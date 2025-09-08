@@ -1,0 +1,323 @@
+/* Teacher Dashboard Styles */
+.teacher-kelas {
+    padding: 20px;
+}
+
+/* Hero Section */
+.index-hero.bg-gradient-primary {
+    background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+    color: white;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.hero-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px;
+}
+
+.quick-stats {
+    display: flex;
+    gap: 20px;
+}
+
+.stat-card {
+    background: rgba(255,255,255,0.2);
+    padding: 15px 20px;
+    border-radius: 8px;
+    text-align: center;
+    min-width: 120px;
+}
+
+.stat-card i {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.stat-card span {
+    display: block;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.stat-card strong {
+    font-size: 22px;
+    display: block;
+    margin-top: 5px;
+}
+
+/* Kelas Cards */
+.kelas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.kelas-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid #e3e6f0;
+}
+
+.kelas-card.hover-shadow:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.kelas-header {
+    padding: 15px;
+    position: relative;
+}
+
+.kelas-header.bg-gradient-info {
+    background: linear-gradient(135deg, #36b9cc 0%, #1cc88a 100%);
+}
+
+.kelas-header.bg-gradient-secondary {
+    background: linear-gradient(135deg, #858796 0%, #60616f 100%);
+}
+
+.badges {
+    display: flex;
+    gap: 8px;
+}
+
+.badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-light {
+    background: rgba(255,255,255,0.2);
+    color: white;
+}
+
+.quick-actions {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.btn-action {
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.actions-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    z-index: 10;
+    min-width: 150px;
+}
+
+.actions-menu a {
+    display: block;
+    padding: 8px 15px;
+    color: #5a5c69;
+    text-decoration: none;
+}
+
+.actions-menu a:hover {
+    background: #f8f9fc;
+}
+
+.actions-menu a i {
+    margin-right: 8px;
+}
+
+.quick-actions:hover .actions-menu {
+    display: block;
+}
+
+.kelas-body {
+    padding: 20px;
+}
+
+.kelas-body h3 {
+    margin: 0 0 10px;
+    color: #4e73df;
+    font-size: 18px;
+}
+
+.kelas-desc {
+    color: #858796;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.kelas-info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    color: #5a5c69;
+}
+
+.info-item i {
+    color: #dddfeb;
+}
+
+.progress-container {
+    margin-top: 15px;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.progress-bar {
+    height: 6px;
+    background: #eaecf4;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #4e73df;
+    border-radius: 3px;
+}
+
+.kelas-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #eaecf4;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.kelas-footer small {
+    color: #b7b9cc;
+    font-size: 12px;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.empty-state i {
+    font-size: 50px;
+    color: #dddfeb;
+    margin-bottom: 20px;
+}
+
+.empty-state h3 {
+    color: #5a5c69;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: #858796;
+    margin-bottom: 20px;
+}
+
+/* Section Header */
+.section-header.with-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-filters {
+    display: flex;
+    gap: 15px;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background: white;
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    z-index: 1;
+    border-radius: 5px;
+}
+
+.dropdown-content a {
+    color: #5a5c69;
+    padding: 10px 15px;
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+}
+
+.dropdown-content a:hover {
+    background: #f8f9fc;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-box input {
+    padding: 8px 15px 8px 35px;
+    border: 1px solid #d1d3e2;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.search-box i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #b7b9cc;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+    
+    .quick-stats {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .section-header.with-actions {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .section-filters {
+        width: 100%;
+    }
+}

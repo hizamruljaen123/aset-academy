@@ -1,0 +1,182 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Siswa extends CI_Controller {
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->model('Siswa_model');
+        $this->load->model('Kelas_model');
+        $this->load->library('form_validation');
+        $this->load->helper('url');
+        $this->load->helper('form');
+        $this->load->library('session');
+        
+        // Cek apakah user sudah login, jika belum redirect ke login
+        if (!$this->session->userdata('logged_in')) {
+            redirect('auth/login');
+        }
+        
+        // Cek role user
+        if ($this->session->userdata('role') != 'admin') {
+            redirect('auth/login');
+        }
+        
+        // Load data kelas untuk dropdown
+        $data['kelas_list'] = $this->Kelas_model->get_all_kelas();
+    }
+
+    // Menampilkan daftar siswa
+    public function index()
+    {
+        $data['title'] = 'Data Siswa';
+        $data['siswa'] = $this->Siswa_model->get_all_siswa();
+        
+        $this->load->view('templates/header', $data);
+        $this->load->view('siswa/index', $data);
+        $this->load->view('templates/footer');
+    }
+
+    // Menampilkan form tambah siswa
+    public function create()
+    {
+        $data['title'] = 'Tambah Siswa';
+        $data['kelas_list'] = $this->Kelas_model->get_all_kelas();
+        
+        $this->form_validation->set_rules('nis', 'NIS', 'required|trim|is_unique[siswa.nis]', [
+            'required' => 'NIS harus diisi',
+            'is_unique' => 'NIS sudah terdaftar'
+        ]);
+        $this->form_validation->set_rules('nama_lengkap', 'Nama Lengkap', 'required|trim');
+        $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|is_unique[siswa.email]', [
+            'required' => 'Email harus diisi',
+            'valid_email' => 'Email tidak valid',
+            'is_unique' => 'Email sudah terdaftar'
+        ]);
+        $this->form_validation->set_rules('no_telepon', 'No Telepon', 'required|trim');
+        $this->form_validation->set_rules('kelas', 'Kelas Programming', 'required|trim');
+        $this->form_validation->set_rules('jurusan', 'Jurusan', 'required|trim');
+        $this->form_validation->set_rules('alamat', 'Alamat', 'trim');
+        $this->form_validation->set_rules('tanggal_lahir', 'Tanggal Lahir', 'required|trim');
+        $this->form_validation->set_rules('jenis_kelamin', 'Jenis Kelamin', 'required|trim');
+        $this->form_validation->set_rules('status', 'Status', 'required|trim');
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->load->view('templates/header', $data);
+            $this->load->view('siswa/create', $data);
+            $this->load->view('templates/footer');
+        } else {
+            $data = [
+                'nis' => $this->input->post('nis'),
+                'nama_lengkap' => $this->input->post('nama_lengkap'),
+                'email' => $this->input->post('email'),
+                'no_telepon' => $this->input->post('no_telepon'),
+                'kelas' => $this->input->post('kelas'),
+                'jurusan' => $this->input->post('jurusan'),
+                'alamat' => $this->input->post('alamat'),
+                'tanggal_lahir' => $this->input->post('tanggal_lahir'),
+                'jenis_kelamin' => $this->input->post('jenis_kelamin'),
+                'status' => $this->input->post('status')
+            ];
+
+            $this->Siswa_model->insert_siswa($data);
+            $this->session->set_flashdata('success', 'Data siswa berhasil ditambahkan');
+            redirect('siswa');
+        }
+    }
+
+    // Menampilkan form edit siswa
+    public function edit($id)
+    {
+        $data['title'] = 'Edit Siswa';
+        $data['siswa'] = $this->Siswa_model->get_siswa_by_id($id);
+        $data['kelas_list'] = $this->Kelas_model->get_all_kelas();
+        
+        if (empty($data['siswa'])) {
+            show_404();
+        }
+
+        $this->form_validation->set_rules('nis', 'NIS', 'required|trim', [
+            'required' => 'NIS harus diisi'
+        ]);
+        $this->form_validation->set_rules('nama_lengkap', 'Nama Lengkap', 'required|trim');
+        $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email', [
+            'required' => 'Email harus diisi',
+            'valid_email' => 'Email tidak valid'
+        ]);
+        $this->form_validation->set_rules('no_telepon', 'No Telepon', 'required|trim');
+        $this->form_validation->set_rules('kelas', 'Kelas Programming', 'required|trim');
+        $this->form_validation->set_rules('jurusan', 'Jurusan', 'required|trim');
+        $this->form_validation->set_rules('alamat', 'Alamat', 'trim');
+        $this->form_validation->set_rules('tanggal_lahir', 'Tanggal Lahir', 'required|trim');
+        $this->form_validation->set_rules('jenis_kelamin', 'Jenis Kelamin', 'required|trim');
+        $this->form_validation->set_rules('status', 'Status', 'required|trim');
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->load->view('templates/header', $data);
+            $this->load->view('siswa/edit', $data);
+            $this->load->view('templates/footer');
+        } else {
+            $data = [
+                'nis' => $this->input->post('nis'),
+                'nama_lengkap' => $this->input->post('nama_lengkap'),
+                'email' => $this->input->post('email'),
+                'no_telepon' => $this->input->post('no_telepon'),
+                'kelas' => $this->input->post('kelas'),
+                'jurusan' => $this->input->post('jurusan'),
+                'alamat' => $this->input->post('alamat'),
+                'tanggal_lahir' => $this->input->post('tanggal_lahir'),
+                'jenis_kelamin' => $this->input->post('jenis_kelamin'),
+                'status' => $this->input->post('status')
+            ];
+
+            $this->Siswa_model->update_siswa($id, $data);
+            $this->session->set_flashdata('success', 'Data siswa berhasil diupdate');
+            redirect('siswa');
+        }
+    }
+
+    // Menghapus data siswa
+    public function delete($id)
+    {
+        $siswa = $this->Siswa_model->get_siswa_by_id($id);
+        
+        if (empty($siswa)) {
+            show_404();
+        }
+
+        $this->Siswa_model->delete_siswa($id);
+        $this->session->set_flashdata('success', 'Data siswa berhasil dihapus');
+        redirect('siswa');
+    }
+
+    // Mencari siswa
+    public function search()
+    {
+        $keyword = $this->input->post('keyword');
+        $data['title'] = 'Hasil Pencarian Siswa';
+        $data['siswa'] = $this->Siswa_model->search_siswa($keyword);
+        $data['keyword'] = $keyword;
+        
+        $this->load->view('templates/header', $data);
+        $this->load->view('siswa/index', $data);
+        $this->load->view('templates/footer');
+    }
+
+    // Menampilkan detail siswa
+    public function detail($id)
+    {
+        $data['title'] = 'Detail Siswa';
+        $data['siswa'] = $this->Siswa_model->get_siswa_by_id($id);
+        
+        if (empty($data['siswa'])) {
+            show_404();
+        }
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('siswa/detail', $data);
+        $this->load->view('templates/footer');
+    }
+}
+?>

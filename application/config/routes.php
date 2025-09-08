@@ -1,0 +1,134 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+/*
+| -------------------------------------------------------------------------
+| URI ROUTING
+| -------------------------------------------------------------------------
+| This file lets you re-map URI requests to specific controller functions.
+|
+| Typically there is a one-to-one relationship between a URL string
+| and its corresponding controller class/method. The segments in a
+| URL normally follow this pattern:
+|
+|	example.com/class/method/id/
+|
+| In some instances, however, you may want to remap this relationship
+| so that a different class/function is called than the one
+| corresponding to the URL.
+|
+| Please see the user guide for complete details:
+|
+|	https://codeigniter.com/userguide3/general/routing.html
+|
+| -------------------------------------------------------------------------
+| RESERVED ROUTES
+| -------------------------------------------------------------------------
+|
+| There are three reserved routes:
+|
+|	$route['default_controller'] = 'welcome';
+|
+| This route indicates which controller class should be loaded if the
+| URI contains no data. In the above example, the "welcome" class
+| would be loaded.
+|
+|	$route['404_override'] = 'errors/page_missing';
+|
+| This route will tell the Router which controller/method to use if those
+| provided in the URL cannot be matched to a valid route.
+|
+|	$route['translate_uri_dashes'] = FALSE;
+|
+| This is not exactly a route, but allows you to automatically route
+| controller and method names that contain dashes. '-' isn't a valid
+| class or method name character, so it requires translation.
+| When you set this option to TRUE, it will replace ALL dashes in the
+| controller and method URI segments.
+|
+| Examples:	my-controller/index	-> my_controller/index
+|		my-controller/my-method	-> my_controller/my_method
+*/
+$route['default_controller'] = 'home';
+$route['404_override'] = '';
+$route['translate_uri_dashes'] = FALSE;
+
+// Routes untuk Auth
+$route['auth'] = 'auth';
+$route['auth/index'] = 'auth';
+$route['auth/login'] = 'auth';
+$route['auth/logout'] = 'auth/logout';
+$route['auth/register'] = 'auth/register';
+$route['auth/forgot_password'] = 'auth/forgot_password';
+
+// Routes untuk Siswa
+$route['siswa'] = 'siswa';
+$route['siswa/index'] = 'siswa';
+$route['siswa/create'] = 'siswa/create';
+$route['siswa/edit/(:num)'] = 'siswa/edit/$1';
+$route['siswa/delete/(:num)'] = 'siswa/delete/$1';
+$route['siswa/detail/(:num)'] = 'siswa/detail/$1';
+$route['siswa/search'] = 'siswa/search';
+
+// Routes untuk Kelas
+$route['kelas'] = 'kelas';
+$route['kelas/index'] = 'kelas';
+$route['kelas/create'] = 'kelas/create';
+$route['kelas/edit/(:num)'] = 'kelas/edit/$1';
+$route['kelas/delete/(:num)'] = 'kelas/delete/$1';
+$route['kelas/detail/(:num)'] = 'kelas/detail/$1';
+$route['kelas/by_level/(:any)'] = 'kelas/by_level/$1';
+$route['kelas/by_bahasa/(:any)'] = 'kelas/by_bahasa/$1';
+
+// Routes untuk Dashboard
+$route['dashboard'] = 'dashboard';
+$route['dashboard/index'] = 'dashboard';
+
+// Routes untuk Student Dashboard
+$route['student'] = 'student_dashboard';
+$route['student/index'] = 'student_dashboard';
+$route['student/profile'] = 'student_dashboard/profile';
+$route['student/materi'] = 'student_dashboard/materi';
+$route['student/materi_detail/(:num)'] = 'student_dashboard/materi_detail/$1';
+
+// Routes untuk Profile Management
+$route['profile'] = 'profile';
+$route['profile/view'] = 'profile/view';
+$route['profile/update'] = 'profile/update';
+$route['profile/change_password'] = 'profile/change_password';
+$route['profile/upload_photo'] = 'profile/upload_photo';
+
+// Routes untuk Admin Free Classes Management
+$route['admin/free_classes'] = 'admin/free_classes';
+$route['admin/free_classes/index'] = 'admin/free_classes';
+$route['admin/free_classes/create'] = 'admin/free_classes/create';
+$route['admin/free_classes/edit/(:num)'] = 'admin/free_classes/edit/$1';
+$route['admin/free_classes/delete/(:num)'] = 'admin/free_classes/delete/$1';
+$route['admin/free_classes/add_material/(:num)'] = 'admin/free_classes/add_material/$1';
+$route['admin/free_classes/edit_material/(:num)'] = 'admin/free_classes/edit_material/$1';
+$route['admin/free_classes/delete_material/(:num)'] = 'admin/free_classes/delete_material/$1';
+$route['admin/free_classes/students/(:num)'] = 'admin/free_classes/students/$1';
+$route['admin/free_classes/student_progress/(:num)'] = 'admin/free_classes/student_progress/$1';
+$route['admin/free_classes/update_student_status/(:num)'] = 'admin/free_classes/update_student_status/$1';
+
+// Routes untuk Student Free Classes Access
+$route['student/free_classes'] = 'student/free_classes';
+$route['student/free_classes/index'] = 'student/free_classes/index';
+$route['student/free_classes/browse'] = 'student/free_classes/browse';
+$route['student/free_classes/view/(:num)'] = 'student/free_classes/view/$1';
+$route['student/free_classes/enroll/(:num)'] = 'student/free_classes/enroll/$1';
+$route['student/free_classes/learn/(:num)'] = 'student/free_classes/learn/$1';
+$route['student/free_classes/material/(:num)/(:num)'] = 'student/free_classes/material/$1/$2';
+$route['student/free_classes/complete_material/(:num)/(:num)'] = 'student/free_classes/complete_material/$1/$2';
+$route['student/free_classes/post_discussion'] = 'student/free_classes/post_discussion';
+$route['student/free_classes/my_classes'] = 'student/free_classes/my_classes';
+
+// Routes untuk Home Page
+$route['home'] = 'home';
+$route['home/index'] = 'home';
+$route['home/about'] = 'home/about';
+$route['home/faq'] = 'home/faq';
+$route['home/premium'] = 'home/premium';
+$route['home/free'] = 'home/free';
+$route['free_class/(:num)'] = 'home/view_free_class/$1';
+$route['free_classes/view/(:num)'] = 'home/view_free_class/$1';

@@ -1,0 +1,185 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Admin_guru extends CI_Controller {
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->model('Users_model');
+        $this->load->model('Guru_model');
+        $this->load->model('Kelas_model');
+        $this->load->library('Permission');
+        
+        // Check if user is logged in and has admin access
+        if (!$this->session->userdata('logged_in')) {
+            redirect('auth');
+        }
+        
+        if (!$this->permission->is_admin()) {
+            show_error('Access denied. Admin role required.', 403);
+        }
+    }
+
+    public function index()
+    {
+        // Get all teachers
+        $this->db->where('role', 'guru');
+        $this->db->order_by('nama_lengkap', 'ASC');
+        $data['teachers'] = $this->db->get('users')->result();
+        
+        // Get teacher stats
+        foreach($data['teachers'] as $teacher) {
+            $teacher->stats = $this->Guru_model->get_guru_stats($teacher->id);
+            $teacher->kelas_count = $teacher->stats['total_kelas'];
+            $teacher->siswa_count = $teacher->stats['total_siswa'];
+        }
+        
+        $data['title'] = 'Kelola Guru';
+        $this->load->view('templates/header', $data);
+        $this->load->view('admin/guru/index', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function create()
+    {
+        $this->form_validation->set_rules('username', 'Username', 'required|trim|is_unique[users.username]');
+        $this->form_validation->set_rules('password', 'Password', 'required|trim|min_length[6]');
+        $this->form_validation->set_rules('nama_lengkap', 'Nama Lengkap', 'required|trim');
+        $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|is_unique[users.email]');
+
+        if ($this->form_validation->run() == FALSE) {
+            $data['title'] = 'Tambah Guru';
+            $this->load->view('templates/header', $data);
+            $this->load->view('admin/guru/create', $data);
+            $this->load->view('templates/footer');
+        } else {
+            $teacher_data = [
+                'username' => $this->input->post('username'),
+                'password' => $this->input->post('password'),
+                'nama_lengkap' => $this->input->post('nama_lengkap'),
+                'email' => $this->input->post('email'),
+                'role' => 'guru',
+                'status' => 'Aktif'
+            ];
+
+            $teacher_id = $this->Users_model->insert_user($teacher_data);
+            
+            if ($teacher_id) {
+                $this->session->set_flashdata('success', 'Guru berhasil ditambahkan');
+            } else {
+                $this->session->set_flashdata('error', 'Gagal menambahkan guru');
+            }
+            
+            redirect('admin_guru');
+        }
+    }
+
+    public function edit($id)
+    {
+        $teacher = $this->Users_model->get_user_by_id($id);
+        if (!$teacher || $teacher->role !== 'guru') {
+            show_404();
+        }
+
+        $this->form_validation->set_rules('username', 'Username', 'required|trim');
+        $this->form_validation->set_rules('nama_lengkap', 'Nama Lengkap', 'required|trim');
+        $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email');
+
+        if ($this->form_validation->run() == FALSE) {
+            $data['teacher'] = $teacher;
+            $data['title'] = 'Edit Guru';
+            $this->load->view('templates/header', $data);
+            $this->load->view('admin/guru/edit', $data);
+            $this->load->view('templates/footer');
+        } else {
+            $update_data = [
+                'username' => $this->input->post('username'),
+                'nama_lengkap' => $this->input->post('nama_lengkap'),
+                'email' => $this->input->post('email'),
+                'status' => $this->input->post('status')
+            ];
+
+            if ($this->input->post('password')) {
+                $update_data['password'] = $this->input->post('password');
+            }
+
+            if ($this->Users_model->update_user($id, $update_data)) {
+                $this->session->set_flashdata('success', 'Data guru berhasil diupdate');
+            } else {
+                $this->session->set_flashdata('error', 'Gagal mengupdate data guru');
+            }
+            
+            redirect('admin_guru');
+        }
+    }
+
+    public function delete($id)
+    {
+        $teacher = $this->Users_model->get_user_by_id($id);
+        if (!$teacher || $teacher->role !== 'guru') {
+            show_404();
+        }
+
+        // Remove all class assignments first
+        $this->db->where('guru_id', $id);
+        $this->db->delete('guru_kelas');
+
+        // Delete teacher
+        if ($this->Users_model->delete_user($id)) {
+            $this->session->set_flashdata('success', 'Guru berhasil dihapus');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal menghapus guru');
+        }
+        
+        redirect('admin_guru');
+    }
+
+    public function assign($teacher_id)
+    {
+        $teacher = $this->Users_model->get_user_by_id($teacher_id);
+        if (!$teacher || $teacher->role !== 'guru') {
+            show_404();
+        }
+
+        // Get all classes
+        $data['all_kelas'] = $this->Kelas_model->get_all_kelas();
+        
+        // Get assigned classes
+        $data['assigned_kelas'] = $this->Guru_model->get_guru_kelas($teacher_id);
+        
+        $data['teacher'] = $teacher;
+        $data['title'] = 'Kelola Penugasan - ' . $teacher->nama_lengkap;
+        $this->load->view('templates/header', $data);
+        $this->load->view('admin/guru/assign', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function assign_class()
+    {
+        $teacher_id = $this->input->post('teacher_id');
+        $class_id = $this->input->post('class_id');
+        
+        if ($this->Guru_model->assign_guru_kelas($teacher_id, $class_id)) {
+            $this->session->set_flashdata('success', 'Kelas berhasil ditugaskan');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal menugaskan kelas');
+        }
+        
+        redirect('admin_guru/assign/' . $teacher_id);
+    }
+
+    public function remove_class()
+    {
+        $teacher_id = $this->input->post('teacher_id');
+        $class_id = $this->input->post('class_id');
+        
+        if ($this->Guru_model->remove_guru_kelas($teacher_id, $class_id)) {
+            $this->session->set_flashdata('success', 'Penugasan kelas berhasil dihapus');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal menghapus penugasan kelas');
+        }
+        
+        redirect('admin_guru/assign/' . $teacher_id);
+    }
+}
