@@ -9,7 +9,9 @@ class Teacher extends CI_Controller {
         $this->load->model('Guru_model');
         $this->load->model('Siswa_model');
         $this->load->model('Materi_model');
+        $this->load->model('Kelas_model');
         $this->load->library('Permission');
+        $this->load->helper('text');
         
         // Check if user is logged in and has teacher role
         if (!$this->session->userdata('logged_in')) {
@@ -67,6 +69,47 @@ class Teacher extends CI_Controller {
         $data['title'] = 'Materi Saya';
         $this->load->view('templates/header', $data);
         $this->load->view('teacher/materi', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function manage_kelas($kelas_id)
+    {
+        $guru_id = $this->session->userdata('user_id');
+
+        // Check if teacher has access to this class
+        if (!$this->Guru_model->has_class_access($guru_id, $kelas_id)) {
+            show_error('Anda tidak memiliki akses ke kelas ini.', 403);
+        }
+
+        $data['kelas'] = $this->Kelas_model->get_kelas_by_id($kelas_id);
+        $data['siswa'] = $this->Siswa_model->get_siswa_by_kelas($kelas_id);
+        $data['materi'] = $this->Materi_model->get_materi_by_kelas($kelas_id);
+
+        $data['title'] = 'Kelola Kelas - ' . $data['kelas']->nama_kelas;
+        $this->load->view('templates/header', $data);
+        $this->load->view('teacher/manage_kelas', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function siswa_detail($siswa_id)
+    {
+        $guru_id = $this->session->userdata('user_id');
+        $siswa = $this->Siswa_model->get_siswa_by_id($siswa_id);
+
+        if (!$siswa) {
+            show_404();
+        }
+
+        // Get class ID from student's class name
+        $kelas = $this->db->get_where('kelas_programming', ['nama_kelas' => $siswa->kelas])->row();
+        if (!$kelas || !$this->Guru_model->has_class_access($guru_id, $kelas->id)) {
+            show_error('Anda tidak memiliki akses ke siswa ini.', 403);
+        }
+
+        $data['siswa'] = $siswa;
+        $data['title'] = 'Detail Siswa - ' . $siswa->nama_lengkap;
+        $this->load->view('templates/header', $data);
+        $this->load->view('teacher/siswa_detail', $data);
         $this->load->view('templates/footer');
     }
 

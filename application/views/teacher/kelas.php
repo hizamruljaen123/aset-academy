@@ -1,122 +1,98 @@
-<div class="teacher-kelas fade-in">
-    <!-- Header with Stats -->
-    <div class="index-hero bg-gradient-primary">
-        <div class="hero-content">
+<div class="p-4 sm:p-6 lg:p-8">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-cyan-500 to-teal-500 text-white rounded-2xl p-6 mb-8 shadow-lg">
+        <div class="flex justify-between items-center">
             <div>
-                <h1 class="hero-title">Kelas Saya</h1>
-                <p class="hero-subtitle"><?php echo count($kelas); ?> kelas yang diampu</p>
+                <h1 class="text-3xl font-bold">Kelas Saya</h1>
+                <p class="text-sm opacity-90 mt-1"><?php echo count($kelas); ?> kelas yang diampu</p>
             </div>
-            <div class="quick-stats">
-                <div class="stat-card">
-                    <i class="fas fa-users"></i>
-                    <span>Total Siswa</span>
-                    <strong>0</strong>
+            <div class="hidden sm:flex space-x-4">
+                <div class="text-center">
+                    <div class="text-3xl font-bold">0</div>
+                    <div class="text-xs opacity-80">Total Siswa</div>
                 </div>
-                <div class="stat-card">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Selesai</span>
-                    <strong>0</strong>
+                <div class="text-center">
+                    <div class="text-3xl font-bold">0</div>
+                    <div class="text-xs opacity-80">Selesai</div>
                 </div>
-                <div class="stat-card">
-                    <i class="fas fa-chart-line"></i>
-                    <span>Rata-rata</span>
-                    <strong>0%</strong>
+                <div class="text-center">
+                    <div class="text-3xl font-bold">0%</div>
+                    <div class="text-xs opacity-80">Rata-rata</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+        <h2 class="text-2xl font-bold text-gray-800">Daftar Kelas</h2>
+        <div class="flex items-center gap-4 w-full sm:w-auto">
+            <div class="relative w-full sm:w-auto">
+                <select class="appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
+                    <option>Semua Status</option>
+                    <option>Aktif</option>
+                    <option>Non-Aktif</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <i class="fas fa-chevron-down text-xs"></i>
+                </div>
+            </div>
+            <div class="relative w-full sm:w-auto">
+                <input type="text" placeholder="Cari kelas..." class="w-full bg-white border border-gray-300 rounded-lg shadow-sm px-4 py-2 pl-10 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                    <i class="fas fa-search text-gray-400"></i>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Kelas Grid -->
-    <div class="section-card fade-in">
-        <div class="section-header with-actions">
-            <div>
-                <h2 class="section-title">Daftar Kelas</h2>
-                <div class="section-filters">
-                    <div class="dropdown">
-                        <button class="btn btn-filter">Filter <i class="fas fa-filter"></i></button>
-                        <div class="dropdown-content">
-                            <a href="#">Semua</a>
-                            <a href="#">Aktif</a>
-                            <a href="#">Non-Aktif</a>
-                        </div>
-                    </div>
-                    <div class="search-box">
-                        <input type="text" placeholder="Cari kelas...">
-                        <i class="fas fa-search"></i>
-                    </div>
-                </div>
+    <?php if (empty($kelas)): ?>
+        <div class="text-center py-16 bg-white rounded-2xl shadow-md">
+            <div class="mx-auto w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center mb-6">
+                <i class="fas fa-chalkboard-teacher text-4xl text-gray-400"></i>
             </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">Anda Belum Mengampu Kelas</h3>
+            <p class="text-gray-500 mb-6">Saat ini Anda belum ditugaskan untuk mengajar di kelas manapun.</p>
+            <button class="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                Minta Penugasan Kelas
+            </button>
         </div>
-        <div class="section-body">
-            <?php if (empty($kelas)): ?>
-                <div class="empty-state">
-                    <i class="fas fa-chalkboard-teacher"></i>
-                    <h3>Belum ada kelas</h3>
-                    <p>Anda belum ditugaskan untuk mengampu kelas</p>
-                    <button class="btn btn-primary">Minta Kelas</button>
-                </div>
-            <?php else: ?>
-                <div class="kelas-grid">
-                    <?php foreach($kelas as $k): ?>
-                        <div class="kelas-card fade-in hover-shadow">
-                            <div class="kelas-header bg-gradient-<?php echo ($k->status == 'Aktif') ? 'info' : 'secondary'; ?>">
-                                <div class="badges">
-                                    <span class="badge badge-light"><?php echo $k->bahasa_program; ?></span>
-                                    <span class="badge badge-<?php echo ($k->status == 'Aktif') ? 'success' : 'secondary'; ?>">
-                                        <?php echo $k->status; ?>
-                                    </span>
-                                </div>
-                                <div class="quick-actions">
-                                    <button class="btn-action"><i class="fas fa-ellipsis-v"></i></button>
-                                    <div class="actions-menu">
-                                        <a href="#"><i class="fas fa-eye"></i> Lihat</a>
-                                        <a href="#"><i class="fas fa-users"></i> Siswa</a>
-                                        <a href="#"><i class="fas fa-book"></i> Materi</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="kelas-body">
-                                <h3><?php echo $k->nama_kelas; ?></h3>
-                                <p class="kelas-desc"><?php echo $k->deskripsi; ?></p>
-                                <div class="kelas-info">
-                                    <div class="info-item">
-                                        <i class="fas fa-signal"></i>
-                                        <span><?php echo $k->level; ?></span>
-                                    </div>
-                                    <div class="info-item">
-                                        <i class="fas fa-clock"></i>
-                                        <span><?php echo $k->durasi; ?> Jam</span>
-                                    </div>
-                                    <div class="info-item">
-                                        <i class="fas fa-money-bill-wave"></i>
-                                        <span>Rp <?php echo number_format($k->harga, 0, ',', '.'); ?></span>
-                                    </div>
-                                </div>
-                                <div class="progress-container">
-                                    <div class="progress-info">
-                                        <span>Progress Kelas</span>
-                                        <span>0%</span>
-                                    </div>
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 0%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="kelas-footer">
-                                <small>Ditugaskan: <?php echo date('d M Y', strtotime($k->assigned_at)); ?></small>
-                                <div>
-                                    <?php if (!empty($k->online_meet_link)): ?>
-                                        <a href="<?php echo $k->online_meet_link; ?>" target="_blank" class="btn btn-sm btn-success">
-                                            <i class="fas fa-video mr-1"></i> Join Meeting
-                                        </a>
-                                    <?php endif; ?>
-                                    <a href="#" class="btn btn-sm btn-primary">Kelola</a>
-                                </div>
+    <?php else: ?>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <?php foreach($kelas as $k): ?>
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-1 transition-all duration-300">
+                    <div class="h-40 bg-gradient-to-br from-gray-700 to-gray-900 flex flex-col justify-between p-5 text-white">
+                        <div>
+                            <span class="text-xs font-semibold bg-white/20 text-white px-3 py-1 rounded-full"><?php echo $k->bahasa_program; ?></span>
+                        </div>
+                        <h3 class="text-xl font-bold"><?php echo $k->nama_kelas; ?></h3>
+                    </div>
+                    <div class="p-5">
+                        <p class="text-gray-600 text-sm mb-4 h-10 overflow-hidden"><?php echo $k->deskripsi; ?></p>
+                        <div class="flex justify-between text-sm text-gray-600 mb-4">
+                            <span class="flex items-center"><i class="fas fa-signal mr-2 text-cyan-500"></i><?php echo $k->level; ?></span>
+                            <span class="flex items-center"><i class="fas fa-clock mr-2 text-teal-500"></i><?php echo $k->durasi; ?> Jam</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4">
+                            <div class="bg-gradient-to-r from-cyan-400 to-teal-500 h-2.5 rounded-full" style="width: 45%"></div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="text-xs text-gray-500">Ditugaskan: <?php echo date('d M Y', strtotime($k->assigned_at)); ?></div>
+                            <div class="flex items-center space-x-2">
+                                <?php if (!empty($k->online_meet_link)): ?>
+                                    <a href="<?php echo $k->online_meet_link; ?>" target="_blank" class="text-green-500 hover:text-green-600 transition-colors">
+                                        <i class="fas fa-video"></i>
+                                    </a>
+                                <?php endif; ?>
+                                <a href="<?php echo site_url('teacher/manage_kelas/' . $k->id); ?>" class="text-gray-400 hover:text-cyan-500 transition-colors" title="Kelola Kelas">
+                                    <i class="fas fa-cog"></i>
+                                </a>
                             </div>
                         </div>
-                    <?php endforeach; ?>
+                    </div>
                 </div>
-            <?php endif; ?>
+            <?php endforeach; ?>
         </div>
-    </div>
+    <?php endif; ?>
 </div>

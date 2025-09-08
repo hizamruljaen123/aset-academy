@@ -95,12 +95,13 @@ class Siswa_model extends CI_Model {
     }
 
     // Fungsi untuk mendapatkan data siswa berdasarkan kelas
-    public function get_siswa_by_kelas($kelas)
+    public function get_siswa_by_kelas($kelas_id)
     {
-        $this->db->select('*');
-        $this->db->from('siswa');
-        $this->db->where('kelas', $kelas);
-        $this->db->order_by('nama_lengkap', 'ASC');
+        $this->db->select('s.*, s.foto_profil');
+        $this->db->from('siswa s');
+        $this->db->join('kelas_programming kp', 's.kelas = kp.nama_kelas');
+        $this->db->where('kp.id', $kelas_id);
+        $this->db->order_by('s.nama_lengkap', 'ASC');
         $query = $this->db->get();
         return $query->result();
     }

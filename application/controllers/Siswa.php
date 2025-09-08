@@ -62,6 +62,14 @@ class Siswa extends CI_Controller {
         $this->form_validation->set_rules('jenis_kelamin', 'Jenis Kelamin', 'required|trim');
         $this->form_validation->set_rules('status', 'Status', 'required|trim');
 
+        // Konfigurasi upload file
+        $config['upload_path'] = './uploads/siswa/';
+        $config['allowed_types'] = 'gif|jpg|png|jpeg';
+        $config['max_size'] = 2048; // 2MB
+        $config['encrypt_name'] = TRUE;
+
+        $this->load->library('upload', $config);
+
         if ($this->form_validation->run() == FALSE) {
             $this->load->view('templates/header', $data);
             $this->load->view('siswa/create', $data);
@@ -77,8 +85,23 @@ class Siswa extends CI_Controller {
                 'alamat' => $this->input->post('alamat'),
                 'tanggal_lahir' => $this->input->post('tanggal_lahir'),
                 'jenis_kelamin' => $this->input->post('jenis_kelamin'),
-                'status' => $this->input->post('status')
+                'status' => $this->input->post('status'),
             ];
+
+            // Cek apakah ada file yang diupload
+            if (!empty($_FILES['foto_profil']['name'])) {
+                if ($this->upload->do_upload('foto_profil')) {
+                    $upload_data = $this->upload->data();
+                    $data['foto_profil'] = $upload_data['file_name'];
+                } else {
+                    // Jika upload gagal, tampilkan error
+                    $data['error_upload'] = $this->upload->display_errors();
+                    $this->load->view('templates/header', $data);
+                    $this->load->view('siswa/create', $data);
+                    $this->load->view('templates/footer');
+                    return; // Hentikan eksekusi
+                }
+            }
 
             $this->Siswa_model->insert_siswa($data);
             $this->session->set_flashdata('success', 'Data siswa berhasil ditambahkan');

@@ -37,7 +37,7 @@ class Guru_model extends CI_Model {
     // Get materials for teacher's classes
     public function get_guru_materi($guru_id)
     {
-        $this->db->select('m.*, kp.nama_kelas');
+        $this->db->select('m.*, kp.nama_kelas, (SELECT COUNT(mp.id) FROM materi_parts mp WHERE mp.materi_id = m.id) as jumlah_part');
         $this->db->from('materi m');
         $this->db->join('kelas_programming kp', 'm.kelas_id = kp.id');
         $this->db->join('guru_kelas gk', 'kp.id = gk.kelas_id');
