@@ -113,6 +113,10 @@ class Student_dashboard extends CI_Controller {
                 // Count total classmates
                 $this->db->where('kelas', $data['student_profile']->kelas);
                 $data['total_classmates'] = $this->db->count_all_results('siswa');
+
+                // Get class schedule
+                $this->load->model('Jadwal_model');
+                $data['jadwal'] = $this->Jadwal_model->get_jadwal_by_kelas($kelas_id);
             }
         } else {
             $data['class_materials'] = [];
@@ -121,6 +125,7 @@ class Student_dashboard extends CI_Controller {
             $data['class_details'] = null;
             $data['classmates'] = [];
             $data['total_classmates'] = 0;
+            $data['jadwal'] = [];
         }
         
         $data['title'] = 'Dashboard Siswa';

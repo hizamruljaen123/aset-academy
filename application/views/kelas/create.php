@@ -64,7 +64,10 @@
 
         <div class="md:col-span-2">
             <label for="online_meet_link" class="form-label">Link Belajar Online</label>
-            <input type="url" id="online_meet_link" name="online_meet_link" class="form-input" value="<?php echo set_value('online_meet_link'); ?>" placeholder="https://zoom.us/j/1234567890">
+            <div class="relative">
+                <i class="fas fa-link absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <input type="url" id="online_meet_link" name="online_meet_link" class="form-input pl-10" value="<?php echo set_value('online_meet_link'); ?>" placeholder="https://zoom.us/j/1234567890">
+            </div>
             <?php echo form_error('online_meet_link', '<p class="form-error">', '</p>'); ?>
         </div>
 

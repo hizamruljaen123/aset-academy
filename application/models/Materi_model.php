@@ -32,6 +32,11 @@ class Materi_model extends CI_Model {
         return $this->db->delete('materi', ['id' => $id]);
     }
 
+    public function insert_materi_part($data)
+    {
+        return $this->db->insert('materi_parts', $data);
+    }
+
     public function get_materi_with_parts_by_kelas($kelas_id)
     {
         $this->db->select('m.*, mp.id as part_id, mp.part_order, mp.part_type, mp.part_title, mp.part_content');

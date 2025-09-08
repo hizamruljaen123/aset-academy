@@ -19,6 +19,11 @@
                     </div>
                 </div>
                 <div class="flex flex-col sm:flex-row gap-3 ml-auto">
+                    <?php if (!empty($kelas->online_meet_link)): ?>
+                        <a href="<?php echo $kelas->online_meet_link; ?>" target="_blank" class="inline-flex items-center px-5 py-2.5 bg-green-500 hover:bg-green-600 border border-transparent rounded-xl font-medium text-sm text-white shadow-sm transition-all duration-200">
+                            <i class="fas fa-video mr-2"></i> Join Meeting
+                        </a>
+                    <?php endif; ?>
                     <a href="<?php echo site_url('kelas/edit/'.$kelas->id); ?>" 
                        class="inline-flex items-center px-5 py-2.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white font-medium hover:bg-white/20 transition-all duration-300">
                         <i class="fas fa-edit mr-2"></i> Edit
@@ -77,6 +82,28 @@
                     <p class="text-gray-500 font-medium">Status</p>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Jadwal Section -->
+    <div class="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl ring-1 ring-gray-200/50 overflow-hidden mb-8">
+        <div class="p-6 border-b border-gray-200/50 bg-gradient-to-r from-gray-50/80 to-white/80">
+            <h2 class="text-2xl font-bold text-gray-800">Jadwal Kelas</h2>
+        </div>
+        <div class="p-6">
+            <?php if (!empty($jadwal)):
+                foreach ($jadwal as $j):
+            ?>
+                <div class="p-4 mb-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <h4 class="font-semibold text-gray-900">Pertemuan <?php echo $j['pertemuan_ke']; ?>: <?php echo $j['judul_pertemuan']; ?></h4>
+                    <p class="text-sm text-gray-600 mt-1"><?php echo date('d M Y', strtotime($j['tanggal_pertemuan'])); ?> | <?php echo date('H:i', strtotime($j['waktu_mulai'])); ?> - <?php echo date('H:i', strtotime($j['waktu_selesai'])); ?></p>
+                </div>
+            <?php 
+                endforeach;
+            else:
+            ?>
+                <p class="text-center text-gray-500 py-4">Belum ada jadwal untuk kelas ini.</p>
+            <?php endif; ?>
         </div>
     </div>
 

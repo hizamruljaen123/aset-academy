@@ -316,6 +316,28 @@
             </div>
             <?php endif; ?>
 
+            <!-- Jadwal Section -->
+            <div class="bg-white rounded-2xl shadow-xl ring-1 ring-gray-200/50 overflow-hidden fade-in">
+                <div class="p-6 border-b border-gray-200/50 bg-gradient-to-r from-gray-50 to-white">
+                    <h2 class="text-2xl font-bold text-gray-800">Jadwal Kelas</h2>
+                </div>
+                <div class="p-6">
+                    <?php if (!empty($jadwal)):
+                        foreach ($jadwal as $j):
+                    ?>
+                        <div class="p-4 mb-4 bg-gray-50 rounded-lg border border-gray-200">
+                            <h4 class="font-semibold text-gray-900">Pertemuan <?php echo $j['pertemuan_ke']; ?>: <?php echo $j['judul_pertemuan']; ?></h4>
+                            <p class="text-sm text-gray-600 mt-1"><?php echo date('d M Y', strtotime($j['tanggal_pertemuan'])); ?> | <?php echo date('H:i', strtotime($j['waktu_mulai'])); ?> - <?php echo date('H:i', strtotime($j['waktu_selesai'])); ?></p>
+                        </div>
+                    <?php 
+                        endforeach;
+                    else:
+                    ?>
+                        <p class="text-center text-gray-500 py-4">Belum ada jadwal untuk kelas ini.</p>
+                    <?php endif; ?>
+                </div>
+            </div>
+
             <!-- Quick Actions -->
             <div class="bg-white rounded-2xl shadow-xl ring-1 ring-gray-200/50 overflow-hidden fade-in">
                 <div class="p-6 border-b border-gray-200/50 bg-gradient-to-r from-gray-50 to-white">

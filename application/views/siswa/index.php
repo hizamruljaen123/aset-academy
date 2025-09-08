@@ -72,6 +72,14 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
                                         <div class="flex justify-center space-x-2">
+                                            <?php 
+                                                $kelas_detail = $this->db->get_where('kelas_programming', ['nama_kelas' => $s->kelas])->row();
+                                                if ($kelas_detail && !empty($kelas_detail->online_meet_link)): 
+                                            ?>
+                                                <a href="<?php echo $kelas_detail->online_meet_link; ?>" target="_blank" class="text-green-600 hover:text-green-900 p-1 rounded-full hover:bg-green-50" title="Join Meeting">
+                                                    <i class="fas fa-video"></i>
+                                                </a>
+                                            <?php endif; ?>
                                             <a href="<?php echo site_url('siswa/detail/'.$s->id); ?>" class="text-blue-600 hover:text-blue-900 p-1 rounded-full hover:bg-blue-50" title="Detail">
                                                 <i class="fas fa-eye"></i>
                                             </a>

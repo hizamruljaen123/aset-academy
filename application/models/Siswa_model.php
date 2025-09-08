@@ -21,6 +21,16 @@ class Siswa_model extends CI_Model {
     }
 
     // Fungsi untuk mendapatkan data siswa berdasarkan ID
+    public function get_siswa_by_email($email)
+    {
+        $this->db->select('*');
+        $this->db->from('siswa');
+        $this->db->where('email', $email);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    // Fungsi untuk mendapatkan data siswa berdasarkan ID
     public function get_siswa_by_id($id)
     {
         $this->db->select('*');

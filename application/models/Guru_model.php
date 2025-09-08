@@ -77,6 +77,14 @@ class Guru_model extends CI_Model {
     }
 
     // Get dashboard stats for teacher
+    public function get_all_gurus()
+    {
+        $this->db->where('role', 'guru');
+        $this->db->where('status', 'Aktif');
+        return $this->db->get('users')->result();
+    }
+
+    // Get dashboard stats for teacher
     public function get_guru_stats($guru_id)
     {
         $stats = [];
@@ -107,5 +115,20 @@ class Guru_model extends CI_Model {
         $stats['total_materi'] = $result->total;
         
         return $stats;
+    }
+
+    // Save or update teacher attendance
+    public function save_absensi_guru($data)
+    {
+        $this->db->where('jadwal_id', $data['jadwal_id']);
+        $this->db->where('guru_id', $data['guru_id']);
+        $q = $this->db->get('absensi_guru');
+
+        if ($q->num_rows() > 0) {
+            $this->db->where('id', $q->row('id'));
+            $this->db->update('absensi_guru', $data);
+        } else {
+            $this->db->insert('absensi_guru', $data);
+        }
     }
 }

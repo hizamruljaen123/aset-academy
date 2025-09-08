@@ -64,7 +64,10 @@
 
                     <div class="space-y-2 md:col-span-2">
                         <label for="online_meet_link" class="block text-sm font-medium text-gray-700">Link Belajar Online</label>
-                        <input type="url" id="online_meet_link" name="online_meet_link" class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" value="<?php echo set_value('online_meet_link', $kelas->online_meet_link); ?>" placeholder="https://zoom.us/j/1234567890">
+                        <div class="relative">
+                            <i class="fas fa-link absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="url" id="online_meet_link" name="online_meet_link" class="block w-full rounded-xl border-gray-300 shadow-sm pl-10 focus:border-blue-500 focus:ring-blue-500" value="<?php echo set_value('online_meet_link', $kelas->online_meet_link); ?>" placeholder="https://zoom.us/j/1234567890">
+                        </div>
                         <?php echo form_error('online_meet_link', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
                     </div>
                 </div>

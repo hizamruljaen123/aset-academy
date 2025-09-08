@@ -187,6 +187,34 @@ class Siswa extends CI_Controller {
         $this->load->view('templates/footer');
     }
 
+    // Menampilkan absensi siswa
+    public function absensi()
+    {
+        $email = $this->session->userdata('email');
+        $siswa = $this->Siswa_model->get_siswa_by_email($email);
+
+        if (!$siswa) {
+            show_error('Data siswa tidak ditemukan.', 404);
+            return;
+        }
+
+        $kelas = $this->db->get_where('kelas_programming', ['nama_kelas' => $siswa->kelas])->row();
+
+        if (!$kelas) {
+            // Handle case where class might not be found
+            $data['rekap'] = [];
+        } else {
+            $data['rekap'] = $this->Absensi_model->get_rekap_siswa($siswa->id, $kelas->id);
+        }
+
+        $data['title'] = 'Absensi Saya';
+        $data['siswa'] = $siswa;
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('siswa/absensi', $data);
+        $this->load->view('templates/footer');
+    }
+
     // Menampilkan detail siswa
     public function detail($id)
     {

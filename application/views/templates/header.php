@@ -13,6 +13,9 @@
     
     <!-- Teacher Styles -->
     <link href="<?php echo base_url('assets/css/teacher.css'); ?>" rel="stylesheet">
+    
+    <!-- Absensi Calendar Styles -->
+    <link href="<?php echo base_url('assets/css/absensi_calendar.css'); ?>" rel="stylesheet">
 </head>
 <body class="bg-gray-50">
     <div class="flex min-h-screen">
@@ -49,6 +52,10 @@
                         <i class="fas fa-book w-5 text-center mr-3"></i>
                         Materi
                     </a>
+                    <a href="<?php echo site_url('teacher/absensi'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == 'absensi') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-user-check w-5 text-center mr-3"></i>
+                        Absensi
+                    </a>
                     
                 <?php elseif ($role == 'siswa'): ?>
                     <!-- Student Navigation -->
@@ -71,6 +78,10 @@
                     <a href="<?php echo site_url('student/free_classes/my_classes'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'free_classes' && $this->uri->segment(3) == 'my_classes') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-chalkboard w-5 text-center mr-3"></i>
                         Kelas Saya
+                    </a>
+                    <a href="<?php echo site_url('absensi'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'absensi') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-user-check w-5 text-center mr-3"></i>
+                        Absensi Saya
                     </a>
                     
                 <?php else: ?>
@@ -98,6 +109,14 @@
                     <a href="<?php echo site_url('admin/free_classes'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'free_classes') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-graduation-cap w-5 text-center mr-3"></i>
                         Kelas Gratis
+                    </a>
+                    <a href="<?php echo site_url('absensi'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'absensi') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-user-check w-5 text-center mr-3"></i>
+                        Data Absensi
+                    </a>
+                    <a href="<?php echo site_url('admin/jadwal'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(2) == 'jadwal') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-calendar-alt w-5 text-center mr-3"></i>
+                        Kelola Jadwal
                     </a>
                     
                     <?php if ($level == '1'): // Super Admin only ?>

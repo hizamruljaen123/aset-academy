@@ -36,9 +36,9 @@
                     <i class="fas fa-chevron-down text-xs"></i>
                 </div>
             </div>
-            <button class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-lg shadow-sm transition-colors">
+            <a href="<?php echo site_url('teacher/create_materi'); ?>" class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-lg shadow-sm transition-colors">
                 <i class="fas fa-plus mr-2"></i> Materi Baru
-            </button>
+            </a>
         </div>
     </div>
 

@@ -1,119 +1,102 @@
-<div class="bg-white rounded-lg shadow-md p-6 mb-6 fade-in">
-    <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">Edit Kelas Gratis</h2>
-        <a href="<?php echo site_url('admin/free_classes'); ?>" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 hover:scale-105">
-            <i class="fas fa-arrow-left mr-2"></i>
-            Kembali
-        </a>
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<div class="p-4 sm:p-6 lg:p-8">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-2xl p-6 mb-8 shadow-lg">
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold">Edit Kelas Gratis</h1>
+                <p class="text-sm opacity-90 mt-1"><?php echo $free_class->title; ?></p>
+            </div>
+            <a href="<?php echo site_url('admin/free_classes'); ?>" class="hidden sm:inline-flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 text-white font-semibold rounded-lg transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i> Kembali
+            </a>
+        </div>
     </div>
 
-    <?php echo form_open_multipart('admin/free_classes/edit/' . $free_class->id, ['class' => 'space-y-6']); ?>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Judul Kelas -->
-            <div class="space-y-2">
-                <label for="title" class="block text-sm font-medium text-gray-700">Judul Kelas <span class="text-red-500">*</span></label>
-                <input type="text" id="title" name="title" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="<?php echo set_value('title', $free_class->title); ?>" required>
-                <?php echo form_error('title', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
+    <div class="bg-white rounded-2xl shadow-md p-6">
+        <?php echo form_open_multipart('admin/free_classes/edit/' . $free_class->id, ['class' => 'space-y-6']); ?>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label for="title" class="block text-sm font-medium text-gray-700">Judul Kelas <span class="text-red-500">*</span></label>
+                    <input type="text" id="title" name="title" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="<?php echo set_value('title', $free_class->title); ?>" required>
+                    <?php echo form_error('title', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
+                </div>
+                <div class="space-y-2">
+                    <label for="category" class="block text-sm font-medium text-gray-700">Kategori <span class="text-red-500">*</span></label>
+                    <input type="text" id="category" name="category" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="<?php echo set_value('category', $free_class->category); ?>" required>
+                    <?php echo form_error('category', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
+                </div>
+                <div class="space-y-2">
+                    <label for="level" class="block text-sm font-medium text-gray-700">Level <span class="text-red-500">*</span></label>
+                    <select id="level" name="level" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
+                        <option value="Dasar" <?php echo set_select('level', 'Dasar', ($free_class->level == 'Dasar')); ?>>Dasar</option>
+                        <option value="Menengah" <?php echo set_select('level', 'Menengah', ($free_class->level == 'Menengah')); ?>>Menengah</option>
+                        <option value="Lanjutan" <?php echo set_select('level', 'Lanjutan', ($free_class->level == 'Lanjutan')); ?>>Lanjutan</option>
+                    </select>
+                    <?php echo form_error('level', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
+                </div>
+                <div class="space-y-2">
+                    <label for="duration" class="block text-sm font-medium text-gray-700">Durasi (jam) <span class="text-red-500">*</span></label>
+                    <input type="number" id="duration" name="duration" min="1" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="<?php echo set_value('duration', $free_class->duration); ?>" required>
+                    <?php echo form_error('duration', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
+                </div>
+                <div class="space-y-2">
+                    <label for="mentor_id" class="block text-sm font-medium text-gray-700">Mentor <span class="text-red-500">*</span></label>
+                    <select id="mentor_id" name="mentor_id" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
+                        <option value="">Pilih Mentor</option>
+                        <?php foreach ($mentors as $mentor): ?>
+                            <option value="<?php echo $mentor->id; ?>" <?php echo set_select('mentor_id', $mentor->id, ($free_class->mentor_id == $mentor->id)); ?>><?php echo $mentor->nama_lengkap; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <?php echo form_error('mentor_id', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
+                </div>
+                <div class="space-y-2">
+                    <label for="max_students" class="block text-sm font-medium text-gray-700">Maksimal Siswa</label>
+                    <input type="number" id="max_students" name="max_students" min="1" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="<?php echo set_value('max_students', $free_class->max_students); ?>">
+                    <?php echo form_error('max_students', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
+                </div>
+                <div class="space-y-2">
+                    <label for="start_date" class="block text-sm font-medium text-gray-700">Tanggal Mulai</label>
+                    <input type="date" id="start_date" name="start_date" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="<?php echo set_value('start_date', $free_class->start_date); ?>">
+                    <?php echo form_error('start_date', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
+                </div>
+                <div class="space-y-2">
+                    <label for="end_date" class="block text-sm font-medium text-gray-700">Tanggal Selesai</label>
+                    <input type="date" id="end_date" name="end_date" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="<?php echo set_value('end_date', $free_class->end_date); ?>">
+                    <?php echo form_error('end_date', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
+                </div>
+                <div class="space-y-2">
+                    <label for="status" class="block text-sm font-medium text-gray-700">Status <span class="text-red-500">*</span></label>
+                    <select id="status" name="status" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
+                        <option value="Draft" <?php echo set_select('status', 'Draft', ($free_class->status == 'Draft')); ?>>Draft</option>
+                        <option value="Published" <?php echo set_select('status', 'Published', ($free_class->status == 'Published')); ?>>Dipublikasikan</option>
+                        <option value="Archived" <?php echo set_select('status', 'Archived', ($free_class->status == 'Archived')); ?>>Diarsipkan</option>
+                    </select>
+                    <?php echo form_error('status', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
+                </div>
+                <div class="space-y-2">
+                    <label for="thumbnail" class="block text-sm font-medium text-gray-700">Thumbnail</label>
+                    <?php if (!empty($free_class->thumbnail)): ?>
+                        <div class="mb-2">
+                            <img src="<?php echo base_url($free_class->thumbnail); ?>" alt="Thumbnail" class="h-24 w-auto rounded-md">
+                        </div>
+                    <?php endif; ?>
+                    <input type="file" id="thumbnail" name="thumbnail" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                    <?php echo form_error('thumbnail', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
+                </div>
             </div>
-
-            <!-- Kategori -->
             <div class="space-y-2">
-                <label for="category" class="block text-sm font-medium text-gray-700">Kategori <span class="text-red-500">*</span></label>
-                <input type="text" id="category" name="category" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="<?php echo set_value('category', $free_class->category); ?>" required>
-                <?php echo form_error('category', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
+                <label for="description" class="block text-sm font-medium text-gray-700">Deskripsi <span class="text-red-500">*</span></label>
+                <textarea id="description" name="description" rows="6" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required><?php echo set_value('description', $free_class->description); ?></textarea>
+                <?php echo form_error('description', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
             </div>
-
-            <!-- Level -->
-            <div class="space-y-2">
-                <label for="level" class="block text-sm font-medium text-gray-700">Level <span class="text-red-500">*</span></label>
-                <select id="level" name="level" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
-                    <option value="Dasar" <?php echo set_select('level', 'Dasar', ($free_class->level == 'Dasar')); ?>>Dasar</option>
-                    <option value="Menengah" <?php echo set_select('level', 'Menengah', ($free_class->level == 'Menengah')); ?>>Menengah</option>
-                    <option value="Lanjutan" <?php echo set_select('level', 'Lanjutan', ($free_class->level == 'Lanjutan')); ?>>Lanjutan</option>
-                </select>
-                <?php echo form_error('level', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
+            <div class="flex justify-end pt-6 border-t">
+                <button type="submit" class="inline-flex items-center px-6 py-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                    <i class="fas fa-save mr-2"></i> Simpan Perubahan
+                </button>
             </div>
-
-            <!-- Durasi -->
-            <div class="space-y-2">
-                <label for="duration" class="block text-sm font-medium text-gray-700">Durasi (jam) <span class="text-red-500">*</span></label>
-                <input type="number" id="duration" name="duration" min="1" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="<?php echo set_value('duration', $free_class->duration); ?>" required>
-                <?php echo form_error('duration', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
-            </div>
-
-            <!-- Mentor -->
-            <div class="space-y-2">
-                <label for="mentor_id" class="block text-sm font-medium text-gray-700">Mentor <span class="text-red-500">*</span></label>
-                <select id="mentor_id" name="mentor_id" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
-                    <option value="">Pilih Mentor</option>
-                    <?php foreach ($mentors as $mentor): ?>
-                        <option value="<?php echo $mentor->id; ?>" <?php echo set_select('mentor_id', $mentor->id, ($free_class->mentor_id == $mentor->id)); ?>><?php echo $mentor->nama_lengkap; ?></option>
-                    <?php endforeach; ?>
-                </select>
-                <?php echo form_error('mentor_id', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
-            </div>
-
-            <!-- Maksimal Siswa -->
-            <div class="space-y-2">
-                <label for="max_students" class="block text-sm font-medium text-gray-700">Maksimal Siswa</label>
-                <input type="number" id="max_students" name="max_students" min="1" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="<?php echo set_value('max_students', $free_class->max_students); ?>">
-                <p class="text-xs text-gray-500">Biarkan kosong untuk tidak membatasi jumlah siswa</p>
-                <?php echo form_error('max_students', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
-            </div>
-
-            <!-- Tanggal Mulai -->
-            <div class="space-y-2">
-                <label for="start_date" class="block text-sm font-medium text-gray-700">Tanggal Mulai</label>
-                <input type="date" id="start_date" name="start_date" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="<?php echo set_value('start_date', $free_class->start_date); ?>">
-                <?php echo form_error('start_date', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
-            </div>
-
-            <!-- Tanggal Selesai -->
-            <div class="space-y-2">
-                <label for="end_date" class="block text-sm font-medium text-gray-700">Tanggal Selesai</label>
-                <input type="date" id="end_date" name="end_date" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="<?php echo set_value('end_date', $free_class->end_date); ?>">
-                <?php echo form_error('end_date', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
-            </div>
-
-            <!-- Status -->
-            <div class="space-y-2">
-                <label for="status" class="block text-sm font-medium text-gray-700">Status <span class="text-red-500">*</span></label>
-                <select id="status" name="status" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
-                    <option value="Draft" <?php echo set_select('status', 'Draft', ($free_class->status == 'Draft')); ?>>Draft</option>
-                    <option value="Published" <?php echo set_select('status', 'Published', ($free_class->status == 'Published')); ?>>Dipublikasikan</option>
-                    <option value="Archived" <?php echo set_select('status', 'Archived', ($free_class->status == 'Archived')); ?>>Diarsipkan</option>
-                </select>
-                <?php echo form_error('status', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
-            </div>
-
-            <!-- Thumbnail -->
-            <div class="space-y-2">
-                <label for="thumbnail" class="block text-sm font-medium text-gray-700">Thumbnail</label>
-                <?php if (!empty($free_class->thumbnail)): ?>
-                    <div class="mb-2">
-                        <img src="<?php echo base_url($free_class->thumbnail); ?>" alt="Thumbnail" class="h-24 w-auto rounded-md">
-                    </div>
-                <?php endif; ?>
-                <input type="file" id="thumbnail" name="thumbnail" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                <p class="text-xs text-gray-500">Format: JPG, JPEG, PNG. Maks: 2MB. Biarkan kosong jika tidak ingin mengubah thumbnail.</p>
-            </div>
-        </div>
-
-        <!-- Deskripsi -->
-        <div class="space-y-2">
-            <label for="description" class="block text-sm font-medium text-gray-700">Deskripsi <span class="text-red-500">*</span></label>
-            <textarea id="description" name="description" rows="6" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required><?php echo set_value('description', $free_class->description); ?></textarea>
-            <?php echo form_error('description', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
-        </div>
-
-        <!-- Submit Button -->
-        <div class="flex justify-end">
-            <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 hover:scale-105">
-                <i class="fas fa-save mr-2"></i>
-                Simpan Perubahan
-            </button>
-        </div>
-    <?php echo form_close(); ?>
+        <?php echo form_close(); ?>
+    </div>
 
     <!-- Materials Section -->
     <div class="mt-12 pt-6 border-t border-gray-200">
@@ -131,7 +114,19 @@
                 <p class="text-gray-500">Belum ada materi untuk kelas ini. Klik tombol "Tambah Materi" untuk menambahkan materi baru.</p>
             </div>
         <?php else: ?>
-            <div class="overflow-x-auto">
+            <div class="space-y-4">
+                <?php foreach ($materials as $material): ?>
+                    <div class="bg-white p-4 rounded-lg shadow-sm border flex justify-between items-center">
+                        <div>
+                            <h4 class="font-semibold text-gray-800"><?php echo $material->title; ?></h4>
+                            <p class="text-sm text-gray-500"><?php echo $material->description; ?></p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <a href="<?php echo site_url('admin/free_classes/edit_material/' . $material->id); ?>" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                            <a href="<?php echo site_url('admin/free_classes/delete_material/' . $material->id); ?>" class="text-red-600 hover:text-red-900" onclick="return confirm('Yakin ingin menghapus materi ini?');">Hapus</a>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>

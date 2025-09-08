@@ -137,6 +137,8 @@ class Kelas extends CI_Controller {
         $data['title'] = 'Detail Kelas';
         $data['kelas'] = $this->Kelas_model->get_kelas_by_id($id);
         $data['materi'] = $this->Materi_model->get_materi_with_parts_by_kelas($id);
+        $this->load->model('Jadwal_model');
+        $data['jadwal'] = $this->Jadwal_model->get_jadwal_by_kelas($id);
 
         if (empty($data['kelas'])) {
             show_404();

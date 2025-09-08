@@ -85,6 +85,11 @@
                                         <i class="fas fa-video"></i>
                                     </a>
                                 <?php endif; ?>
+                                <?php if (!empty($k->online_meet_link)): ?>
+                                    <a href="<?php echo $k->online_meet_link; ?>" target="_blank" class="text-green-500 hover:text-green-600 transition-colors" title="Join Meeting">
+                                        <i class="fas fa-video"></i>
+                                    </a>
+                                <?php endif; ?>
                                 <a href="<?php echo site_url('teacher/manage_kelas/' . $k->id); ?>" class="text-gray-400 hover:text-cyan-500 transition-colors" title="Kelola Kelas">
                                     <i class="fas fa-cog"></i>
                                 </a>

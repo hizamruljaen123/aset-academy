@@ -145,6 +145,10 @@ class Free_classes extends CI_Controller {
         
         // Get class materials
         $data['materials'] = $this->Free_class_model->get_free_class_materials($enrollment->class_id);
+
+        // Get class schedule
+        $this->load->model('Jadwal_model');
+        $data['jadwal'] = $this->Jadwal_model->get_jadwal_by_kelas($enrollment->class_id, 'free');
         
         // Get material progress
         $data['progress'] = $this->Enrollment_model->get_all_material_progress($enrollment_id);

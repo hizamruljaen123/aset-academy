@@ -111,6 +111,12 @@ $route['admin/free_classes/students/(:num)'] = 'admin/free_classes/students/$1';
 $route['admin/free_classes/student_progress/(:num)'] = 'admin/free_classes/student_progress/$1';
 $route['admin/free_classes/update_student_status/(:num)'] = 'admin/free_classes/update_student_status/$1';
 
+// Routes for Admin Jadwal Management
+$route['admin/jadwal'] = 'admin/jadwal';
+$route['admin/jadwal/index'] = 'admin/jadwal';
+$route['admin/jadwal/create'] = 'admin/jadwal/create';
+$route['admin/jadwal/store'] = 'admin/jadwal/store';
+
 // Routes untuk Student Free Classes Access
 $route['student/free_classes'] = 'student/free_classes';
 $route['student/free_classes/index'] = 'student/free_classes/index';
