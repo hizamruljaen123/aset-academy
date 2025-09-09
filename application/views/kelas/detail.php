@@ -1,5 +1,3 @@
-
-
 <div class="p-4 transition-opacity duration-500 opacity-0">
     <!-- Hero Banner with Gradient -->
     <div class="relative rounded-2xl overflow-hidden mb-8 h-64">
@@ -81,6 +79,79 @@
                     <h3 class="text-3xl font-bold text-gray-800"><?php echo $kelas->status; ?></h3>
                     <p class="text-gray-500 font-medium">Status</p>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- Attendance Statistics -->
+        <div class="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl ring-1 ring-gray-200/50 overflow-hidden">
+            <div class="p-6 border-b border-gray-200/50 bg-gradient-to-r from-gray-50/80 to-white/80">
+                <h2 class="text-2xl font-bold text-gray-800">Statistik Absensi</h2>
+            </div>
+            <div class="p-6">
+                <div class="h-64">
+                    <canvas id="attendanceChart"></canvas>
+                </div>
+                <div class="grid grid-cols-4 gap-4 mt-4">
+                    <div class="text-center p-3 rounded-lg bg-green-100 text-green-800">
+                        <div class="text-2xl font-bold"><?= $attendance_stats['Hadir'] ?></div>
+                        <div class="text-sm">Hadir</div>
+                    </div>
+                    <div class="text-center p-3 rounded-lg bg-yellow-100 text-yellow-800">
+                        <div class="text-2xl font-bold"><?= $attendance_stats['Sakit'] ?></div>
+                        <div class="text-sm">Sakit</div>
+                    </div>
+                    <div class="text-center p-3 rounded-lg bg-blue-100 text-blue-800">
+                        <div class="text-2xl font-bold"><?= $attendance_stats['Izin'] ?></div>
+                        <div class="text-sm">Izin</div>
+                    </div>
+                    <div class="text-center p-3 rounded-lg bg-red-100 text-red-800">
+                        <div class="text-2xl font-bold"><?= $attendance_stats['Alpa'] ?></div>
+                        <div class="text-sm">Alpa</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Progress -->
+        <div class="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl ring-1 ring-gray-200/50 overflow-hidden">
+            <div class="p-6 border-b border-gray-200/50 bg-gradient-to-r from-gray-50/80 to-white/80">
+                <h2 class="text-2xl font-bold text-gray-800">Progress Siswa</h2>
+            </div>
+            <div class="p-6">
+                <?php if (!empty($student_progress)): ?>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Siswa</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIS</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Progress</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <?php foreach ($student_progress as $student): ?>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?= $student['nama_lengkap'] ?></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $student['nis'] ?></td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                                <div class="bg-blue-600 h-2.5 rounded-full" style="width: <?= ($student['total_materi'] > 0) ? round(($student['completed_materi']/$student['total_materi'])*100) : 0 ?>%"></div>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">
+                                                <?= ($student['total_materi'] > 0) ? round(($student['completed_materi']/$student['total_materi'])*100) : 0 ?>% (<?= $student['completed_materi'] ?>/<?= $student['total_materi'] ?>) 
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php else: ?>
+                    <p class="text-center text-gray-500 py-8">Belum ada data progress siswa</p>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -246,6 +317,41 @@ document.addEventListener('DOMContentLoaded', function() {
 
     window.closeModal = closeModal;
 });
+
+// Attendance Chart
+const ctx = document.getElementById('attendanceChart').getContext('2d');
+const attendanceChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Hadir', 'Sakit', 'Izin', 'Alpa'],
+        datasets: [{
+            data: [
+                <?= $attendance_stats['Hadir'] ?>, 
+                <?= $attendance_stats['Sakit'] ?>, 
+                <?= $attendance_stats['Izin'] ?>, 
+                <?= $attendance_stats['Alpa'] ?>
+            ],
+            backgroundColor: [
+                'rgba(16, 185, 129, 0.8)',
+                'rgba(245, 158, 11, 0.8)',
+                'rgba(59, 130, 246, 0.8)',
+                'rgba(239, 68, 68, 0.8)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }
+});
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <?php $this->load->view('templates/footer'); ?>

@@ -84,6 +84,16 @@ class Guru_model extends CI_Model {
         return $this->db->get('users')->result();
     }
 
+    public function get_all_absensi_guru()
+    {
+        $this->db->select('ag.*, u.nama_lengkap as nama_guru, jk.judul_pertemuan, jk.tanggal_pertemuan');
+        $this->db->from('absensi_guru ag');
+        $this->db->join('users u', 'ag.guru_id = u.id');
+        $this->db->join('jadwal_kelas jk', 'ag.jadwal_id = jk.id', 'left');
+        $this->db->order_by('jk.tanggal_pertemuan', 'DESC');
+        return $this->db->get()->result_array();
+    }
+
     // Get dashboard stats for teacher
     public function get_guru_stats($guru_id)
     {

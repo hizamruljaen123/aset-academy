@@ -110,6 +110,8 @@ class Teacher extends CI_Controller {
         }
 
         $data['siswa'] = $siswa;
+        $data['programming_classes'] = $this->Siswa_model->get_enrolled_programming_classes($siswa_id);
+        $data['free_classes'] = $this->Siswa_model->get_enrolled_free_classes($siswa_id);
         $data['title'] = 'Detail Siswa - ' . $siswa->nama_lengkap;
         $this->load->view('templates/header', $data);
         $this->load->view('teacher/siswa_detail', $data);

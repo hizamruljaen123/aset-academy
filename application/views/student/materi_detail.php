@@ -313,6 +313,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Initialize Quill to display content only
+const quill = new Quill('#content-viewer', {
+    readOnly: true,
+    theme: 'bubble'
+});
+
+// Mark as complete functionality
+document.querySelector('.mark-complete')?.addEventListener('click', function() {
+    const materiId = this.dataset.materiId;
+    // AJAX call to mark as complete
+});
 </script>
 
 <style>
@@ -349,5 +361,15 @@ document.addEventListener('DOMContentLoaded', function() {
         button[onclick="window.print()"] {
             display: none !important;
         }
+    }
+    
+    .ql-editor {
+        padding: 0;
+        font-family: inherit;
+    }
+    
+    .ql-editor img {
+        max-width: 100%;
+        height: auto;
     }
 </style>

@@ -123,15 +123,16 @@ class Kelas_model extends CI_Model {
     }
 
     // Fungsi untuk mendapatkan kelas yang paling populer
-    public function get_popular_kelas()
+    // Fungsi untuk mendapatkan kelas yang paling populer
+    public function get_popular_kelas($limit = 5)
     {
-        $this->db->select('k.nama_kelas, COUNT(s.id) as jumlah_siswa');
+        $this->db->select('k.*, COUNT(s.id) as jumlah_siswa');
         $this->db->from('kelas_programming k');
         $this->db->join('siswa s', 'k.nama_kelas = s.kelas', 'left');
         $this->db->where('k.status', 'Aktif');
         $this->db->group_by('k.id');
         $this->db->order_by('jumlah_siswa', 'DESC');
-        $this->db->limit(5);
+        $this->db->limit($limit);
         $query = $this->db->get();
         return $query->result();
     }
@@ -145,6 +146,29 @@ class Kelas_model extends CI_Model {
         $this->db->group_by('level');
         $query = $this->db->get();
         return $query->result();
+    }
+
+    // Fungsi untuk mendapatkan progress siswa berdasarkan kelas
+    public function get_student_progress($kelas_id)
+    {
+        // First check if materi_progress table exists
+        $table_exists = $this->db->query("SHOW TABLES LIKE 'materi_progress'")->num_rows() > 0;
+        
+        $this->db->select('s.id, s.nama_lengkap, s.nis, COUNT(m.id) as total_materi');
+        $this->db->from('siswa s');
+        $this->db->join('materi m', 'm.kelas_id = '.$kelas_id);
+        $this->db->where('s.kelas', (string)$kelas_id);
+        $this->db->group_by('s.id');
+        
+        if ($table_exists) {
+            $this->db->select('COUNT(mp.id) as completed_materi');
+            $this->db->join('materi_progress mp', 'mp.materi_id = m.id AND mp.siswa_id = s.id AND mp.status = "Completed"', 'left');
+        } else {
+            // If table doesn't exist, set completed to 0
+            $this->db->select('0 as completed_materi');
+        }
+        
+        return $this->db->get()->result_array();
     }
 }
 ?>

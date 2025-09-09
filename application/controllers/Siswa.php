@@ -225,6 +225,9 @@ class Siswa extends CI_Controller {
             show_404();
         }
 
+        $data['programming_classes'] = $this->Siswa_model->get_enrolled_programming_classes($id);
+        $data['free_classes'] = $this->Siswa_model->get_enrolled_free_classes($id);
+
         $this->load->view('templates/header', $data);
         $this->load->view('siswa/detail', $data);
         $this->load->view('templates/footer');

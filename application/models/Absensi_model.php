@@ -88,4 +88,28 @@ class Absensi_model extends CI_Model {
         $this->db->order_by('jk.tanggal_pertemuan', 'DESC');
         return $this->db->get()->result_array();
     }
+
+    // Get attendance statistics by class
+    public function get_attendance_stats_by_class($kelas_id)
+    {
+        $this->db->select('status, COUNT(*) as count');
+        $this->db->from('absensi a');
+        $this->db->join('jadwal_kelas jk', 'a.jadwal_id = jk.id');
+        $this->db->where('jk.kelas_id', $kelas_id);
+        $this->db->group_by('status');
+        $result = $this->db->get()->result_array();
+        
+        $stats = [
+            'Hadir' => 0,
+            'Sakit' => 0,
+            'Izin' => 0,
+            'Alpa' => 0
+        ];
+        
+        foreach ($result as $row) {
+            $stats[$row['status']] = (int)$row['count'];
+        }
+        
+        return $stats;
+    }
 }

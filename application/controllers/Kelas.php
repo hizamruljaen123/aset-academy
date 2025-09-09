@@ -137,8 +137,16 @@ class Kelas extends CI_Controller {
         $data['title'] = 'Detail Kelas';
         $data['kelas'] = $this->Kelas_model->get_kelas_by_id($id);
         $data['materi'] = $this->Materi_model->get_materi_with_parts_by_kelas($id);
+        
         $this->load->model('Jadwal_model');
         $data['jadwal'] = $this->Jadwal_model->get_jadwal_by_kelas($id);
+        
+        // Load attendance statistics
+        $this->load->model('Absensi_model');
+        $data['attendance_stats'] = $this->Absensi_model->get_attendance_stats_by_class($id);
+        
+        // Load student progress
+        $data['student_progress'] = $this->Kelas_model->get_student_progress($id);
 
         if (empty($data['kelas'])) {
             show_404();

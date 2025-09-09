@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Academy Lite</title>
+    <title>Login - Asset Academy</title>
     
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -15,7 +15,7 @@
     <div class="max-w-md w-full mx-8 p-8 bg-white rounded-lg shadow-lg transition-opacity duration-500 opacity-0">
         <div class="text-center mb-8">
             <h1 class="text-2xl font-bold text-gray-800 mb-2">
-                <i class="fas fa-graduation-cap text-blue-500"></i> Academy Lite
+                <i class="fas fa-graduation-cap text-blue-500"></i> Asset Academy
             </h1>
             <p class="text-gray-500 text-sm">Sistem Pendataan Siswa</p>
         </div>

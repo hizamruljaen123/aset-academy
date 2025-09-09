@@ -23,11 +23,8 @@ class Siswa_model extends CI_Model {
     // Fungsi untuk mendapatkan data siswa berdasarkan ID
     public function get_siswa_by_email($email)
     {
-        $this->db->select('*');
-        $this->db->from('siswa');
         $this->db->where('email', $email);
-        $query = $this->db->get();
-        return $query->row();
+        return $this->db->get('siswa')->row();
     }
 
     // Fungsi untuk mendapatkan data siswa berdasarkan ID
@@ -125,6 +122,28 @@ class Siswa_model extends CI_Model {
         $this->db->order_by('nama_lengkap', 'ASC');
         $query = $this->db->get();
         return $query->result();
+    }
+
+    public function get_enrolled_programming_classes($siswa_id)
+    {
+        $this->db->select('kp.*, gk.assigned_at as enrollment_date');
+        $this->db->from('kelas_programming kp');
+        $this->db->join('guru_kelas gk', 'kp.id = gk.kelas_id');
+        $this->db->join('users u', 'gk.guru_id = u.id');
+        $this->db->join('siswa s', 'u.email = s.email');
+        $this->db->where('s.id', $siswa_id);
+        return $this->db->get()->result_array();
+    }
+
+    public function get_enrolled_free_classes($siswa_id)
+    {
+        $this->db->select('fc.*, fce.enrollment_date');
+        $this->db->from('free_classes fc');
+        $this->db->join('free_class_enrollments fce', 'fc.id = fce.class_id');
+        $this->db->join('users u', 'fce.student_id = u.id');
+        $this->db->join('siswa s', 'u.email = s.email');
+        $this->db->where('s.id', $siswa_id);
+        return $this->db->get()->result_array();
     }
 }
 ?>

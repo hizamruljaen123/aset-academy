@@ -16,6 +16,10 @@
     
     <!-- Absensi Calendar Styles -->
     <link href="<?php echo base_url('assets/css/absensi_calendar.css'); ?>" rel="stylesheet">
+    
+    <!-- Quill.js Styles -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link href="<?php echo base_url('assets/css/quill-custom.css'); ?>" rel="stylesheet">
 </head>
 <body class="bg-gray-50">
     <div class="flex min-h-screen">
@@ -51,10 +55,6 @@
                     <a href="<?php echo site_url('teacher/materi'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == 'materi') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-book w-5 text-center mr-3"></i>
                         Materi
-                    </a>
-                    <a href="<?php echo site_url('teacher/absensi'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == 'absensi') ? 'bg-blue-50 text-blue-600' : ''; ?>">
-                        <i class="fas fa-user-check w-5 text-center mr-3"></i>
-                        Absensi
                     </a>
                     
                 <?php elseif ($role == 'siswa'): ?>
@@ -278,3 +278,6 @@
             }
         });
     </script>
+    <!-- Quill.js Scripts -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script src="<?php echo base_url('assets/js/quill-init.js'); ?>"></script>

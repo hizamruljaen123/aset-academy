@@ -8,21 +8,25 @@ class Home extends CI_Controller {
         parent::__construct();
         $this->load->model('Kelas_model');
         $this->load->model('Free_class_model');
+        $this->load->model('Testimonial_model');
         $this->load->helper('url');
     }
 
     public function index()
     {
-        // Get premium classes (non-free classes)
-        $data['premium_classes'] = $this->Kelas_model->get_all_kelas();
+        // Get featured premium classes
+        $data['featured_premium'] = $this->Kelas_model->get_popular_kelas(3);
 
-        // Get free classes
-        $data['free_classes'] = $this->Free_class_model->get_all_free_classes();
+        // Get featured free classes
+        $data['featured_free'] = $this->Free_class_model->get_popular_free_classes(3);
 
-        $data['title'] = 'Asset Academy - Belajar Programming Bersama';
+        // Get testimonials
+        $data['testimonials'] = $this->Testimonial_model->get_featured_testimonials(5);
+
+        $data['title'] = 'Aset Academy - Belajar Programming Jadi Mudah & Menyenangkan';
         $data['description'] = 'Platform pembelajaran programming terdepan dengan berbagai kelas premium dan gratis untuk semua level. Mulai perjalanan Anda menjadi programmer handal hari ini!';
 
-        $this->load->view('home/index_simple', $data);
+        $this->load->view('home/index', $data);
     }
 
     public function about()

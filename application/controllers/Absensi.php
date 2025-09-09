@@ -22,7 +22,9 @@ class Absensi extends CI_Controller {
         $user_id = $this->session->userdata('id');
 
         if ($role == 'super_admin' || $role == 'admin') {
-            $data['absensi'] = $this->Absensi_model->get_all_absensi();
+            $data['absensi_siswa'] = $this->Absensi_model->get_all_absensi();
+            $this->load->model('Guru_model');
+            $data['absensi_guru'] = $this->Guru_model->get_all_absensi_guru();
         } elseif ($role == 'guru') {
             $data['absensi'] = $this->Absensi_model->get_absensi_for_user($user_id, $role);
         } elseif ($role == 'siswa') {
