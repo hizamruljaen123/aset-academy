@@ -1,64 +1,37 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+$base_url = config_item('base_url');
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <title>Error</title>
-<style type="text/css">
-
-::selection { background-color: #E13300; color: white; }
-::-moz-selection { background-color: #E13300; color: white; }
-
-body {
-	background-color: #fff;
-	margin: 40px;
-	font: 13px/20px normal Helvetica, Arial, sans-serif;
-	color: #4F5155;
-}
-
-a {
-	color: #003399;
-	background-color: transparent;
-	font-weight: normal;
-}
-
-h1 {
-	color: #444;
-	background-color: transparent;
-	border-bottom: 1px solid #D0D0D0;
-	font-size: 19px;
-	font-weight: normal;
-	margin: 0 0 14px 0;
-	padding: 14px 15px 10px 15px;
-}
-
-code {
-	font-family: Consolas, Monaco, Courier New, Courier, monospace;
-	font-size: 12px;
-	background-color: #f9f9f9;
-	border: 1px solid #D0D0D0;
-	color: #002166;
-	display: block;
-	margin: 14px 0 14px 0;
-	padding: 12px 10px 12px 10px;
-}
-
-#container {
-	margin: 10px;
-	border: 1px solid #D0D0D0;
-	box-shadow: 0 0 8px #D0D0D0;
-}
-
-p {
-	margin: 12px 15px 12px 15px;
-}
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
 </style>
 </head>
-<body>
-	<div id="container">
-		<h1><?php echo $heading; ?></h1>
-		<?php echo $message; ?>
-	</div>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="text-center p-8 bg-white rounded-2xl shadow-2xl max-w-lg w-full transform transition-all hover:scale-105 duration-500">
+        
+        <div class="mb-6">
+             <img src="https://raw.githubusercontent.com/hizamruljaen123/aset-academy/main/assets/img/error.svg" alt="General Error" class="mx-auto w-64 h-64">
+        </div>
+        
+        <h1 class="text-4xl font-bold text-red-600 mb-2"><?php echo $heading; ?></h1>
+
+        <div class="text-gray-600 mb-8 bg-gray-50 p-4 rounded-lg">
+            <?php echo $message; ?>
+        </div>
+
+        <a href="<?php echo $base_url; ?>" class="inline-flex items-center px-6 py-3 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-300 hover:scale-105">
+            <i class="fas fa-home mr-2"></i>
+            Kembali ke Beranda
+        </a>
+    </div>
 </body>
 </html>
