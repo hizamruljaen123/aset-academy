@@ -87,7 +87,8 @@
             </div>
             <div class="space-y-2">
                 <label for="description" class="block text-sm font-medium text-gray-700">Deskripsi <span class="text-red-500">*</span></label>
-                <textarea id="description" name="description" rows="6" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required><?php echo set_value('description', $free_class->description); ?></textarea>
+                <input type="hidden" name="description" id="description">
+                <div id="editor" style="height: 300px;" class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"><?php echo set_value('description', $free_class->description); ?></div>
                 <?php echo form_error('description', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
             </div>
             <div class="flex justify-end pt-6 border-t">
@@ -203,6 +204,25 @@
             });
         }
     });
+
+    var quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                ['link', 'image', 'code-block'],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                ['clean']
+            ]
+        }
+    });
+
+    var form = document.querySelector('form');
+    form.onsubmit = function() {
+        var description = document.querySelector('input[name=description]');
+        description.value = quill.root.innerHTML;
+    };
 </script>
 
 <style>

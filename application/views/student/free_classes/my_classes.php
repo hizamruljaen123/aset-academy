@@ -155,9 +155,37 @@
                                         Join Meeting
                                     </a>
                                     <?php endif; ?>
-                                    <a href="<?php echo site_url('student/free_classes/learn/' . $enrollment->id); ?>" class="block w-full text-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300">
+                                    <a href="<?php echo site_url('student/free_classes/view/' . $enrollment->id); ?>" class="block w-full text-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300">
                                         <?php echo ($enrollment->status == 'Completed') ? 'Lihat Kembali' : 'Lanjutkan Belajar'; ?>
                                     </a>
+                                    <div x-data="{ open: false }">
+                                        <button @click="open = !open" class="w-full mt-2 text-sm text-gray-600 hover:text-gray-900">Lihat Detail</button>
+                                        <div x-show="open" class="mt-4 p-4 bg-gray-50 rounded-lg">
+                                            <h4 class="font-bold mb-2">Absensi Saya</h4>
+                                            <ul class="space-y-2">
+                                                <?php if (!empty($enrollment->attendance)): ?>
+                                                    <?php foreach($enrollment->attendance as $att): ?>
+                                                        <li class="flex justify-between items-center text-sm">
+                                                            <span>Pertemuan <?php echo $att->pertemuan_ke; ?>: <?php echo $att->judul_pertemuan; ?></span>
+                                                            <span class="px-2 py-1 text-xs rounded-full <?php echo ($att->status == 'Hadir') ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800'; ?>"><?php echo $att->status ?? 'Belum ada'; ?></span>
+                                                        </li>
+                                                    <?php endforeach; ?>
+                                                <?php else: ?>
+                                                    <li class="text-sm text-gray-500">Tidak ada data absensi.</li>
+                                                <?php endif; ?>
+                                            </ul>
+                                            <h4 class="font-bold mt-4 mb-2">Teman Sekelas</h4>
+                                            <ul class="space-y-2">
+                                                <?php if (isset($enrollment->classmates) && is_array($enrollment->classmates)): ?>
+                                                    <?php foreach($enrollment->classmates as $classmate): ?>
+                                                        <li class="text-sm"><?php echo $classmate->nama_lengkap; ?></li>
+                                                    <?php endforeach; ?>
+                                                <?php else: ?>
+                                                    <li class="text-sm text-gray-500">Belum ada teman sekelas lain</li>
+                                                <?php endif; ?>
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -224,9 +252,37 @@
                                             Terdaftar: <?php echo date('d M Y', strtotime($enrollment->enrollment_date)); ?>
                                         </span>
                                     </div>
-                                    <a href="<?php echo site_url('student/free_classes/learn/' . $enrollment->id); ?>" class="block w-full text-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300">
+                                    <a href="<?php echo site_url('student/free_classes/view/' . $enrollment->id); ?>" class="block w-full text-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300">
                                         Lanjutkan Belajar
                                     </a>
+                                    <div x-data="{ open: false }">
+                                        <button @click="open = !open" class="w-full mt-2 text-sm text-gray-600 hover:text-gray-900">Lihat Detail</button>
+                                        <div x-show="open" class="mt-4 p-4 bg-gray-50 rounded-lg">
+                                            <h4 class="font-bold mb-2">Absensi Saya</h4>
+                                            <ul class="space-y-2">
+                                                <?php if (!empty($enrollment->attendance)): ?>
+                                                    <?php foreach($enrollment->attendance as $att): ?>
+                                                        <li class="flex justify-between items-center text-sm">
+                                                            <span>Pertemuan <?php echo $att->pertemuan_ke; ?>: <?php echo $att->judul_pertemuan; ?></span>
+                                                            <span class="px-2 py-1 text-xs rounded-full <?php echo ($att->status == 'Hadir') ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800'; ?>"><?php echo $att->status ?? 'Belum ada'; ?></span>
+                                                        </li>
+                                                    <?php endforeach; ?>
+                                                <?php else: ?>
+                                                    <li class="text-sm text-gray-500">Tidak ada data absensi.</li>
+                                                <?php endif; ?>
+                                            </ul>
+                                            <h4 class="font-bold mt-4 mb-2">Teman Sekelas</h4>
+                                            <ul class="space-y-2">
+                                                <?php if (isset($enrollment->classmates) && is_array($enrollment->classmates)): ?>
+                                                    <?php foreach($enrollment->classmates as $classmate): ?>
+                                                        <li class="text-sm"><?php echo $classmate->nama_lengkap; ?></li>
+                                                    <?php endforeach; ?>
+                                                <?php else: ?>
+                                                    <li class="text-sm text-gray-500">Belum ada teman sekelas lain</li>
+                                                <?php endif; ?>
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -293,9 +349,37 @@
                                             <?php echo date('d M Y', strtotime($enrollment->completion_date)); ?>
                                         </span>
                                     </div>
-                                    <a href="<?php echo site_url('student/free_classes/learn/' . $enrollment->id); ?>" class="block w-full text-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300">
+                                    <a href="<?php echo site_url('student/free_classes/view/' . $enrollment->id); ?>" class="block w-full text-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300">
                                         Lihat Kembali
                                     </a>
+                                    <div x-data="{ open: false }">
+                                        <button @click="open = !open" class="w-full mt-2 text-sm text-gray-600 hover:text-gray-900">Lihat Detail</button>
+                                        <div x-show="open" class="mt-4 p-4 bg-gray-50 rounded-lg">
+                                            <h4 class="font-bold mb-2">Absensi Saya</h4>
+                                            <ul class="space-y-2">
+                                                <?php if (!empty($enrollment->attendance)): ?>
+                                                    <?php foreach($enrollment->attendance as $att): ?>
+                                                        <li class="flex justify-between items-center text-sm">
+                                                            <span>Pertemuan <?php echo $att->pertemuan_ke; ?>: <?php echo $att->judul_pertemuan; ?></span>
+                                                            <span class="px-2 py-1 text-xs rounded-full <?php echo ($att->status == 'Hadir') ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800'; ?>"><?php echo $att->status ?? 'Belum ada'; ?></span>
+                                                        </li>
+                                                    <?php endforeach; ?>
+                                                <?php else: ?>
+                                                    <li class="text-sm text-gray-500">Tidak ada data absensi.</li>
+                                                <?php endif; ?>
+                                            </ul>
+                                            <h4 class="font-bold mt-4 mb-2">Teman Sekelas</h4>
+                                            <ul class="space-y-2">
+                                                <?php if (isset($enrollment->classmates) && is_array($enrollment->classmates)): ?>
+                                                    <?php foreach($enrollment->classmates as $classmate): ?>
+                                                        <li class="text-sm"><?php echo $classmate->nama_lengkap; ?></li>
+                                                    <?php endforeach; ?>
+                                                <?php else: ?>
+                                                    <li class="text-sm text-gray-500">Belum ada teman sekelas lain</li>
+                                                <?php endif; ?>
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         <?php endforeach; ?>

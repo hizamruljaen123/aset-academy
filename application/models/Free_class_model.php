@@ -305,4 +305,173 @@ class Free_class_model extends CI_Model
         
         return $categories;
     }
+
+    /**
+     * Get enrolled classes for a student
+     * 
+     * @param int $student_id
+     * @param int $limit (optional)
+     * @return array
+     */
+    public function get_enrolled_classes($student_id, $limit = null)
+    {
+        $this->db->select('fc.*, fce.progress, fce.status as enrollment_status, u.nama_lengkap as mentor_name');
+        $this->db->from('free_class_enrollments fce');
+        $this->db->join('free_classes fc', 'fce.class_id = fc.id');
+        $this->db->join('users u', 'fc.mentor_id = u.id', 'left');
+        $this->db->where('fce.student_id', $student_id);
+        $this->db->where('fce.status', 'Enrolled');
+        $this->db->order_by('fce.enrollment_date', 'DESC');
+        
+        if ($limit) {
+            $this->db->limit($limit);
+        }
+        
+        return $this->db->get()->result();
+    }
+
+    /**
+     * Get progress stats for a student
+     * 
+     * @param int $student_id
+     * @return array
+     */
+    public function get_progress_stats($student_id)
+    {
+        $stats = [
+            'total_enrollments' => 0,
+            'completed_enrollments' => 0,
+            'avg_progress' => 0
+        ];
+
+        $this->db->from('free_class_enrollments');
+        $this->db->where('student_id', $student_id);
+        $enrollments = $this->db->get()->result();
+
+        if (empty($enrollments)) {
+            return $stats;
+        }
+
+        $stats['total_enrollments'] = count($enrollments);
+        $total_progress = 0;
+
+        foreach ($enrollments as $enrollment) {
+            if ($enrollment->status == 'Completed') {
+                $stats['completed_enrollments']++;
+            }
+            $total_progress += $enrollment->progress;
+        }
+
+        if ($stats['total_enrollments'] > 0) {
+            $stats['avg_progress'] = round($total_progress / $stats['total_enrollments']);
+        }
+
+        return $stats;
+    }
+
+    /**
+     * Get all enrolled classes for a student
+     * 
+     * @param int $student_id
+     * @return array
+     */
+    public function get_all_enrolled_classes($student_id)
+    {
+        $this->db->select('fc.*, fce.id as enrollment_id, fce.progress, fce.status, fce.enrollment_date, fce.completion_date, u.nama_lengkap as mentor_name');
+        $this->db->from('free_class_enrollments fce');
+        $this->db->join('free_classes fc', 'fce.class_id = fc.id');
+        $this->db->join('users u', 'fc.mentor_id = u.id', 'left');
+        $this->db->where('fce.student_id', $student_id);
+        $this->db->order_by('fce.enrollment_date', 'DESC');
+        
+        return $this->db->get()->result();
+    }
+
+    /**
+     * Check if a student is enrolled in a class
+     * 
+     * @param int $student_id
+     * @param int $class_id
+     * @return bool
+     */
+    public function is_enrolled($student_id, $class_id)
+    {
+        $this->db->where('student_id', $student_id);
+        $this->db->where('class_id', $class_id);
+        return $this->db->count_all_results('free_class_enrollments') > 0;
+    }
+
+    /**
+     * Get enrollment details for a student in a class
+     * 
+     * @param int $student_id
+     * @param int $class_id
+     * @return object
+     */
+    public function get_enrollment($student_id, $class_id)
+    {
+        $this->db->where('student_id', $student_id);
+        $this->db->where('class_id', $class_id);
+        return $this->db->get('free_class_enrollments')->row();
+    }
+
+    /**
+     * Enroll a student in a free class
+     * 
+     * @param int $student_id
+     * @param int $class_id
+     * @return bool
+     */
+    public function enroll_student($student_id, $class_id)
+    {
+        $data = [
+            'student_id' => $student_id,
+            'class_id' => $class_id,
+            'enrollment_date' => date('Y-m-d H:i:s'),
+            'status' => 'Enrolled'
+        ];
+        return $this->db->insert('free_class_enrollments', $data);
+    }
+
+    /**
+     * Get enrolled students for a class
+     * 
+     * @param int $class_id
+     * @return array
+     */
+    public function get_enrolled_students($class_id)
+    {
+        $this->db->select('u.nama_lengkap, u.username');
+        $this->db->from('free_class_enrollments fce');
+        $this->db->join('users u', 'fce.student_id = u.id');
+        $this->db->where('fce.class_id', $class_id);
+        $this->db->where('fce.status', 'Enrolled');
+        $this->db->order_by('u.nama_lengkap', 'ASC');
+        return $this->db->get()->result();
+    }
+
+    /**
+     * Get class schedule for a free class
+     * 
+     * @param int $class_id
+     * @return array
+     */
+    public function get_class_schedule($class_id)
+    {
+        $this->db->where('kelas_id', $class_id);
+        $this->db->where('class_type', 'free');
+        $this->db->order_by('pertemuan_ke', 'ASC');
+        return $this->db->get('jadwal_kelas')->result_array();
+    }
+
+    public function get_student_attendance_by_class($student_id, $class_id)
+    {
+        $this->db->select('jk.pertemuan_ke, jk.judul_pertemuan, jk.tanggal_pertemuan, a.status');
+        $this->db->from('jadwal_kelas jk');
+        $this->db->join('absensi a', 'a.jadwal_id = jk.id AND a.siswa_id = ' . $this->db->escape($student_id), 'left');
+        $this->db->where('jk.kelas_id', $class_id);
+        $this->db->where('jk.class_type', 'free');
+        $this->db->order_by('jk.pertemuan_ke', 'ASC');
+        return $this->db->get()->result();
+    }
 }

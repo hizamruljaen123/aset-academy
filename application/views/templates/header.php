@@ -20,6 +20,11 @@
     <!-- Quill.js Styles -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <link href="<?php echo base_url('assets/css/quill-custom.css'); ?>" rel="stylesheet">
+    <link href="<?php echo base_url('assets/css/forum.css'); ?>" rel="stylesheet">
+
+    <!-- Highlight.js for Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 </head>
 <body class="bg-gray-50">
     <div class="flex min-h-screen">
@@ -56,6 +61,10 @@
                         <i class="fas fa-book w-5 text-center mr-3"></i>
                         Materi
                     </a>
+                    <a href="<?php echo site_url('forum'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'forum') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-comments w-5 text-center mr-3"></i>
+                        Forum
+                    </a>
                     
                 <?php elseif ($role == 'siswa'): ?>
                     <!-- Student Navigation -->
@@ -82,6 +91,10 @@
                     <a href="<?php echo site_url('absensi'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'absensi') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-user-check w-5 text-center mr-3"></i>
                         Absensi Saya
+                    </a>
+                    <a href="<?php echo site_url('forum'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'forum') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-comments w-5 text-center mr-3"></i>
+                        Forum
                     </a>
                     
                 <?php else: ?>
@@ -117,6 +130,10 @@
                     <a href="<?php echo site_url('admin/jadwal'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(2) == 'jadwal') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-calendar-alt w-5 text-center mr-3"></i>
                         Kelola Jadwal
+                    </a>
+                    <a href="<?php echo site_url('forum'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'forum') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-comments w-5 text-center mr-3"></i>
+                        Forum
                     </a>
                     
                     <?php if ($level == '1'): // Super Admin only ?>
