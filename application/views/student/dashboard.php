@@ -94,149 +94,234 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Left Column -->
         <div class="lg:col-span-2 space-y-8">
-            <!-- Current Class Info -->
-            <?php if (isset($class_details) && $class_details): ?>
-            <div class="bg-white rounded-2xl shadow-xl ring-1 ring-gray-200/50 overflow-hidden fade-in">
-                <div class="p-6 border-b border-gray-200/50 bg-gradient-to-r from-gray-50 to-white">
-                    <div class="flex justify-between items-center">
-                        <h2 class="text-2xl font-bold text-gray-800">Kelas Saya</h2>
-                        <span class="px-3 py-1 text-sm font-medium rounded-full <?php echo ($class_details->status == 'Aktif') ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'; ?>">
-                            <?php echo $class_details->status; ?>
-                        </span>
+            <!-- Tab Navigation -->
+            <div class="flex border-b border-gray-200">
+                <button class="py-2 px-4 font-medium text-blue-600 border-b-2 border-blue-600" id="regularClassTab">
+                    Kelas Reguler
+                </button>
+                <button class="py-2 px-4 font-medium text-gray-500 hover:text-blue-600" id="premiumClassTab">
+                    Kelas Premium
+                </button>
+            </div>
+            
+            <!-- Regular Class Content -->
+            <div id="regularClassContent">
+                <!-- Current Class Info -->
+                <?php if (isset($class_details) && $class_details): ?>
+                <div class="bg-white rounded-2xl shadow-xl ring-1 ring-gray-200/50 overflow-hidden fade-in">
+                    <div class="p-6 border-b border-gray-200/50 bg-gradient-to-r from-gray-50 to-white">
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-2xl font-bold text-gray-800">Kelas Saya</h2>
+                            <span class="px-3 py-1 text-sm font-medium rounded-full <?php echo ($class_details->status == 'Aktif') ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'; ?>">
+                                <?php echo $class_details->status; ?>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <div class="md:w-1/3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl p-6 text-white shadow-lg">
+                                <h3 class="text-xl font-bold mb-2"><?php echo $class_details->nama_kelas; ?></h3>
+                                <div class="flex items-center mb-3">
+                                    <span class="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
+                                        <?php echo $class_details->bahasa_program; ?>
+                                    </span>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-signal mr-2"></i>
+                                        <span><?php echo $class_details->level; ?></span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-clock mr-2"></i>
+                                        <span><?php echo $class_details->durasi; ?> Jam</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-book mr-2"></i>
+                                        <span><?php echo $total_materi; ?> Materi</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="md:w-2/3">
+                                <h3 class="text-lg font-bold text-gray-800 mb-3">Deskripsi Kelas</h3>
+                                <p class="text-gray-600 mb-4"><?php echo $class_details->deskripsi; ?></p>
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <span class="text-sm text-gray-500">Harga Kelas</span>
+                                        <p class="text-lg font-bold text-gray-900">Rp <?php echo number_format($class_details->harga, 0, ',', '.'); ?></p>
+                                    </div>
+                                    <a href="<?php echo site_url('student/materi'); ?>" class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform hover:scale-105">
+                                        <i class="fas fa-book-open mr-2"></i>
+                                        Lihat Semua Materi
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="p-6">
-                    <div class="flex flex-col md:flex-row gap-6">
-                        <div class="md:w-1/3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl p-6 text-white shadow-lg">
-                            <h3 class="text-xl font-bold mb-2"><?php echo $class_details->nama_kelas; ?></h3>
-                            <div class="flex items-center mb-3">
-                                <span class="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
-                                    <?php echo $class_details->bahasa_program; ?>
-                                </span>
-                            </div>
-                            <div class="space-y-2">
-                                <div class="flex items-center">
-                                    <i class="fas fa-signal mr-2"></i>
-                                    <span><?php echo $class_details->level; ?></span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-clock mr-2"></i>
-                                    <span><?php echo $class_details->durasi; ?> Jam</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-book mr-2"></i>
-                                    <span><?php echo $total_materi; ?> Materi</span>
-                                </div>
-                            </div>
+                <?php endif; ?>
+                
+                <!-- Recent Materials -->
+                <div class="bg-white rounded-2xl shadow-xl ring-1 ring-gray-200/50 overflow-hidden fade-in">
+                    <div class="p-6 border-b border-gray-200/50 bg-gradient-to-r from-gray-50 to-white">
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-2xl font-bold text-gray-800">Materi Terbaru</h2>
+                            <a href="<?php echo site_url('student/materi'); ?>" class="text-sm font-medium text-blue-600 hover:text-blue-800">
+                                Lihat Semua <i class="fas fa-arrow-right ml-1"></i>
+                            </a>
                         </div>
-                        <div class="md:w-2/3">
-                            <h3 class="text-lg font-bold text-gray-800 mb-3">Deskripsi Kelas</h3>
-                            <p class="text-gray-600 mb-4"><?php echo $class_details->deskripsi; ?></p>
-                            <div class="flex justify-between items-center">
-                                <div>
-                                    <span class="text-sm text-gray-500">Harga Kelas</span>
-                                    <p class="text-lg font-bold text-gray-900">Rp <?php echo number_format($class_details->harga, 0, ',', '.'); ?></p>
-                                </div>
-                                <a href="<?php echo site_url('student/materi'); ?>" class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform hover:scale-105">
-                                    <i class="fas fa-book-open mr-2"></i>
-                                    Lihat Semua Materi
-                                </a>
+                    </div>
+                    <div class="p-6">
+                        <?php if (empty($recent_materials)): ?>
+                            <div class="text-center py-8">
+                                <i class="fas fa-book-open text-5xl text-gray-300 mb-3"></i>
+                                <h3 class="text-lg font-medium text-gray-900">Belum ada materi</h3>
+                                <p class="text-gray-500">Belum ada materi pembelajaran yang tersedia untuk kelas Anda</p>
                             </div>
-                        </div>
+                        <?php else: ?>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <?php foreach($recent_materials as $materi): ?>
+                                    <div class="p-4 border border-gray-100 rounded-xl hover:shadow-md transition-all duration-300 hover:border-blue-200 fade-in">
+                                        <div class="flex items-center mb-3">
+                                            <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3">
+                                                <i class="fas fa-book"></i>
+                                            </div>
+                                            <div>
+                                                <h4 class="font-medium text-gray-900"><?php echo $materi->judul; ?></h4>
+                                                <p class="text-xs text-gray-500"><?php echo date('d M Y', strtotime($materi->created_at)); ?></p>
+                                            </div>
+                                        </div>
+                                        <p class="text-sm text-gray-600 mb-3"><?php echo substr($materi->deskripsi, 0, 100) . (strlen($materi->deskripsi) > 100 ? '...' : ''); ?></p>
+                                        <div class="flex justify-end">
+                                            <a href="<?php echo site_url('student/materi_detail/'.$materi->id); ?>" class="inline-flex items-center px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium text-blue-600 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                                                <i class="fas fa-eye mr-1"></i>
+                                                Lihat Detail
+                                            </a>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                
+                <!-- Available Classes -->
+                <div class="bg-white rounded-2xl shadow-xl ring-1 ring-gray-200/50 overflow-hidden fade-in">
+                    <div class="p-6 border-b border-gray-200/50 bg-gradient-to-r from-gray-50 to-white">
+                        <h2 class="text-2xl font-bold text-gray-800">Kelas Tersedia</h2>
+                        <p class="text-gray-500 mt-1">Kelas programming yang dapat diikuti</p>
+                    </div>
+                    <div class="p-6">
+                        <?php if (empty($available_classes)): ?>
+                            <div class="text-center py-8">
+                                <i class="fas fa-graduation-cap text-5xl text-gray-300 mb-3"></i>
+                                <h3 class="text-lg font-medium text-gray-900">Belum ada kelas</h3>
+                                <p class="text-gray-500">Belum ada kelas programming yang tersedia</p>
+                            </div>
+                        <?php else: ?>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <?php foreach(array_slice($available_classes, 0, 4) as $kelas): ?>
+                                    <div class="border border-gray-200 rounded-xl p-5 hover:shadow-lg transition-all duration-300 hover:border-blue-200 fade-in">
+                                        <div class="flex justify-between items-start mb-3">
+                                            <span class="px-3 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800"><?php echo $kelas->bahasa_program; ?></span>
+                                            <span class="px-3 py-1 text-xs font-medium rounded-full <?php echo ($kelas->status == 'Aktif') ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'; ?>">
+                                                <?php echo $kelas->status; ?>
+                                            </span>
+                                        </div>
+                                        <h4 class="text-lg font-bold text-gray-900 mb-2"><?php echo $kelas->nama_kelas; ?></h4>
+                                        <p class="text-sm text-gray-600 mb-4"><?php echo substr($kelas->deskripsi, 0, 120) . (strlen($kelas->deskripsi) > 120 ? '...' : ''); ?></p>
+                                        <div class="flex flex-wrap gap-4 mb-3">
+                                            <div class="flex items-center text-sm text-gray-500">
+                                                <i class="fas fa-signal mr-2"></i>
+                                                <span><?php echo $kelas->level; ?></span>
+                                            </div>
+                                            <div class="flex items-center text-sm text-gray-500">
+                                                <i class="fas fa-clock mr-2"></i>
+                                                <span><?php echo $kelas->durasi; ?> Jam</span>
+                                            </div>
+                                        </div>
+                                        <div class="flex justify-between items-center mt-4">
+                                            <p class="text-lg font-bold text-gray-900">Rp <?php echo number_format($kelas->harga, 0, ',', '.'); ?></p>
+                                            <button class="inline-flex items-center px-3 py-1.5 border border-transparent rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                                                <i class="fas fa-info-circle mr-1"></i>
+                                                Detail
+                                            </button>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
-            <?php endif; ?>
             
-            <!-- Recent Materials -->
-            <div class="bg-white rounded-2xl shadow-xl ring-1 ring-gray-200/50 overflow-hidden fade-in">
-                <div class="p-6 border-b border-gray-200/50 bg-gradient-to-r from-gray-50 to-white">
-                    <div class="flex justify-between items-center">
-                        <h2 class="text-2xl font-bold text-gray-800">Materi Terbaru</h2>
-                        <a href="<?php echo site_url('student/materi'); ?>" class="text-sm font-medium text-blue-600 hover:text-blue-800">
-                            Lihat Semua <i class="fas fa-arrow-right ml-1"></i>
-                        </a>
+            <!-- Premium Class Content -->
+            <div id="premiumClassContent" class="hidden">
+                <?php if (!empty($paid_classes) || !empty($available_paid_classes)): ?>
+                    <!-- Content same as previously added premium classes section -->
+                    <?php if (!empty($paid_classes) || !empty($available_paid_classes)): ?>
+                        <!-- Paid Classes Section -->
+                        <div class="bg-white rounded-2xl shadow-xl ring-1 ring-gray-200/50 overflow-hidden fade-in">
+                            <div class="p-6 border-b border-gray-200/50 bg-gradient-to-r from-gray-50 to-white">
+                                <h2 class="text-2xl font-bold text-gray-800">Kelas Berbayar</h2>
+                                <p class="text-gray-500 mt-1">Kelas premium yang telah dibeli dan tersedia</p>
+                            </div>
+                            <div class="p-6">
+                                <?php if (!empty($paid_classes)): ?>
+                                    <h3 class="text-lg font-bold text-gray-800 mb-4">Kelas yang Telah Dibeli</h3>
+                                    <div class="grid grid-cols-1 gap-4 mb-6">
+                                        <?php foreach($paid_classes as $class): ?>
+                                            <div class="border border-green-100 rounded-xl p-4 bg-green-50/50">
+                                                <div class="flex justify-between items-start">
+                                                    <h4 class="text-lg font-bold text-gray-900"><?php echo $class->nama_kelas; ?></h4>
+                                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                                                        Sudah Dibeli
+                                                    </span>
+                                                </div>
+                                                <p class="text-sm text-gray-600 mb-3"><?php echo $class->deskripsi; ?></p>
+                                                <div class="flex justify-between items-center">
+                                                    <span class="text-sm text-gray-500">Harga: Rp <?php echo number_format($class->harga, 0, ',', '.'); ?></span>
+                                                    <a href="<?php echo site_url('kelas/detail/'.$class->class_id); ?>" class="text-sm font-medium text-blue-600 hover:text-blue-800">
+                                                        Akses Kelas <i class="fas fa-arrow-right ml-1"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
+                                
+                                <?php if (!empty($available_paid_classes)): ?>
+                                    <h3 class="text-lg font-bold text-gray-800 mb-4">Kelas Berbayar Tersedia</h3>
+                                    <div class="grid grid-cols-1 gap-4">
+                                        <?php foreach($available_paid_classes as $class): ?>
+                                            <div class="border border-gray-200 rounded-xl p-4 hover:shadow-md transition-all duration-300">
+                                                <div class="flex justify-between items-start mb-2">
+                                                    <h4 class="text-lg font-bold text-gray-900"><?php echo $class->nama_kelas; ?></h4>
+                                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
+                                                        Premium
+                                                    </span>
+                                                </div>
+                                                <p class="text-sm text-gray-600 mb-3"><?php echo substr($class->deskripsi, 0, 120) . (strlen($class->deskripsi) > 120 ? '...' : ''); ?></p>
+                                                <div class="flex justify-between items-center">
+                                                    <span class="text-lg font-bold text-gray-900">Rp <?php echo number_format($class->harga, 0, ',', '.'); ?></span>
+                                                    <a href="<?php echo site_url('payment/initiate/'.$class->id); ?>" class="inline-flex items-center px-3 py-1.5 border border-transparent rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                                                        <i class="fas fa-shopping-cart mr-1"></i>
+                                                        Beli Sekarang
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <div class="text-center py-12 bg-white rounded-lg shadow">
+                        <i class="fas fa-graduation-cap text-5xl text-gray-300 mb-4"></i>
+                        <h3 class="text-lg font-medium text-gray-900">Belum ada kelas premium</h3>
+                        <p class="text-gray-500 mt-1">Silakan cek kembali nanti untuk kelas premium terbaru</p>
                     </div>
-                </div>
-                <div class="p-6">
-                    <?php if (empty($recent_materials)): ?>
-                        <div class="text-center py-8">
-                            <i class="fas fa-book-open text-5xl text-gray-300 mb-3"></i>
-                            <h3 class="text-lg font-medium text-gray-900">Belum ada materi</h3>
-                            <p class="text-gray-500">Belum ada materi pembelajaran yang tersedia untuk kelas Anda</p>
-                        </div>
-                    <?php else: ?>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <?php foreach($recent_materials as $materi): ?>
-                                <div class="p-4 border border-gray-100 rounded-xl hover:shadow-md transition-all duration-300 hover:border-blue-200 fade-in">
-                                    <div class="flex items-center mb-3">
-                                        <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3">
-                                            <i class="fas fa-book"></i>
-                                        </div>
-                                        <div>
-                                            <h4 class="font-medium text-gray-900"><?php echo $materi->judul; ?></h4>
-                                            <p class="text-xs text-gray-500"><?php echo date('d M Y', strtotime($materi->created_at)); ?></p>
-                                        </div>
-                                    </div>
-                                    <p class="text-sm text-gray-600 mb-3"><?php echo substr($materi->deskripsi, 0, 100) . (strlen($materi->deskripsi) > 100 ? '...' : ''); ?></p>
-                                    <div class="flex justify-end">
-                                        <a href="<?php echo site_url('student/materi_detail/'.$materi->id); ?>" class="inline-flex items-center px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium text-blue-600 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                                            <i class="fas fa-eye mr-1"></i> Lihat Detail
-                                        </a>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                    <?php endif; ?>
-                </div>
-            </div>
-            
-            <!-- Available Classes -->
-            <div class="bg-white rounded-2xl shadow-xl ring-1 ring-gray-200/50 overflow-hidden fade-in">
-                <div class="p-6 border-b border-gray-200/50 bg-gradient-to-r from-gray-50 to-white">
-                    <h2 class="text-2xl font-bold text-gray-800">Kelas Tersedia</h2>
-                    <p class="text-gray-500 mt-1">Kelas programming yang dapat diikuti</p>
-                </div>
-                <div class="p-6">
-                    <?php if (empty($available_classes)): ?>
-                        <div class="text-center py-8">
-                            <i class="fas fa-graduation-cap text-5xl text-gray-300 mb-3"></i>
-                            <h3 class="text-lg font-medium text-gray-900">Belum ada kelas</h3>
-                            <p class="text-gray-500">Belum ada kelas programming yang tersedia</p>
-                        </div>
-                    <?php else: ?>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <?php foreach(array_slice($available_classes, 0, 4) as $kelas): ?>
-                                <div class="border border-gray-200 rounded-xl p-5 hover:shadow-lg transition-all duration-300 hover:border-blue-200 fade-in">
-                                    <div class="flex justify-between items-start mb-3">
-                                        <span class="px-3 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800"><?php echo $kelas->bahasa_program; ?></span>
-                                        <span class="px-3 py-1 text-xs font-medium rounded-full <?php echo ($kelas->status == 'Aktif') ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'; ?>">
-                                            <?php echo $kelas->status; ?>
-                                        </span>
-                                    </div>
-                                    <h4 class="text-lg font-bold text-gray-900 mb-2"><?php echo $kelas->nama_kelas; ?></h4>
-                                    <p class="text-sm text-gray-600 mb-4"><?php echo substr($kelas->deskripsi, 0, 120) . (strlen($kelas->deskripsi) > 120 ? '...' : ''); ?></p>
-                                    <div class="flex flex-wrap gap-4 mb-3">
-                                        <div class="flex items-center text-sm text-gray-500">
-                                            <i class="fas fa-signal mr-2"></i>
-                                            <span><?php echo $kelas->level; ?></span>
-                                        </div>
-                                        <div class="flex items-center text-sm text-gray-500">
-                                            <i class="fas fa-clock mr-2"></i>
-                                            <span><?php echo $kelas->durasi; ?> Jam</span>
-                                        </div>
-                                    </div>
-                                    <div class="flex justify-between items-center mt-4">
-                                        <p class="text-lg font-bold text-gray-900">Rp <?php echo number_format($kelas->harga, 0, ',', '.'); ?></p>
-                                        <button class="inline-flex items-center px-3 py-1.5 border border-transparent rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                                            <i class="fas fa-info-circle mr-1"></i> Detail
-                                        </button>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                    <?php endif; ?>
-                </div>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -404,6 +489,28 @@
             
             fadeElements.forEach(element => {
                 observer.observe(element);
+            });
+        }
+        
+        // Tab navigation
+        const regularClassTab = document.getElementById('regularClassTab');
+        const premiumClassTab = document.getElementById('premiumClassTab');
+        const regularClassContent = document.getElementById('regularClassContent');
+        const premiumClassContent = document.getElementById('premiumClassContent');
+        
+        if (regularClassTab && premiumClassTab && regularClassContent && premiumClassContent) {
+            regularClassTab.addEventListener('click', () => {
+                regularClassTab.classList.add('text-blue-600', 'border-b-2', 'border-blue-600');
+                premiumClassTab.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600');
+                regularClassContent.classList.remove('hidden');
+                premiumClassContent.classList.add('hidden');
+            });
+            
+            premiumClassTab.addEventListener('click', () => {
+                premiumClassTab.classList.add('text-blue-600', 'border-b-2', 'border-blue-600');
+                regularClassTab.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600');
+                premiumClassContent.classList.remove('hidden');
+                regularClassContent.classList.add('hidden');
             });
         }
     });

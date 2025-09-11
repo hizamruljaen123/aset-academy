@@ -1,0 +1,23 @@
+<?php
+class Kelas_programming_model extends CI_Model {
+    public function __construct() {
+        parent::__construct();
+    }
+
+    public function get_premium_classes($student_id) {
+        $this->db->select('kp.*');
+        $this->db->from('kelas_programming kp');
+        $this->db->where('kp.status', 'Aktif');
+        $this->db->where('kp.harga >', 0);
+        
+        // Exclude already purchased classes
+        $this->db->join('payments p', "kp.id = p.class_id AND p.user_id = $student_id AND p.status = 'Verified'", 'left');
+        $this->db->where('p.id IS NULL');
+        
+        return $this->db->get()->result();
+    }
+
+    public function get_kelas($id) {
+        return $this->db->where('id', $id)->get('kelas_programming')->row();
+    }
+}

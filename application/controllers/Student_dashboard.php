@@ -63,6 +63,22 @@ class Student_dashboard extends CI_Controller {
         $this->db->where('status', 'Aktif');
         $data['available_classes'] = $this->db->get('kelas_programming')->result();
         
+        // Get paid classes the student has active enrollment for
+        $this->load->model('Premium_enrollment_model');
+        $data['paid_classes'] = $this->Premium_enrollment_model->get_student_enrollments($student_id);
+        
+        // Get available paid classes (excluding already purchased ones)
+        $this->db->select('kp.*');
+        $this->db->from('kelas_programming kp');
+        $this->db->where('kp.status', 'Aktif');
+        $this->db->where('kp.harga >', 0);
+        
+        // Exclude classes already purchased by student
+        $this->db->join('payments p', "kp.id = p.class_id AND p.user_id = $student_id AND p.status = 'Verified'", 'left');
+        $this->db->where('p.id IS NULL');
+        
+        $data['available_paid_classes'] = $this->db->get()->result();
+        
         // Get materials for student's class
         if ($data['student_profile']->kelas) {
             // Get kelas_id from nama_kelas

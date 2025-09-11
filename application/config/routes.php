@@ -51,6 +51,24 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $route['default_controller'] = 'home';
 $route['404_override'] = '';
+
+// Teacher Assignments Routes
+$route['teacher/assignments'] = 'teacher/assignments';
+$route['teacher/assignments/view_class/(:num)/(:any)'] = 'teacher/assignment_view_class/$1/$2';
+$route['teacher/assignments/create/(:num)/(:any)'] = 'teacher/assignment_create/$1/$2';
+$route['teacher/assignments/edit/(:num)'] = 'teacher/assignment_edit/$1';
+$route['teacher/assignments/delete/(:num)'] = 'teacher/assignment_delete/$1';
+$route['teacher/assignments/submissions/(:num)'] = 'teacher/assignment_submissions/$1';
+$route['teacher/assignments/grade/(:num)'] = 'teacher/assignment_grade/$1';
+
+// Student Assignments Routes
+$route['student/assignments'] = 'student/Assignments';
+$route['student/assignments/view_class/(:num)/(:any)'] = 'student/Assignments/view_class/$1/$2';
+$route['student/assignments/submit/(:num)'] = 'student/Assignments/submit/$1';
+
+// Admin Assignments Routes
+$route['admin/assignments'] = 'admin/Assignments';
+
 $route['translate_uri_dashes'] = FALSE;
 
 // Routes untuk Auth
@@ -90,6 +108,10 @@ $route['student/index'] = 'student_dashboard';
 $route['student/profile'] = 'student_dashboard/profile';
 $route['student/materi'] = 'student_dashboard/materi';
 $route['student/materi_detail/(:num)'] = 'student_dashboard/materi_detail/$1';
+$route['student/premium'] = 'student_premium';
+$route['student/premium/detail/(:num)'] = 'student_premium/detail/$1';
+$route['student/premium/orders'] = 'payment/orders';
+$route['student/premium/payment/(:num)'] = 'payment/purchase/$1';
 
 // Routes untuk Profile Management
 $route['profile'] = 'profile';
@@ -97,6 +119,12 @@ $route['profile/view'] = 'profile/view';
 $route['profile/update'] = 'profile/update';
 $route['profile/change_password'] = 'profile/change_password';
 $route['profile/upload_photo'] = 'profile/upload_photo';
+
+// Routes untuk Admin Enrollment Management
+$route['admin/enrollment'] = 'admin_enrollment';
+$route['admin/enrollment/grant_access/(:num)'] = 'admin_enrollment/grant_access/$1';
+$route['admin/enrollment/revoke_access/(:num)'] = 'admin_enrollment/revoke_access/$1';
+$route['admin/enrollment/update_status'] = 'admin_enrollment/update_status';
 
 // Routes untuk Admin Free Classes Management
 $route['admin/free_classes'] = 'admin/free_classes';

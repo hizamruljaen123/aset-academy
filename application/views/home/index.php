@@ -75,7 +75,10 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <?php foreach ($featured_premium as $class): ?>
+                <?php foreach ($featured_premium as $class): 
+                $is_enrolled = isset($user_id) ? $this->db->where(['class_id' => $class->id, 'student_id' => $user_id])->get('free_class_enrollments')->row() : false;
+                $payment_status = isset($user_id) ? $this->db->where(['class_id' => $class->id, 'user_id' => $user_id])->order_by('created_at', 'DESC')->get('payments')->row() : false;
+                ?>
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300" data-aos="fade-up" data-aos-delay="100">
                     <div class="relative overflow-hidden">
                         <img src="<?= $class->gambar ? base_url('uploads/kelas/' . $class->gambar) : 'http://static.photos/technology/640x360/2' ?>" alt="<?= html_escape($class->nama_kelas) ?>" class="w-full h-48 object-cover hover:scale-105 transition-transform duration-300">
@@ -91,9 +94,29 @@
                         <p class="text-gray-600 mb-4"><?= html_escape($class->deskripsi) ?></p>
                         <div class="flex justify-between items-center">
                             <span class="text-2xl font-bold text-blue-600">Rp <?= number_format($class->harga, 0, ',', '.') ?></span>
-                            <a href="<?= site_url('kelas/detail/' . $class->id) ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                                Lihat Kelas
-                            </a>
+                            <?php if(isset($user_id)): ?>
+                                <?php if($is_enrolled): ?>
+                                    <a href="<?= site_url('kelas/detail/' . $class->id) ?>" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                                        Lanjut Belajar
+                                    </a>
+                                <?php elseif($payment_status && $payment_status->status == 'Verified'): ?>
+                                    <a href="<?= site_url('kelas/enroll/' . $class->id) ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                        Akses Kelas
+                                    </a>
+                                <?php elseif($payment_status && $payment_status->status == 'Pending'): ?>
+                                    <button class="bg-yellow-500 text-white px-4 py-2 rounded-lg cursor-not-allowed">
+                                        Menunggu Verifikasi
+                                    </button>
+                                <?php else: ?>
+                                    <a href="<?= site_url('payment/initiate/' . $class->id) ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                        Daftar Sekarang
+                                    </a>
+                                <?php endif; ?>
+                            <?php else: ?>
+                                <a href="<?= site_url('auth/login?redirect=payment/initiate/' . $class->id) ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                    Daftar Sekarang
+                                </a>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

@@ -53,6 +53,42 @@
                         <p class="text-gray-600">Total Guru</p>
                     </div>
                 </div>
+                <div class="bg-white p-4 rounded-lg shadow flex items-center">
+                    <div class="p-3 rounded-full bg-purple-100 text-purple-600 mr-4">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-2xl font-bold text-gray-800"><?php echo $stats['total_payments']; ?></h4>
+                        <p class="text-gray-600">Total Pembayaran</p>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow flex items-center">
+                    <div class="p-3 rounded-full bg-green-100 text-green-600 mr-4">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-2xl font-bold text-gray-800"><?php echo $stats['verified_payments']; ?></h4>
+                        <p class="text-gray-600">Pembayaran Diverifikasi</p>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow flex items-center">
+                    <div class="p-3 rounded-full bg-yellow-100 text-yellow-600 mr-4">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-2xl font-bold text-gray-800"><?php echo $stats['pending_payments']; ?></h4>
+                        <p class="text-gray-600">Pembayaran Pending</p>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow flex items-center">
+                    <div class="p-3 rounded-full bg-blue-100 text-blue-600 mr-4">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-2xl font-bold text-gray-800">Rp <?php echo number_format($stats['revenue'] ?? 0, 0, ',', '.'); ?></h4>
+                        <p class="text-gray-600">Total Pendapatan</p>
+                    </div>
+                </div>
             </div>
 
             <!-- Recent Activity -->
@@ -61,6 +97,20 @@
                     <h2 class="text-lg font-medium text-gray-900">Aktivitas Terbaru</h2>
                 </div>
                 <div class="p-4 space-y-4">
+                    <?php foreach($recent_payments as $payment): ?>
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 p-2 rounded-full bg-green-100 text-green-600 mr-3">
+                            <i class="fas fa-money-bill-wave text-sm"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm text-gray-800">
+                                <strong><?php echo $payment->student_name; ?></strong> membeli kelas 
+                                <strong><?php echo $payment->class_name; ?></strong> (Rp <?php echo number_format($payment->amount ?? 0, 0, ',', '.'); ?>)
+                            </p>
+                            <p class="text-xs text-gray-500"><?php echo date('d M Y', strtotime($payment->created_at)); ?></p>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
                     <?php foreach(array_slice($recent_siswa, 0, 2) as $siswa): ?>
                     <div class="flex items-start">
                         <div class="flex-shrink-0 p-2 rounded-full bg-indigo-100 text-indigo-600 mr-3">

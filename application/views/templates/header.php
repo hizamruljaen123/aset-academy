@@ -10,6 +10,7 @@
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = {darkMode: 'class'}</script>
     
     <!-- Teacher Styles -->
     <link href="<?php echo base_url('assets/css/teacher.css'); ?>" rel="stylesheet">
@@ -21,6 +22,12 @@
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <link href="<?php echo base_url('assets/css/quill-custom.css'); ?>" rel="stylesheet">
     <link href="<?php echo base_url('assets/css/forum.css'); ?>" rel="stylesheet">
+    
+    <!-- Custom Form Input Styles -->
+    <link href="<?php echo base_url('assets/css/form-inputs.css'); ?>" rel="stylesheet">
+    
+    <!-- Admin Assignments Styles -->
+    <link href="<?php echo base_url('assets/css/assignments-admin.css'); ?>" rel="stylesheet">    
 
     <!-- Highlight.js for Syntax Highlighting -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
@@ -61,6 +68,10 @@
                         <i class="fas fa-book w-5 text-center mr-3"></i>
                         Materi
                     </a>
+                    <a href="<?php echo site_url('teacher/assignments'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == 'assignments') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-edit w-5 text-center mr-3"></i>
+                        Penilaian
+                    </a>
                     <a href="<?php echo site_url('forum'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'forum') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-comments w-5 text-center mr-3"></i>
                         Forum
@@ -80,6 +91,10 @@
                         <i class="fas fa-book-open w-5 text-center mr-3"></i>
                         Materi Pembelajaran
                     </a>
+                    <a href="<?php echo site_url('student/premium'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'premium') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-crown w-5 text-center mr-3 text-yellow-500"></i>
+                        Kelas Premium
+                    </a>
                     <a href="<?php echo site_url('student/free_classes'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'free_classes') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-graduation-cap w-5 text-center mr-3"></i>
                         Kelas Gratis
@@ -91,6 +106,10 @@
                     <a href="<?php echo site_url('absensi'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'absensi') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-user-check w-5 text-center mr-3"></i>
                         Absensi Saya
+                    </a>
+                    <a href="<?php echo site_url('student/assignments'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'assignments') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-tasks w-5 text-center mr-3"></i>
+                        Penilaian
                     </a>
                     <a href="<?php echo site_url('forum'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'forum') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-comments w-5 text-center mr-3"></i>
@@ -131,14 +150,26 @@
                         <i class="fas fa-calendar-alt w-5 text-center mr-3"></i>
                         Kelola Jadwal
                     </a>
+                    <a href="<?php echo site_url('admin/assignments'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'assignments') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-clipboard-check w-5 text-center mr-3"></i>
+                        Penilaian
+                    </a>
                     <a href="<?php echo site_url('forum'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'forum') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-comments w-5 text-center mr-3"></i>
                         Forum
                     </a>
                     
-                    <?php if ($level == '1'): // Super Admin only ?>
+                    <?php if ($level == '1' || $level == '2'): // Super Admin or Admin ?>
                     <div class="border-t border-gray-200 my-2"></div>
-                    <div class="px-2 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">Super Admin</div>
+                    <div class="px-2 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">Admin</div>
+                    <a href="<?php echo site_url('payment/admin_verify'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'payment' && $this->uri->segment(2) == 'admin_verify') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-money-check-alt w-5 text-center mr-3"></i>
+                        Verifikasi Pembayaran
+                    </a>
+                    <a href="<?php echo site_url('admin/enrollment'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'enrollment') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-user-graduate w-5 text-center mr-3"></i>
+                        Kelola Akses Kelas
+                    </a>
                     <a href="<?php echo site_url('admin/users'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'users') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-user-shield w-5 text-center mr-3"></i>
                         Kelola User
@@ -298,3 +329,6 @@
     <!-- Quill.js Scripts -->
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script src="<?php echo base_url('assets/js/quill-init.js'); ?>"></script>
+    
+    <!-- Admin Assignments Scripts -->
+    <script src="<?php echo base_url('assets/js/assignments-admin.js'); ?>"></script>

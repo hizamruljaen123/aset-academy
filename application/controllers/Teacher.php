@@ -264,4 +264,211 @@ class Teacher extends CI_Controller {
         $this->load->view('teacher/materi_detail', $data);
         $this->load->view('templates/footer');
     }
+    
+    public function assignments()
+    {
+        $teacher_id = $this->session->userdata('user_id');
+        
+        if (!$teacher_id) {
+            redirect('auth/login');
+        }
+        
+        // Load necessary models
+        $this->load->model('Assignment_model', 'assignment');
+        $this->load->model('Kelas_model', 'kelas');
+        
+        // Get classes assigned to this teacher
+        $data['premium_classes'] = $this->kelas->get_premium_classes_by_teacher($teacher_id); 
+        $data['gratis_classes'] = $this->kelas->get_gratis_classes_by_teacher($teacher_id);
+
+        $data['title'] = 'Manajemen Tugas';
+        $this->load->view('templates/header', $data);
+        $this->load->view('teacher/assignments/index', $data);
+        $this->load->view('templates/footer');
+    }
+    
+    public function assignment_view_class($class_id, $class_type)
+    {
+        // Load necessary models if they aren't already loaded
+        if (!isset($this->assignment)) {
+            $this->load->model('Assignment_model', 'assignment');
+        }
+        
+        // Use kelas_programming table for both premium and gratis classes
+        $data['class'] = $this->db->get_where('kelas_programming', ['id' => $class_id])->row();
+
+        if (!$data['class']) {
+            show_404();
+        }
+
+        $data['assignments'] = $this->assignment->get_assignments_by_class($class_id, $class_type);
+        $data['class_type'] = $class_type;
+        $data['title'] = 'Tugas untuk ' . $data['class']->nama_kelas;
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('teacher/assignments/view_class', $data);
+        $this->load->view('templates/footer');
+    }
+    
+    public function assignment_create($class_id, $class_type)
+    {
+        // Load necessary models if they aren't already loaded
+        if (!isset($this->assignment)) {
+            $this->load->model('Assignment_model', 'assignment');
+        }
+        
+        $this->load->library('form_validation');
+
+        $this->form_validation->set_rules('title', 'Judul', 'required|trim');
+        $this->form_validation->set_rules('description', 'Deskripsi', 'trim');
+        $this->form_validation->set_rules('due_date', 'Batas Waktu', 'trim');
+
+        // Use kelas_programming table for both premium and gratis classes
+        $data['class'] = $this->db->get_where('kelas_programming', ['id' => $class_id])->row();
+        
+        if (!$data['class']) {
+            show_404();
+        }
+        
+        $data['class_type'] = $class_type;
+        $data['title'] = 'Buat Tugas Baru';
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->load->view('templates/header', $data);
+            $this->load->view('teacher/assignments/create', $data);
+            $this->load->view('templates/footer');
+        } else {
+            $data = [
+                'class_id' => $class_id,
+                'class_type' => $class_type,
+                'teacher_id' => $this->session->userdata('user_id'),
+                'title' => $this->input->post('title'),
+                'description' => $this->input->post('description'),
+                'due_date' => $this->input->post('due_date') ? $this->input->post('due_date') : NULL
+            ];
+
+            $this->assignment->create_assignment($data);
+            $this->session->set_flashdata('success', 'Tugas berhasil dibuat.');
+            redirect('teacher/assignment_view_class/' . $class_id . '/' . $class_type);
+        }
+    }
+    
+    public function assignment_edit($assignment_id)
+    {
+        // Load necessary models if they aren't already loaded
+        if (!isset($this->assignment)) {
+            $this->load->model('Assignment_model', 'assignment');
+        }
+        
+        $this->load->library('form_validation');
+
+        $data['assignment'] = $this->assignment->get_assignment($assignment_id);
+        if (!$data['assignment']) {
+            show_404();
+        }
+
+        // Use kelas_programming table for both premium and gratis classes
+        $data['class'] = $this->db->get_where('kelas_programming', ['id' => $data['assignment']->class_id])->row();
+
+        $data['class_type'] = $data['assignment']->class_type;
+        $data['title'] = 'Edit Tugas: ' . $data['assignment']->title;
+
+        $this->form_validation->set_rules('title', 'Judul', 'required|trim');
+        $this->form_validation->set_rules('description', 'Deskripsi', 'trim');
+        $this->form_validation->set_rules('due_date', 'Batas Waktu', 'trim');
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->load->view('templates/header', $data);
+            $this->load->view('teacher/assignments/create', $data);
+            $this->load->view('templates/footer');
+        } else {
+            $update_data = [
+                'title' => $this->input->post('title'),
+                'description' => $this->input->post('description'),
+                'due_date' => $this->input->post('due_date') ? $this->input->post('due_date') : NULL
+            ];
+
+            $this->assignment->update_assignment($assignment_id, $update_data);
+            $this->session->set_flashdata('success', 'Tugas berhasil diperbarui.');
+            redirect('teacher/assignment_view_class/' . $data['assignment']->class_id . '/' . $data['assignment']->class_type);
+        }
+    }
+    
+    public function assignment_delete($assignment_id)
+    {
+        // Load necessary models if they aren't already loaded
+        if (!isset($this->assignment)) {
+            $this->load->model('Assignment_model', 'assignment');
+        }
+        
+        $assignment = $this->assignment->get_assignment($assignment_id);
+        if (!$assignment) {
+            show_404();
+        }
+
+        $this->assignment->delete_assignment($assignment_id);
+        $this->session->set_flashdata('success', 'Tugas berhasil dihapus.');
+        redirect('teacher/assignment_view_class/' . $assignment->class_id . '/' . $assignment->class_type);
+    }
+    
+    public function assignment_submissions($assignment_id)
+    {
+        // Load necessary models if they aren't already loaded
+        if (!isset($this->assignment)) {
+            $this->load->model('Assignment_model', 'assignment');
+        }
+        
+        $data['assignment'] = $this->assignment->get_assignment($assignment_id);
+        if (!$data['assignment']) {
+            show_404();
+        }
+
+        $data['submissions'] = $this->assignment->get_submissions_by_assignment($assignment_id);
+        $data['title'] = 'Pengumpulan untuk ' . $data['assignment']->title;
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('teacher/assignments/submissions', $data);
+        $this->load->view('templates/footer');
+    }
+    
+    public function assignment_grade($submission_id)
+    {
+        // Load necessary models if they aren't already loaded
+        if (!isset($this->assignment)) {
+            $this->load->model('Assignment_model', 'assignment');
+        }
+        
+        $this->load->library('form_validation');
+        $data['submission'] = $this->db->select('ss.*, u.nama_lengkap')
+                                    ->from('student_submissions ss')
+                                    ->join('users u', 'ss.student_id = u.id')
+                                    ->where('ss.id', $submission_id)
+                                    ->get()->row();
+
+        if (!$data['submission']) {
+            show_404();
+        }
+
+        $data['assignment'] = $this->assignment->get_assignment($data['submission']->assignment_id);
+        $data['title'] = 'Beri Nilai untuk ' . $data['submission']->nama_lengkap;
+
+        $this->form_validation->set_rules('grade', 'Nilai', 'required|trim|numeric');
+        $this->form_validation->set_rules('feedback', 'Feedback', 'trim');
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->load->view('templates/header', $data);
+            $this->load->view('teacher/assignments/grade', $data);
+            $this->load->view('templates/footer');
+        } else {
+            $grade_data = [
+                'grade' => $this->input->post('grade'),
+                'feedback' => $this->input->post('feedback'),
+                'status' => 'graded'
+            ];
+
+            $this->assignment->grade_submission($submission_id, $grade_data);
+            $this->session->set_flashdata('success', 'Nilai berhasil disimpan.');
+            redirect('teacher/assignment_submissions/' . $data['submission']->assignment_id);
+        }
+    }
 }

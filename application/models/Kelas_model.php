@@ -170,5 +170,25 @@ class Kelas_model extends CI_Model {
         
         return $this->db->get()->result_array();
     }
+
+    public function get_premium_classes_by_teacher($teacher_id)
+    {
+        $this->db->select('kp.*');
+        $this->db->from('kelas_programming kp');
+        $this->db->join('guru_kelas gk', 'gk.kelas_id = kp.id');
+        $this->db->where('gk.guru_id', $teacher_id);
+        $this->db->where('gk.status', 'Aktif');
+        $this->db->where('kp.status', 'Aktif');
+        return $this->db->get()->result();
+    }
+
+    public function get_gratis_classes_by_teacher($teacher_id)
+    {
+        $this->db->select('*');
+        $this->db->from('free_classes');
+        $this->db->where('mentor_id', $teacher_id);
+        $this->db->where('status', 'Published');
+        return $this->db->get()->result();
+    }
 }
 ?>
