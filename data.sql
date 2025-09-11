@@ -173,12 +173,28 @@ CREATE TABLE IF NOT EXISTS `forum_threads` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `slug` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `slug_unique` (`slug`),
   KEY `user_id` (`user_id`),
   KEY `category_id` (`category_id`),
   KEY `idx_slug` (`slug`),
   CONSTRAINT `forum_threads_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `forum_threads_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `forum_categories` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table academy_lite.forum_thread_views
+CREATE TABLE IF NOT EXISTS `forum_thread_views` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `thread_id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `viewed_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_view` (`thread_id`,`user_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `forum_thread_views_ibfk_1` FOREIGN KEY (`thread_id`) REFERENCES `forum_threads` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `forum_thread_views_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Data exporting was unselected.
 
@@ -542,6 +558,62 @@ CREATE TABLE IF NOT EXISTS `user_permissions` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_permission` (`role`,`level`,`module`,`action`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table academy_lite.workshops
+CREATE TABLE IF NOT EXISTS `workshops` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `slug` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `type` enum('workshop','seminar') NOT NULL DEFAULT 'workshop',
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `start_datetime` datetime NOT NULL,
+  `end_datetime` datetime NOT NULL,
+  `location` varchar(255) NOT NULL,
+  `max_participants` int NOT NULL DEFAULT '0',
+  `thumbnail` varchar(255) DEFAULT NULL,
+  `status` enum('draft','published','completed') NOT NULL DEFAULT 'draft',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `slug` (`slug`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table academy_lite.workshop_materials
+CREATE TABLE IF NOT EXISTS `workshop_materials` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `workshop_id` int unsigned NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `file_path` varchar(255) NOT NULL,
+  `file_type` varchar(50) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `workshop_id` (`workshop_id`),
+  CONSTRAINT `workshop_materials_ibfk_1` FOREIGN KEY (`workshop_id`) REFERENCES `workshops` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table academy_lite.workshop_participants
+CREATE TABLE IF NOT EXISTS `workshop_participants` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `workshop_id` int unsigned NOT NULL,
+  `user_id` int DEFAULT NULL,
+  `external_name` varchar(255) DEFAULT NULL,
+  `external_email` varchar(255) DEFAULT NULL,
+  `role` enum('student','teacher','external') NOT NULL DEFAULT 'external',
+  `status` enum('registered','attended','cancelled') NOT NULL DEFAULT 'registered',
+  `registered_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `workshop_id` (`workshop_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `workshop_participants_ibfk_1` FOREIGN KEY (`workshop_id`) REFERENCES `workshops` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `workshop_participants_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- Data exporting was unselected.
 

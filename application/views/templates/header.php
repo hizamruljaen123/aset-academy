@@ -163,6 +163,10 @@
                         <i class="fas fa-clipboard-check w-5 text-center mr-3"></i>
                         Penilaian
                     </a>
+                    <a href="<?= site_url('admin/workshops'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'workshops') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-chalkboard-teacher w-5 text-center mr-3"></i>
+                        Workshop & Seminar
+                    </a>
                     <a href="<?php echo site_url('forum'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'forum') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-comments w-5 text-center mr-3"></i>
                         Forum
