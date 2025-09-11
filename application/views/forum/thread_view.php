@@ -1,3 +1,5 @@
+<?php $this->load->view('forum/viewers_modal'); ?>
+
 <div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
     <div class="max-w-4xl mx-auto">
         <!-- Breadcrumb -->
@@ -80,20 +82,20 @@
                             <i class="far fa-thumbs-up mr-1"></i>
                             <span><?php echo $likes; ?> Suka</span>
                         </button>
-                        <button type="button" class="inline-flex items-center text-gray-500 hover:text-blue-600">
+                        <button type="button" id="open-comments-modal" class="inline-flex items-center text-gray-500 hover:text-blue-600">
                             <i class="far fa-comment-alt mr-1"></i>
                             <span><?php echo $post_count; ?> Komentar</span>
                         </button>
-                        <button type="button" class="inline-flex items-center text-gray-500 hover:text-blue-600">
+                        <button type="button" id="open-viewers-modal" class="inline-flex items-center text-gray-500 hover:text-blue-600">
                             <i class="far fa-eye mr-1"></i>
-                            <span><?php echo isset($thread->views) ? $thread->views : '0'; ?> Dilihat</span>
+                            <span><?php echo $view_count; ?> Dilihat</span>
                         </button>
                     </div>
                     <div class="flex items-center space-x-2">
                         <button type="button" class="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                             <i class="far fa-bookmark mr-1"></i> Simpan
                         </button>
-                        <button type="button" class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <button type="button" onclick="document.getElementById('reply-form-main').scrollIntoView({ behavior: 'smooth' });" class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                             <i class="far fa-comment-dots mr-1"></i> Balas
                         </button>
                     </div>
@@ -169,7 +171,7 @@
                                             <i class="far fa-thumbs-up mr-1"></i>
                                             <span>Suka</span>
                                         </button>
-                                        <button type="button" class="inline-flex items-center hover:text-blue-600" onclick="document.getElementById('reply-to-<?php echo $post->id; ?>').scrollIntoView({ behavior: 'smooth' });">
+                                        <button type="button" class="inline-flex items-center hover:text-blue-600" @click="document.getElementById('reply-to-<?php echo $post->id; ?>').classList.toggle('hidden'); document.getElementById('reply-to-<?php echo $post->id; ?>').scrollIntoView({ behavior: 'smooth' });">
                                             <i class="far fa-comment-dots mr-1"></i>
                                             <span>Balas</span>
                                         </button>
@@ -296,6 +298,62 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Viewers Modal Logic
+    const viewersModal = document.getElementById('viewers-modal');
+    const openViewersModalBtn = document.getElementById('open-viewers-modal');
+    const closeViewersModalBtn = document.getElementById('close-viewers-modal');
+    const viewersList = document.getElementById('viewers-list');
+
+    if (openViewersModalBtn) {
+        openViewersModalBtn.addEventListener('click', function() {
+            fetch(`<?php echo site_url('forum/get_viewers/' . $thread->id); ?>`)
+                .then(response => response.json())
+                .then(data => {
+                    viewersList.innerHTML = ''; // Clear previous list
+                    if (data.length > 0) {
+                        data.forEach(viewer => {
+                            const viewerEl = document.createElement('div');
+                            viewerEl.className = 'flex items-center space-x-3 mb-3 p-2 rounded-lg hover:bg-gray-50';
+                            viewerEl.innerHTML = `
+                                <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 font-bold text-sm">
+                                    ${viewer.nama_lengkap.charAt(0).toUpperCase()}
+                                </div>
+                                <div class="flex-1">
+                                    <div class="font-medium text-gray-800">${viewer.nama_lengkap}</div>
+                                    <div class="text-xs text-gray-500">Dilihat pada ${new Date(viewer.viewed_at).toLocaleString('id-ID')}</div>
+                                </div>
+                            `;
+                            viewersList.appendChild(viewerEl);
+                        });
+                    } else {
+                        viewersList.innerHTML = '<p class="text-gray-500 text-center">Belum ada yang melihat thread ini.</p>';
+                    }
+                    viewersModal.classList.remove('hidden');
+                });
+        });
+    }
+
+    if (closeViewersModalBtn) {
+        closeViewersModalBtn.addEventListener('click', function() {
+            viewersModal.classList.add('hidden');
+        });
+    }
+
+    if (viewersModal) {
+        viewersModal.addEventListener('click', function(e) {
+            if (e.target === viewersModal) {
+                viewersModal.classList.add('hidden');
+            }
+        });
+    }
+
+    // Comments Modal and Quill Editor Logic
+    const openCommentsModalBtn = document.getElementById('open-comments-modal');
+    if (openCommentsModalBtn) {
+        openCommentsModalBtn.addEventListener('click', function() {
+            openModal();
+        });
+    }
     var mainEditor = new Quill('#editor-main', { theme: 'snow', modules: { toolbar: [['bold', 'italic'], ['link', 'code-block']] } });
     var mainForm = document.querySelector('#reply-form-main form');
     mainForm.onsubmit = function() {

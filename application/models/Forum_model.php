@@ -84,7 +84,7 @@ class Forum_model extends CI_Model {
     
     public function get_popular_threads($limit = 5)
     {
-        $this->db->select('ft.id, ft.title, ft.slug, ft.created_at, 
+        $this->db->select('ft.id, ft.title, ft.created_at, 
                          u.nama_lengkap as author_name, u.username,
                          (SELECT COUNT(*) FROM forum_posts fp WHERE fp.thread_id = ft.id) as reply_count');
         $this->db->from('forum_threads ft');
@@ -157,7 +157,7 @@ class Forum_model extends CI_Model {
     
     public function get_similar_threads($category_id, $exclude_thread_id, $limit = 5)
     {
-        $this->db->select('ft.id, ft.title, ft.slug, ft.created_at, 
+        $this->db->select('ft.id, ft.title, ft.created_at, 
                          u.nama_lengkap as author_name,
                          (SELECT COUNT(*) FROM forum_posts fp WHERE fp.thread_id = ft.id) as reply_count');
         $this->db->from('forum_threads ft');
@@ -283,5 +283,37 @@ class Forum_model extends CI_Model {
     {
         // Deleting a post will also cascade delete likes and replies
         return $this->db->delete('forum_posts', ['id' => $post_id]);
+    }
+
+    public function record_view($thread_id, $user_id)
+    {
+        // Check if the view already exists
+        $this->db->where('thread_id', $thread_id);
+        $this->db->where('user_id', $user_id);
+        $query = $this->db->get('forum_thread_views');
+
+        if ($query->num_rows() == 0) {
+            // If it doesn't exist, insert it
+            $data = [
+                'thread_id' => $thread_id,
+                'user_id' => $user_id
+            ];
+            $this->db->insert('forum_thread_views', $data);
+        }
+    }
+
+    public function get_thread_view_count($thread_id)
+    {
+        return $this->db->where('thread_id', $thread_id)->count_all_results('forum_thread_views');
+    }
+
+    public function get_thread_viewers($thread_id)
+    {
+        $this->db->select('u.nama_lengkap, u.username, v.viewed_at');
+        $this->db->from('forum_thread_views v');
+        $this->db->join('users u', 'u.id = v.user_id');
+        $this->db->where('v.thread_id', $thread_id);
+        $this->db->order_by('v.viewed_at', 'DESC');
+        return $this->db->get()->result();
     }
 }

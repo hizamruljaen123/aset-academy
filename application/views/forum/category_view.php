@@ -33,7 +33,7 @@
                                 <div class="ml-4 flex-1">
                                     <div class="flex items-center justify-between">
                                         <h3 class="text-lg font-medium text-gray-900 hover:text-blue-600 transition-colors duration-150">
-                                            <a href="<?php echo site_url('forum/thread/' . $thread->slug); ?>">
+                                            <a href="<?php echo site_url('forum/thread/' . $thread->id); ?>">
                                                 <?php if ($thread->is_pinned): ?>
                                                     <span class="text-yellow-500 mr-2"><i class="fas fa-thumbtack"></i></span>
                                                 <?php endif; ?>

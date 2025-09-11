@@ -190,5 +190,15 @@ class Kelas_model extends CI_Model {
         $this->db->where('status', 'Published');
         return $this->db->get()->result();
     }
+
+    public function get_all_free_classes()
+    {
+        $this->db->select('id, title as nama_kelas');
+        $this->db->from('free_classes');
+        $this->db->where('status', 'Published');
+        $this->db->order_by('title', 'ASC');
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 ?>

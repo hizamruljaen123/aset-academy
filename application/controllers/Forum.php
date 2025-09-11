@@ -65,23 +65,23 @@ class Forum extends CI_Controller {
         $this->load->view('templates/footer');
     }
 
-    public function thread($thread_slug = null)
+    public function thread($thread_id = null)
     {
-        // If no slug is provided, show 404
-        if (!$thread_slug) {
+        // If no id is provided, show 404
+        if (!$thread_id || !is_numeric($thread_id)) {
             show_404();
         }
         
-        // Get thread data by slug
-        $data['thread'] = $this->forum->get_thread_by_slug($thread_slug);
+        // Get thread data by id
+        $data['thread'] = $this->forum->get_thread($thread_id);
         if (!$data['thread']) {
             show_404();
         }
         
-        // Increment view count
-        $this->db->set('views', 'views+1', FALSE);
-        $this->db->where('id', $data['thread']->id);
-        $this->db->update('forum_threads');
+        // Record the view
+        if ($this->session->userdata('user_id')) {
+            $this->forum->record_view($thread_id, $this->session->userdata('user_id'));
+        }
 
         // Get category info
         $data['category'] = $this->forum->get_category($data['thread']->category_id);
@@ -92,6 +92,7 @@ class Forum extends CI_Controller {
         $data['posts'] = $this->forum->get_posts($data['thread']->id, $limit, $offset);
         $data['post_count'] = $this->forum->count_posts($data['thread']->id);
         $data['likes'] = $this->forum->count_likes($data['thread']->id, 'thread');
+        $data['view_count'] = $this->forum->get_thread_view_count($thread_id);
         
         // Check if user has liked the thread
         $data['user_has_liked'] = false;
@@ -112,7 +113,7 @@ class Forum extends CI_Controller {
         
         // Set up pagination
         $this->load->library('pagination');
-        $config['base_url'] = site_url('forum/thread/' . $thread_slug);
+        $config['base_url'] = site_url('forum/thread/' . $thread_id);
         $config['total_rows'] = $data['post_count'];
         $config['per_page'] = $limit;
         $config['uri_segment'] = 4;
@@ -180,9 +181,7 @@ class Forum extends CI_Controller {
             ];
 
             $thread_id = $this->forum->create_thread($thread_data);
-            // Get the thread to get its slug
-            $thread = $this->forum->get_thread($thread_id);
-            redirect('forum/thread/' . $thread->slug);
+            redirect('forum/thread/' . $thread_id);
         }
     }
 
@@ -200,10 +199,10 @@ class Forum extends CI_Controller {
             $this->forum->create_post($post_data);
         }
 
-        // Redirect back to the thread using its slug
+        // Redirect back to the thread
         $thread = $this->forum->get_thread($thread_id);
         if ($thread) {
-            redirect('forum/thread/' . $thread->slug);
+            redirect('forum/thread/' . $thread_id);
         } else {
             // Fallback if thread not found
             redirect('forum');
@@ -227,15 +226,23 @@ class Forum extends CI_Controller {
         $this->forum->toggle_like($user_id, $thread_id, $post_id);
 
         if ($type == 'thread') {
-            // Get the thread to get its slug
-            $thread = $this->forum->get_thread($id);
-            redirect('forum/thread/' . $thread->slug);
+            redirect('forum/thread/' . $id);
         } else {
             // Need to get thread_id from post_id to redirect correctly
             $post = $this->db->get_where('forum_posts', ['id' => $post_id])->row();
-            // Get the thread to get its slug
-            $thread = $this->forum->get_thread($post->thread_id);
-            redirect('forum/thread/' . $thread->slug);
+            redirect('forum/thread/' . $post->thread_id);
         }
+    }
+
+    public function get_viewers($thread_id)
+    {
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        }
+
+        $viewers = $this->forum->get_thread_viewers($thread_id);
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($viewers));
     }
 }

@@ -25,6 +25,48 @@ class Assignments extends CI_Controller {
         $this->load->view('templates/footer');
     }
 
+    public function create()
+    {
+        $this->load->model('Kelas_model');
+        $this->load->model('Guru_model');
+
+        $data['title'] = 'Buat Tugas Baru';
+        $data['premium_classes'] = $this->Kelas_model->get_all_kelas();
+        $data['free_classes'] = $this->Kelas_model->get_all_free_classes(); // Assuming this method exists
+        $data['teachers'] = $this->Guru_model->get_all_gurus();
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('admin/assignments/create', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function store()
+    {
+        $this->load->library('form_validation');
+
+        $this->form_validation->set_rules('title', 'Judul', 'required');
+        $this->form_validation->set_rules('class_id_type', 'Kelas', 'required');
+        
+        if ($this->form_validation->run() == FALSE) {
+            $this->create(); // Reload create form with validation errors
+        } else {
+            list($class_id, $class_type) = explode('|', $this->input->post('class_id_type'));
+
+            $data = [
+                'title' => $this->input->post('title'),
+                'description' => $this->input->post('description'),
+                'class_id' => $class_id,
+                'class_type' => $class_type,
+                'teacher_id' => $this->session->userdata('user_id'), // Or select from a dropdown
+                'due_date' => $this->input->post('due_date') ? $this->input->post('due_date') : NULL
+            ];
+
+            $this->assignment->create_assignment($data);
+            $this->session->set_flashdata('success', 'Tugas baru berhasil dibuat.');
+            redirect('admin/assignments');
+        }
+    }
+
     public function submissions($assignment_id)
     {
         $this->load->model('Assignment_model');

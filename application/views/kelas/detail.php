@@ -234,7 +234,7 @@
 </div>
 
 <!-- Modal -->
-<div id="parts-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+<div id="parts-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
     <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" onclick="closeModal()"></div>
     <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-auto z-10">
         <div class="p-6 border-b border-gray-200">

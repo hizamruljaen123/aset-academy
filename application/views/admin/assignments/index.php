@@ -7,10 +7,10 @@
                 <p class="text-gray-600">Kelola semua tugas siswa dan pantau progres pengumpulan</p>
             </div>
             <div class="flex gap-3">
-                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
+                <a href="<?= site_url('admin/assignments/create'); ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
                     <i class="fas fa-plus"></i>
                     Buat Tugas Baru
-                </button>
+                </a>
                 <button class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-2">
                     <i class="fas fa-filter"></i>
                     Filter
