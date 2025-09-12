@@ -22,10 +22,12 @@
                             <i class="fas fa-video mr-2"></i> Join Meeting
                         </a>
                     <?php endif; ?>
+                    <?php if ($this->session->userdata('role') === 'admin'): ?>
                     <a href="<?php echo site_url('kelas/edit/'.$kelas->id); ?>" 
                        class="inline-flex items-center px-5 py-2.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white font-medium hover:bg-white/20 transition-all duration-300">
                         <i class="fas fa-edit mr-2"></i> Edit
                     </a>
+                    <?php endif; ?>
                     <a href="<?php echo site_url('kelas'); ?>" 
                        class="inline-flex items-center px-5 py-2.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white font-medium hover:bg-white/20 transition-all duration-300">
                         <i class="fas fa-arrow-left mr-2"></i> Kembali
@@ -186,10 +188,12 @@
                     <h2 class="text-2xl font-bold text-gray-800">Daftar Materi</h2>
                     <p class="text-gray-500">Semua materi yang tersedia dalam kelas ini</p>
                 </div>
+                <?php if ($this->session->userdata('role') === 'admin'): ?>
                 <a href="<?php echo site_url('materi/index/' . $kelas->id); ?>" 
                    class="mt-4 sm:mt-0 inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 border border-transparent rounded-xl font-medium text-sm text-white shadow-sm hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:-translate-y-0.5">
                     <i class="fas fa-plus mr-2"></i> Tambah Materi
                 </a>
+                <?php endif; ?>
             </div>
         </div>
         <div class="p-6">

@@ -98,4 +98,54 @@ class Home extends CI_Controller {
         
         $this->load->view('home/free_class_view', $data);
     }
+    
+    public function kelas_premium($id)
+    {
+        $kelas = $this->Kelas_model->get_kelas_by_id($id);
+        
+        if (!$kelas) {
+            show_404();
+        }
+        
+        if ($kelas->status != 'Aktif') {
+            show_error('Kelas ini tidak tersedia', 403);
+        }
+        
+        // Get related materials
+        $this->load->model('Materi_model');
+        $materi = $this->Materi_model->get_materi_with_parts_by_kelas($id);
+        
+        // Get schedule
+        $this->load->model('Jadwal_model');
+        $jadwal = $this->Jadwal_model->get_jadwal_by_kelas($id);
+        
+        // Get attendance statistics
+        $this->load->model('Absensi_model');
+        $attendance_stats = $this->Absensi_model->get_attendance_stats_by_class($id);
+        
+        // Get student progress
+        $student_progress = $this->Kelas_model->get_student_progress($id);
+        
+        // Get enrolled students count
+        $enrolled_count = $this->Kelas_model->count_enrolled_students($id);
+        
+        $data['kelas'] = $kelas;
+        $data['materi'] = $materi;
+        $data['jadwal'] = $jadwal;
+        $data['attendance_stats'] = $attendance_stats;
+        $data['student_progress'] = $student_progress;
+        $data['enrolled_count'] = $enrolled_count;
+        $data['title'] = $kelas->nama_kelas . ' - Detail Kelas Premium';
+        $data['description'] = 'Detail lengkap kelas premium: ' . $kelas->nama_kelas . '. Pelajari apa saja yang akan Anda pelajari dalam kelas ini.';
+        
+        $this->load->view('kelas/detail_premium', $data);
+    }
+    
+    public function partnership()
+    {
+        $data['title'] = 'Partnership & Corporate Training - Aset Academy';
+        $data['description'] = 'Transformasi digital perusahaan Anda dengan program pelatihan programming terbaik. Solusi edukasi khusus untuk korporasi, institusi, dan komunitas.';
+
+        $this->load->view('home/partnership', $data);
+    }
 }

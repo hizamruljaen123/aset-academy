@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= isset($title) ? html_escape($title) : 'Aset Academy' ?></title>
     <meta name="description" content="<?= isset($description) ? html_escape($description) : 'Belajar Programming Jadi Mudah & Menyenangkan' ?>">
+    <meta name="keywords" content="<?= isset($keywords) ? html_escape($keywords) : 'programming course, coding bootcamp, learn programming, web development, mobile development, data science' ?>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>

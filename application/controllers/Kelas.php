@@ -13,14 +13,18 @@ class Kelas extends CI_Controller {
         $this->load->helper('form');
         $this->load->library('session');
         
-        // Cek apakah user sudah login, jika belum redirect ke login
-        if (!$this->session->userdata('logged_in')) {
-            redirect('auth/login');
-        }
-        
-        // Cek role user
-        if ($this->session->userdata('role') != 'admin') {
-            redirect('auth/login');
+        // Daftar method yang dapat diakses publik tanpa perlu login
+        $public_methods = ['detail', 'by_level', 'by_bahasa'];
+        $current_method = $this->router->fetch_method();
+
+        // Jika method yang diakses tidak termasuk yang publik, lakukan pengecekan login & role admin
+        if (!in_array($current_method, $public_methods)) {
+            if (!$this->session->userdata('logged_in')) {
+                redirect('auth/login');
+            }
+            if ($this->session->userdata('role') != 'admin') {
+                redirect('auth/login');
+            }
         }
     }
 
@@ -152,9 +156,10 @@ class Kelas extends CI_Controller {
             show_404();
         }
 
-        $this->load->view('templates/header', $data);
+        // Use home template structure
+        $this->load->view('home/templates/_header', $data);
         $this->load->view('kelas/detail', $data);
-        $this->load->view('templates/footer');
+        $this->load->view('home/templates/_footer');
     }
 
     // Menampilkan kelas berdasarkan level

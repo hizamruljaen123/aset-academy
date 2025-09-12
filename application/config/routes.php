@@ -166,3 +166,4 @@ $route['home/premium'] = 'home/premium';
 $route['home/free'] = 'home/free';
 $route['free_class/(:num)'] = 'home/view_free_class/$1';
 $route['free_classes/view/(:num)'] = 'home/view_free_class/$1';
+$route['home/partnership'] = 'home/partnership';

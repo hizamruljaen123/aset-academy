@@ -10,7 +10,7 @@
             <a href="<?= site_url('home') ?>" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Beranda</a>
             <a href="<?= site_url('home/premium') ?>" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Kelas Premium</a>
             <a href="<?= site_url('home/free') ?>" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Kelas Gratis</a>
-            <a href="<?= site_url('home#features') ?>" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Fitur</a>
+            <a href="<?= site_url('home/partnership') ?>" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Partnership</a>
             <a href="<?= site_url('home/about') ?>" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Tentang Kami</a>
             <a href="<?= site_url('home/faq') ?>" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">FAQ</a>
         </div>

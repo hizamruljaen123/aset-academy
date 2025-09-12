@@ -200,5 +200,17 @@ class Kelas_model extends CI_Model {
         $query = $this->db->get();
         return $query->result();
     }
+
+    // Fungsi untuk menghitung jumlah siswa yang terdaftar di kelas
+    public function count_enrolled_students($kelas_id)
+    {
+        $this->db->select('COUNT(*) as total');
+        $this->db->from('siswa');
+        $this->db->where('kelas', (string)$kelas_id);
+        $this->db->where('status', 'Aktif');
+        $query = $this->db->get();
+        $result = $query->row();
+        return $result ? $result->total : 0;
+    }
 }
 ?>
