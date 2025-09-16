@@ -50,7 +50,7 @@
                 </div>
                 
                 <div class="relative">
-                    <img src="<?= $free_class->thumbnail ? base_url('uploads/free_class/' . $free_class->thumbnail) : 'http://static.photos/technology/640x360/5' ?>" alt="<?= html_escape($free_class->title) ?>" class="w-full rounded-2xl shadow-2xl">
+                    <img src="<?= $free_class->thumbnail ?>" alt="<?= html_escape($free_class->title) ?>" class="w-full rounded-2xl shadow-2xl">
                     <div class="absolute -top-4 -right-4 bg-green-400 text-green-900 px-4 py-2 rounded-full font-bold text-sm">
                         ⭐ 4.8/5 Rating
                     </div>
@@ -316,7 +316,7 @@
                 ?>
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300" data-aos="fade-up" data-aos-delay="100">
                     <div class="relative overflow-hidden">
-                        <img src="<?= $related_class->thumbnail ? base_url('uploads/free_class/' . $related_class->thumbnail) : 'http://static.photos/technology/640x360/5' ?>" alt="<?= html_escape($related_class->title) ?>" class="w-full h-48 object-cover">
+                        <img src="<?php echo $related_class->thumbnail ?>" alt="<?= html_escape($related_class->title) ?>" class="w-full h-48 object-cover">
                         <div class="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">
                             Gratis
                         </div>

@@ -50,7 +50,7 @@
                 <?php foreach ($free_classes as $class): ?>
                 <div class="course-card bg-white rounded-xl shadow-lg overflow-hidden" data-aos="fade-up" data-aos-delay="100" data-category="<?= strtolower(str_replace(' ', '-', $class->category)) ?> <?= strtolower($class->level) ?>">
                     <div class="relative overflow-hidden">
-                        <img src="<?= $class->thumbnail ? base_url('uploads/free_class/' . $class->thumbnail) : 'http://static.photos/technology/640x360/5' ?>" alt="<?= html_escape($class->title) ?>" class="w-full h-48 object-cover">
+                        <img src="<?= $class->thumbnail ?>" alt="<?= html_escape($class->title) ?>" class="w-full h-48 object-cover">
                         <div class="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">
                             Gratis
                         </div>

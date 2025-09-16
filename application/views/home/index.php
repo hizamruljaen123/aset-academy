@@ -81,7 +81,7 @@
                 ?>
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300" data-aos="fade-up" data-aos-delay="100">
                     <div class="relative overflow-hidden">
-                        <img src="<?= $class->gambar ? base_url('uploads/kelas/' . $class->gambar) : 'http://static.photos/technology/640x360/2' ?>" alt="<?= html_escape($class->nama_kelas) ?>" class="w-full h-48 object-cover hover:scale-105 transition-transform duration-300">
+                        <img src="<?= $class->gambar ?>" alt="<?= html_escape($class->nama_kelas) ?>" class="w-full h-48 object-cover hover:scale-105 transition-transform duration-300">
                         <div class="absolute top-4 left-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-bold">
                             Premium
                         </div>
@@ -139,7 +139,7 @@
                 <?php foreach ($featured_free as $class): ?>
                 <div class="bg-gray-50 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300" data-aos="fade-up" data-aos-delay="100">
                     <div class="relative overflow-hidden">
-                        <img src="<?= $class->thumbnail ? base_url('uploads/free_class/' . $class->thumbnail) : 'http://static.photos/technology/640x360/5' ?>" alt="<?= html_escape($class->title) ?>" class="w-full h-48 object-cover">
+                        <img src="<?= $class->thumbnail?>" alt="<?= html_escape($class->title) ?>" class="w-full h-48 object-cover">
                         <div class="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">
                             Gratis
                         </div>
@@ -213,7 +213,7 @@
                     <?php foreach ($testimonials as $testimonial): ?>
                     <div class="carousel-item w-80 flex-shrink-0 bg-gray-50 p-6 rounded-xl" data-aos="fade-up" data-aos-delay="100">
                         <div class="flex items-center mb-4">
-                            <img src="<?= $testimonial->photo ? base_url('uploads/testimonials/' . $testimonial->photo) : 'http://static.photos/people/80x80/1' ?>" alt="<?= html_escape($testimonial->name) ?>" class="w-12 h-12 rounded-full mr-4">
+                            <img src="<?= $testimonial->photo?>" alt="<?= html_escape($testimonial->name) ?>" class="w-12 h-12 rounded-full mr-4">
                             <div>
                                 <h4 class="font-bold text-gray-800"><?= html_escape($testimonial->name) ?></h4>
                                 <p class="text-sm text-gray-600"><?= html_escape($testimonial->position) ?></p>

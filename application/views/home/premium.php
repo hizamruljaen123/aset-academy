@@ -47,7 +47,7 @@
                 <?php foreach ($premium_classes as $class): ?>
                 <div class="course-card bg-white rounded-xl shadow-lg overflow-hidden" data-aos="fade-up" data-aos-delay="100" data-category="<?= strtolower(str_replace(' ', '-', $class->bahasa_program)) ?>">
                     <div class="relative overflow-hidden">
-                        <img src="<?= $class->gambar ? base_url('uploads/kelas/' . $class->gambar) : 'http://static.photos/technology/640x360/2' ?>" alt="<?= html_escape($class->nama_kelas) ?>" class="w-full h-48 object-cover hover:scale-105 transition-transform duration-300">
+                        <img src="<?= $class->gambar ?>" alt="<?= html_escape($class->nama_kelas) ?>" class="w-full h-48 object-cover hover:scale-105 transition-transform duration-300">
                         <div class="absolute top-4 left-4 premium-badge text-white px-3 py-1 rounded-full text-sm font-bold">
                             Premium
                         </div>

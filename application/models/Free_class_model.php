@@ -219,6 +219,7 @@ class Free_class_model extends CI_Model
      * @param int $limit
      * @return array
      */
+    
     public function get_popular_free_classes($limit = 5)
     {
         $this->db->select('fc.*, u.nama_lengkap as mentor_name, COUNT(fce.id) as enrollment_count');
