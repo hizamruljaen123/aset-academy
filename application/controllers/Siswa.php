@@ -18,9 +18,10 @@ class Siswa extends CI_Controller {
             redirect('auth/login');
         }
         
-        // Cek role user
-        if ($this->session->userdata('role') != 'admin') {
-            redirect('auth/login');
+        // Cek role user - allow admin and super_admin
+        $allowed_roles = ['admin', 'super_admin'];
+        if (!in_array($this->session->userdata('role'), $allowed_roles)) {
+            redirect('dashboard');
         }
         
         // Load data kelas untuk dropdown

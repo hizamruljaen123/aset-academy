@@ -126,6 +126,19 @@ $route['admin/enrollment/grant_access/(:num)'] = 'admin_enrollment/grant_access/
 $route['admin/enrollment/revoke_access/(:num)'] = 'admin_enrollment/revoke_access/$1';
 $route['admin/enrollment/update_status'] = 'admin_enrollment/update_status';
 
+// Routes untuk Admin Permissions Management
+$route['admin/permissions'] = 'admin/permissions';
+$route['admin/permissions/index'] = 'admin/permissions';
+$route['admin/permissions/create'] = 'admin/permissions/create';
+$route['admin/permissions/store'] = 'admin/permissions/store';
+$route['admin/permissions/edit/(:num)'] = 'admin/permissions/edit/$1';
+$route['admin/permissions/update/(:num)'] = 'admin/permissions/update/$1';
+$route['admin/permissions/delete/(:num)'] = 'admin/permissions/delete/$1';
+$route['admin/permissions/toggle/(:num)'] = 'admin/permissions/toggle/$1';
+$route['admin/permissions/reset_defaults'] = 'admin/permissions/reset_defaults';
+$route['admin/permissions/export'] = 'admin/permissions/export';
+$route['admin/permissions/import'] = 'admin/permissions/import';
+
 // Routes untuk Admin Free Classes Management
 $route['admin/free_classes'] = 'admin/free_classes';
 $route['admin/free_classes/index'] = 'admin/free_classes';

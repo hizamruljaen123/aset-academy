@@ -1,4 +1,4 @@
-<div class="p-4 transition-opacity duration-500 opacity-0">
+<div class="p-4 transition-opacity duration-500 opacity-0 permissions-container">
     <!-- Header -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 bg-white p-6 rounded-2xl shadow-xl ring-1 ring-gray-200/50">
         <div class="mb-4 md:mb-0">
@@ -27,7 +27,7 @@
             <p class="text-gray-500">Overview hak akses per role dan module</p>
         </div>
         <div class="p-6">
-            <div class="overflow-x-auto">
+            <div class="table-responsive">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
@@ -108,7 +108,7 @@
             <h2 class="text-2xl font-bold text-gray-800">Detail Permissions</h2>
         </div>
         <div class="p-6">
-            <div class="overflow-x-auto">
+            <div class="table-responsive">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
@@ -218,11 +218,53 @@
     </div>
 </div>
 
+<style>
+/* Custom styles for permissions page */
+.permissions-container {
+    max-height: 70vh;
+    overflow-y: auto;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e0 #f7fafc;
+}
+
+.permissions-container::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.permissions-container::-webkit-scrollbar-track {
+    background: #f7fafc;
+    border-radius: 4px;
+}
+
+.permissions-container::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 4px;
+}
+
+.permissions-container::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0;
+}
+
+/* Ensure tables are responsive */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+</style>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const permissionsPage = document.querySelector('.transition-opacity');
     if (permissionsPage) {
         permissionsPage.classList.add('opacity-100');
+    }
+
+    // Add smooth scrolling for better UX
+    const container = document.querySelector('.permissions-container');
+    if (container) {
+        container.style.scrollBehavior = 'smooth';
     }
 });
 </script>

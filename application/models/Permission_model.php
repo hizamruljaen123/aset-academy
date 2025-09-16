@@ -22,6 +22,27 @@ class Permission_model extends CI_Model
         return $this->db->get('user_permissions')->row();
     }
 
+    public function create_permission($data)
+    {
+        return $this->db->insert('user_permissions', $data);
+    }
+
+    public function delete_permission($id)
+    {
+        $this->db->where('id', $id);
+        return $this->db->delete('user_permissions');
+    }
+
+    public function toggle_permission($id)
+    {
+        $permission = $this->get_permission_by_id($id);
+        if ($permission) {
+            $new_status = $permission->allowed ? 0 : 1;
+            return $this->update_permission($id, ['allowed' => $new_status]);
+        }
+        return false;
+    }
+
     public function update_permission($id, $data)
     {
         $this->db->where('id', $id);

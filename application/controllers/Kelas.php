@@ -22,8 +22,10 @@ class Kelas extends CI_Controller {
             if (!$this->session->userdata('logged_in')) {
                 redirect('auth/login');
             }
-            if ($this->session->userdata('role') != 'admin') {
-                redirect('auth/login');
+            // Allow admin and super_admin roles
+            $allowed_roles = ['admin', 'super_admin'];
+            if (!in_array($this->session->userdata('role'), $allowed_roles)) {
+                redirect('dashboard');
             }
         }
     }
