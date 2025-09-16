@@ -1,5 +1,8 @@
-// Define base URL
-const base_url = window.location.origin + '/';
+// Define base URL - use the correct project path
+const base_url = window.location.origin + '/aset-academy/';
+
+// Force cache refresh
+console.log('Admin Payment JS loaded with base_url:', base_url);
 
 // Payment Verification - Modal Controller
 
@@ -62,12 +65,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function showVerifyModal(paymentId) {
             document.getElementById('verifyForm').action = base_url + 'payment/admin_process_verify/' + paymentId;
+            document.getElementById('verify_payment_id').value = paymentId;
             const modal = modalConfig.find(m => m.name === 'verify');
             if (modal) modal.element.classList.remove('hidden');
         }
 
         function showRejectModal(paymentId) {
             document.getElementById('rejectForm').action = base_url + 'payment/admin_process_verify/' + paymentId;
+            document.getElementById('reject_payment_id').value = paymentId;
             const modal = modalConfig.find(m => m.name === 'reject');
             if (modal) modal.element.classList.remove('hidden');
         }

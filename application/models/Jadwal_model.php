@@ -62,6 +62,17 @@ class Jadwal_model extends CI_Model {
         return $this->db->count_all_results('jadwal_kelas');
     }
 
+    public function get_all_jadwal()
+    {
+        $this->db->select('jadwal_kelas.*, kelas_programming.nama_kelas, users.nama_lengkap as nama_guru');
+        $this->db->from('jadwal_kelas');
+        $this->db->join('kelas_programming', 'kelas_programming.id = jadwal_kelas.kelas_id', 'left');
+        $this->db->join('users', 'users.id = jadwal_kelas.guru_id', 'left');
+        $this->db->order_by('jadwal_kelas.tanggal_pertemuan', 'DESC');
+        $this->db->order_by('jadwal_kelas.waktu_mulai', 'ASC');
+        return $this->db->get()->result();
+    }
+
 }
 
 /* End of file Jadwal_model.php */

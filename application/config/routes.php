@@ -145,6 +145,17 @@ $route['admin/jadwal/index'] = 'admin/jadwal';
 $route['admin/jadwal/create'] = 'admin/jadwal/create';
 $route['admin/jadwal/store'] = 'admin/jadwal/store';
 
+// Routes untuk Payment Management
+$route['payment/initiate/(:num)'] = 'payment/initiate/$1';
+$route['payment/confirm/(:num)'] = 'payment/confirm/$1';
+$route['payment/process/(:num)'] = 'payment/process/$1';
+$route['payment/status/(:num)'] = 'payment/status/$1';
+$route['payment/orders'] = 'payment/orders';
+$route['payment/admin_verify'] = 'payment/admin_verify';
+$route['payment/admin_process_verify/(:num)'] = 'payment/admin_process_verify/$1';
+$route['payment/invoice/(:num)'] = 'payment/invoice/$1';
+$route['payment/purchase/(:num)'] = 'payment/purchase/$1';
+
 // Routes untuk Student Free Classes Access
 $route['student/free_classes'] = 'student/free_classes';
 $route['student/free_classes/index'] = 'student/free_classes/index';

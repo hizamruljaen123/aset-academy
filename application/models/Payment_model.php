@@ -31,4 +31,15 @@ class Payment_model extends CI_Model {
                        ->get()
                        ->result();
     }
+
+    // Get payment with full details
+    public function get_payment_with_details($payment_id) {
+        return $this->db->select('payments.*, kelas_programming.nama_kelas as class_name, company_bank_accounts.bank_name as company_bank_name, company_bank_accounts.account_number as company_account_number, company_bank_accounts.account_holder as company_account_holder')
+                       ->from('payments')
+                       ->join('kelas_programming', 'kelas_programming.id = payments.class_id')
+                       ->join('company_bank_accounts', 'company_bank_accounts.id = payments.bank_account_id', 'left')
+                       ->where('payments.id', $payment_id)
+                       ->get()
+                       ->row();
+    }
 }

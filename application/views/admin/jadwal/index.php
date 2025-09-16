@@ -54,15 +54,15 @@
                     <tbody class="bg-white divide-y divide-gray-200">
                         <?php foreach ($jadwal as $j): ?>
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?= $j['nama_kelas']; ?></td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $j['pertemuan_ke']; ?></td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $j['judul_pertemuan']; ?></td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= date('d M Y', strtotime($j['tanggal_pertemuan'])); ?></td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= date('H:i', strtotime($j['waktu_mulai'])); ?> - <?= date('H:i', strtotime($j['waktu_selesai'])); ?></td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $j['nama_guru']; ?></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?= $j->nama_kelas; ?></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $j->pertemuan_ke; ?></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $j->judul_pertemuan; ?></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= date('d M Y', strtotime($j->tanggal_pertemuan)); ?></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= date('H:i', strtotime($j->waktu_mulai)); ?> - <?= date('H:i', strtotime($j->waktu_selesai)); ?></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $j->nama_guru; ?></td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <a href="<?= site_url('admin/jadwal/edit/' . $j['id']); ?>" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                                    <a href="<?= site_url('admin/jadwal/delete/' . $j['id']); ?>" class="text-red-600 hover:text-red-900 ml-4" onclick="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?');">Hapus</a>
+                                    <a href="<?= site_url('admin/jadwal/edit/' . $j->id); ?>" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                    <a href="<?= site_url('admin/jadwal/delete/' . $j->id); ?>" class="text-red-600 hover:text-red-900 ml-4" onclick="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?');">Hapus</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

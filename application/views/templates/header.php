@@ -10,10 +10,16 @@
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>tailwind.config = {darkMode: 'class'}</script>
+    <script>
+        try {
+            tailwind.config = {darkMode: 'class'};
+        } catch (error) {
+            console.warn('Tailwind config error:', error);
+        }
+    </script>
 
     <!-- Alpine.js for interactivity -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" onerror="console.warn('Alpine.js failed to load')"></script>
     
     <!-- Teacher Styles -->
     <link href="<?php echo base_url('assets/css/teacher.css'); ?>" rel="stylesheet">
@@ -40,7 +46,7 @@
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
 
     <!-- Flowbite -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js" onerror="console.warn('Flowbite failed to load')"></script>
 </head>
 <body class="bg-gray-50">
     <div class="flex min-h-screen">
@@ -345,3 +351,29 @@
     
     <!-- Admin Assignments Scripts -->
     <script src="<?php echo base_url('assets/js/assignments-admin.js'); ?>"></script>
+
+    <!-- Global JavaScript Error Handler -->
+    <script>
+        // Global error handler to catch and log JavaScript errors
+        window.addEventListener('error', function(e) {
+            console.warn('JavaScript Error:', e.error ? e.error.message : e.message, 'at', e.filename + ':' + e.lineno);
+            // Don't prevent default to allow normal error handling
+        });
+
+        // Handle unhandled promise rejections
+        window.addEventListener('unhandledrejection', function(e) {
+            console.warn('Unhandled Promise Rejection:', e.reason);
+        });
+
+        // Suppress specific known warnings
+        const originalWarn = console.warn;
+        console.warn = function(...args) {
+            // Filter out known harmless warnings
+            if (args[0] && typeof args[0] === 'string') {
+                if (args[0].includes('cdn.tailwindcss.com should not be used in production')) {
+                    return; // Suppress Tailwind warning
+                }
+            }
+            originalWarn.apply(console, args);
+        };
+    </script>

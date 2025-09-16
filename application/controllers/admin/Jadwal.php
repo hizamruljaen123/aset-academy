@@ -61,9 +61,9 @@ class Jadwal extends CI_Controller {
         $data = [];
         foreach ($events as $event) {
             $data[] = [
-                'title' => $event['judul_pertemuan'],
-                'start' => $event['tanggal_pertemuan'] . 'T' . $event['waktu_mulai'],
-                'end' => $event['tanggal_pertemuan'] . 'T' . $event['waktu_selesai'],
+                'title' => $event->judul_pertemuan,
+                'start' => $event->tanggal_pertemuan . 'T' . $event->waktu_mulai,
+                'end' => $event->tanggal_pertemuan . 'T' . $event->waktu_selesai,
                 'allDay' => false
             ];
         }

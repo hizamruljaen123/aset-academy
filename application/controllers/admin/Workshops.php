@@ -119,8 +119,14 @@ class Workshops extends CI_Controller {
                 'updated_at' => date('Y-m-d H:i:s')
             ];
 
-            // Handle thumbnail upload
-            if (!empty($_FILES['thumbnail']['name'])) {
+            // Handle thumbnail upload/removal
+            if ($this->input->post('remove_poster')) {
+                // Remove existing poster
+                if ($data['workshop']->thumbnail && file_exists($data['workshop']->thumbnail)) {
+                    unlink($data['workshop']->thumbnail);
+                }
+                $workshop_data['thumbnail'] = null;
+            } elseif (!empty($_FILES['thumbnail']['name'])) {
                 $config['upload_path'] = './uploads/workshops/';
                 $config['allowed_types'] = 'jpg|jpeg|png|gif';
                 $config['max_size'] = 2048; // 2MB
@@ -133,7 +139,7 @@ class Workshops extends CI_Controller {
                     if ($data['workshop']->thumbnail && file_exists($data['workshop']->thumbnail)) {
                         unlink($data['workshop']->thumbnail);
                     }
-                    
+
                     $upload_data = $this->upload->data();
                     $workshop_data['thumbnail'] = 'uploads/workshops/' . $upload_data['file_name'];
                 } else {

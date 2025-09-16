@@ -60,6 +60,9 @@
                                     <button onclick="showVerifyModal(<?= $payment->id ?>)" class="text-green-600 hover:text-green-900">
                                         <i class="fas fa-check mr-1"></i> Verifikasi
                                     </button>
+                                    <button onclick="showRejectModal(<?= $payment->id ?>)" class="text-red-600 hover:text-red-900">
+                                        <i class="fas fa-times mr-1"></i> Tolak
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -80,7 +83,8 @@
                 <p class="text-sm text-gray-500">Apakah Anda yakin ingin memverifikasi pembayaran ini?</p>
             </div>
             <form id="verifyForm" method="POST" action="">
-                <input type="hidden" name="status" value="Verified">
+                <input type="hidden" name="action" value="verify">
+                <input type="hidden" name="payment_id" id="verify_payment_id" value="">
                 <div class="mb-4">
                     <label for="notes" class="block text-sm font-medium text-gray-700">Catatan (opsional)</label>
                     <textarea name="notes" id="notes" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"></textarea>
@@ -107,7 +111,8 @@
                 <p class="text-sm text-gray-500">Apakah Anda yakin ingin menolak pembayaran ini?</p>
             </div>
             <form id="rejectForm" method="POST" action="">
-                <input type="hidden" name="status" value="Rejected">
+                <input type="hidden" name="action" value="reject">
+                <input type="hidden" name="payment_id" id="reject_payment_id" value="">
                 <div class="mb-4">
                     <label for="rejectNotes" class="block text-sm font-medium text-gray-700">Alasan Penolakan</label>
                     <textarea name="notes" id="rejectNotes" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" required></textarea>
@@ -193,4 +198,4 @@
 <script id="paymentsData" type="application/json">
 <?= json_encode($payments) ?>
 </script>
-<script src="<?= base_url('assets/js/admin-payment.js') ?>"></script>
+<script src="<?= base_url('assets/js/admin-payment.js?v=' . time()) ?>"></script>

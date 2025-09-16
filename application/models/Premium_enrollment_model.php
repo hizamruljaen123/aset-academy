@@ -31,7 +31,7 @@ class Premium_enrollment_model extends CI_Model {
     
     // Get enrollments by status
     public function get_enrollments_by_status($status) {
-        $this->db->select('pe.*, u.nama_lengkap as student_name, kp.nama_kelas as class_name, p.amount');
+        $this->db->select('pe.*, u.nama_lengkap as student_name, kp.nama_kelas as class_name, p.amount, p.payment_method');
         $this->db->from('premium_class_enrollments pe');
         $this->db->join('users u', 'pe.student_id = u.id');
         $this->db->join('kelas_programming kp', 'pe.class_id = kp.id');

@@ -62,6 +62,7 @@
                             <th class="px-4 py-3 text-sm">Tanggal</th>
                             <th class="px-4 py-3 text-sm">Kelas</th>
                             <th class="px-4 py-3 text-sm">Jumlah</th>
+                            <th class="px-4 py-3 text-sm">Invoice</th>
                             <th class="px-4 py-3 text-sm">Status</th>
                             <th class="px-4 py-3 text-sm">Aksi</th>
                         </tr>
@@ -72,6 +73,15 @@
                             <td class="px-4 py-3 whitespace-nowrap"><?= date('d-m-Y H:i', strtotime($o->created_at)) ?></td>
                             <td class="px-4 py-3 whitespace-nowrap font-medium text-gray-800"><?= $o->class_name ?></td>
                             <td class="px-4 py-3 whitespace-nowrap">Rp <?= number_format($o->amount,0,',','.') ?></td>
+                            <td class="px-4 py-3 whitespace-nowrap">
+                                <?php if(!empty($o->invoice_number)): ?>
+                                    <a href="<?= site_url('payment/invoice/'.$o->id) ?>" target="_blank" class="text-blue-600 hover:underline text-xs">
+                                        <?= $o->invoice_number ?>
+                                    </a>
+                                <?php else: ?>
+                                    <span class="text-gray-400">-</span>
+                                <?php endif; ?>
+                            </td>
                             <td class="px-4 py-3 whitespace-nowrap">
                                 <?php if($o->status==='Verified'): ?>
                                     <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full">Terverifikasi</span>

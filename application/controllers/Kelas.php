@@ -156,10 +156,10 @@ class Kelas extends CI_Controller {
             show_404();
         }
 
-        // Use home template structure
-        $this->load->view('home/templates/_header', $data);
+        // Use admin dashboard template structure for better styling
+        $this->load->view('templates/header', $data);
         $this->load->view('kelas/detail', $data);
-        $this->load->view('home/templates/_footer');
+        $this->load->view('templates/footer');
     }
 
     // Menampilkan kelas berdasarkan level

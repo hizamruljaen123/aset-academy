@@ -4,6 +4,7 @@ class Payment extends CI_Controller {
         parent::__construct();
         $this->load->model('Kelas_programming_model');
         $this->load->model('Payment_model');
+        $this->load->model('Company_bank_model');
         $this->load->library('form_validation');
     }
 
@@ -48,15 +49,68 @@ class Payment extends CI_Controller {
             redirect('payment/status/' . $pending_payment->id);
         }
 
+        // Get active bank accounts
+        $bank_accounts = $this->Company_bank_model->get_active_bank_accounts();
+
         $data = [
             'title' => 'Pembayaran Kelas',
             'class' => $class,
-            'user' => $this->db->where('id', $this->session->userdata('user_id'))->get('users')->row()
+            'user' => $this->db->where('id', $this->session->userdata('user_id'))->get('users')->row(),
+            'bank_accounts' => $bank_accounts
         ];
 
         $this->load->view('templates/header', $data);
         $this->load->view('payment/initiate', $data);
         $this->load->view('templates/footer');
+    }
+
+    // Show payment confirmation page
+    public function confirm($class_id) {
+        if (!$this->session->userdata('logged_in')) {
+            redirect('auth');
+        }
+
+        $class = $this->Kelas_programming_model->get_kelas($class_id);
+        if (!$class) {
+            show_404();
+        }
+
+        $this->form_validation->set_rules('payment_method', 'Metode Pembayaran', 'required');
+        $this->form_validation->set_rules('bank_name', 'Nama Bank', 'trim');
+        $this->form_validation->set_rules('account_number', 'Nomor Rekening', 'trim');
+        $this->form_validation->set_rules('bank_account_id', 'ID Bank Perusahaan', 'trim');
+        $this->form_validation->set_rules('payment_description', 'Keterangan Pembayaran', 'trim');
+        $this->form_validation->set_rules('user_bank_name', 'Nama Bank Pengirim', 'trim');
+        $this->form_validation->set_rules('user_account_holder', 'Nama Pemilik Rekening', 'trim');
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->initiate($class_id);
+        } else {
+            // Store payment data in session for confirmation
+            $payment_data = [
+                'class_id' => $class_id,
+                'amount' => $this->input->post('amount'),
+                'payment_method' => $this->input->post('payment_method'),
+                'bank_name' => $this->input->post('bank_name'),
+                'account_number' => $this->input->post('account_number'),
+                'bank_account_id' => $this->input->post('bank_account_id'),
+                'payment_description' => $this->input->post('payment_description'),
+                'user_bank_name' => $this->input->post('user_bank_name'),
+                'user_account_holder' => $this->input->post('user_account_holder')
+            ];
+            
+            $this->session->set_userdata('payment_confirmation', $payment_data);
+            
+            $data = [
+                'title' => 'Konfirmasi Pembayaran',
+                'class' => $class,
+                'payment_data' => $payment_data
+            ];
+
+            $this->load->view('templates/header', $data);
+            $this->load->view('payment/confirm', $data);
+            $this->load->view('templates/footer');
+        }
     }
 
     // Process payment submission
@@ -65,14 +119,17 @@ class Payment extends CI_Controller {
             redirect('auth');
         }
 
-        $this->form_validation->set_rules('payment_method', 'Metode Pembayaran', 'required');
-        $this->form_validation->set_rules('bank_name', 'Nama Bank', 'trim');
-        $this->form_validation->set_rules('account_number', 'Nomor Rekening', 'trim');
+        // Get payment data from session
+        $payment_data = $this->session->userdata('payment_confirmation');
+        if (!$payment_data || $payment_data['class_id'] != $class_id) {
+            redirect('payment/initiate/' . $class_id);
+        }
 
         $is_ajax = $this->input->is_ajax_request();
-        // Additional manual validation for Transfer method (avoid missing language line for required_if)
-        if ($this->input->post('payment_method') === 'Transfer') {
-            if (!$this->input->post('bank_name') || !$this->input->post('account_number')) {
+        
+        // Additional manual validation for Transfer method
+        if ($payment_data['payment_method'] === 'Transfer') {
+            if (!$payment_data['bank_name'] || !$payment_data['account_number']) {
                 $manual_error = 'Nama Bank dan Nomor Rekening wajib diisi untuk metode Transfer.';
                 if ($is_ajax) {
                     echo json_encode(['success' => false, 'message' => $manual_error]);
@@ -83,55 +140,60 @@ class Payment extends CI_Controller {
                 return;
             }
         }
-        if ($this->form_validation->run() == FALSE) {
-            if ($is_ajax) {
-                echo json_encode(['success' => false, 'message' => strip_tags(validation_errors())]);
-                return;
-            }
-            $this->initiate($class_id);
-        } else {
-            $upload_dir = FCPATH . 'uploads/payments/';
-            if (!is_dir($upload_dir)) {
-                mkdir($upload_dir, 0755, true);
-            }
-            $config['upload_path'] = $upload_dir;
-            $config['allowed_types'] = 'jpg|jpeg|png|pdf';
-            $config['max_size'] = 2048;
-            $config['encrypt_name'] = TRUE;
 
-            $this->load->library('upload', $config);
-
-            $payment_proof = '';
-            if ($this->upload->do_upload('payment_proof')) {
-                $payment_proof = $this->upload->data('file_name');
-            } else if ($this->input->post('payment_method') == 'Transfer') {
-                $this->session->set_flashdata('error', 'Bukti pembayaran wajib diunggah untuk metode transfer');
-                $this->initiate($class_id);
-                return;
-            }
-
-            $payment_data = [
-                'user_id' => $this->session->userdata('user_id'),
-                'class_id' => $class_id,
-                'amount' => $this->input->post('amount'),
-                'payment_method' => $this->input->post('payment_method'),
-                'bank_name' => $this->input->post('bank_name'),
-                'account_number' => $this->input->post('account_number'),
-                'payment_proof' => $payment_proof,
-                'status' => 'Pending',
-                'created_at' => date('Y-m-d H:i:s')
-            ];
-
-            $this->db->insert('payments', $payment_data);
-            $payment_id = $this->db->insert_id();
-
-            if ($is_ajax) {
-                echo json_encode(['success' => true, 'redirect' => site_url('payment/status/' . $payment_id)]);
-                return;
-            }
-            $this->session->set_flashdata('message', 'Pembayaran berhasil diajukan. Mohon tunggu verifikasi admin.');
-            redirect('payment/status/' . $payment_id);
+        $upload_dir = FCPATH . 'uploads/payments/';
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0755, true);
         }
+        $config['upload_path'] = $upload_dir;
+        $config['allowed_types'] = 'jpg|jpeg|png|pdf';
+        $config['max_size'] = 2048;
+        $config['encrypt_name'] = TRUE;
+
+        $this->load->library('upload', $config);
+
+        $payment_proof = '';
+        if ($this->upload->do_upload('payment_proof')) {
+            $payment_proof = $this->upload->data('file_name');
+        } else if ($payment_data['payment_method'] == 'Transfer') {
+            $this->session->set_flashdata('error', 'Bukti pembayaran wajib diunggah untuk metode transfer');
+            $this->initiate($class_id);
+            return;
+        }
+
+        // Generate invoice number
+        $invoice_number = 'INV-' . date('Ymd') . '-' . str_pad($this->session->userdata('user_id'), 4, '0', STR_PAD_LEFT) . '-' . str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
+
+        $final_payment_data = [
+            'user_id' => $this->session->userdata('user_id'),
+            'class_id' => $class_id,
+            'amount' => $payment_data['amount'],
+            'payment_method' => $payment_data['payment_method'],
+            'bank_name' => $payment_data['bank_name'],
+            'account_number' => $payment_data['account_number'],
+            'bank_account_id' => $payment_data['bank_account_id'],
+            'payment_description' => $payment_data['payment_description'],
+            'user_bank_name' => $payment_data['user_bank_name'],
+            'user_account_holder' => $payment_data['user_account_holder'],
+            'invoice_number' => $invoice_number,
+            'invoice_generated_at' => date('Y-m-d H:i:s'),
+            'payment_proof' => $payment_proof,
+            'status' => 'Pending',
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+
+        $this->db->insert('payments', $final_payment_data);
+        $payment_id = $this->db->insert_id();
+
+        if ($is_ajax) {
+            echo json_encode(['success' => true, 'redirect' => site_url('payment/status/' . $payment_id)]);
+            return;
+        }
+        // Clear session data
+        $this->session->unset_userdata('payment_confirmation');
+        
+        $this->session->set_flashdata('message', 'Pembayaran berhasil diajukan. Mohon tunggu verifikasi admin.');
+        redirect('payment/status/' . $payment_id);
     }
 
     // View payment status
@@ -140,10 +202,10 @@ class Payment extends CI_Controller {
             redirect('auth');
         }
 
-        $payment = $this->db->where('id', $payment_id)
-                           ->where('user_id', $this->session->userdata('user_id'))
-                           ->get('payments')
-                           ->row();
+        $payment = $this->Payment_model->get_payment_with_details($payment_id);
+        if (!$payment || $payment->user_id != $this->session->userdata('user_id')) {
+            show_404();
+        }
 
         if (!$payment) {
             show_404();
@@ -235,9 +297,14 @@ class Payment extends CI_Controller {
     }
 
     // Admin process verification
-    public function admin_process_verify($payment_id) {
+    public function admin_process_verify($payment_id = null) {
         if ($this->session->userdata('level') != '1' && $this->session->userdata('level') != '2') {
             redirect('auth/login');
+        }
+
+        // Get payment_id from POST data if not in URL
+        if (!$payment_id) {
+            $payment_id = $this->input->post('payment_id');
         }
 
         $payment = $this->db->where('id', $payment_id)->get('payments')->row();
@@ -279,5 +346,28 @@ class Payment extends CI_Controller {
         }
 
         redirect('payment/admin_verify');
+    }
+
+    // Generate and download invoice
+    public function invoice($payment_id) {
+        if (!$this->session->userdata('logged_in')) {
+            redirect('auth');
+        }
+
+        $payment = $this->Payment_model->get_payment_with_details($payment_id);
+        if (!$payment || $payment->user_id != $this->session->userdata('user_id')) {
+            show_404();
+        }
+
+        $class = $this->Kelas_programming_model->get_kelas($payment->class_id);
+        $user = $this->db->where('id', $payment->user_id)->get('users')->row();
+
+        $data = [
+            'payment' => $payment,
+            'class' => $class,
+            'user' => $user
+        ];
+
+        $this->load->view('payment/invoice', $data);
     }
 }

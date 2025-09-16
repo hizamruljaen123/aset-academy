@@ -19,7 +19,7 @@
                 </div>
             <?php endif; ?>
             
-            <form action="<?= site_url('payment/process/' . $class->id) ?>" method="POST" enctype="multipart/form-data">
+            <form action="<?= site_url('payment/confirm/' . $class->id) ?>" method="POST" enctype="multipart/form-data">
                 <div class="mb-4">
                     <label class="block text-gray-700 font-bold mb-2" for="payment_method">
                         Metode Pembayaran
@@ -38,25 +38,11 @@
                         </label>
                         <select id="bank_select" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="">Pilih Bank</option>
-                            <option value="BCA">Bank Central Asia (BCA)</option>
-                            <option value="BRI">Bank Rakyat Indonesia (BRI)</option>
-                            <option value="BNI">Bank Negara Indonesia (BNI)</option>
-                            <option value="Mandiri">Bank Mandiri</option>
-                            <option value="CIMB Niaga">CIMB Niaga</option>
-                            <option value="BTN">Bank Tabungan Negara (BTN)</option>
-                            <option value="Danamon">Bank Danamon</option>
-                            <option value="Permata">Bank Permata</option>
-                            <option value="Maybank">Maybank Indonesia</option>
-                            <option value="OCBC NISP">OCBC NISP</option>
-                            <option value="BSI">Bank Syariah Indonesia (BSI)</option>
-                            <option value="BTPN">Bank BTPN</option>
-                            <option value="BJB">Bank BJB</option>
-                            <option value="Bukopin">Bank KB Bukopin</option>
-                            <option value="Mega">Bank Mega</option>
-                            <option value="Panin">Bank Panin</option>
-                            <option value="Citibank">Citibank Indonesia</option>
-                            <option value="DBS">Bank DBS Indonesia</option>
-                            <option value="HSBC">HSBC Indonesia</option>
+                            <?php foreach ($bank_accounts as $bank): ?>
+                            <option value="<?= $bank->id ?>" data-bank-name="<?= $bank->bank_name ?>" data-account-number="<?= $bank->account_number ?>" data-account-holder="<?= $bank->account_holder ?>">
+                                <?= $bank->bank_name ?>
+                            </option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
 
@@ -65,9 +51,32 @@
                         <p class="font-semibold mt-1" id="account-text"></p>
                     </div>
 
+                    <!-- User bank details for transfer -->
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-bold mb-2" for="user_bank_name">
+                            Nama Bank Pengirim
+                        </label>
+                        <input type="text" name="user_bank_name" id="user_bank_name" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Contoh: BCA, BRI, Mandiri">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-bold mb-2" for="user_account_holder">
+                            Nama Pemilik Rekening
+                        </label>
+                        <input type="text" name="user_account_holder" id="user_account_holder" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nama lengkap pemilik rekening">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-bold mb-2" for="payment_description">
+                            Keterangan Pembayaran
+                        </label>
+                        <textarea name="payment_description" id="payment_description" rows="3" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Tambahkan catatan atau keterangan pembayaran (opsional)"></textarea>
+                    </div>
+
                     <!-- Hidden fields populated via JS so backend validation tetap jalan -->
                     <input type="hidden" name="bank_name" id="bank_name">
                     <input type="hidden" name="account_number" id="account_number">
+                    <input type="hidden" name="bank_account_id" id="bank_account_id">
                 </div>
                 
                 <div class="mb-4">
@@ -100,27 +109,15 @@
     const accountInfo   = document.getElementById('account-info');
     const accountText   = document.getElementById('account-text');
 
-    const accounts = {
-        'BCA' : '1234567890',
-        'BRI' : '0234567890',
-        'BNI' : '3456789012',
-        'Mandiri':'7890123456',
-        'CIMB Niaga':'0145678901',
-        'BTN':'2222333344',
-        'Danamon':'5555666677',
-        'Permata':'8888999900',
-        'Maybank':'9911223344',
-        'OCBC NISP':'7766554433',
-        'BSI':'1100110011',
-        'BTPN':'6677889900',
-        'BJB':'1122334455',
-        'Bukopin':'2233445566',
-        'Mega':'3344556677',
-        'Panin':'4455667788',
-        'Citibank':'5566778899',
-        'DBS':'6677889911',
-        'HSBC':'7788990011'
+    // Bank accounts data from database options
+    const bankAccounts = {};
+    <?php foreach ($bank_accounts as $bank): ?>
+    bankAccounts[<?= $bank->id ?>] = {
+        bank_name: '<?= $bank->bank_name ?>',
+        account_number: '<?= $bank->account_number ?>',
+        account_holder: '<?= $bank->account_holder ?>'
     };
+    <?php endforeach; ?>
 
     function toggleBankDetails(){
         if(paymentMethod.value === 'Transfer'){
@@ -139,16 +136,20 @@
     toggleBankDetails();
 
     bankSelect.addEventListener('change', function(){
-        const bank = this.value;
-        if(bank && accounts[bank]){
-            bankNameInput.value = bank;
-            accNumInput.value = accounts[bank];
-            accountText.textContent = `${bank} - ${accounts[bank]} a.n CV ASET MEDIA CEMERLANG`;
+        const bankId = this.value;
+        const bankAccount = bankAccounts[bankId];
+        
+        if(bankAccount){
+            bankNameInput.value = bankAccount.bank_name;
+            accNumInput.value = bankAccount.account_number;
+            document.getElementById('bank_account_id').value = bankId;
+            accountText.textContent = `${bankAccount.bank_name} - ${bankAccount.account_number} a.n ${bankAccount.account_holder}`;
             accountInfo.classList.remove('hidden');
         } else {
             accountInfo.classList.add('hidden');
             bankNameInput.value='';
             accNumInput.value='';
+            document.getElementById('bank_account_id').value='';
         }
     });
 })();

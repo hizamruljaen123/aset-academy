@@ -30,15 +30,22 @@
                     <div>
                         <p class="text-gray-600">Status:</p>
                         <p class="font-bold">
-                            <span class="px-2 py-1 rounded-full text-sm <?= 
-                                $payment->status == 'Verified' ? 'bg-green-100 text-green-800' : 
+                            <span class="px-2 py-1 rounded-full text-sm <?=
+                                $payment->status == 'Verified' ? 'bg-green-100 text-green-800' :
                                 ($payment->status == 'Rejected' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800')
                             ?>">
-                                <?= $payment->status == 'Verified' ? 'Terverifikasi' : 
+                                <?= $payment->status == 'Verified' ? 'Terverifikasi' :
                                    ($payment->status == 'Rejected' ? 'Ditolak' : 'Menunggu Verifikasi') ?>
                             </span>
                         </p>
                     </div>
+
+                    <?php if (!empty($payment->invoice_number)): ?>
+                    <div>
+                        <p class="text-gray-600">Nomor Invoice:</p>
+                        <p class="font-bold text-blue-600"><?= $payment->invoice_number ?></p>
+                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
             
@@ -56,7 +63,28 @@
                             <p class="text-gray-600">Nomor Rekening:</p>
                             <p class="font-bold"><?= $payment->account_number ?></p>
                         </div>
-                        
+
+                        <?php if (!empty($payment->user_bank_name)): ?>
+                        <div>
+                            <p class="text-gray-600">Bank Pengirim:</p>
+                            <p class="font-bold"><?= $payment->user_bank_name ?></p>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if (!empty($payment->user_account_holder)): ?>
+                        <div>
+                            <p class="text-gray-600">Nama Pemilik Rekening:</p>
+                            <p class="font-bold"><?= $payment->user_account_holder ?></p>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if (!empty($payment->payment_description)): ?>
+                        <div class="md:col-span-2">
+                            <p class="text-gray-600">Keterangan Pembayaran:</p>
+                            <p class="font-bold bg-gray-50 p-2 rounded"><?= nl2br($payment->payment_description) ?></p>
+                        </div>
+                        <?php endif; ?>
+
                         <?php if ($payment->payment_proof): ?>
                             <div class="md:col-span-2">
                                 <p class="text-gray-600">Bukti Transfer:</p>
@@ -70,10 +98,16 @@
             <?php endif; ?>
             
             <?php if ($payment->status == 'Verified'): ?>
-                <div class="text-center mt-6">
+                <div class="text-center mt-6 space-y-3">
                     <a href="<?= site_url('kelas/enroll/' . $payment->class_id) ?>" class="inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline">
                         Akses Kelas Sekarang
                     </a>
+                    <?php if (!empty($payment->invoice_number)): ?>
+                    <br>
+                    <a href="<?= site_url('payment/invoice/' . $payment->id) ?>" target="_blank" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline text-sm">
+                        <i class="fas fa-download mr-2"></i>Download Invoice
+                    </a>
+                    <?php endif; ?>
                 </div>
             <?php elseif ($payment->status == 'Rejected' && $payment->notes): ?>
                 <div class="mb-6 p-4 bg-red-50 rounded-lg">
