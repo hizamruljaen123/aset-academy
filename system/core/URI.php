@@ -49,55 +49,56 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @author		EllisLab Dev Team
  * @link		https://codeigniter.com/userguide3/libraries/uri.html
  */
+#[\AllowDynamicProperties]
 class CI_URI {
 
-	/**
-	 * List of cached URI segments
-	 *
-	 * @var	array
-	 */
-	public $keyval = array();
+ /**
+  * List of cached URI segments
+  *
+  * @var	array
+  */
+ public $keyval = array();
 
-	/**
-	 * Current URI string
-	 *
-	 * @var	string
-	 */
-	public $uri_string = '';
+ /**
+  * Current URI string
+  *
+  * @var	string
+  */
+ public $uri_string = '';
 
-	/**
-	 * List of URI segments
-	 *
-	 * Starts at 1 instead of 0.
-	 *
-	 * @var	array
-	 */
-	public $segments = array();
+ /**
+  * List of URI segments
+  *
+  * Starts at 1 instead of 0.
+  *
+  * @var	array
+  */
+ public $segments = array();
 
-	/**
-	 * List of routed URI segments
-	 *
-	 * Starts at 1 instead of 0.
-	 *
-	 * @var	array
-	 */
-	public $rsegments = array();
+ /**
+  * List of routed URI segments
+  *
+  * Starts at 1 instead of 0.
+  *
+  * @var	array
+  */
+ public $rsegments = array();
 
-	/**
-	 * Permitted URI chars
-	 *
-	 * PCRE character group allowed in URI segments
-	 *
-	 * @var	string
-	 */
-	protected $_permitted_uri_chars;
+ /**
+  * Permitted URI chars
+  *
+  * PCRE character group allowed in URI segments
+  *
+  * @var	string
+  */
+ protected $_permitted_uri_chars;
 
-	/**
-	 * Class constructor
-	 *
-	 * @return	void
-	 */
-	public function __construct()
+ /**
+  * Class constructor
+  *
+  * @return	void
+  */
+ public function __construct()
 	{
 		$this->config =& load_class('Config', 'core');
 

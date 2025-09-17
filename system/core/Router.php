@@ -49,14 +49,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @author		EllisLab Dev Team
  * @link		https://codeigniter.com/userguide3/general/routing.html
  */
+#[\AllowDynamicProperties]
 class CI_Router {
 
-	/**
-	 * CI_Config class object
-	 *
-	 * @var	object
-	 */
-	public $config;
+ /**
+  * CI_Config class object
+  *
+  * @var	object
+  */
+ public $config;
 
 	/**
 	 * List of routes

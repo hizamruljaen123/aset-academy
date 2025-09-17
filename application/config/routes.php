@@ -191,3 +191,17 @@ $route['home/free'] = 'home/free';
 $route['free_class/(:num)'] = 'home/view_free_class/$1';
 $route['free_classes/view/(:num)'] = 'home/view_free_class/$1';
 $route['home/partnership'] = 'home/partnership';
+
+// Routes untuk Dokumentasi
+$route['documentation'] = 'documentation';
+$route['documentation/index'] = 'documentation';
+$route['documentation/chapter1'] = 'documentation/chapter1';
+$route['documentation/chapter2'] = 'documentation/chapter2';
+$route['documentation/chapter3'] = 'documentation/chapter3';
+$route['documentation/chapter4'] = 'documentation/chapter4';
+$route['documentation/chapter5'] = 'documentation/chapter5';
+$route['documentation/chapter6'] = 'documentation/chapter6';
+$route['documentation/chapter7'] = 'documentation/chapter7';
+$route['documentation/chapter8'] = 'documentation/chapter8';
+$route['documentation/chapter9'] = 'documentation/chapter9';
+$route['documentation/chapter10'] = 'documentation/chapter10';

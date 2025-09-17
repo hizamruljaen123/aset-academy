@@ -45,5 +45,6 @@
             transition: max-height 0.3s ease-out;
         }
     </style>
+    <link rel="stylesheet" href="<?= base_url('assets/css/documentation.css') ?>">
 </head>
 <body class="font-sans antialiased bg-gray-50">
