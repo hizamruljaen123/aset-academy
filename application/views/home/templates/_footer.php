@@ -1,55 +1,45 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <footer class="bg-gray-900 text-white py-12">
     <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-                <div class="flex items-center space-x-2 mb-6">
-                    <i data-feather="monitor" class="text-blue-400 w-8 h-8"></i>
-                    <span class="text-xl font-bold">Aset Academy</span>
+        <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+            <div class="mb-6 md:mb-0">
+                <img src="<?= base_url('assets/img/logo-white.png') ?>" alt="ASET Academy" class="h-8 mb-4">
+                <p class="text-gray-400 max-w-md">Platform pembelajaran programming terbaik untuk mengembangkan skill digital masa depan.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-lg font-bold mb-6">Platform</h3>
+                    <ul class="space-y-3">
+                        <li><a href="<?= site_url('home/premium') ?>" class="text-gray-400 hover:text-white transition-colors">Kelas Premium</a></li>
+                        <li><a href="<?= site_url('home/free') ?>" class="text-gray-400 hover:text-white transition-colors">Kelas Gratis</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Bootcamp</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Webinar</a></li>
+                    </ul>
                 </div>
-                <p class="text-gray-400 mb-6">
-                    Platform belajar programming terbaik dengan metode interaktif dan kurikulum terkini.
-                </p>
-                <div class="flex space-x-4">
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors"><i data-feather="facebook" class="w-6 h-6"></i></a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors"><i data-feather="twitter" class="w-6 h-6"></i></a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors"><i data-feather="instagram" class="w-6 h-6"></i></a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors"><i data-feather="youtube" class="w-6 h-6"></i></a>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-6">Dukungan</h3>
+                    <ul class="space-y-3">
+                        <li><a href="<?= site_url('home/faq') ?>" class="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Bantuan</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Kontak</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Syarat & Ketentuan</a></li>
+                    </ul>
                 </div>
-            </div>
-            
-            <div>
-                <h3 class="text-lg font-bold mb-6">Platform</h3>
-                <ul class="space-y-3">
-                    <li><a href="<?= site_url('home/premium') ?>" class="text-gray-400 hover:text-white transition-colors">Kelas Premium</a></li>
-                    <li><a href="<?= site_url('home/free') ?>" class="text-gray-400 hover:text-white transition-colors">Kelas Gratis</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Bootcamp</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Webinar</a></li>
-                </ul>
-            </div>
-            
-            <div>
-                <h3 class="text-lg font-bold mb-6">Dukungan</h3>
-                <ul class="space-y-3">
-                    <li><a href="<?= site_url('home/faq') ?>" class="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Bantuan</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Kontak</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Syarat & Ketentuan</a></li>
-                </ul>
-            </div>
-            
-            <div>
-                <h3 class="text-lg font-bold mb-6">Kontak</h3>
-                <div class="space-y-3 text-gray-400">
-                    <p class="flex items-center"><i data-feather="mail" class="w-5 h-5 mr-3"></i> hello@asetacademy.com</p>
-                    <p class="flex items-center"><i data-feather="phone" class="w-5 h-5 mr-3"></i> +62 812 3456 7890</p>
-                    <p class="flex items-center"><i data-feather="map-pin" class="w-5 h-5 mr-3"></i> Jakarta, Indonesia</p>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-6">Kontak</h3>
+                    <div class="space-y-3 text-gray-400">
+                        <p class="flex items-center"><i data-feather="mail" class="w-5 h-5 mr-3"></i> hello@asetacademy.com</p>
+                        <p class="flex items-center"><i data-feather="phone" class="w-5 h-5 mr-3"></i> +62 812 3456 7890</p>
+                        <p class="flex items-center"><i data-feather="map-pin" class="w-5 h-5 mr-3"></i> Jakarta, Indonesia</p>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
-            <p>&copy; <?= date('Y') ?> Aset Academy. All rights reserved.</p>
+        <div class="border-t border-gray-800 pt-8 text-center text-gray-400 text-sm">
+            <p>&copy; <?= date('Y') ?> ASET Academy. All rights reserved.</p>
         </div>
     </div>
 </footer>

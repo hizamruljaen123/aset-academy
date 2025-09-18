@@ -2,8 +2,7 @@
 <nav class="fixed w-full bg-white/80 backdrop-blur-sm shadow-md z-50 transition-all duration-300">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
         <div class="flex items-center space-x-2">
-            <i data-feather="monitor" class="text-blue-600 w-8 h-8"></i>
-            <span class="text-xl font-bold text-gray-800">Aset Academy</span>
+            <img src="<?= base_url('assets/img/logo.png') ?>" alt="ASET Academy" class="h-8">
         </div>
         
         <div class="hidden md:flex space-x-8">
