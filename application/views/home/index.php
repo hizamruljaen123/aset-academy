@@ -76,16 +76,16 @@
                         <div class="flex justify-between items-center mt-4">
                             <span class="text-2xl font-bold text-blue-600">Rp <?= number_format($class->harga, 0, ',', '.') ?></span>
                             <div class="flex flex-col space-y-2">
-                                <a href="<?= site_url('home/premium_class_view/' . $class->id) ?>" class="w-full text-center bg-indigo-100 text-indigo-700 px-4 py-2 rounded-lg hover:bg-indigo-200 transition-colors text-sm font-semibold">
+                                <a href="<?= premium_class_url($class->id) ?>" class="w-full text-center bg-indigo-100 text-indigo-700 px-4 py-2 rounded-lg hover:bg-indigo-200 transition-colors text-sm font-semibold">
                                     Lihat Detail
                                 </a>
                                 <?php if(isset($user_id)): ?>
                                     <?php if($is_enrolled): ?>
-                                        <a href="<?= site_url('kelas/detail/' . $class->id) ?>" class="w-full text-center bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm font-semibold">
+                                        <a href="<?= site_url('kelas/detail/' . encrypt_url($class->id)) ?>" class="w-full text-center bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm font-semibold">
                                             Lanjut Belajar
                                         </a>
                                     <?php elseif($payment_status && $payment_status->status == 'Verified'): ?>
-                                        <a href="<?= site_url('kelas/enroll/' . $class->id) ?>" class="w-full text-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold">
+                                        <a href="<?= site_url('kelas/enroll/' . encrypt_url($class->id)) ?>" class="w-full text-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold">
                                             Akses Kelas
                                         </a>
                                     <?php elseif($payment_status && $payment_status->status == 'Pending'): ?>
@@ -93,12 +93,12 @@
                                             Menunggu Verifikasi
                                         </button>
                                     <?php else: ?>
-                                        <a href="<?= site_url('payment/initiate/' . $class->id) ?>" class="w-full text-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold">
+                                        <a href="<?= site_url('payment/initiate/' . encrypt_url($class->id)) ?>" class="w-full text-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold">
                                             Daftar Sekarang
                                         </a>
                                     <?php endif; ?>
                                 <?php else: ?>
-                                    <a href="<?= site_url('auth/login?redirect=payment/initiate/' . $class->id) ?>" class="w-full text-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold">
+                                    <a href="<?= site_url('auth/login?redirect=payment/initiate/' . encrypt_url($class->id)) ?>" class="w-full text-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold">
                                         Daftar Sekarang
                                     </a>
                                 <?php endif; ?>
@@ -136,7 +136,7 @@
                             <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs"><?= html_escape($class->level) ?></span>
                         </div>
                         <p class="text-gray-600 mb-4"><?= html_escape($class->description) ?></p>
-                        <a href="<?= site_url('home/view_free_class/' . $class->id) ?>" class="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-center">
+                        <a href="<?= free_class_url($class->id) ?>" class="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-center">
                             Mulai Belajar
                         </a>
                     </div>

@@ -56,7 +56,7 @@
                             </div>
                         <?php elseif ($this->session->userdata('user_id')): ?>
                             <?php if ($max_participants == 0 || $participant_count < $max_participants): ?>
-                                <a href="<?= site_url('workshops/register/' . $workshop->id) ?>"
+                                <a href="<?= workshop_register_url($workshop->id) ?>"
                                    class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-colors font-semibold">
                                     <i class="fas fa-user-plus mr-2"></i>
                                     Daftar Sekarang
@@ -68,7 +68,7 @@
                                 </div>
                             <?php endif; ?>
                         <?php else: ?>
-                            <a href="<?= site_url('auth/login?redirect=workshops/detail/' . $workshop->slug) ?>"
+                            <a href="<?= site_url('auth/login?redirect=' . urlencode(workshop_detail_url($workshop->id))) ?>"
                                class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-colors font-semibold">
                                 <i class="fas fa-sign-in-alt mr-2"></i>
                                 Login untuk Daftar
@@ -221,7 +221,7 @@
                         <?php elseif ($this->session->userdata('user_id')): ?>
                             <?php if ($max_participants == 0 || $participant_count < $max_participants): ?>
                                 <div class="text-center">
-                                    <a href="<?= site_url('workshops/register/' . $workshop->id) ?>"
+                                    <a href="<?= workshop_register_url($workshop->id) ?>"
                                        class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold inline-block">
                                         <i class="fas fa-user-plus mr-2"></i>
                                         Daftar Sekarang
@@ -244,7 +244,7 @@
                         <?php else: ?>
                             <div class="text-center space-y-3">
                                 <!-- Register as Member Button -->
-                                <a href="<?= site_url('auth/login?redirect=workshops/detail/' . $workshop->id) ?>"
+                                <a href="<?= site_url('auth/login?redirect=' . urlencode(workshop_detail_url($workshop->id))) ?>"
                                    class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold inline-block">
                                     <i class="fas fa-sign-in-alt mr-2"></i>
                                     Login & Daftar sebagai Member
@@ -312,7 +312,7 @@
                         </div>
                     </div>
 
-                    <form id="guestForm" action="<?= site_url('workshops/register_guest/' . $workshop->id) ?>" method="POST">
+                    <form id="guestForm" action="<?= workshop_register_guest_url($workshop->id) ?>" method="POST">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Nama Lengkap -->
                             <div>

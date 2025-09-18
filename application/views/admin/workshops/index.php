@@ -283,13 +283,13 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex space-x-2">
-                                        <a href="<?= site_url('admin/workshops/edit/'.$workshop->id) ?>" class="text-indigo-600 hover:text-indigo-900" title="Edit">
+                                        <a href="<?= admin_workshop_url($workshop->id) ?>" class="text-indigo-600 hover:text-indigo-900" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="<?= site_url('admin/workshops/participants/'.$workshop->id) ?>" class="text-blue-600 hover:text-blue-900" title="Peserta">
+                                        <a href="<?= admin_workshop_participants_url($workshop->id) ?>" class="text-blue-600 hover:text-blue-900" title="Peserta">
                                             <i class="fas fa-users"></i>
                                         </a>
-                                        <a href="<?= site_url('admin/workshops/delete/'.$workshop->id) ?>" class="text-red-600 hover:text-red-900" title="Hapus" onclick="return confirm('Apakah Anda yakin ingin menghapus workshop ini?')">
+                                        <a href="<?= site_url('admin/workshops/delete/' . encrypt_url($workshop->id)) ?>" class="text-red-600 hover:text-red-900" title="Hapus" onclick="return confirm('Apakah Anda yakin ingin menghapus workshop ini?')">
                                             <i class="fas fa-trash"></i>
                                         </a>
                                     </div>

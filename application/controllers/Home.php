@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Home extends CI_Controller {
+class Home extends MY_Controller {
 
     public function __construct()
     {
@@ -94,8 +94,9 @@ class Home extends CI_Controller {
         $this->load->view('home/free', $data);
     }
     
-    public function view_free_class($class_id)
+    public function view_free_class($encrypted_class_id)
     {
+        $class_id = $this->decrypt_id($encrypted_class_id, 'Class ID');
         $free_class = $this->free_class_model->get_free_class_by_id($class_id);
         
         if (!$free_class) {
@@ -126,8 +127,9 @@ class Home extends CI_Controller {
         $this->load->view('home/free_class_view', $data);
     }
     
-    public function kelas_premium($id)
+    public function kelas_premium($encrypted_id)
     {
+        $id = $this->decrypt_id($encrypted_id, 'Class ID');
         $kelas = $this->kelas_model->get_kelas_by_id($id);
         
         if (!$kelas) {
@@ -173,13 +175,13 @@ class Home extends CI_Controller {
         $this->load->view('home/partnership', $data);
     }
 
-    public function premium_class_view($id = null)
+    public function premium_class_view($encrypted_id = null)
     {
-        if (!$id || !is_numeric($id)) {
+        if (!$encrypted_id) {
             show_404();
         }
 
-
+        $id = $this->decrypt_id($encrypted_id, 'Premium Class ID');
         $data['kelas'] = $this->kelas_programming_model->get_kelas_by_id($id);
 
         if (!$data['kelas']) {

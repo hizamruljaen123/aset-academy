@@ -38,7 +38,7 @@
                     
                     <div class="flex justify-between items-center">
                         <span class="font-bold text-lg"><?= $workshop->price > 0 ? 'Rp' . number_format($workshop->price) : 'Gratis' ?></span>
-                        <a href="<?= site_url('workshops/detail/' . $workshop->id) ?>" class="text-blue-500 hover:underline">Detail</a>
+                        <a href="<?= workshop_detail_url($workshop->id) ?>" class="text-blue-500 hover:underline">Detail</a>
                     </div>
                 </div>
             </div>

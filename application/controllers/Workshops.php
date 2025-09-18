@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Workshops extends CI_Controller {
+class Workshops extends MY_Controller {
 
     public function __construct()
     {
@@ -20,11 +20,9 @@ class Workshops extends CI_Controller {
         $this->load->view('home/workshop_list', $data);
     }
 
-    public function detail($id = null)
+    public function detail($encrypted_id = null)
     {
-        if (!$id || !is_numeric($id)) {
-            show_404();
-        }
+        $id = $this->decrypt_id($encrypted_id, 'Workshop ID');
 
         // Get workshop by ID
         $workshop = $this->workshop_model->get_workshop($id);
@@ -63,11 +61,9 @@ class Workshops extends CI_Controller {
         $this->load->view('home/workshop_detail', $data);
     }
 
-    public function register($id = null)
+    public function register($encrypted_id = null)
     {
-        if (!$id || !is_numeric($id)) {
-            show_404();
-        }
+        $id = $this->decrypt_id($encrypted_id, 'Workshop ID');
 
         // Get workshop by ID
         $workshop = $this->workshop_model->get_workshop($id);
@@ -110,14 +106,12 @@ class Workshops extends CI_Controller {
             $this->session->set_flashdata('error', 'Terjadi kesalahan saat mendaftar. Silakan coba lagi.');
         }
 
-        redirect('workshops/detail/' . $id);
+        redirect('workshops/detail/' . $this->encrypt_id($id));
     }
 
-    public function register_guest($id = null)
+    public function register_guest($encrypted_id = null)
     {
-        if (!$id || !is_numeric($id)) {
-            show_404();
-        }
+        $id = $this->decrypt_id($encrypted_id, 'Workshop ID');
 
         // Get workshop by ID
         $workshop = $this->workshop_model->get_workshop($id);
@@ -169,19 +163,18 @@ class Workshops extends CI_Controller {
         $guest_id = $this->workshop_model->register_guest($id, $guest_data);
 
         if ($guest_id) {
-            // Redirect to success page with guest ID
-            redirect('workshops/guest_success/' . $guest_id);
+            // Redirect to success page with encrypted guest ID
+            $encrypted_guest_id = $this->encryption_url->encode($guest_id);
+            redirect('workshops/guest_success/' . $encrypted_guest_id);
         } else {
             $this->session->set_flashdata('error', 'Terjadi kesalahan saat mendaftar. Silakan coba lagi.');
-            redirect('workshops/detail/' . $id . '#guest-registration');
+            redirect('workshops/detail/' . $this->encrypt_id($id) . '#guest-registration');
         }
     }
 
-    public function guest_success($guest_id = null)
+    public function guest_success($encrypted_guest_id = null)
     {
-        if (!$guest_id || !is_numeric($guest_id)) {
-            show_404();
-        }
+        $guest_id = $this->decrypt_id($encrypted_guest_id, 'Guest ID');
 
         $guest = $this->workshop_model->get_guest_registration($guest_id);
 

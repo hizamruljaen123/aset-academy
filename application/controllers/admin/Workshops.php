@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Workshops extends CI_Controller {
+class Workshops extends MY_Controller {
 
     public function __construct()
     {
@@ -78,12 +78,14 @@ class Workshops extends CI_Controller {
 
             $workshop_id = $this->Workshop_model->create_workshop($workshop_data);
             $this->session->set_flashdata('success', 'Workshop berhasil dibuat!');
-            redirect('admin/workshops/edit/' . $workshop_id);
+            redirect('admin/workshops/edit/' . $this->encrypt_id($workshop_id));
         }
     }
 
-    public function edit($id)
+    public function edit($encrypted_id = null)
     {
+        $id = $this->decrypt_id($encrypted_id, 'Workshop ID');
+
         $data['title'] = 'Edit Workshop/Seminar';
         $data['workshop'] = $this->Workshop_model->get_workshop($id);
         $data['materials'] = $this->Workshop_model->get_materials($id);
@@ -144,42 +146,38 @@ class Workshops extends CI_Controller {
                     $workshop_data['thumbnail'] = 'uploads/workshops/' . $upload_data['file_name'];
                 } else {
                     $this->session->set_flashdata('error', $this->upload->display_errors());
-                    redirect('admin/workshops/edit/' . $id);
+                    redirect('admin/workshops/edit/' . $this->encrypt_id($id));
                 }
             }
 
             $this->Workshop_model->update_workshop($id, $workshop_data);
             $this->session->set_flashdata('success', 'Workshop berhasil diperbarui!');
-            redirect('admin/workshops/edit/' . $id);
+            redirect('admin/workshops/edit/' . $this->encrypt_id($id));
         }
     }
 
-    public function delete($id)
+    public function delete($encrypted_id = null)
     {
-        $workshop = $this->Workshop_model->get_workshop($id);
-        
-        if ($workshop) {
-            // Delete thumbnail if exists
-            if ($workshop->thumbnail && file_exists($workshop->thumbnail)) {
-                unlink($workshop->thumbnail);
-            }
-            
-            $this->Workshop_model->delete_workshop($id);
-            $this->session->set_flashdata('success', 'Workshop berhasil dihapus!');
+        $id = $this->decrypt_id($encrypted_id, 'Workshop ID');
+
+        if ($this->Workshop_model->delete_workshop($id)) {
+            $this->session->set_flashdata('success', 'Workshop berhasil dihapus.');
         } else {
-            $this->session->set_flashdata('error', 'Workshop tidak ditemukan!');
+            $this->session->set_flashdata('error', 'Gagal menghapus workshop.');
         }
-        
+
         redirect('admin/workshops');
     }
 
-    public function add_material($workshop_id)
+    public function add_material($encrypted_workshop_id)
     {
+        $workshop_id = $this->decrypt_id($encrypted_workshop_id, 'Workshop ID');
+        
         $this->form_validation->set_rules('title', 'Judul Materi', 'required|trim');
 
         if ($this->form_validation->run() == FALSE) {
             $this->session->set_flashdata('error', validation_errors());
-            redirect('admin/workshops/edit/' . $workshop_id);
+            redirect('admin/workshops/edit/' . $this->encrypt_id($workshop_id));
         }
 
         $config['upload_path'] = './uploads/workshop_materials/';
@@ -191,7 +189,7 @@ class Workshops extends CI_Controller {
 
         if (!$this->upload->do_upload('material_file')) {
             $this->session->set_flashdata('error', $this->upload->display_errors());
-            redirect('admin/workshops/edit/' . $workshop_id);
+            redirect('admin/workshops/edit/' . $this->encrypt_id($workshop_id));
         }
 
         $upload_data = $this->upload->data();
@@ -203,30 +201,33 @@ class Workshops extends CI_Controller {
 
         $this->Workshop_model->add_material($workshop_id, $material_data);
         $this->session->set_flashdata('success', 'Materi berhasil ditambahkan!');
-        redirect('admin/workshops/edit/' . $workshop_id);
+        redirect('admin/workshops/edit/' . $this->encrypt_id($workshop_id));
     }
 
-    public function delete_material($id)
+    public function delete_material($encrypted_material_id)
     {
-        $material = $this->db->get_where('workshop_materials', ['id' => $id])->row();
-        
-        if ($material) {
-            // Delete file
-            if (file_exists($material->file_path)) {
-                unlink($material->file_path);
-            }
-            
-            $this->db->where('id', $id)->delete('workshop_materials');
-            $this->session->set_flashdata('success', 'Materi berhasil dihapus!');
-        } else {
-            $this->session->set_flashdata('error', 'Materi tidak ditemukan!');
+        $material_id = $this->decrypt_id($encrypted_material_id, 'Material ID');
+
+        $material = $this->Workshop_model->get_material($material_id);
+        if (!$material) {
+            show_404();
         }
-        
-        redirect('admin/workshops/edit/' . $material->workshop_id);
+
+        $workshop_id = $material->workshop_id;
+
+        if ($this->Workshop_model->delete_material($material_id)) {
+            $this->session->set_flashdata('success', 'Materi berhasil dihapus.');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal menghapus materi.');
+        }
+
+        redirect('admin/workshops/manage_materials/' . $this->encrypt_id($workshop_id));
     }
 
-    public function participants($workshop_id)
+    public function participants($encrypted_workshop_id)
     {
+        $workshop_id = $this->decrypt_id($encrypted_workshop_id, 'Workshop ID');
+        
         $data['title'] = 'Kelola Peserta Workshop';
         $data['workshop'] = $this->Workshop_model->get_workshop($workshop_id);
         $data['participants'] = $this->Workshop_model->get_participants($workshop_id);
@@ -240,8 +241,28 @@ class Workshops extends CI_Controller {
         $this->load->view('templates/footer');
     }
 
-    public function export_participants($workshop_id)
+    public function manage_materials($encrypted_workshop_id)
     {
+        $workshop_id = $this->decrypt_id($encrypted_workshop_id, 'Workshop ID');
+
+        $workshop = $this->Workshop_model->get_workshop($workshop_id);
+        if (!$workshop) {
+            show_404();
+        }
+
+        $data['title'] = 'Kelola Materi Workshop';
+        $data['workshop'] = $workshop;
+        $data['materials'] = $this->Workshop_model->get_materials($workshop_id);
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('admin/workshops/manage_materials', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function export_participants($encrypted_workshop_id)
+    {
+        $workshop_id = $this->decrypt_id($encrypted_workshop_id, 'Workshop ID');
+        
         $workshop = $this->Workshop_model->get_workshop($workshop_id);
         $participants = $this->Workshop_model->get_participants($workshop_id);
         

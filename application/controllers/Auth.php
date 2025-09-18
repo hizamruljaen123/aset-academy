@@ -49,36 +49,29 @@ class Auth extends CI_Controller {
                 $session_data = array(
                     'user_id' => $user->id,
                     'username' => $user->username,
-                    'nama_lengkap' => $user->nama_lengkap,
                     'email' => $user->email,
                     'role' => $user->role,
                     'level' => $user->level,
-                    'department' => $user->department,
-                    'permissions' => $user->permissions,
                     'logged_in' => TRUE
                 );
                 
                 $this->session->set_userdata($session_data);
                 
-                // Redirect berdasarkan role dan level
-                // Remove mobile detection as it's not available in standard CI_Input
-                if ($user->level == '4') { // Siswa
-                    redirect('student');
-                } elseif ($user->level == '3') { // Guru
-                    redirect('guru');
-                } elseif ($user->level == '2') { // Admin
-                    redirect('dashboard');
-                } elseif ($user->level == '1') { // Super Admin
-                    redirect('dashboard');
-                } else {
-                    redirect('student'); // Default fallback
-                }
+                // Redirect based on role and level
+                $redirect_url = $this->Auth_model->get_redirect_url($user->role, $user->level);
+                redirect($redirect_url);
             } else {
                 // Login gagal
-                $this->session->set_flashdata('error', 'Username atau password salah');
+                $this->session->set_flashdata('error', 'Username atau password salah!');
                 redirect('auth');
             }
         }
+    }
+
+    // Alias untuk method index (login)
+    public function login()
+    {
+        $this->index();
     }
 
     // Logout
@@ -90,7 +83,6 @@ class Auth extends CI_Controller {
         // Destroy all session data
         $this->session->sess_destroy();
         
-        // Redirect to login page
         redirect('auth');
     }
 

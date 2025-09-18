@@ -385,7 +385,7 @@
                                         <a href="<?= base_url($material->file_path) ?>" target="_blank" class="text-blue-600 hover:text-blue-800" title="Download">
                                             <i class="fas fa-download"></i>
                                         </a>
-                                        <a href="<?= site_url('admin/workshops/delete_material/'.$material->id) ?>" class="text-red-600 hover:text-red-800" title="Hapus" onclick="return confirm('Yakin ingin menghapus materi ini?')">
+                                        <a href="<?= site_url('admin/workshops/delete_material/' . encrypt_url($material->id)) ?>" class="text-red-600 hover:text-red-800" title="Hapus" onclick="return confirm('Yakin ingin menghapus materi ini?')">
                                             <i class="fas fa-trash"></i>
                                         </a>
                                     </div>
@@ -409,7 +409,7 @@
                         </div>
                     </div>
 
-                    <a href="<?= site_url('admin/workshops/participants/'.$workshop->id) ?>" class="block w-full bg-white border border-gray-300 text-center py-2 px-4 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <a href="<?= admin_workshop_participants_url($workshop->id) ?>" class="block w-full bg-white border border-gray-300 text-center py-2 px-4 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                         Lihat Semua Peserta
                     </a>
                 </div>

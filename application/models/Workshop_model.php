@@ -35,6 +35,7 @@ class Workshop_model extends CI_Model {
         if ($limit !== null) {
             $this->db->limit($limit, $offset);
         }
+        $this->db->where('status', 'published');
         $this->db->order_by('start_datetime', 'ASC');
         return $this->db->get('workshops')->result();
     }
@@ -42,13 +43,13 @@ class Workshop_model extends CI_Model {
     // Get workshop by ID
     public function get_workshop($id)
     {
-        return $this->db->get_where('workshops', ['id' => $id])->row();
+        return $this->db->get_where('workshops', ['id' => $id, 'status' => 'published'])->row();
     }
 
     // Get workshop by slug
     public function get_workshop_by_slug($slug)
     {
-        return $this->db->get_where('workshops', ['slug' => $slug])->row();
+        return $this->db->get_where('workshops', ['slug' => $slug, 'status' => 'published'])->row();
     }
 
     // Get upcoming workshops

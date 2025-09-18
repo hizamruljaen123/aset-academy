@@ -68,7 +68,7 @@
                                 <span class="text-sm text-gray-600">4.8</span>
                             </div>
                         </div>
-                        <a href="<?= site_url('home/view_free_class/' . $class->id) ?>" class="w-full block bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 transition-colors text-center font-medium">
+                        <a href="<?= free_class_url($class->id) ?>" class="w-full block bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 transition-colors text-center font-medium">
                             Mulai Belajar Sekarang
                         </a>
                     </div>

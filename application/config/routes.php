@@ -54,48 +54,38 @@ $route['404_override'] = '';
 
 // Teacher Assignments Routes
 $route['teacher/assignments'] = 'teacher/assignments';
-$route['teacher/assignments/view_class/(:num)/(:any)'] = 'teacher/assignment_view_class/$1/$2';
-$route['teacher/assignments/create/(:num)/(:any)'] = 'teacher/assignment_create/$1/$2';
-$route['teacher/assignments/edit/(:num)'] = 'teacher/assignment_edit/$1';
-$route['teacher/assignments/delete/(:num)'] = 'teacher/assignment_delete/$1';
-$route['teacher/assignments/submissions/(:num)'] = 'teacher/assignment_submissions/$1';
-$route['teacher/assignments/grade/(:num)'] = 'teacher/assignment_grade/$1';
+$route['teacher/assignments/view_class/(:any)/(:any)'] = 'teacher/assignment_view_class/$1/$2';
+$route['teacher/assignments/create/(:any)/(:any)'] = 'teacher/assignment_create/$1/$2';
+$route['teacher/assignments/edit/(:any)'] = 'teacher/assignment_edit/$1';
+$route['teacher/assignments/delete/(:any)'] = 'teacher/assignment_delete/$1';
+$route['teacher/assignments/submissions/(:any)'] = 'teacher/assignment_submissions/$1';
+$route['teacher/assignments/grade/(:any)'] = 'teacher/assignment_grade/$1';
 
 // Student Assignments Routes
 $route['student/assignments'] = 'student/Assignments';
-$route['student/assignments/view_class/(:num)/(:any)'] = 'student/Assignments/view_class/$1/$2';
-$route['student/assignments/submit/(:num)'] = 'student/Assignments/submit/$1';
+$route['student/assignments/view_class/(:any)/(:any)'] = 'student/Assignments/view_class/$1/$2';
+$route['student/assignments/submit/(:any)'] = 'student/Assignments/submit/$1';
 
 // Admin Assignments Routes
 $route['admin/assignments'] = 'admin/Assignments';
 $route['admin/statistics'] = 'admin/statistics';
 
-$route['translate_uri_dashes'] = FALSE;
-
-// Routes untuk Auth
-$route['auth'] = 'auth';
-$route['auth/index'] = 'auth';
-$route['auth/login'] = 'auth';
-$route['auth/logout'] = 'auth/logout';
-$route['auth/register'] = 'auth/register';
-$route['auth/forgot_password'] = 'auth/forgot_password';
-
 // Routes untuk Siswa
 $route['siswa'] = 'siswa';
 $route['siswa/index'] = 'siswa';
 $route['siswa/create'] = 'siswa/create';
-$route['siswa/edit/(:num)'] = 'siswa/edit/$1';
-$route['siswa/delete/(:num)'] = 'siswa/delete/$1';
-$route['siswa/detail/(:num)'] = 'siswa/detail/$1';
+$route['siswa/edit/(:any)'] = 'siswa/edit/$1';
+$route['siswa/delete/(:any)'] = 'siswa/delete/$1';
+$route['siswa/detail/(:any)'] = 'siswa/detail/$1';
 $route['siswa/search'] = 'siswa/search';
 
 // Routes untuk Kelas
 $route['kelas'] = 'kelas';
 $route['kelas/index'] = 'kelas';
 $route['kelas/create'] = 'kelas/create';
-$route['kelas/edit/(:num)'] = 'kelas/edit/$1';
-$route['kelas/delete/(:num)'] = 'kelas/delete/$1';
-$route['kelas/detail/(:num)'] = 'kelas/detail/$1';
+$route['kelas/edit/(:any)'] = 'kelas/edit/$1';
+$route['kelas/delete/(:any)'] = 'kelas/delete/$1';
+$route['kelas/detail/(:any)'] = 'kelas/detail/$1';
 $route['kelas/by_level/(:any)'] = 'kelas/by_level/$1';
 $route['kelas/by_bahasa/(:any)'] = 'kelas/by_bahasa/$1';
 
@@ -108,18 +98,18 @@ $route['student'] = 'student_dashboard';
 $route['student/index'] = 'student_dashboard';
 $route['student/profile'] = 'student_dashboard/profile';
 $route['student/materi'] = 'student_dashboard/materi';
-$route['student/materi_detail/(:num)'] = 'student_dashboard/materi_detail/$1';
+$route['student/materi_detail/(:any)'] = 'student_dashboard/materi_detail/$1';
 $route['student/premium'] = 'student_premium';
-$route['student/premium/detail/(:num)'] = 'student_premium/detail/$1';
+$route['student/premium/detail/(:any)'] = 'student_premium/detail/$1';
 $route['student/premium/orders'] = 'payment/orders';
-$route['student/premium/payment/(:num)'] = 'payment/purchase/$1';
+$route['student/premium/payment/(:any)'] = 'payment/purchase/$1';
 
 // Routes untuk Student Mobile Dashboard
 $route['student_mobile'] = 'student_mobile';
 $route['student_mobile/index'] = 'student_mobile';
 $route['student_mobile/profile'] = 'student_mobile/profile';
 $route['student_mobile/materi'] = 'student_mobile/materi';
-$route['student_mobile/materi_detail/(:num)'] = 'student_mobile/materi_detail/$1';
+$route['student_mobile/materi_detail/(:any)'] = 'student_mobile/materi_detail/$1';
 
 // Routes untuk Profile Management
 $route['profile'] = 'profile';
@@ -130,8 +120,8 @@ $route['profile/upload_photo'] = 'profile/upload_photo';
 
 // Routes untuk Admin Enrollment Management
 $route['admin/enrollment'] = 'admin_enrollment';
-$route['admin/enrollment/grant_access/(:num)'] = 'admin_enrollment/grant_access/$1';
-$route['admin/enrollment/revoke_access/(:num)'] = 'admin_enrollment/revoke_access/$1';
+$route['admin/enrollment/grant_access/(:any)'] = 'admin_enrollment/grant_access/$1';
+$route['admin/enrollment/revoke_access/(:any)'] = 'admin_enrollment/revoke_access/$1';
 $route['admin/enrollment/update_status'] = 'admin_enrollment/update_status';
 
 // Routes untuk Admin Permissions Management
@@ -139,10 +129,10 @@ $route['admin/permissions'] = 'admin/permissions';
 $route['admin/permissions/index'] = 'admin/permissions';
 $route['admin/permissions/create'] = 'admin/permissions/create';
 $route['admin/permissions/store'] = 'admin/permissions/store';
-$route['admin/permissions/edit/(:num)'] = 'admin/permissions/edit/$1';
-$route['admin/permissions/update/(:num)'] = 'admin/permissions/update/$1';
-$route['admin/permissions/delete/(:num)'] = 'admin/permissions/delete/$1';
-$route['admin/permissions/toggle/(:num)'] = 'admin/permissions/toggle/$1';
+$route['admin/permissions/edit/(:any)'] = 'admin/permissions/edit/$1';
+$route['admin/permissions/update/(:any)'] = 'admin/permissions/update/$1';
+$route['admin/permissions/delete/(:any)'] = 'admin/permissions/delete/$1';
+$route['admin/permissions/toggle/(:any)'] = 'admin/permissions/toggle/$1';
 $route['admin/permissions/reset_defaults'] = 'admin/permissions/reset_defaults';
 $route['admin/permissions/export'] = 'admin/permissions/export';
 $route['admin/permissions/import'] = 'admin/permissions/import';
@@ -151,14 +141,14 @@ $route['admin/permissions/import'] = 'admin/permissions/import';
 $route['admin/free_classes'] = 'admin/free_classes';
 $route['admin/free_classes/index'] = 'admin/free_classes';
 $route['admin/free_classes/create'] = 'admin/free_classes/create';
-$route['admin/free_classes/edit/(:num)'] = 'admin/free_classes/edit/$1';
-$route['admin/free_classes/delete/(:num)'] = 'admin/free_classes/delete/$1';
-$route['admin/free_classes/add_material/(:num)'] = 'admin/free_classes/add_material/$1';
-$route['admin/free_classes/edit_material/(:num)'] = 'admin/free_classes/edit_material/$1';
-$route['admin/free_classes/delete_material/(:num)'] = 'admin/free_classes/delete_material/$1';
-$route['admin/free_classes/students/(:num)'] = 'admin/free_classes/students/$1';
-$route['admin/free_classes/student_progress/(:num)'] = 'admin/free_classes/student_progress/$1';
-$route['admin/free_classes/update_student_status/(:num)'] = 'admin/free_classes/update_student_status/$1';
+$route['admin/free_classes/edit/(:any)'] = 'admin/free_classes/edit/$1';
+$route['admin/free_classes/delete/(:any)'] = 'admin/free_classes/delete/$1';
+$route['admin/free_classes/add_material/(:any)'] = 'admin/free_classes/add_material/$1';
+$route['admin/free_classes/edit_material/(:any)'] = 'admin/free_classes/edit_material/$1';
+$route['admin/free_classes/delete_material/(:any)'] = 'admin/free_classes/delete_material/$1';
+$route['admin/free_classes/students/(:any)'] = 'admin/free_classes/students/$1';
+$route['admin/free_classes/student_progress/(:any)'] = 'admin/free_classes/student_progress/$1';
+$route['admin/free_classes/update_student_status/(:any)'] = 'admin/free_classes/update_student_status/$1';
 
 // Routes for Admin Jadwal Management
 $route['admin/jadwal'] = 'admin/jadwal';
@@ -167,26 +157,26 @@ $route['admin/jadwal/create'] = 'admin/jadwal/create';
 $route['admin/jadwal/store'] = 'admin/jadwal/store';
 
 // Routes untuk Payment Management
-$route['payment/initiate/(:num)'] = 'payment/initiate/$1';
-$route['payment/confirm/(:num)'] = 'payment/confirm/$1';
-$route['payment/process/(:num)'] = 'payment/process/$1';
-$route['payment/status/(:num)'] = 'payment/status/$1';
+$route['payment/initiate/(:any)'] = 'payment/initiate/$1';
+$route['payment/confirm/(:any)'] = 'payment/confirm/$1';
+$route['payment/process/(:any)'] = 'payment/process/$1';
+$route['payment/status/(:any)'] = 'payment/status/$1';
 $route['payment/orders'] = 'payment/orders';
 $route['payment/admin_verify'] = 'payment/admin_verify';
-$route['payment/admin_process_verify/(:num)'] = 'payment/admin_process_verify/$1';
-$route['payment/invoice/(:num)'] = 'payment/invoice/$1';
-$route['home/premium_class_view/(:num)'] = 'home/premium_class_view/$1';
-$route['payment/purchase/(:num)'] = 'payment/purchase/$1';
+$route['payment/admin_process_verify/(:any)'] = 'payment/admin_process_verify/$1';
+$route['payment/invoice/(:any)'] = 'payment/invoice/$1';
+$route['home/premium_class_view/(:any)'] = 'home/premium_class_view/$1';
+$route['payment/purchase/(:any)'] = 'payment/purchase/$1';
 
 // Routes untuk Student Free Classes Access
 $route['student/free_classes'] = 'student/free_classes';
 $route['student/free_classes/index'] = 'student/free_classes/index';
 $route['student/free_classes/browse'] = 'student/free_classes/browse';
-$route['student/free_classes/view/(:num)'] = 'student/free_classes/view/$1';
-$route['student/free_classes/enroll/(:num)'] = 'student/free_classes/enroll/$1';
-$route['student/free_classes/learn/(:num)'] = 'student/free_classes/learn/$1';
-$route['student/free_classes/material/(:num)/(:num)'] = 'student/free_classes/material/$1/$2';
-$route['student/free_classes/complete_material/(:num)/(:num)'] = 'student/free_classes/complete_material/$1/$2';
+$route['student/free_classes/view/(:any)'] = 'student/free_classes/view/$1';
+$route['student/free_classes/enroll/(:any)'] = 'student/free_classes/enroll/$1';
+$route['student/free_classes/learn/(:any)'] = 'student/free_classes/learn/$1';
+$route['student/free_classes/material/(:any)/(:any)'] = 'student/free_classes/material/$1/$2';
+$route['student/free_classes/complete_material/(:any)/(:any)'] = 'student/free_classes/complete_material/$1/$2';
 $route['student/free_classes/post_discussion'] = 'student/free_classes/post_discussion';
 $route['student/free_classes/my_classes'] = 'student/free_classes/my_classes';
 
@@ -199,17 +189,17 @@ $route['home/premium'] = 'home/premium';
 $route['home/free'] = 'home/free';
 $route['home/digital_solutions'] = 'home/digital_solutions';
 $route['home/download_app'] = 'home/download_app';
-$route['free_class/(:num)'] = 'home/view_free_class/$1';
-$route['free_classes/view/(:num)'] = 'home/view_free_class/$1';
+$route['free_class/(:any)'] = 'home/view_free_class/$1';
+$route['free_classes/view/(:any)'] = 'home/view_free_class/$1';
 $route['home/partnership'] = 'home/partnership';
 
 // Routes untuk Workshop & Seminar
 $route['workshops'] = 'workshops';
 $route['workshops/index'] = 'workshops';
-$route['workshops/detail/(:num)'] = 'workshops/detail/$1';
-$route['workshops/register/(:num)'] = 'workshops/register/$1';
-$route['workshops/register_guest/(:num)'] = 'workshops/register_guest/$1';
-$route['workshops/guest_success/(:num)'] = 'workshops/guest_success/$1';
+$route['workshops/detail/(:any)'] = 'workshops/detail/$1';
+$route['workshops/register/(:any)'] = 'workshops/register/$1';
+$route['workshops/register_guest/(:any)'] = 'workshops/register_guest/$1';
+$route['workshops/guest_success/(:any)'] = 'workshops/guest_success/$1';
 
 // AJAX Routes for Regional Data
 $route['workshops/get_provinces'] = 'workshops/get_provinces';
@@ -218,28 +208,28 @@ $route['workshops/get_districts/(:any)'] = 'workshops/get_districts/$1';
 
 // Admin Workshop Guests Routes (under /admin/ prefix)
 $route['admin/workshop-guests'] = 'admin_workshop_guests';
-$route['admin/workshop-guests/workshop/(:num)'] = 'admin_workshop_guests/workshop_guests/$1';
-$route['admin/workshop-guests/export/(:num)'] = 'admin_workshop_guests/export_guests/$1';
-$route['admin/workshop-guests/delete-guest/(:num)'] = 'admin_workshop_guests/delete_guest/$1';
+$route['admin/workshop-guests/workshop/(:any)'] = 'admin_workshop_guests/workshop_guests/$1';
+$route['admin/workshop-guests/export/(:any)'] = 'admin_workshop_guests/export_guests/$1';
+$route['admin/workshop-guests/delete-guest/(:any)'] = 'admin_workshop_guests/delete_guest/$1';
 
 // Admin Workshop Management Routes
 $route['admin/workshops'] = 'admin/workshops';
 $route['admin/workshops/index'] = 'admin/workshops';
 $route['admin/workshops/create'] = 'admin/workshops/create';
-$route['admin/workshops/edit/(:num)'] = 'admin/workshops/edit/$1';
-$route['admin/workshops/delete/(:num)'] = 'admin/workshops/delete/$1';
-$route['admin/workshops/manage_materials/(:num)'] = 'admin/workshops/manage_materials/$1';
-$route['admin/workshops/add_material/(:num)'] = 'admin/workshops/add_material/$1';
-$route['admin/workshops/edit_material/(:num)'] = 'admin/workshops/edit_material/$1';
-$route['admin/workshops/delete_material/(:num)'] = 'admin/workshops/delete_material/$1';
+$route['admin/workshops/edit/(:any)'] = 'admin/workshops/edit/$1';
+$route['admin/workshops/delete/(:any)'] = 'admin/workshops/delete/$1';
+$route['admin/workshops/manage_materials/(:any)'] = 'admin/workshops/manage_materials/$1';
+$route['admin/workshops/add_material/(:any)'] = 'admin/workshops/add_material/$1';
+$route['admin/workshops/edit_material/(:any)'] = 'admin/workshops/edit_material/$1';
+$route['admin/workshops/delete_material/(:any)'] = 'admin/workshops/delete_material/$1';
 
 // Forum Routes
 $route['forum'] = 'forum';
 $route['forum/index'] = 'forum';
 $route['forum/create'] = 'forum/create';
-$route['forum/view/(:num)'] = 'forum/view/$1';
-$route['forum/edit/(:num)'] = 'forum/edit/$1';
-$route['forum/delete/(:num)'] = 'forum/delete/$1';
+$route['forum/view/(:any)'] = 'forum/view/$1';
+$route['forum/edit/(:any)'] = 'forum/edit/$1';
+$route['forum/delete/(:any)'] = 'forum/delete/$1';
 
 // Teacher Routes
 $route['teacher'] = 'teacher';
@@ -268,10 +258,17 @@ $route['documentation/chapter10'] = 'documentation/chapter10';
 // Student Mobile Forum Routes
 $route['student_mobile/forum'] = 'student_mobile/forum';
 $route['student_mobile/forum/create'] = 'student_mobile/forum/create';
-$route['student_mobile/forum/thread/(:num)(?:/(:any))?'] = 'student_mobile/forum/thread/$1/$2';
-$route['student_mobile/forum/category/(:num)'] = 'student_mobile/forum/category/$1';
+$route['student_mobile/forum/thread/(:any)(?:/(:any))?'] = 'student_mobile/forum/thread/$1/$2';
+$route['student_mobile/forum/category/(:any)'] = 'student_mobile/forum/category/$1';
 $route['student_mobile/forum/save_thread'] = 'student_mobile/forum/save_thread';
-$route['student_mobile/forum/reply/(:num)'] = 'student_mobile/forum/reply/$1';
+$route['student_mobile/forum/reply/(:any)'] = 'student_mobile/forum/reply/$1';
+
+// Auth Routes
+$route['auth/login'] = 'auth/login';
+$route['auth/register'] = 'auth/register';
+$route['auth/logout'] = 'auth/logout';
+$route['auth/forgot_password'] = 'auth/forgot_password';
+$route['auth/reset_password/(:any)'] = 'auth/reset_password/$1';
 
 // Mobile Auth Routes
 $route['mobile/login'] = 'auth/mobile_login';
@@ -281,3 +278,7 @@ $route['mobile/register/process'] = 'auth/process_mobile_register';
 
 // Sitemap
 $route['sitemap.xml'] = 'sitemap';
+
+// Test Routes (only for development)
+$route['test/encryption'] = 'test_encryption';
+$route['test/workshop-urls'] = 'test_encryption/workshop_test';

@@ -27,7 +27,7 @@
                     <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300" data-aos="fade-up">
                         <div class="relative overflow-hidden">
                             <?php if ($workshop->thumbnail): ?>
-                                <img src="<?= base_url($workshop->thumbnail) ?>" alt="<?= html_escape($workshop->title) ?>" class="w-full h-48 object-cover hover:scale-105 transition-transform duration-300">
+                                <img src="<?= $workshop->thumbnail ?>" alt="<?= html_escape($workshop->title) ?>" class="w-full h-48 object-cover hover:scale-105 transition-transform duration-300">
                             <?php else: ?>
                                 <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
                                     <i class="fas fa-chalkboard-teacher text-gray-400 text-3xl"></i>
@@ -94,7 +94,7 @@
                                     ?>
                                 </div>
 
-                                <a href="<?= site_url('workshops/detail/' . $workshop->id) ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold">
+                                <a href="<?= site_url('workshops/detail/' . encrypt_url($workshop->id)) ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold">
                                     Lihat Detail
                                 </a>
                             </div>

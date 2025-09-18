@@ -1,6 +1,6 @@
 <div class="max-w-screen-xl mx-auto p-4">
     <div class="mb-6">
-        <a href="<?= site_url('admin/workshops/edit/'.$workshop->id) ?>" class="text-blue-600 hover:text-blue-800 flex items-center">
+        <a href="<?= admin_workshop_url($workshop->id) ?>" class="text-blue-600 hover:text-blue-800 flex items-center">
             <i class="fas fa-arrow-left mr-2"></i> Kembali ke Workshop
         </a>
     </div>
@@ -12,7 +12,7 @@
                 <p class="text-gray-600"><?= $workshop->title ?> - <?= date('d M Y', strtotime($workshop->start_datetime)) ?></p>
             </div>
             <div class="flex gap-2">
-                <a href="<?= site_url('admin/workshops/export/'.$workshop->id) ?>" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2">
+                <a href="<?= site_url('admin/workshops/export/' . encrypt_url($workshop->id)) ?>" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2">
                     <i class="fas fa-file-export"></i>
                     Export CSV
                 </a>
