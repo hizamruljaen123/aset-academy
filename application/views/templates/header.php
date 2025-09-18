@@ -57,8 +57,7 @@
         <div class="w-64 bg-white shadow-md fixed h-full transition-all duration-300 ease-in-out z-50" id="sidebar">
             <div class="p-4 border-b border-gray-200">
                 <a href="<?php echo site_url(); ?>" class="flex items-center text-blue-600 font-bold">
-                    <i class="fas fa-graduation-cap mr-2"></i>
-                    Academy Lite
+                <img src="<?= base_url('assets/img/logo.png') ?>" alt="ASET Academy" class="h-8 w-auto">
                 </a>
             </div>
             
@@ -143,6 +142,10 @@
                     <a href="<?php echo site_url('dashboard'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'dashboard' || $this->uri->segment(1) == '') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-tachometer-alt w-5 text-center mr-3"></i>
                         Dashboard
+                    </a>
+                    <a href="<?php echo site_url('admin/statistics'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'statistics') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-chart-line w-5 text-center mr-3"></i>
+                        Statistics
                     </a>
                     <a href="<?php echo site_url('siswa'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'siswa') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-users w-5 text-center mr-3"></i>

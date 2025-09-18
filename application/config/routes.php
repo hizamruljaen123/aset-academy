@@ -68,6 +68,7 @@ $route['student/assignments/submit/(:num)'] = 'student/Assignments/submit/$1';
 
 // Admin Assignments Routes
 $route['admin/assignments'] = 'admin/Assignments';
+$route['admin/statistics'] = 'admin/statistics';
 
 $route['translate_uri_dashes'] = FALSE;
 
