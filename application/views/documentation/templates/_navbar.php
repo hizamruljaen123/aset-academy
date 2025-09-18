@@ -47,10 +47,35 @@
                     </div>
                 </div>
 
-                <!-- Dokumentasi (Simple Link) -->
-                <a href="<?= site_url('documentation') ?>" class="px-4 py-2 text-blue-600 font-medium transition-colors rounded-lg bg-blue-50 flex items-center">
-                    <i class="fas fa-book mr-2"></i>Dokumentasi
-                </a>
+                <!-- Dokumentasi Dropdown -->
+                <div class="relative group">
+                    <button class="px-4 py-2 text-blue-600 font-medium transition-colors rounded-lg bg-blue-50 flex items-center">
+                        <i class="fas fa-book mr-2"></i>Dokumentasi
+                        <i class="fas fa-chevron-down ml-2 text-sm transition-transform group-hover:rotate-180"></i>
+                    </button>
+                    <div class="absolute top-full left-0 mt-2 w-80 bg-white rounded-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                        <div class="p-3">
+                            <div class="mb-3">
+                                <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Panduan Utama</div>
+                                <a href="<?= site_url('documentation') ?>" class="flex items-center px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors">
+                                    <i class="fas fa-home mr-3 text-blue-500"></i>
+                                    <span class="font-medium">Beranda Dokumentasi</span>
+                                </a>
+                            </div>
+                            <div class="border-t border-gray-100 pt-3">
+                                <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Bab Materi</div>
+                                <div class="grid grid-cols-2 gap-1">
+                                    <?php for($i = 1; $i <= 10; $i++): ?>
+                                    <a href="<?= site_url('documentation/chapter'.$i) ?>" class="flex items-center px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors">
+                                        <span class="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-medium mr-2"><?php echo $i; ?></span>
+                                        <span>Bab <?php echo $i; ?></span>
+                                    </a>
+                                    <?php endfor; ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Layanan Dropdown -->
                 <div class="relative group">
@@ -82,25 +107,10 @@
                     </div>
                 </div>
 
-                <!-- Tentang & Support -->
-                <div class="relative group">
-                    <button class="px-4 py-2 text-gray-700 hover:text-blue-600 font-medium transition-colors rounded-lg hover:bg-blue-50 flex items-center">
-                        <i class="fas fa-info-circle mr-2"></i>Info
-                        <i class="fas fa-chevron-down ml-2 text-sm transition-transform group-hover:rotate-180"></i>
-                    </button>
-                    <div class="absolute top-full left-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                        <div class="p-2">
-                            <a href="<?= site_url('home/about') ?>" class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors">
-                                <i class="fas fa-building mr-3 text-blue-500"></i>
-                                <span>Tentang Kami</span>
-                            </a>
-                            <a href="<?= site_url('home/faq') ?>" class="flex items-center px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
-                                <i class="fas fa-question-circle mr-3 text-purple-500"></i>
-                                <span>FAQ</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                <!-- Tentang Kami -->
+                <a href="<?= site_url('home/about') ?>" class="px-4 py-2 text-gray-700 hover:text-blue-600 font-medium transition-colors rounded-lg hover:bg-blue-50">
+                    <i class="fas fa-info-circle mr-2"></i>Tentang
+                </a>
 
                 <!-- Download App -->
                 <a href="<?= site_url('home/download_app') ?>" class="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors flex items-center">
@@ -143,28 +153,36 @@
                     </a>
                 </div>
 
-                <!-- Mobile Other Links -->
-                <a href="<?= site_url('documentation') ?>" class="flex items-center px-4 py-3 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                    <i class="fas fa-book mr-3"></i>Dokumentasi
-                </a>
-                <a href="<?= site_url('home/digital_solutions') ?>" class="flex items-center px-4 py-3 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg transition-colors">
-                    <i class="fas fa-laptop-code mr-3 text-emerald-500"></i>Solusi Digital
-                </a>
-                <a href="<?= site_url('home/partnership') ?>" class="flex items-center px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
-                    <i class="fas fa-handshake mr-3 text-purple-500"></i>Partnership
-                </a>
-
-                <!-- Mobile Info Section -->
+                <!-- Mobile Dokumentasi Section -->
                 <div class="px-4 py-2">
-                    <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Info & Support</div>
-                    <a href="<?= site_url('home/about') ?>" class="flex items-center px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors">
-                        <i class="fas fa-building mr-3 text-blue-500"></i>Tentang Kami
+                    <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Dokumentasi</div>
+                    <a href="<?= site_url('documentation') ?>" class="flex items-center px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                        <i class="fas fa-book mr-3"></i>Beranda Dokumentasi
                     </a>
-                    <a href="<?= site_url('home/faq') ?>" class="flex items-center px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
-                        <i class="fas fa-question-circle mr-3 text-purple-500"></i>FAQ
+                    <div class="ml-7 mt-2 grid grid-cols-2 gap-1">
+                        <?php for($i = 1; $i <= 10; $i++): ?>
+                        <a href="<?= site_url('documentation/chapter'.$i) ?>" class="px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded transition-colors">
+                            Bab <?php echo $i; ?>
+                        </a>
+                        <?php endfor; ?>
+                    </div>
+                </div>
+
+                <!-- Mobile Layanan Section -->
+                <div class="px-4 py-2">
+                    <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Layanan</div>
+                    <a href="<?= site_url('home/digital_solutions') ?>" class="flex items-center px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg transition-colors">
+                        <i class="fas fa-laptop-code mr-3 text-emerald-500"></i>Solusi Digital
+                    </a>
+                    <a href="<?= site_url('home/partnership') ?>" class="flex items-center px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
+                        <i class="fas fa-handshake mr-3 text-purple-500"></i>Partnership
                     </a>
                 </div>
 
+                <!-- Mobile Other Links -->
+                <a href="<?= site_url('home/about') ?>" class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors">
+                    <i class="fas fa-info-circle mr-3"></i>Tentang Kami
+                </a>
                 <a href="<?= site_url('home/download_app') ?>" class="flex items-center px-4 py-3 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
                     <i class="fas fa-mobile-alt mr-3"></i>Download App
                 </a>

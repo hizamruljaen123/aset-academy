@@ -1,0 +1,28 @@
+User-agent: *
+Allow: /
+
+# Block access to admin areas
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /teacher/
+Disallow: /student/
+Disallow: /student_mobile/
+
+# Block access to authentication pages (but allow crawling)
+# Allow: /auth/
+
+# Block access to system files
+Disallow: /system/
+Disallow: /application/
+Disallow: /assets/css/
+Disallow: /assets/js/
+Disallow: /uploads/
+Disallow: /database/
+
+# Block access to temporary or development files
+Disallow: *.sql
+Disallow: *.log
+Disallow: *.tmp
+
+# Sitemap
+Sitemap: https://asetacademy.id/sitemap.xml

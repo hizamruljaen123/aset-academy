@@ -1,6 +1,7 @@
-<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+<?php $this->load->view('documentation/templates/_header'); ?>
+
     <!-- Hero Section -->
-    <section class="relative py-20 px-4 sm:px-6 lg:px-8">
+    <section class="relative py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-indigo-100">
         <div class="max-w-7xl mx-auto text-center">
             <div class="mb-8" data-aos="fade-up">
                 <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
@@ -321,14 +322,4 @@
     </section>
 </div>
 
-<script>
-    // Initialize AOS
-    AOS.init({
-        duration: 800,
-        easing: 'ease-in-out',
-        once: true
-    });
-
-    // Initialize Feather Icons
-    feather.replace();
-</script>
+<?php $this->load->view('documentation/templates/_footer'); ?>

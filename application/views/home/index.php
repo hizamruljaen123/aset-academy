@@ -43,29 +43,7 @@
         </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-                <div class="text-center" data-aos="fade-up" data-aos-delay="100">
-                    <div class="text-3xl md:text-4xl font-bold text-blue-600 mb-2">150+</div>
-                    <div class="text-gray-600">Kelas Premium</div>
-                </div>
-                <div class="text-center" data-aos="fade-up" data-aos-delay="200">
-                    <div class="text-3xl md:text-4xl font-bold text-green-600 mb-2">50+</div>
-                    <div class="text-gray-600">Kelas Gratis</div>
-                </div>
-                <div class="text-center" data-aos="fade-up" data-aos-delay="300">
-                    <div class="text-3xl md:text-4xl font-bold text-purple-600 mb-2">10K+</div>
-                    <div class="text-gray-600">Siswa Aktif</div>
-                </div>
-                <div class="text-center" data-aos="fade-up" data-aos-delay="400">
-                    <div class="text-3xl md:text-4xl font-bold text-indigo-600 mb-2">25+</div>
-                    <div class="text-gray-600">Instruktur</div>
-                </div>
-            </div>
-        </div>
-    </section>
+    
 
     <!-- Premium Classes Section -->
     <section class="py-16 bg-gray-50">
@@ -221,7 +199,13 @@
                     <?php foreach ($testimonials as $testimonial): ?>
                     <div class="carousel-item w-80 flex-shrink-0 bg-gray-50 p-6 rounded-xl" data-aos="fade-up" data-aos-delay="100">
                         <div class="flex items-center mb-4">
-                            <img src="<?= $testimonial->photo?>" alt="<?= html_escape($testimonial->name) ?>" class="w-12 h-12 rounded-full mr-4">
+                            <?php if ($testimonial->photo && file_exists(FCPATH . 'uploads/testimonials/' . $testimonial->photo)): ?>
+                                <img src="<?= base_url('uploads/testimonials/' . $testimonial->photo) ?>" alt="<?= html_escape($testimonial->name) ?>" class="w-12 h-12 rounded-full mr-4 object-cover">
+                            <?php else: ?>
+                                <div class="w-12 h-12 rounded-full mr-4 bg-gray-200 flex items-center justify-center">
+                                    <i class="fas fa-user text-gray-500 text-xl"></i>
+                                </div>
+                            <?php endif; ?>
                             <div>
                                 <h4 class="font-bold text-gray-800"><?= html_escape($testimonial->name) ?></h4>
                                 <p class="text-sm text-gray-600"><?= html_escape($testimonial->position) ?></p>

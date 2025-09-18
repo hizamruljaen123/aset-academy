@@ -229,3 +229,6 @@ $route['mobile/login'] = 'auth/mobile_login';
 $route['mobile/login/process'] = 'auth/process_mobile_login';
 $route['mobile/register'] = 'auth/mobile_register';
 $route['mobile/register/process'] = 'auth/process_mobile_register';
+
+// Sitemap
+$route['sitemap.xml'] = 'sitemap';
