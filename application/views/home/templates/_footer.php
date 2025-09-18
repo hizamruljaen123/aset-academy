@@ -12,8 +12,9 @@
                     <ul class="space-y-3">
                         <li><a href="<?= site_url('home/premium') ?>" class="text-gray-400 hover:text-white transition-colors">Kelas Premium</a></li>
                         <li><a href="<?= site_url('home/free') ?>" class="text-gray-400 hover:text-white transition-colors">Kelas Gratis</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Bootcamp</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Webinar</a></li>
+                        <li><a href="<?= site_url('workshops') ?>" class="text-gray-400 hover:text-white transition-colors">Workshop & Seminar</a></li>
+                        <li><a href="<?= site_url('forum') ?>" class="text-gray-400 hover:text-white transition-colors">Forum Diskusi</a></li>
+                        <li><a href="<?= site_url('home/digital_solutions') ?>" class="text-gray-400 hover:text-white transition-colors">Solusi Digital</a></li>
                     </ul>
                 </div>
                 
@@ -21,9 +22,10 @@
                     <h3 class="text-lg font-bold mb-6">Dukungan</h3>
                     <ul class="space-y-3">
                         <li><a href="<?= site_url('home/faq') ?>" class="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Bantuan</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Kontak</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Syarat & Ketentuan</a></li>
+                        <li><a href="<?= site_url('home/about') ?>" class="text-gray-400 hover:text-white transition-colors">Tentang Kami</a></li>
+                        <li><a href="<?= site_url('home/partnership') ?>" class="text-gray-400 hover:text-white transition-colors">Kemitraan</a></li>
+                        <li><a href="<?= site_url('documentation') ?>" class="text-gray-400 hover:text-white transition-colors">Dokumentasi</a></li>
+                        <li><a href="<?= site_url('sitemap.xml') ?>" class="text-gray-400 hover:text-white transition-colors">Sitemap</a></li>
                     </ul>
                 </div>
                 

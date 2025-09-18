@@ -7,8 +7,7 @@
                 <!-- Brand -->
                 <div class="md:col-span-1">
                     <div class="flex items-center space-x-2 mb-4">
-                        <img src="<?= base_url('assets/img/logo.png') ?>" alt="ASET Academy" class="h-8 w-auto">
-                        <span class="text-xl font-bold">ASET Academy</span>
+                        <img src="<?= base_url('assets/img/logo-white.png') ?>" alt="ASET Academy" class="h-8 w-auto">
                     </div>
                     <p class="text-gray-400 text-sm leading-relaxed">
                         Platform pembelajaran programming terdepan dengan metode belajar interaktif dan kurikulum terkini.

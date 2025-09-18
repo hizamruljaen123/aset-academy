@@ -92,70 +92,21 @@
         </div>
     </section>
 
-    <!-- Team Section -->
-    <section class="py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12" data-aos="fade-up">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Tim Kami</h2>
-                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                    Dikenal ahli di bidangnya dan passionate tentang pendidikan teknologi
-                </p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="text-center" data-aos="fade-up" data-aos-delay="100">
-                    <img src="http://static.photos/people/200x200/1" alt="CEO" class="w-32 h-32 rounded-full mx-auto mb-4 shadow-lg">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Ahmad Fauzi</h3>
-                    <p class="text-blue-600 font-medium mb-2">Founder & CEO</p>
-                    <p class="text-gray-600 text-sm">
-                        Ex-Google Engineer dengan 10+ tahun pengalaman dalam software development
-                    </p>
-                </div>
-                
-                <div class="text-center" data-aos="fade-up" data-aos-delay="200">
-                    <img src="http://static.photos/people/200x200/2" alt="CTO" class="w-32 h-32 rounded-full mx-auto mb-4 shadow-lg">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Sarah Wijaya</h3>
-                    <p class="text-blue-600 font-medium mb-2">Chief Technology Officer</p>
-                    <p class="text-gray-600 text-sm">
-                        Specialist dalam cloud computing dan architecture system yang scalable
-                    </p>
-                </div>
-                
-                <div class="text-center" data-aos="fade-up" data-aos-delay="300">
-                    <img src="http://static.photos/people/200x200/3" alt="Lead Instructor" class="w-32 h-32 rounded-full mx-auto mb-4 shadow-lg">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Rizky Pratama</h3>
-                    <p class="text-blue-600 font-medium mb-2">Lead Instructor</p>
-                    <p class="text-gray-600 text-sm">
-                        Full-stack developer dengan passion kuat dalam mengajar dan mentoring
-                    </p>
-                </div>
-                
-                <div class="text-center" data-aos="fade-up" data-aos-delay="400">
-                    <img src="http://static.photos/people/200x200/4" alt="Curriculum Director" class="w-32 h-32 rounded-full mx-auto mb-4 shadow-lg">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Dewi Lestari</h3>
-                    <p class="text-blue-600 font-medium mb-2">Curriculum Director</p>
-                    <p class="text-gray-600 text-sm">
-                        Ahli dalam pengembangan kurikulum berbasis kebutuhan industri modern
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
+   
     <!-- Stats Section -->
     <section class="py-16 bg-gradient-to-r from-blue-600 to-indigo-700">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div class="text-center text-white" data-aos="fade-up" data-aos-delay="100">
-                    <div class="text-3xl md:text-4xl font-bold mb-2">3+</div>
+                    <div class="text-3xl md:text-4xl font-bold mb-2">5+</div>
                     <div class="text-lg">Tahun Berpengalaman</div>
                 </div>
                 <div class="text-center text-white" data-aos="fade-up" data-aos-delay="200">
-                    <div class="text-3xl md:text-4xl font-bold mb-2">10K+</div>
+                    <div class="text-3xl md:text-4xl font-bold mb-2">68+</div>
                     <div class="text-lg">Siswa Aktif</div>
                 </div>
                 <div class="text-center text-white" data-aos="fade-up" data-aos-delay="300">
-                    <div class="text-3xl md:text-4xl font-bold mb-2">200+</div>
+                    <div class="text-3xl md:text-4xl font-bold mb-2">7+</div>
                     <div class="text-lg">Kelas Tersedia</div>
                 </div>
                 <div class="text-center text-white" data-aos="fade-up" data-aos-delay="400">

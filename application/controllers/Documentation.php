@@ -15,7 +15,7 @@ class Documentation extends CI_Controller {
         
         $this->load->view('home/templates/_header', $data);
         $this->load->view('documentation/index', $data);
-        $this->load->view('home/templates/_footer');
+        
     }
 
     // Chapter 1: Pengenalan Komputer dan Sistem Operasi
@@ -26,7 +26,7 @@ class Documentation extends CI_Controller {
         
         $this->load->view('home/templates/_header', $data);
         $this->load->view('documentation/chapter1', $data);
-        $this->load->view('home/templates/_footer');
+        
     }
 
     // Chapter 2: Dasar-dasar Jaringan Komputer
@@ -37,7 +37,7 @@ class Documentation extends CI_Controller {
         
         $this->load->view('home/templates/_header', $data);
         $this->load->view('documentation/chapter2', $data);
-        $this->load->view('home/templates/_footer');
+        
     }
 
     // Chapter 3: Pengenalan Pemrograman
@@ -48,7 +48,7 @@ class Documentation extends CI_Controller {
         
         $this->load->view('home/templates/_header', $data);
         $this->load->view('documentation/chapter3', $data);
-        $this->load->view('home/templates/_footer');
+        
     }
 
     // Chapter 4: Bahasa Pemrograman Dasar
@@ -59,7 +59,7 @@ class Documentation extends CI_Controller {
         
         $this->load->view('home/templates/_header', $data);
         $this->load->view('documentation/chapter4', $data);
-        $this->load->view('home/templates/_footer');
+        
     }
 
     // Chapter 5: Struktur Data Dasar
@@ -70,7 +70,7 @@ class Documentation extends CI_Controller {
         
         $this->load->view('home/templates/_header', $data);
         $this->load->view('documentation/chapter5', $data);
-        $this->load->view('home/templates/_footer');
+        
     }
 
     // Chapter 6: Database dan SQL
@@ -81,7 +81,7 @@ class Documentation extends CI_Controller {
         
         $this->load->view('home/templates/_header', $data);
         $this->load->view('documentation/chapter6', $data);
-        $this->load->view('home/templates/_footer');
+        
     }
 
     // Chapter 7: Web Development Dasar
@@ -92,7 +92,7 @@ class Documentation extends CI_Controller {
         
         $this->load->view('home/templates/_header', $data);
         $this->load->view('documentation/chapter7', $data);
-        $this->load->view('home/templates/_footer');
+        
     }
 
     // Chapter 8: Version Control dengan Git
@@ -103,7 +103,7 @@ class Documentation extends CI_Controller {
         
         $this->load->view('home/templates/_header', $data);
         $this->load->view('documentation/chapter8', $data);
-        $this->load->view('home/templates/_footer');
+        
     }
 
     // Chapter 9: Security dan Best Practices
@@ -114,7 +114,7 @@ class Documentation extends CI_Controller {
         
         $this->load->view('home/templates/_header', $data);
         $this->load->view('documentation/chapter9', $data);
-        $this->load->view('home/templates/_footer');
+        
     }
 
     // Chapter 10: Karier dan Pengembangan Diri
@@ -125,6 +125,6 @@ class Documentation extends CI_Controller {
         
         $this->load->view('home/templates/_header', $data);
         $this->load->view('documentation/chapter10', $data);
-        $this->load->view('home/templates/_footer');
+        
     }
 }

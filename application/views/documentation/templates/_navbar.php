@@ -6,7 +6,6 @@
             <div class="flex items-center space-x-3">
                 <a href="<?= site_url() ?>" class="flex items-center space-x-2 hover:opacity-80 transition-opacity">
                     <img src="<?= base_url('assets/img/logo.png') ?>" alt="ASET Academy" class="h-8 w-auto">
-                    <span class="text-lg font-bold text-gray-900 hidden sm:block">ASET Academy</span>
                 </a>
             </div>
 
