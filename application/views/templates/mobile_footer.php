@@ -26,22 +26,14 @@
         </div>
     </nav>
 
+    <!-- Forum FAB -->
+    <?php $this->load->view('templates/forum_fab'); ?>
+
     <!-- Mobile Bottom Sheet Container -->
     <div id="mobile-bottom-sheet" class="fixed inset-x-0 bottom-0 bg-white rounded-t-3xl shadow-2xl transform translate-y-full transition-transform duration-300 z-50 max-h-96 overflow-y-auto">
         <div class="w-12 h-1 bg-gray-300 rounded-full mx-auto mt-3 mb-4"></div>
         <div class="px-4 pb-6">
             <!-- Bottom sheet content will be loaded here -->
-        </div>
-    </div>
-
-    <!-- Forum FAB -->
-    <?php $this->load->view('templates/forum_fab'); ?>
-
-    <!-- Mobile Toast Notification -->
-    <div id="mobile-toast" class="fixed top-20 left-4 right-4 bg-gray-900 text-white px-4 py-3 rounded-lg shadow-lg transform translate-y-full transition-transform duration-300 z-50">
-        <div class="flex items-center">
-            <i data-feather="info" class="w-5 h-5 mr-3"></i>
-            <span id="mobile-toast-message">Notification message</span>
         </div>
     </div>
 
@@ -73,19 +65,6 @@
                 }
             });
         });
-        
-        // Mobile toast notification
-        function showToast(message, duration = 3000) {
-            const toast = document.getElementById('mobile-toast');
-            const toastMessage = document.getElementById('mobile-toast-message');
-            
-            toastMessage.textContent = message;
-            toast.classList.remove('translate-y-full');
-            
-            setTimeout(() => {
-                toast.classList.add('translate-y-full');
-            }, duration);
-        }
         
         // Mobile bottom sheet
         function showBottomSheet(content) {
@@ -150,7 +129,6 @@
             if (pullDistance > 100) {
                 // Trigger refresh
                 mainContent.style.transform = 'translateY(0)';
-                showToast('Memperbarui data...');
                 
                 // Reload the page after a short delay
                 setTimeout(() => {
@@ -165,7 +143,7 @@
         
         // Mobile FAB functionality
         document.getElementById('mobile-fab').addEventListener('click', function() {
-            showToast('Fitur ini akan segera hadir!');
+            // Fitur ini akan segera hadir
         });
         
         // Handle back button for mobile
