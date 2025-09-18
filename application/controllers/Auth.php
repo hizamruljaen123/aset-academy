@@ -67,9 +67,9 @@ class Auth extends CI_Controller {
                 } elseif ($user->level == '3') { // Guru
                     redirect('guru');
                 } elseif ($user->level == '2') { // Admin
-                    redirect('admin/dashboard');
+                    redirect('dashboard');
                 } elseif ($user->level == '1') { // Super Admin
-                    redirect('admin/dashboard');
+                    redirect('dashboard');
                 } else {
                     redirect('student'); // Default fallback
                 }
