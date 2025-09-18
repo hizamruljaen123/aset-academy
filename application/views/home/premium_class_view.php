@@ -195,6 +195,10 @@
                             <img src="<?= base_url('assets/img/avatars/' . $testi->photo) ?>" 
                                  alt="<?= html_escape($testi->name) ?>" 
                                  class="w-12 h-12 rounded-full object-cover">
+                        <?php else: ?>
+                            <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                                <i class="fas fa-user text-blue-600 text-xl"></i>
+                            </div>
                         <?php endif; ?>
                         <div class="ml-4">
                             <h4 class="font-semibold"><?= html_escape($testi->name) ?></h4>

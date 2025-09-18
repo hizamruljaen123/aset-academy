@@ -113,9 +113,13 @@ class Home extends CI_Controller {
         // Get enrolled students count
         $enrolled_count = $this->free_class_model->count_enrolled_students($class_id);
         
+        // Get related free classes
+        $related_classes = $this->free_class_model->get_recent_free_classes(3);
+        
         $data['free_class'] = $free_class;
         $data['materials'] = $materials;
         $data['enrolled_count'] = $enrolled_count;
+        $data['related_classes'] = $related_classes;
         $data['title'] = $free_class->title . ' - Asset Academy';
         $data['description'] = 'Lihat detail kelas gratis: ' . $free_class->title . '. ' . $free_class->description;
         

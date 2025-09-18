@@ -301,7 +301,6 @@
     <section class="py-16 bg-gray-50">
         <div class="container mx-auto px-4">
             <div class="text-center mb-12" data-aos="fade-up">
-                <h
                 <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Kelas Lainnya</h2>
                 <p class="text-xl text-gray-600 max-w-2xl mx-auto">
                     Jelajahi kelas gratis lainnya yang mungkin Anda minati
@@ -310,7 +309,6 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <?php 
-                $related_classes = $this->Free_class_model->get_recent_free_classes(3);
                 foreach ($related_classes as $related_class): 
                     if ($related_class->id != $free_class->id): 
                 ?>
