@@ -197,6 +197,7 @@ $route['home/faq'] = 'home/faq';
 $route['home/premium'] = 'home/premium';
 $route['home/free'] = 'home/free';
 $route['home/digital_solutions'] = 'home/digital_solutions';
+$route['home/download_app'] = 'home/download_app';
 $route['free_class/(:num)'] = 'home/view_free_class/$1';
 $route['free_classes/view/(:num)'] = 'home/view_free_class/$1';
 $route['home/partnership'] = 'home/partnership';

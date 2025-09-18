@@ -13,6 +13,9 @@
             <a href="<?= site_url('home/partnership') ?>" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Partnership</a>
             <a href="<?= site_url('home/about') ?>" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Tentang Kami</a>
             <a href="<?= site_url('home/faq') ?>" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">FAQ</a>
+            <a href="<?= site_url('home/download_app') ?>" class="text-blue-600 hover:text-blue-700 font-medium transition-colors">
+                <i class="fas fa-mobile-alt mr-1"></i>Download App
+            </a>
         </div>
         
         <div class="flex items-center space-x-4">

@@ -19,6 +19,9 @@
                         Tingkatkan skill programmingmu dengan metode belajar interaktif dan kurikulum terkini dari instruktur profesional.
                     </p>
                     <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <a href="<?= site_url('home/download_app') ?>" class="px-8 py-4 bg-green-500 text-white font-bold rounded-lg hover:bg-green-600 transition-colors text-center flex items-center justify-center">
+                            <i class="fas fa-mobile-alt mr-2"></i>Download App
+                        </a>
                         <a href="#" class="px-8 py-4 bg-white text-blue-600 font-bold rounded-lg hover:bg-gray-100 transition-colors text-center">
                             Lihat Kelas Premium
                         </a>

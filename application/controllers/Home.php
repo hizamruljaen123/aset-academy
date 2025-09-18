@@ -50,6 +50,14 @@ class Home extends CI_Controller {
         $this->load->view('home/faq', $data);
     }
 
+    public function download_app()
+    {
+        $data['title'] = 'Download Aset Academy Mobile App';
+        $data['description'] = 'Download aplikasi mobile Aset Academy untuk Android. Akses materi pembelajaran dan fitur interaktif dimana saja.';
+
+        $this->load->view('home/download_app', $data);
+    }
+
     public function premium()
     {
         $data['premium_classes'] = $this->kelas_model->get_all_kelas();
