@@ -19,10 +19,16 @@ class Testimonial_model extends CI_Model {
 
     public function get_featured_testimonials($limit = 5)
     {
-        $this->db->order_by('rating', 'DESC');
+        $this->db->where('rating >=', 4);
         $this->db->order_by('created_at', 'DESC');
         $this->db->limit($limit);
-        $query = $this->db->get('testimonials');
-        return $query->result();
+        return $this->db->get('testimonials')->result();
+    }
+
+    public function get_testimonials_for_class($limit = 3)
+    {
+        $this->db->order_by('created_at', 'DESC');
+        $this->db->limit($limit);
+        return $this->db->get('testimonials')->result();
     }
 }

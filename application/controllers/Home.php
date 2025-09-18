@@ -6,22 +6,27 @@ class Home extends CI_Controller {
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('Kelas_model');
-        $this->load->model('Free_class_model');
-        $this->load->model('Testimonial_model');
+        $this->load->model('Kelas_model', 'kelas_model');
+        $this->load->model('Free_class_model', 'free_class_model');
+        $this->load->model('Testimonial_model', 'testimonial_model');
+        $this->load->model('Kelas_programming_model', 'kelas_programming_model');
+        $this->load->model('Materi_model', 'materi_model');
+        $this->load->model('User_model', 'user_model');
+        $this->load->model('Jadwal_model', 'jadwal_model');
+        $this->load->model('Absensi_model', 'absensi_model');
         $this->load->helper('url');
     }
 
     public function index()
     {
         // Get featured premium classes
-        $data['featured_premium'] = $this->Kelas_model->get_popular_kelas(3);
+        $data['featured_premium'] = $this->kelas_model->get_popular_kelas(3);
 
         // Get featured free classes
-        $data['featured_free'] = $this->Free_class_model->get_popular_free_classes(3);
+        $data['featured_free'] = $this->free_class_model->get_popular_free_classes(3);
 
         // Get testimonials
-        $data['testimonials'] = $this->Testimonial_model->get_featured_testimonials(5);
+        $data['testimonials'] = $this->testimonial_model->get_featured_testimonials(5);
 
         $data['title'] = 'Aset Academy - Belajar Programming Jadi Mudah & Menyenangkan';
         $data['description'] = 'Platform pembelajaran programming terdepan dengan berbagai kelas premium dan gratis untuk semua level. Mulai perjalanan Anda menjadi programmer handal hari ini!';
@@ -47,7 +52,7 @@ class Home extends CI_Controller {
 
     public function premium()
     {
-        $data['premium_classes'] = $this->Kelas_model->get_all_kelas();
+        $data['premium_classes'] = $this->kelas_model->get_all_kelas();
         $data['title'] = 'Kelas Premium - Asset Academy';
         $data['description'] = 'Jelajahi koleksi kelas premium kami untuk pembelajaran programming yang komprehensif.';
 
@@ -56,11 +61,11 @@ class Home extends CI_Controller {
 
     public function free()
     {
-        $free_classes = $this->Free_class_model->get_all_free_classes();
+        $free_classes = $this->free_class_model->get_all_free_classes();
         
         // Add material count to each class
         foreach ($free_classes as $class) {
-            $materials = $this->Free_class_model->get_free_class_materials($class->id);
+            $materials = $this->free_class_model->get_free_class_materials($class->id);
             $class->material_count = count($materials);
         }
         
@@ -73,7 +78,7 @@ class Home extends CI_Controller {
     
     public function view_free_class($class_id)
     {
-        $free_class = $this->Free_class_model->get_free_class_by_id($class_id);
+        $free_class = $this->free_class_model->get_free_class_by_id($class_id);
         
         if (!$free_class) {
             show_404();
@@ -84,11 +89,11 @@ class Home extends CI_Controller {
         }
         
         // Get class materials
-        $materials = $this->Free_class_model->get_free_class_materials($class_id);
+        $materials = $this->free_class_model->get_free_class_materials($class_id);
         $free_class->material_count = count($materials);
         
         // Get enrolled students count
-        $enrolled_count = $this->Free_class_model->count_enrolled_students($class_id);
+        $enrolled_count = $this->free_class_model->count_enrolled_students($class_id);
         
         $data['free_class'] = $free_class;
         $data['materials'] = $materials;
@@ -101,7 +106,7 @@ class Home extends CI_Controller {
     
     public function kelas_premium($id)
     {
-        $kelas = $this->Kelas_model->get_kelas_by_id($id);
+        $kelas = $this->kelas_model->get_kelas_by_id($id);
         
         if (!$kelas) {
             show_404();
@@ -112,22 +117,19 @@ class Home extends CI_Controller {
         }
         
         // Get related materials
-        $this->load->model('Materi_model');
-        $materi = $this->Materi_model->get_materi_with_parts_by_kelas($id);
+        $materi = $this->materi_model->get_materi_with_parts_by_kelas($id);
         
         // Get schedule
-        $this->load->model('Jadwal_model');
-        $jadwal = $this->Jadwal_model->get_jadwal_by_kelas($id);
+        $jadwal = $this->jadwal_model->get_jadwal_by_kelas($id);
         
         // Get attendance statistics
-        $this->load->model('Absensi_model');
-        $attendance_stats = $this->Absensi_model->get_attendance_stats_by_class($id);
+        $attendance_stats = $this->absensi_model->get_attendance_stats_by_class($id);
         
         // Get student progress
-        $student_progress = $this->Kelas_model->get_student_progress($id);
+        $student_progress = $this->kelas_model->get_student_progress($id);
         
         // Get enrolled students count
-        $enrolled_count = $this->Kelas_model->count_enrolled_students($id);
+        $enrolled_count = $this->kelas_model->count_enrolled_students($id);
         
         $data['kelas'] = $kelas;
         $data['materi'] = $materi;
@@ -147,5 +149,57 @@ class Home extends CI_Controller {
         $data['description'] = 'Transformasi digital perusahaan Anda dengan program pelatihan programming terbaik. Solusi edukasi khusus untuk korporasi, institusi, dan komunitas.';
 
         $this->load->view('home/partnership', $data);
+    }
+
+    public function premium_class_view($id = null)
+    {
+        if (!$id || !is_numeric($id)) {
+            show_404();
+        }
+
+
+        $data['kelas'] = $this->kelas_programming_model->get_kelas_by_id($id);
+
+        if (!$data['kelas']) {
+            show_404();
+        }
+        
+        // Tambahkan deskripsi_singkat jika tidak ada
+        if (!isset($data['kelas']->deskripsi_singkat)) {
+            $data['kelas']->deskripsi_singkat = substr($data['kelas']->deskripsi, 0, 100) . '...';
+        }
+
+        $data['materi'] = $this->materi_model->get_materi_by_kelas($id);
+        
+        // Get instructor info
+        $data['instruktur'] = null;
+        $this->db->select('users.*');
+        $this->db->from('guru_kelas');
+        $this->db->join('users', 'users.id = guru_kelas.guru_id');
+        $this->db->where('guru_kelas.kelas_id', $data['kelas']->id);
+        $data['instruktur'] = $this->db->get()->row();
+
+        $data['testimonials'] = $this->testimonial_model->get_testimonials_for_class();
+        $data['total_siswa'] = $this->kelas_programming_model->count_siswa($id);
+        $data['avg_rating'] = $this->kelas_programming_model->get_average_rating($id);
+
+        // Pengecekan enrollment
+        $data['sudah_bergabung'] = false;
+        if ($this->session->userdata('user_id') && isset($data['kelas']->id)) {
+            $user_id = $this->session->userdata('user_id');
+            $data['sudah_bergabung'] = $this->kelas_programming_model->is_user_enrolled($user_id, $data['kelas']->id);
+        }
+
+        $data['title'] = $data['kelas']->nama_kelas . ' - ASET Academy';
+
+        $this->load->view('home/premium_class_view', $data);
+    }
+
+    public function digital_solutions()
+    {
+        $data['title'] = 'Pengembangan Software Custom untuk UMKM - ASET Academy';
+        $data['description'] = 'Pengembangan software khusus untuk kebutuhan bisnis UMKM. Sistem manajemen, aplikasi kasir, otomasi bisnis, dan solusi digital terintegrasi untuk meningkatkan efisiensi dan produktivitas.';
+
+        $this->load->view('home/digital_solutions', $data);
     }
 }

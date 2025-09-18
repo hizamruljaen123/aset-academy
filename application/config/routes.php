@@ -174,6 +174,7 @@ $route['payment/orders'] = 'payment/orders';
 $route['payment/admin_verify'] = 'payment/admin_verify';
 $route['payment/admin_process_verify/(:num)'] = 'payment/admin_process_verify/$1';
 $route['payment/invoice/(:num)'] = 'payment/invoice/$1';
+$route['home/premium_class_view/(:num)'] = 'home/premium_class_view/$1';
 $route['payment/purchase/(:num)'] = 'payment/purchase/$1';
 
 // Routes untuk Student Free Classes Access
@@ -195,6 +196,7 @@ $route['home/about'] = 'home/about';
 $route['home/faq'] = 'home/faq';
 $route['home/premium'] = 'home/premium';
 $route['home/free'] = 'home/free';
+$route['home/digital_solutions'] = 'home/digital_solutions';
 $route['free_class/(:num)'] = 'home/view_free_class/$1';
 $route['free_classes/view/(:num)'] = 'home/view_free_class/$1';
 $route['home/partnership'] = 'home/partnership';

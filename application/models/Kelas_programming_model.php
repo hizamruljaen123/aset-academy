@@ -17,7 +17,26 @@ class Kelas_programming_model extends CI_Model {
         return $this->db->get()->result();
     }
 
-    public function get_kelas($id) {
+    public function get_kelas_by_id($id) {
         return $this->db->where('id', $id)->get('kelas_programming')->row();
+    }
+
+    public function count_siswa($id) {
+        return $this->db->where('class_id', $id)->from('payments')->where('status', 'Verified')->count_all_results();
+    }
+
+    public function get_average_rating($id)
+    {
+        // Karena tabel testimonials tidak terkait dengan kelas, kembalikan nilai default
+        return 4.5; // Nilai default atau bisa diambil dari cache/config
+    }
+
+    public function is_user_enrolled($user_id, $kelas_id)
+    {
+        $this->db->where('user_id', $user_id);
+        $this->db->where('class_id', $kelas_id);
+        $this->db->where('status', 'Verified');
+        $query = $this->db->get('payments');
+        return $query->num_rows() > 0;
     }
 }

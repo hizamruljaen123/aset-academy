@@ -92,31 +92,36 @@
                             <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm"><?= html_escape($class->bahasa_program) ?></span>
                         </div>
                         <p class="text-gray-600 mb-4"><?= html_escape($class->deskripsi) ?></p>
-                        <div class="flex justify-between items-center">
+                        <div class="flex justify-between items-center mt-4">
                             <span class="text-2xl font-bold text-blue-600">Rp <?= number_format($class->harga, 0, ',', '.') ?></span>
-                            <?php if(isset($user_id)): ?>
-                                <?php if($is_enrolled): ?>
-                                    <a href="<?= site_url('kelas/detail/' . $class->id) ?>" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
-                                        Lanjut Belajar
-                                    </a>
-                                <?php elseif($payment_status && $payment_status->status == 'Verified'): ?>
-                                    <a href="<?= site_url('kelas/enroll/' . $class->id) ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                                        Akses Kelas
-                                    </a>
-                                <?php elseif($payment_status && $payment_status->status == 'Pending'): ?>
-                                    <button class="bg-yellow-500 text-white px-4 py-2 rounded-lg cursor-not-allowed">
-                                        Menunggu Verifikasi
-                                    </button>
+                            <div class="flex flex-col space-y-2">
+                                <a href="<?= site_url('home/premium_class_view/' . $class->id) ?>" class="w-full text-center bg-indigo-100 text-indigo-700 px-4 py-2 rounded-lg hover:bg-indigo-200 transition-colors text-sm font-semibold">
+                                    Lihat Detail
+                                </a>
+                                <?php if(isset($user_id)): ?>
+                                    <?php if($is_enrolled): ?>
+                                        <a href="<?= site_url('kelas/detail/' . $class->id) ?>" class="w-full text-center bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm font-semibold">
+                                            Lanjut Belajar
+                                        </a>
+                                    <?php elseif($payment_status && $payment_status->status == 'Verified'): ?>
+                                        <a href="<?= site_url('kelas/enroll/' . $class->id) ?>" class="w-full text-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold">
+                                            Akses Kelas
+                                        </a>
+                                    <?php elseif($payment_status && $payment_status->status == 'Pending'): ?>
+                                        <button class="w-full text-center bg-yellow-500 text-white px-4 py-2 rounded-lg cursor-not-allowed text-sm font-semibold">
+                                            Menunggu Verifikasi
+                                        </button>
+                                    <?php else: ?>
+                                        <a href="<?= site_url('payment/initiate/' . $class->id) ?>" class="w-full text-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold">
+                                            Daftar Sekarang
+                                        </a>
+                                    <?php endif; ?>
                                 <?php else: ?>
-                                    <a href="<?= site_url('payment/initiate/' . $class->id) ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                    <a href="<?= site_url('auth/login?redirect=payment/initiate/' . $class->id) ?>" class="w-full text-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold">
                                         Daftar Sekarang
                                     </a>
                                 <?php endif; ?>
-                            <?php else: ?>
-                                <a href="<?= site_url('auth/login?redirect=payment/initiate/' . $class->id) ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                                    Daftar Sekarang
-                                </a>
-                            <?php endif; ?>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -68,8 +68,8 @@
                         <div class="flex justify-between items-center mb-4">
                             <span class="text-2xl font-bold text-blue-600">Rp <?= number_format($class->harga, 0, ',', '.') ?></span>
                         </div>
-                        <a href="<?= site_url('home/kelas_premium/' . $class->id) ?>" class="w-full block bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition-colors text-center font-medium">
-                            Lihat Detail Kelas
+                        <a href="<?= site_url('home/premium_class_view/' . $class->id) ?>" class="w-full text-center bg-indigo-100 text-indigo-700 px-4 py-2 rounded-lg hover:bg-indigo-200 transition-colors text-sm font-semibold">
+                            Lihat Detail
                         </a>
                     </div>
                 </div>
