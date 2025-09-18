@@ -202,6 +202,54 @@ $route['free_class/(:num)'] = 'home/view_free_class/$1';
 $route['free_classes/view/(:num)'] = 'home/view_free_class/$1';
 $route['home/partnership'] = 'home/partnership';
 
+// Routes untuk Workshop & Seminar
+$route['workshops'] = 'workshops';
+$route['workshops/index'] = 'workshops';
+$route['workshops/detail/(:num)'] = 'workshops/detail/$1';
+$route['workshops/register/(:num)'] = 'workshops/register/$1';
+$route['workshops/register_guest/(:num)'] = 'workshops/register_guest/$1';
+$route['workshops/guest_success/(:num)'] = 'workshops/guest_success/$1';
+
+// AJAX Routes for Regional Data
+$route['workshops/get_provinces'] = 'workshops/get_provinces';
+$route['workshops/get_regencies/(:any)'] = 'workshops/get_regencies/$1';
+$route['workshops/get_districts/(:any)'] = 'workshops/get_districts/$1';
+
+// Admin Workshop Guests Routes (under /admin/ prefix)
+$route['admin/workshop-guests'] = 'admin_workshop_guests';
+$route['admin/workshop-guests/workshop/(:num)'] = 'admin_workshop_guests/workshop_guests/$1';
+$route['admin/workshop-guests/export/(:num)'] = 'admin_workshop_guests/export_guests/$1';
+$route['admin/workshop-guests/delete-guest/(:num)'] = 'admin_workshop_guests/delete_guest/$1';
+
+// Admin Workshop Management Routes
+$route['admin/workshops'] = 'admin/workshops';
+$route['admin/workshops/index'] = 'admin/workshops';
+$route['admin/workshops/create'] = 'admin/workshops/create';
+$route['admin/workshops/edit/(:num)'] = 'admin/workshops/edit/$1';
+$route['admin/workshops/delete/(:num)'] = 'admin/workshops/delete/$1';
+$route['admin/workshops/manage_materials/(:num)'] = 'admin/workshops/manage_materials/$1';
+$route['admin/workshops/add_material/(:num)'] = 'admin/workshops/add_material/$1';
+$route['admin/workshops/edit_material/(:num)'] = 'admin/workshops/edit_material/$1';
+$route['admin/workshops/delete_material/(:num)'] = 'admin/workshops/delete_material/$1';
+
+// Forum Routes
+$route['forum'] = 'forum';
+$route['forum/index'] = 'forum';
+$route['forum/create'] = 'forum/create';
+$route['forum/view/(:num)'] = 'forum/view/$1';
+$route['forum/edit/(:num)'] = 'forum/edit/$1';
+$route['forum/delete/(:num)'] = 'forum/delete/$1';
+
+// Teacher Routes
+$route['teacher'] = 'teacher';
+$route['teacher/index'] = 'teacher';
+$route['teacher/kelas'] = 'teacher/kelas';
+$route['teacher/siswa'] = 'teacher/siswa';
+$route['teacher/materi'] = 'teacher/materi';
+
+// Guru Routes (Alias untuk Teacher)
+$route['guru'] = 'teacher';
+
 // Routes untuk Dokumentasi
 $route['documentation'] = 'documentation';
 $route['documentation/index'] = 'documentation';

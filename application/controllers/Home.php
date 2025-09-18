@@ -13,12 +13,18 @@ class Home extends CI_Controller {
         $this->load->model('Materi_model', 'materi_model');
         $this->load->model('User_model', 'user_model');
         $this->load->model('Jadwal_model', 'jadwal_model');
-        $this->load->model('Absensi_model', 'absensi_model');
+        $this->load->model('Workshop_model', 'workshop_model');
         $this->load->helper('url');
     }
 
     public function index()
     {
+        // Check if workshops exist, if not, create sample data
+        $existing_workshops = $this->workshop_model->get_all_workshops();
+        if (empty($existing_workshops)) {
+            $this->create_sample_workshops();
+        }
+
         // Get featured premium classes
         $data['featured_premium'] = $this->kelas_model->get_popular_kelas(3);
 
@@ -28,12 +34,16 @@ class Home extends CI_Controller {
         // Get testimonials
         $data['testimonials'] = $this->testimonial_model->get_featured_testimonials(5);
 
+        // Get upcoming workshops and seminars
+        $data['upcoming_workshops'] = $this->workshop_model->get_upcoming_workshops(3);
+
         $data['title'] = 'Aset Academy - Belajar Programming Jadi Mudah & Menyenangkan';
         $data['description'] = 'Platform pembelajaran programming terdepan dengan berbagai kelas premium dan gratis untuk semua level. Mulai perjalanan Anda menjadi programmer handal hari ini!';
 
         $this->load->view('home/index', $data);
     }
 
+    
     public function about()
     {
         $data['title'] = 'Tentang Kami - Asset Academy';

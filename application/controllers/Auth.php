@@ -61,10 +61,17 @@ class Auth extends CI_Controller {
                 $this->session->set_userdata($session_data);
                 
                 // Redirect berdasarkan role dan level
-                if ($this->input->is_mobile()) {
-                    redirect('student_mobile');
-                } else {
+                // Remove mobile detection as it's not available in standard CI_Input
+                if ($user->level == '4') { // Siswa
                     redirect('student');
+                } elseif ($user->level == '3') { // Guru
+                    redirect('guru');
+                } elseif ($user->level == '2') { // Admin
+                    redirect('admin/dashboard');
+                } elseif ($user->level == '1') { // Super Admin
+                    redirect('admin/dashboard');
+                } else {
+                    redirect('student'); // Default fallback
                 }
             } else {
                 // Login gagal
@@ -231,7 +238,7 @@ class Auth extends CI_Controller {
                 
                 $this->session->set_userdata($user_data);
                 
-                // Redirect ke dashboard mobile
+                // Redirect ke dashboard mobile - tetap gunakan mobile dashboard jika tersedia
                 redirect('student_mobile');
             } else {
                 // Jika login gagal

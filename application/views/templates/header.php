@@ -47,6 +47,9 @@
 
     <!-- Flowbite -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js" onerror="console.warn('Flowbite failed to load')"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gray-50">
     <div class="flex min-h-screen">
@@ -90,6 +93,10 @@
                     <a href="<?php echo site_url('forum'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'forum') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-comments w-5 text-center mr-3"></i>
                         Forum
+                    </a>
+                    <a href="<?php echo site_url('admin_workshop_guests'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'admin_workshop_guests') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-users-cog w-5 text-center mr-3"></i>
+                        Workshop Guests
                     </a>
                     
                 <?php elseif ($role == 'siswa'): ?>
@@ -176,6 +183,10 @@
                     <a href="<?php echo site_url('forum'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'forum') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-comments w-5 text-center mr-3"></i>
                         Forum
+                    </a>
+                    <a href="<?php echo site_url('admin/workshop-guests'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'workshop-guests') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-users-cog w-5 text-center mr-3"></i>
+                        Workshop Guests
                     </a>
                     
                     <?php if ($level == '1' || $level == '2'): // Super Admin or Admin ?>

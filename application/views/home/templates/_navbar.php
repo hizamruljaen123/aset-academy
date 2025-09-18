@@ -43,6 +43,15 @@
                                     <div class="text-sm text-gray-500">Belajar tanpa biaya</div>
                                 </div>
                             </a>
+                            <a href="<?= site_url('workshops') ?>" class="flex items-center px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
+                                <div class="w-10 h-10 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-lg flex items-center justify-center mr-3">
+                                    <i class="fas fa-chalkboard-teacher text-white text-sm"></i>
+                                </div>
+                                <div>
+                                    <div class="font-medium">Workshop & Seminar</div>
+                                    <div class="text-sm text-gray-500">Pelatihan intensif</div>
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -140,6 +149,9 @@
                     </a>
                     <a href="<?= site_url('home/free') ?>" class="flex items-center px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600 rounded-lg transition-colors">
                         <i class="fas fa-leaf mr-3 text-green-500"></i>Kelas Gratis
+                    </a>
+                    <a href="<?= site_url('workshops') ?>" class="flex items-center px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
+                        <i class="fas fa-chalkboard-teacher mr-3 text-purple-500"></i>Workshop & Seminar
                     </a>
                 </div>
 

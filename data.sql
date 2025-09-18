@@ -6,8 +6,7 @@
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET NAMES utf8 */;
-/*!50503 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8mb3 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
@@ -469,6 +468,51 @@ CREATE TABLE IF NOT EXISTS `premium_class_enrollments` (
 
 -- Data exporting was unselected.
 
+-- Dumping structure for table academy_lite.reg_districts
+CREATE TABLE IF NOT EXISTS `reg_districts` (
+  `id` char(6) NOT NULL,
+  `regency_id` char(4) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_regency` (`regency_id`),
+  CONSTRAINT `fk_regency` FOREIGN KEY (`regency_id`) REFERENCES `reg_regencies` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table academy_lite.reg_provinces
+CREATE TABLE IF NOT EXISTS `reg_provinces` (
+  `id` char(2) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table academy_lite.reg_regencies
+CREATE TABLE IF NOT EXISTS `reg_regencies` (
+  `id` char(4) NOT NULL,
+  `province_id` char(2) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_province` (`province_id`),
+  CONSTRAINT `fk_province` FOREIGN KEY (`province_id`) REFERENCES `reg_provinces` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table academy_lite.reg_villages
+CREATE TABLE IF NOT EXISTS `reg_villages` (
+  `id` char(10) NOT NULL,
+  `district_id` char(6) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_district` (`district_id`),
+  CONSTRAINT `fk_district` FOREIGN KEY (`district_id`) REFERENCES `reg_districts` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+-- Data exporting was unselected.
+
 -- Dumping structure for table academy_lite.siswa
 CREATE TABLE IF NOT EXISTS `siswa` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -559,7 +603,7 @@ CREATE TABLE IF NOT EXISTS `user_permissions` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_permission` (`role`,`level`,`module`,`action`)
-) ENGINE=InnoDB AUTO_INCREMENT=181 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=208 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -586,6 +630,23 @@ CREATE TABLE IF NOT EXISTS `workshops` (
   KEY `idx_created_at` (`created_at`),
   KEY `idx_status_type` (`status`,`type`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb3;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table academy_lite.workshop_guests
+CREATE TABLE IF NOT EXISTS `workshop_guests` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `workshop_id` int unsigned NOT NULL,
+  `nama_lengkap` varchar(255) NOT NULL,
+  `asal_kampus_sekolah` varchar(255) NOT NULL,
+  `usia` int NOT NULL,
+  `pekerjaan` enum('Pelajar','Mahasiswa','Karyawan','Wirausaha','PNS','Guru/Dosen','Lainnya') NOT NULL DEFAULT 'Pelajar',
+  `no_wa_telegram` varchar(20) NOT NULL,
+  `registered_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `workshop_id` (`workshop_id`),
+  CONSTRAINT `workshop_guests_ibfk_1` FOREIGN KEY (`workshop_id`) REFERENCES `workshops` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
 
 -- Data exporting was unselected.
 

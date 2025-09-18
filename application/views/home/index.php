@@ -146,6 +146,9 @@
         </div>
     </section>
 
+    <!-- Workshop & Seminar Section -->
+    <?php $this->load->view('home/workshop_section'); ?>
+
     <!-- Features Section -->
     <section class="py-16 bg-gray-50">
         <div class="container mx-auto px-4">
