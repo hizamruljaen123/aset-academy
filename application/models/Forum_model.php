@@ -86,11 +86,33 @@ class Forum_model extends CI_Model {
     {
         $this->db->select('ft.id, ft.title, ft.created_at, 
                          u.nama_lengkap as author_name, u.username,
-                         (SELECT COUNT(*) FROM forum_posts fp WHERE fp.thread_id = ft.id) as reply_count');
+                         (SELECT COUNT(*) FROM forum_posts fp WHERE fp.thread_id = ft.id) as reply_count,
+                         (SELECT COUNT(*) FROM forum_likes WHERE thread_id = ft.id) as like_count');
         $this->db->from('forum_threads ft');
-        $this->db->join('users u', 'u.id = ft.user_id');
-        $this->db->order_by('(SELECT COUNT(*) FROM forum_posts fp WHERE fp.thread_id = ft.id)', 'DESC');
+        $this->db->join('users u', 'u.id = ft.user_id', 'left');
+        $this->db->order_by('like_count', 'DESC');
+        $this->db->order_by('ft.created_at', 'DESC');
         $this->db->limit($limit);
+        return $this->db->get()->result();
+    }
+    
+    /**
+     * Get recent forum threads
+     * 
+     * @param int $limit Number of threads to return
+     * @return array Array of thread objects
+     */
+    public function get_recent_threads($limit = 10, $offset = 0)
+    {
+        $this->db->select('ft.*, u.nama_lengkap, u.username,
+                          (SELECT COUNT(*) FROM forum_posts WHERE thread_id = ft.id) as post_count,
+                          (SELECT COUNT(*) FROM forum_likes WHERE thread_id = ft.id) as like_count,
+                          (SELECT name FROM forum_categories WHERE id = ft.category_id) as category_name,
+                          (SELECT COUNT(*) FROM forum_thread_views WHERE thread_id = ft.id) as views');
+        $this->db->from('forum_threads ft');
+        $this->db->join('users u', 'u.id = ft.user_id', 'left');
+        $this->db->order_by('ft.is_pinned DESC, ft.updated_at DESC, ft.created_at DESC');
+        $this->db->limit($limit, $offset);
         return $this->db->get()->result();
     }
     

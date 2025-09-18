@@ -12,12 +12,15 @@
 </head>
 <body class="flex items-center justify-center min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600">
 
+    <!-- Header -->
+    
+
     <div class="max-w-md w-full mx-8 p-8 bg-white rounded-lg shadow-lg transition-opacity duration-500 opacity-0">
         <div class="text-center mb-8">
-            <h1 class="text-2xl font-bold text-gray-800 mb-2">
-                <i class="fas fa-graduation-cap text-blue-500"></i> Asset Academy
-            </h1>
-            <p class="text-gray-500 text-sm">Sistem Pendataan Siswa</p>
+            <center>
+            <img src="<?= base_url('assets/img/logo.png') ?>" alt="ASET Academy" class="h-8">
+</center>
+        
         </div>
 
         <?php if ($this->session->flashdata('error')): ?>
@@ -74,7 +77,6 @@
         <?php echo form_close(); ?>
 
         <div class="mt-6 text-center text-sm text-gray-500">
-            <p class="mb-1">Default Login: <span class="font-medium text-gray-700">admin / admin</span></p>
             <p>Belum punya akun? <a href="<?php echo site_url('auth/register'); ?>" class="text-blue-500 hover:text-blue-600">Daftar di sini</a></p>
         </div>
     </div>

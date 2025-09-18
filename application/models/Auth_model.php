@@ -125,4 +125,21 @@ class Auth_model extends CI_Model {
         // Lower number = higher access level
         return (int)$user_level <= (int)$required_level;
     }
+
+    // Login mobile
+    public function login_mobile($username, $password)
+    {
+        // Cari user berdasarkan username atau NIS
+        $this->db->where('username', $username)
+                 ->or_where('id IN (SELECT id FROM siswa WHERE nis = ?)', $username);
+        
+        $user = $this->db->get('users')->row();
+        
+        // Verifikasi password
+        if ($user && password_verify($password, $user->password)) {
+            return $user;
+        }
+        
+        return false;
+    }
 }

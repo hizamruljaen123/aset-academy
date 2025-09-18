@@ -265,6 +265,23 @@ class Enrollment_model extends CI_Model
     }
     
     /**
+     * Get active enrollment for a student
+     * 
+     * @param int $student_id
+     * @return object|null
+     */
+    public function get_active_enrollment($student_id)
+    {
+        $this->db->select('*, class_id as kelas_id');
+        $this->db->from('free_class_enrollments');
+        $this->db->where('student_id', $student_id);
+        $this->db->where('status', 'Enrolled');
+        $this->db->order_by('enrollment_date', 'DESC');
+        $this->db->limit(1);
+        return $this->db->get()->row();
+    }
+    
+    /**
      * Get student progress statistics
      * 
      * @param int $student_id
@@ -298,5 +315,27 @@ class Enrollment_model extends CI_Model
             'in_progress_enrollments' => $in_progress_enrollments,
             'avg_progress' => (int) round($avg_progress)
         ];
+    }
+    
+    /**
+     * Get all paid/premium class enrollments for a student
+     * 
+     * @param int $student_id
+     * @return array
+     */
+    public function get_paid_classes($student_id)
+    {
+        $this->db->select('pce.*, kp.nama_kelas, kp.deskripsi, kp.level, kp.harga, kp.gambar, u.nama_lengkap as mentor_name');
+        $this->db->from('premium_class_enrollments pce');
+        $this->db->join('kelas_programming kp', 'kp.id = pce.class_id', 'left');
+        // Note: There's no mentor_id in kelas_programming, so this join won't work as expected
+        // Consider removing this join or finding another way to get mentor information
+        $this->db->join('users u', 'u.id = 0', 'left'); // Dummy join since we don't have mentor_id
+        $this->db->where('pce.student_id', $student_id);
+        $this->db->where_in('pce.status', ['Active', 'Completed']); // Match the exact case from the ENUM
+        $this->db->order_by('pce.enrollment_date', 'DESC');
+        
+        $query = $this->db->get();
+        return $query->result();
     }
 }

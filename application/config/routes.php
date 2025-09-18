@@ -113,6 +113,13 @@ $route['student/premium/detail/(:num)'] = 'student_premium/detail/$1';
 $route['student/premium/orders'] = 'payment/orders';
 $route['student/premium/payment/(:num)'] = 'payment/purchase/$1';
 
+// Routes untuk Student Mobile Dashboard
+$route['student_mobile'] = 'student_mobile';
+$route['student_mobile/index'] = 'student_mobile';
+$route['student_mobile/profile'] = 'student_mobile/profile';
+$route['student_mobile/materi'] = 'student_mobile/materi';
+$route['student_mobile/materi_detail/(:num)'] = 'student_mobile/materi_detail/$1';
+
 // Routes untuk Profile Management
 $route['profile'] = 'profile';
 $route['profile/view'] = 'profile/view';
@@ -205,3 +212,17 @@ $route['documentation/chapter7'] = 'documentation/chapter7';
 $route['documentation/chapter8'] = 'documentation/chapter8';
 $route['documentation/chapter9'] = 'documentation/chapter9';
 $route['documentation/chapter10'] = 'documentation/chapter10';
+
+// Student Mobile Forum Routes
+$route['student_mobile/forum'] = 'student_mobile/forum';
+$route['student_mobile/forum/create'] = 'student_mobile/forum/create';
+$route['student_mobile/forum/thread/(:num)(?:/(:any))?'] = 'student_mobile/forum/thread/$1/$2';
+$route['student_mobile/forum/category/(:num)'] = 'student_mobile/forum/category/$1';
+$route['student_mobile/forum/save_thread'] = 'student_mobile/forum/save_thread';
+$route['student_mobile/forum/reply/(:num)'] = 'student_mobile/forum/reply/$1';
+
+// Mobile Auth Routes
+$route['mobile/login'] = 'auth/mobile_login';
+$route['mobile/login/process'] = 'auth/process_mobile_login';
+$route['mobile/register'] = 'auth/mobile_register';
+$route['mobile/register/process'] = 'auth/process_mobile_register';

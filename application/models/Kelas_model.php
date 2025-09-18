@@ -212,5 +212,60 @@ class Kelas_model extends CI_Model {
         $result = $query->row();
         return $result ? $result->total : 0;
     }
+    
+    /**
+     * Get available classes for enrollment
+     * 
+     * @param int $student_id
+     * @return array
+     */
+    public function get_available_for_enrollment($student_id)
+    {
+        // Get all active classes
+        $this->db->select('*');
+        $this->db->from('kelas_programming');
+        $this->db->where('status', 'Aktif');
+        $all_classes = $this->db->get()->result();
+        
+        // Get classes the student is already enrolled in
+        $enrolled_classes = [];
+        $this->db->select('class_id');
+        $this->db->from('free_class_enrollments');
+        $this->db->where('student_id', $student_id);
+        $this->db->where_in('status', ['Enrolled', 'Completed']);
+        $enrollments = $this->db->get()->result();
+        
+        foreach ($enrollments as $enrollment) {
+            $enrolled_classes[] = $enrollment->class_id;
+        }
+        
+        // Filter out classes the student is already enrolled in
+        $available_classes = [];
+        foreach ($all_classes as $class) {
+            if (!in_array($class->id, $enrolled_classes)) {
+                $available_classes[] = $class;
+            }
+        }
+        
+        return $available_classes;
+    }
+    
+    /**
+     * Get all premium classes available for enrollment
+     * 
+     * @return array
+     */
+    public function get_premium_classes()
+    {
+        $this->db->select('kp.id, kp.nama_kelas, kp.deskripsi, kp.level, kp.harga, kp.gambar, COUNT(pce.id) as total_students');
+        $this->db->from('kelas_programming kp');
+        $this->db->join('premium_class_enrollments pce', 'pce.class_id = kp.id AND pce.status = "active"', 'left');
+        $this->db->where('kp.status', 'Aktif');
+        $this->db->group_by('kp.id, kp.nama_kelas, kp.deskripsi, kp.level, kp.harga, kp.gambar');
+        $this->db->order_by('kp.nama_kelas', 'ASC');
+        
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 ?>
