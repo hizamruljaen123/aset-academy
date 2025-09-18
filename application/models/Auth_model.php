@@ -129,14 +129,12 @@ class Auth_model extends CI_Model {
     // Login mobile
     public function login_mobile($username, $password)
     {
-        // Cari user berdasarkan username atau NIS
-        $this->db->where('username', $username)
-                 ->or_where('id IN (SELECT id FROM siswa WHERE nis = ?)', $username);
+        // Cari user berdasarkan username atau NIS (dengan asumsi siswa.id = users.id)
+        $query = $this->db->query("SELECT u.* FROM users u LEFT JOIN siswa s ON u.id = s.id WHERE u.username = ? OR s.nis = ?", array($username, $username));
+        $user = $query->row();
         
-        $user = $this->db->get('users')->row();
-        
-        // Verifikasi password
-        if ($user && password_verify($password, $user->password)) {
+        // Verifikasi password (cek bcrypt atau md5 untuk kompatibilitas)
+        if ($user && (password_verify($password, $user->password) || md5($password) == $user->password)) {
             return $user;
         }
         

@@ -215,7 +215,7 @@ class Auth extends CI_Controller {
             $password = $this->input->post('password');
             
             // Coba login dengan username atau NIS
-            $user = $this->auth_model->login_mobile($username, $password);
+            $user = $this->Auth_model->login_mobile($username, $password);
 
             if ($user) {
                 // Set session data
@@ -284,6 +284,7 @@ class Auth extends CI_Controller {
             
             // Data untuk tabel siswa (default values)
             $siswa_data = array(
+                'id' => $user_id, // Pastikan id siswa sama dengan users.id
                 'nis' => $new_nis,
                 'nama_lengkap' => $this->input->post('nama_lengkap'),
                 'email' => $this->input->post('email'),
