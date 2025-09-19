@@ -338,4 +338,20 @@ class Enrollment_model extends CI_Model
         $query = $this->db->get();
         return $query->result();
     }
+    
+    /**
+     * Check if student is enrolled in a premium class
+     * 
+     * @param int $student_id
+     * @param int $class_id
+     * @return bool
+     */
+    public function is_enrolled($student_id, $class_id)
+    {
+        $this->db->where('student_id', $student_id);
+        $this->db->where('class_id', $class_id);
+        $this->db->where_in('status', ['Active', 'Completed', 'Pending']);
+        $count = $this->db->count_all_results('premium_class_enrollments');
+        return $count > 0;
+    }
 }

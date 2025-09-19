@@ -110,6 +110,9 @@ $route['student_mobile/index'] = 'student_mobile';
 $route['student_mobile/profile'] = 'student_mobile/profile';
 $route['student_mobile/materi'] = 'student_mobile/materi';
 $route['student_mobile/materi_detail/(:any)'] = 'student_mobile/materi_detail/$1';
+$route['student_mobile/my_classes'] = 'student_mobile/my_classes';
+$route['student_mobile/browse_classes'] = 'student_mobile/browse_classes';
+$route['student_mobile/premium_detail/(:any)'] = 'student_mobile/premium_detail/$1';
 
 // Routes untuk Profile Management
 $route['profile'] = 'profile';

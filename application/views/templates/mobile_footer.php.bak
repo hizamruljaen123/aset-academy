@@ -4,25 +4,25 @@
     <nav class="mobile-nav">
         <div class="flex items-center">
             <a href="<?= site_url('student_mobile') ?>" class="mobile-nav-item <?= strpos(uri_string(), 'student_mobile') !== false && !strpos(uri_string(), 'orders') && !strpos(uri_string(), 'jadwal') && !strpos(uri_string(), 'forum') && !strpos(uri_string(), 'profile') ? 'active' : '' ?>">
-                <i data-feather="home" class="w-8 h-8 mx-auto"></i>
+                <i data-feather="home" class="w-12 h-12 mx-auto"></i>
                 <span class="text-xs font-semibold mt-1">Beranda</span>
             </a>
             <a href="<?= site_url('student_mobile/orders') ?>" class="mobile-nav-item <?= strpos(uri_string(), 'orders') !== false ? 'active' : '' ?>">
-                <i data-feather="shopping-bag" class="w-8 h-8 mx-auto"></i>
+                <i data-feather="shopping-bag" class="w-12 h-12 mx-auto"></i>
                 <span class="text-xs font-semibold mt-1">Pesanan</span>
             </a>
             
             <!-- Central Menu Button -->
             <button onclick="toggleMenu()" class="mobile-nav-item bg-blue-700 text-white rounded-full w-14 h-14 flex items-center justify-center mx-2 shadow-lg transform transition-transform duration-200 hover:scale-110 active:scale-95">
-                <i data-feather="grid" class="w-8 h-8"></i>
+                <i data-feather="grid" class="w-12 h-12"></i>
             </button>
             
             <a href="<?= site_url('student_mobile/jadwal') ?>" class="mobile-nav-item <?= strpos(current_url(), 'jadwal') !== false ? 'active' : '' ?>">
-                <i data-feather="calendar" class="w-8 h-8 mx-auto"></i>
+                <i data-feather="calendar" class="w-12 h-12 mx-auto"></i>
                 <span class="text-xs font-semibold mt-1">Jadwal</span>
             </a>
             <a href="<?= site_url('student_mobile/forum') ?>" class="mobile-nav-item <?= strpos(uri_string(), 'forum') !== false ? 'active' : '' ?>">
-                <i data-feather="message-circle" class="w-8 h-8 mx-auto"></i>
+                <i data-feather="message-circle" class="w-12 h-12 mx-auto"></i>
                 <span class="text-xs font-semibold mt-1">Forum</span>
             </a>
         </div>
@@ -88,22 +88,6 @@
                             <i data-feather="credit-card" class="w-6 h-6 text-pink-600"></i>
                         </div>
                         <span class="text-xs font-medium text-gray-700">Status</span>
-                    </a>
-                    
-                    <!-- Kelas Saya -->
-                    <a href="<?= site_url('student_mobile/my_classes') ?>" onclick="toggleMenu()" class="flex flex-col items-center p-3 rounded-xl hover:bg-teal-50 transition-colors">
-                        <div class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center mb-2">
-                            <i data-feather="book-open" class="w-6 h-6 text-teal-600"></i>
-                        </div>
-                        <span class="text-xs font-medium text-gray-700">Kelas Saya</span>
-                    </a>
-                    
-                    <!-- Jelajahi Kelas -->
-                    <a href="<?= site_url('student_mobile/browse_classes') ?>" onclick="toggleMenu()" class="flex flex-col items-center p-3 rounded-xl hover:bg-purple-50 transition-colors">
-                        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-2">
-                            <i data-feather="search" class="w-6 h-6 text-purple-600"></i>
-                        </div>
-                        <span class="text-xs font-medium text-gray-700">Jelajahi Kelas</span>
                     </a>
                     
                     <!-- Settings -->
@@ -184,7 +168,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: #3b82f6;
+            background: #3b82f6; /* Blue background */
             border-top: 1px solid #2563eb;
             padding: 8px 0;
             z-index: 40;
@@ -207,6 +191,7 @@
             width: 32px;
             height: 32px;
             stroke-width: 2.5;
+            transition: all 0.3s ease;
         }
         
         .mobile-nav-item.active {
@@ -216,6 +201,12 @@
             margin: 0 4px;
             transform: scale(1.05);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .mobile-nav-item:hover {
+            color: white;
+            opacity: 0.9;
+            transform: scale(1.05);
         }
         
         .mobile-nav-item span {

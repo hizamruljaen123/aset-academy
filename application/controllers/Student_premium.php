@@ -40,7 +40,7 @@ class Student_premium extends CI_Controller {
     }
     
     public function detail($class_id) {
-        $data['class'] = $this->Kelas_programming_model->get_kelas($class_id);
+        $data['class'] = $this->Kelas_programming_model->get_kelas_by_id($class_id);
         if (!$data['class']) show_404();
         
         $data['title'] = 'Detail Kelas - ' . $data['class']->nama_kelas;

@@ -15,7 +15,7 @@ class Jadwal_model extends CI_Model {
         $this->db->where('kelas_id', $kelas_id);
         $this->db->order_by('tanggal_pertemuan', 'ASC');
         $this->db->order_by('waktu_mulai', 'ASC');
-        return $this->db->get('jadwal_kelas')->result_array();
+        return $this->db->get('jadwal_kelas')->result();
     }
 
     public function get_jadwal_by_id($id)

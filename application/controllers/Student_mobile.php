@@ -14,6 +14,7 @@ class Student_mobile extends CI_Controller
         $this->load->model('Enrollment_model');
         $this->load->model('Jadwal_model');
         $this->load->model('Forum_model');
+        $this->load->model('Free_class_model', 'free_class');
         
         // Check if user is logged in
         if (!$this->session->userdata('logged_in')) {
@@ -249,8 +250,19 @@ class Student_mobile extends CI_Controller
             // Get student profile
             $data['student_profile'] = $this->Siswa_model->get_siswa_by_id($user_id);
             
-            // Get all available classes
-            $data['classes'] = $this->Kelas_model->get_all_available();
+            // Get free classes with enrollment counts
+            $free_classes = $this->free_class->get_all_free_classes();
+            foreach ($free_classes as $class) {
+                $class->enrollment_count = $this->free_class->count_enrolled_students($class->id);
+            }
+            $data['free_classes'] = $free_classes;
+            
+            // Get premium classes with enrollment counts
+            $premium_classes = $this->Kelas_model->get_all_kelas();
+            foreach ($premium_classes as $class) {
+                $class->enrollment_count = $this->Kelas_model->count_enrolled_students($class->id);
+            }
+            $data['premium_classes'] = $premium_classes;
             
             // Set page title
             $data['title'] = 'Jelajahi Kelas - Mobile';
@@ -298,10 +310,10 @@ class Student_mobile extends CI_Controller
             $data['is_enrolled'] = $this->Enrollment_model->is_enrolled($user_id, $kelas_id);
             
             // Get class materials
-            $data['materials'] = $this->Materi_model->get_by_kelas($kelas_id);
+            $data['materials'] = $this->Materi_model->get_materi_by_kelas($kelas_id);
             
             // Get class schedule
-            $data['schedule'] = $this->Jadwal_model->get_by_kelas($kelas_id);
+            $data['schedule'] = $this->Jadwal_model->get_jadwal_by_kelas($kelas_id);
             
             // Set page title
             $data['title'] = $data['kelas']->nama_kelas . ' - Mobile';
@@ -352,7 +364,7 @@ class Student_mobile extends CI_Controller
         $user_id = $this->session->userdata('user_id');
         
         // Get material details
-        $data['materi'] = $this->Materi_model->get_by_id($materi_id);
+        $data['materi'] = $this->Materi_model->get_materi_by_id($materi_id);
         
         if (!$data['materi']) {
             show_404();
@@ -377,7 +389,7 @@ class Student_mobile extends CI_Controller
         }
         
         // Get material parts
-        $data['parts'] = $this->Materi_part_model->get_by_materi($materi_id);
+        $data['parts'] = $this->Materi_part_model->get_parts_by_materi_id($materi_id);
         
         // Set page title
         $data['title'] = $data['materi']->judul . ' - Mobile';
@@ -388,6 +400,33 @@ class Student_mobile extends CI_Controller
         $this->load->view('templates/mobile_footer');
     }
     
+    public function my_classes()
+    {
+        $user_id = $this->session->userdata('user_id');
+        
+        // Get student profile
+        $data['student_profile'] = $this->Siswa_model->get_siswa_by_id($user_id);
+        
+        // Get all enrolled classes
+        $enrollments = $this->free_class->get_all_enrolled_classes($user_id);
+
+        foreach ($enrollments as $enrollment) {
+            $enrollment->attendance = $this->free_class->get_student_attendance_by_class($user_id, $enrollment->id) ?? [];
+            $enrollment->classmates = $this->free_class->get_enrolled_students($enrollment->id) ?? [];
+        }
+
+        $data['enrollments'] = $enrollments;
+        $data['progress_stats'] = $this->free_class->get_progress_stats($user_id);
+
+        // Set page title
+        $data['title'] = 'Kelas Saya - Mobile';
+        
+        // Load mobile views
+        $this->load->view('templates/mobile_header', $data);
+        $this->load->view('student/mobile/my_classes', $data);
+        $this->load->view('templates/mobile_footer');
+    }
+
     /**
      * Forum main method - handles forum index, category, and thread viewing
      */
@@ -434,6 +473,102 @@ class Student_mobile extends CI_Controller
         // Load views
         $this->load->view('templates/mobile_header', $data);
         $this->load->view('student/mobile/forum', $data);
+        $this->load->view('templates/mobile_footer');
+    }
+    
+    /**
+     * Mobile payment initiation page
+     */
+    public function payment($class_id)
+    {
+        $user_id = $this->session->userdata('user_id');
+        
+        // Load required models
+        $this->load->model('Kelas_programming_model');
+        $this->load->model('Payment_model');
+        $this->load->model('Company_bank_model');
+        
+        // Get class details
+        $class = $this->Kelas_programming_model->get_kelas_by_id($class_id);
+        if (!$class) {
+            show_404();
+        }
+        
+        // Check if already enrolled
+        $is_enrolled = $this->db->where([
+            'class_id' => $class_id,
+            'user_id' => $user_id,
+            'status' => 'Verified'
+        ])->get('payments')->row();
+        
+        if ($is_enrolled) {
+            $this->session->set_flashdata('message', 'Anda sudah memiliki akses ke kelas ini.');
+            redirect('student_mobile');
+        }
+        
+        // Check for pending payment
+        $pending_payment = $this->db->where([
+            'class_id' => $class_id,
+            'user_id' => $user_id,
+            'status' => 'Pending'
+        ])->get('payments')->row();
+        
+        if ($pending_payment) {
+            $this->session->set_flashdata('message', 'Anda sudah memiliki pembayaran yang sedang diverifikasi');
+            redirect('payment/status/' . $pending_payment->id);
+        }
+        
+        // Get active bank accounts
+        $bank_accounts = $this->Company_bank_model->get_active_bank_accounts();
+        
+        $data = [
+            'title' => 'Pembayaran Kelas - Mobile',
+            'class' => $class,
+            'bank_accounts' => $bank_accounts,
+            'user' => $this->User_model->get_user_by_id($user_id)
+        ];
+        
+        // Load mobile payment view
+        $this->load->view('templates/mobile_header', $data);
+        $this->load->view('student/mobile/payment', $data);
+        $this->load->view('templates/mobile_footer');
+    }
+    
+    /**
+     * Display user's payment orders with status filtering
+     */
+    public function orders()
+    {
+        $user_id = $this->session->userdata('user_id');
+        
+        // Load payment model
+        $this->load->model('Payment_model');
+        $this->load->model('Kelas_programming_model');
+        
+        // Get all user payments with class details
+        $payments = $this->Payment_model->get_user_payments($user_id);
+        
+        // Categorize payments by status
+        $data['pending_payments'] = [];
+        $data['paid_payments'] = [];
+        $data['all_payments'] = $payments;
+        
+        foreach ($payments as $payment) {
+            // Get class details for each payment
+            $payment->class = $this->Kelas_programming_model->get_kelas_by_id($payment->class_id);
+            
+            if ($payment->status === 'Pending') {
+                $data['pending_payments'][] = $payment;
+            } elseif ($payment->status === 'Verified' || $payment->status === 'Completed') {
+                $data['paid_payments'][] = $payment;
+            }
+        }
+        
+        $data['title'] = 'Daftar Pemesanan - Mobile';
+        
+        // Load mobile orders view
+        $this->load->view('templates/mobile_header', $data);
+        $this->load->view('student/mobile/orders', $data);
         $this->load->view('templates/mobile_footer');
     }
     

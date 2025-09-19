@@ -14,7 +14,7 @@ class Payment extends CI_Controller {
             redirect('auth');
         }
 
-        $class = $this->Kelas_programming_model->get_kelas($class_id);
+        $class = $this->Kelas_programming_model->get_kelas_by_id($class_id);
         if (!$class) {
             show_404();
         }
@@ -70,7 +70,7 @@ class Payment extends CI_Controller {
             redirect('auth');
         }
 
-        $class = $this->Kelas_programming_model->get_kelas($class_id);
+        $class = $this->Kelas_programming_model->get_kelas_by_id($class_id);
         if (!$class) {
             show_404();
         }
@@ -211,7 +211,7 @@ class Payment extends CI_Controller {
             show_404();
         }
 
-        $class = $this->Kelas_programming_model->get_kelas($payment->class_id);
+        $class = $this->Kelas_programming_model->get_kelas_by_id($payment->class_id);
 
         $data = [
             'title' => 'Status Pembayaran',
@@ -275,7 +275,7 @@ class Payment extends CI_Controller {
         }
 
         $this->load->model('Kelas_programming_model');
-        $class = $this->Kelas_programming_model->get_kelas($class_id);
+        $class = $this->Kelas_programming_model->get_kelas_by_id($class_id);
         if (!$class) {
             show_404();
         }
@@ -359,7 +359,7 @@ class Payment extends CI_Controller {
             show_404();
         }
 
-        $class = $this->Kelas_programming_model->get_kelas($payment->class_id);
+        $class = $this->Kelas_programming_model->get_kelas_by_id($payment->class_id);
         $user = $this->db->where('id', $payment->user_id)->get('users')->row();
 
         $data = [

@@ -243,7 +243,7 @@
                             <p class="text-xs text-gray-600 mb-3 line-clamp-2"><?php echo substr($class->deskripsi, 0, 100) . (strlen($class->deskripsi) > 100 ? '...' : ''); ?></p>
                             <div class="flex items-center justify-between">
                                 <span class="text-sm font-bold text-gray-900">Rp <?php echo number_format($class->harga, 0, ',', '.'); ?></span>
-                                <button onclick="location.href='<?= site_url('payment/initiate/'.$class->id) ?>'" class="mobile-btn bg-blue-600 text-white text-xs">
+                                <button onclick="location.href='<?= site_url('student_mobile/payment/'.$class->id) ?>'" class="mobile-btn bg-blue-600 text-white text-xs">
                                     <i data-feather="shopping-cart" class="w-3 h-3 inline mr-1"></i>
                                     Beli Sekarang
                                 </button>
