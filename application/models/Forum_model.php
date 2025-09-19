@@ -39,9 +39,13 @@ class Forum_model extends CI_Model {
 
     public function get_thread($thread_id)
     {
-        $this->db->select('ft.*, u.nama_lengkap, u.username');
+        $this->db->select('ft.*, u.nama_lengkap, u.username, 
+                          fc.name as category_name, 
+                          (SELECT COUNT(*) FROM forum_posts WHERE thread_id = ft.id) as post_count,
+                          (SELECT COUNT(*) FROM forum_thread_views WHERE thread_id = ft.id) as views');
         $this->db->from('forum_threads ft');
         $this->db->join('users u', 'ft.user_id = u.id');
+        $this->db->join('forum_categories fc', 'ft.category_id = fc.id');
         $this->db->where('ft.id', $thread_id);
         return $this->db->get()->row();
     }
@@ -142,10 +146,21 @@ class Forum_model extends CI_Model {
     
     public function get_replies($post_id)
     {
-        $this->db->select('fp.*, u.nama_lengkap, u.username');
+        $this->db->select('fp.*, u.nama_lengkap as author_name, u.username');
         $this->db->from('forum_posts fp');
         $this->db->join('users u', 'u.id = fp.user_id');
         $this->db->where('fp.parent_id', $post_id);
+        $this->db->order_by('fp.created_at', 'ASC');
+        return $this->db->get()->result();
+    }
+    
+    public function get_thread_replies($thread_id)
+    {
+        $this->db->select('fp.*, u.nama_lengkap as author_name, u.username');
+        $this->db->from('forum_posts fp');
+        $this->db->join('users u', 'u.id = fp.user_id');
+        $this->db->where('fp.thread_id', $thread_id);
+        $this->db->where('fp.parent_id IS NULL'); // Only direct replies to thread
         $this->db->order_by('fp.created_at', 'ASC');
         return $this->db->get()->result();
     }

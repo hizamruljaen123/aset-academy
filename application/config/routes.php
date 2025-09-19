@@ -262,6 +262,7 @@ $route['documentation/chapter10'] = 'documentation/chapter10';
 $route['student_mobile/forum'] = 'student_mobile/forum';
 $route['student_mobile/forum/create'] = 'student_mobile/forum/create';
 $route['student_mobile/forum/thread/(:any)(?:/(:any))?'] = 'student_mobile/forum/thread/$1/$2';
+$route['student_mobile/forum_thread_clean/(:any)(?:/(:any))?'] = 'student_mobile/forum_thread_clean/$1/$2';
 $route['student_mobile/forum/category/(:any)'] = 'student_mobile/forum/category/$1';
 $route['student_mobile/forum/save_thread'] = 'student_mobile/forum/save_thread';
 $route['student_mobile/forum/reply/(:any)'] = 'student_mobile/forum/reply/$1';

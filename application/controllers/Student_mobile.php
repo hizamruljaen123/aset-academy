@@ -14,6 +14,7 @@ class Student_mobile extends CI_Controller
         $this->load->model('Enrollment_model');
         $this->load->model('Jadwal_model');
         $this->load->model('Forum_model');
+        $this->load->model('Absensi_model');
         $this->load->model('Free_class_model', 'free_class');
         
         // Check if user is logged in
@@ -609,6 +610,41 @@ class Student_mobile extends CI_Controller
     }
     
     /**
+     * Display a single thread with its replies (Clean version without header)
+     */
+    public function forum_thread_clean($thread_id = null, $slug = null)
+    {
+        // Get user data
+        $user_id = $this->session->userdata('user_id');
+        $data['user'] = $this->User_model->get_user_by_id($user_id);
+        
+        // Get thread data
+        $data['thread'] = $this->Forum_model->get_thread($thread_id);
+        if (!$data['thread']) {
+            show_404();
+        }
+        
+        // Verify slug
+        $correct_slug = url_title($data['thread']->title, '-', true);
+        if ($slug !== $correct_slug) {
+            redirect('student_mobile/forum_thread_clean/' . $thread_id . '/' . $correct_slug);
+        }
+        
+        // Get thread replies
+        $data['replies'] = $this->Forum_model->get_thread_replies($thread_id);
+        
+        // Record view
+        $this->Forum_model->record_view($thread_id, $user_id);
+        
+        // Set page title
+        $data['title'] = $data['thread']->title . ' - Forum - Mobile';
+        
+        $this->load->view('templates/mobile_header', $data);
+        $this->load->view('student/mobile/forum_thread_clean', $data);
+        $this->load->view('templates/mobile_footer');
+    }
+    
+    /**
      * Display a single thread with its replies
      */
     private function _forum_thread($thread_id = null, $slug = null)
@@ -630,10 +666,10 @@ class Student_mobile extends CI_Controller
         }
         
         // Get thread replies
-        $data['replies'] = $this->Forum_model->get_replies($thread_id);
+        $data['replies'] = $this->Forum_model->get_thread_replies($thread_id);
         
         // Record view
-        $this->Forum_model->record_thread_view($thread_id, $user_id);
+        $this->Forum_model->record_view($thread_id, $user_id);
         
         // Set page title
         $data['title'] = $data['thread']->title . ' - Forum - Mobile';
@@ -642,6 +678,21 @@ class Student_mobile extends CI_Controller
         $this->load->view('templates/mobile_header', $data);
         $this->load->view('student/mobile/forum_thread', $data);
         $this->load->view('templates/mobile_footer');
+    }
+    
+    /**
+     * Handle forum reply submission
+     */
+    private function _forum_reply($thread_id)
+    {
+        // Validate thread exists
+        $thread = $this->Forum_model->get_thread($thread_id);
+        if (!$thread) {
+            show_404();
+        }
+        
+        // Process the reply submission
+        $this->_forum_save_reply($thread_id);
     }
     
     /**
@@ -738,13 +789,14 @@ class Student_mobile extends CI_Controller
             // Prepare reply data
             $reply_data = array(
                 'thread_id' => $thread_id,
-                'content' => $this->input->post('content'),
                 'user_id' => $user_id,
+                'parent_id' => NULL, // Reply langsung ke thread
+                'content' => $this->input->post('content'),
                 'created_at' => date('Y-m-d H:i:s')
             );
             
             // Save reply
-            $reply_id = $this->Forum_model->create_reply($reply_data);
+            $reply_id = $this->Forum_model->create_post($reply_data);
             
             if ($reply_id) {
                 // Reply created successfully

@@ -9,7 +9,8 @@
         </div>
 
         <!-- Flash Messages -->
-        <?php if ($this->session->flashdata('success')): ?>
+        <?php if ($this->session->flashdata('success')):
+        ?>
             <div class="bg-green-50 border border-green-200 text-green-700 px-3 py-2 rounded-lg mb-4 text-xs" role="alert">
                 <div class="flex items-center">
                     <i data-feather="check-circle" class="w-3 h-3 mr-1.5"></i>
@@ -18,7 +19,8 @@
             </div>
         <?php endif; ?>
 
-        <?php if ($this->session->flashdata('error')): ?>
+        <?php if ($this->session->flashdata('error')):
+        ?>
             <div class="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg mb-4 text-xs" role="alert">
                 <div class="flex items-center">
                     <i data-feather="alert-circle" class="w-3 h-3 mr-1.5"></i>
@@ -35,7 +37,8 @@
                     <i data-feather="tag" class="w-2.5 h-2.5 mr-1"></i>
                     <?= html_escape($thread->category_name) ?>
                 </span>
-                <?php if ($thread->is_pinned): ?>
+                <?php if ($thread->is_pinned):
+                ?>
                     <span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-sm">
                         <i data-feather="pin" class="w-2.5 h-2.5 mr-1"></i>
                         Disematkan
@@ -106,7 +109,8 @@
                 </h2>
             </div>
 
-            <?php if (empty($replies)): ?>
+            <?php if (empty($replies)):
+            ?>
                 <div class="text-center py-6 bg-white rounded-lg shadow-md border border-gray-100">
                     <div class="w-8 h-8 mx-auto mb-2 rounded-full bg-gradient-to-r from-blue-100 to-purple-100 flex items-center justify-center avatar-small">
                         <i data-feather="message-square" class="w-4 h-4 text-blue-500"></i>
@@ -114,9 +118,11 @@
                     <p class="text-gray-500 font-medium text-sm">Belum ada balasan</p>
                     <p class="text-xs text-gray-400 mt-0.5">Jadilah yang pertama memberikan balasan!</p>
                 </div>
-            <?php else: ?>
+            <?php else:
+            ?>
                 <div class="space-y-3">
-                    <?php foreach ($replies as $reply): ?>
+                    <?php foreach ($replies as $reply):
+                    ?>
                         <div id="reply-<?= $reply->id ?>" class="bg-white rounded-lg shadow-md border border-gray-100 p-4 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 reply-card">
                             <div class="flex items-start space-x-3">
                                 <!-- User Avatar -->

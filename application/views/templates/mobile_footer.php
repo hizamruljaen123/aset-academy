@@ -105,6 +105,14 @@
                         </div>
                         <span class="text-xs font-medium text-gray-700">Jelajahi Kelas</span>
                     </a>
+
+                    <!-- Absensi -->
+                    <a href="<?= site_url('student_mobile/absensi') ?>" onclick="toggleMenu()" class="flex flex-col items-center p-3 rounded-xl hover:bg-cyan-50 transition-colors">
+                        <div class="w-12 h-12 bg-cyan-100 rounded-full flex items-center justify-center mb-2">
+                            <i data-feather="clipboard" class="w-6 h-6 text-cyan-600"></i>
+                        </div>
+                        <span class="text-xs font-medium text-gray-700">Absensi</span>
+                    </a>
                     
                     <!-- Settings -->
                     <a href="<?= site_url('student_mobile/settings') ?>" onclick="toggleMenu()" class="flex flex-col items-center p-3 rounded-xl hover:bg-gray-50 transition-colors">

@@ -112,4 +112,94 @@ class Absensi_model extends CI_Model {
         
         return $stats;
     }
+
+    public function get_attendance_summary($user_id)
+    {
+        $this->db->select('status, COUNT(id) as total');
+        $this->db->from('absensi');
+        $this->db->where('siswa_id', $user_id);
+        $this->db->group_by('status');
+        $query = $this->db->get();
+        $result = $query->result_array();
+
+        $summary = [
+            'Hadir' => 0,
+            'Sakit' => 0,
+            'Izin' => 0,
+            'Alpa' => 0,
+        ];
+
+        foreach ($result as $row) {
+            if (array_key_exists($row['status'], $summary)) {
+                $summary[$row['status']] = (int)$row['total'];
+            }
+        }
+
+        return $summary;
+    }
+
+    public function get_attendance_rate($user_id)
+    {
+        $this->db->where('siswa_id', $user_id);
+        $total_records = $this->db->count_all_results('absensi');
+
+        if ($total_records == 0) {
+            return 0;
+        }
+
+        $this->db->where('siswa_id', $user_id);
+        $this->db->where('status', 'Hadir');
+        $hadir_records = $this->db->count_all_results('absensi');
+
+        return ($hadir_records / $total_records) * 100;
+    }
+
+    public function get_student_attendance($user_id, $limit = 10)
+    {
+        $this->db->select('a.*, jk.judul_pertemuan, jk.tanggal_pertemuan, jk.waktu_mulai, k.nama_kelas');
+        $this->db->from('absensi a');
+        $this->db->join('jadwal_kelas jk', 'a.jadwal_id = jk.id');
+        $this->db->join('kelas_programming k', 'jk.kelas_id = k.id');
+        $this->db->where('a.siswa_id', $user_id);
+        $this->db->order_by('jk.tanggal_pertemuan', 'DESC');
+        $this->db->limit($limit);
+        return $this->db->get()->result_array();
+    }
+
+    public function get_attendance_dates($user_id)
+    {
+        $this->db->select('DATE(jk.tanggal_pertemuan) as date, a.status');
+        $this->db->from('absensi a');
+        $this->db->join('jadwal_kelas jk', 'a.jadwal_id = jk.id');
+        $this->db->where('a.siswa_id', $user_id);
+        $this->db->order_by('jk.tanggal_pertemuan', 'ASC');
+        $query = $this->db->get();
+        $results = $query->result_array();
+
+        $dates = [];
+        foreach ($results as $row) {
+            $dates[] = [
+                'date' => $row['date'],
+                'status' => $row['status']
+            ];
+        }
+
+        return $dates;
+    }
+
+    public function get_status_class($status)
+    {
+        switch ($status) {
+            case 'Hadir':
+                return 'bg-green-100 text-green-800';
+            case 'Sakit':
+                return 'bg-blue-100 text-blue-800';
+            case 'Izin':
+                return 'bg-yellow-100 text-yellow-800';
+            case 'Alpa':
+                return 'bg-red-100 text-red-800';
+            default:
+                return 'bg-gray-100 text-gray-800';
+        }
+    }
 }

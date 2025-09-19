@@ -89,16 +89,16 @@
                     <div class="border border-gray-200 rounded-lg p-4">
                         <div class="flex items-start justify-between mb-2">
                             <div>
-                                <h4 class="text-sm font-medium text-gray-900"><?php echo $record->judul_pertemuan; ?></h4>
-                                <p class="text-xs text-gray-500"><?php echo $record->nama_kelas; ?></p>
+                                <h4 class="text-sm font-medium text-gray-900"><?php echo $record['judul_pertemuan']; ?></h4>
+                                <p class="text-xs text-gray-500"><?php echo $record['nama_kelas']; ?></p>
                             </div>
-                            <span class="px-2 py-1 text-xs font-medium rounded-full <?php echo $this->Absensi_model->get_status_class($record->status); ?>">
-                                <?php echo $record->status; ?>
+                            <span class="px-2 py-1 text-xs font-medium rounded-full <?php echo $this->Absensi_model->get_status_class($record['status']); ?>">
+                                <?php echo $record['status']; ?>
                             </span>
                         </div>
                         <div class="flex items-center justify-between text-xs text-gray-500">
-                            <span><i data-feather="calendar" class="w-3 h-3 inline mr-1"></i><?php echo date('d M Y', strtotime($record->tanggal_pertemuan)); ?></span>
-                            <span><i data-feather="clock" class="w-3 h-3 inline mr-1"></i><?php echo date('H:i', strtotime($record->waktu_mulai)); ?></span>
+                            <span><i data-feather="calendar" class="w-3 h-3 inline mr-1"></i><?php echo date('d M Y', strtotime($record['tanggal_pertemuan'])); ?></span>
+                            <span><i data-feather="clock" class="w-3 h-3 inline mr-1"></i><?php echo date('H:i', strtotime($record['waktu_mulai'])); ?></span>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -106,41 +106,6 @@
         <?php endif; ?>
     </div>
 
-    <!-- Quick Actions -->
-    <div class="mobile-card">
-        <h3 class="text-lg font-bold text-gray-900 mb-4">Aksi Cepat</h3>
-        <div class="space-y-2">
-            <button class="w-full flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                        <i data-feather="download" class="w-4 h-4 text-green-600"></i>
-                    </div>
-                    <span class="text-sm font-medium text-gray-900">Download Laporan Absensi</span>
-                </div>
-                <i data-feather="chevron-right" class="w-4 h-4 text-gray-400"></i>
-            </button>
-
-            <button class="w-full flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <i data-feather="mail" class="w-4 h-4 text-blue-600"></i>
-                    </div>
-                    <span class="text-sm font-medium text-gray-900">Izin Tidak Hadir</span>
-                </div>
-                <i data-feather="chevron-right" class="w-4 h-4 text-gray-400"></i>
-            </button>
-
-            <button class="w-full flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                        <i data-feather="bar-chart-2" class="w-4 h-4 text-purple-600"></i>
-                    </div>
-                    <span class="text-sm font-medium text-gray-900">Statistik Absensi</span>
-                </div>
-                <i data-feather="chevron-right" class="w-4 h-4 text-gray-400"></i>
-            </button>
-        </div>
-    </div>
 </div>
 
 <script>
