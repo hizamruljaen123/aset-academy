@@ -20,6 +20,13 @@ class Assignments extends CI_Controller {
         $data['assignments'] = $this->assignment->get_all_assignments();
         $data['title'] = 'Manajemen Semua Tugas';
         
+        // Calculate statistics
+        $data['stats'] = $this->calculate_assignment_stats($data['assignments']);
+        
+        // Get filter data
+        $data['classes'] = $this->get_all_classes();
+        $data['teachers'] = $this->assignment->get_all_teachers();
+        
         $this->load->view('templates/header', $data);
         $this->load->view('admin/assignments/index', $data);
         $this->load->view('templates/footer');
@@ -112,5 +119,72 @@ class Assignments extends CI_Controller {
         } else {
             echo json_encode(['success' => false, 'message' => 'Gagal menyimpan penilaian ke database.']);
         }
+    }
+
+    // Helper methods for statistics and data
+    private function calculate_assignment_stats($assignments)
+    {
+        $stats = [
+            'total_assignments' => count($assignments),
+            'graded_submissions' => 0,
+            'ungraded_submissions' => 0,
+            'total_submissions' => 0,
+            'average_score' => 0,
+            'total_grades' => 0
+        ];
+
+        $total_grades = 0;
+        $grade_count = 0;
+
+        foreach ($assignments as $assignment) {
+            $submissions = $this->assignment->get_submissions($assignment->id);
+            $stats['total_submissions'] += count($submissions);
+
+            foreach ($submissions as $submission) {
+                if ($submission->status == 'graded' && $submission->grade !== null) {
+                    $stats['graded_submissions']++;
+                    $total_grades += $submission->grade;
+                    $grade_count++;
+                } else {
+                    $stats['ungraded_submissions']++;
+                }
+            }
+        }
+
+        // Calculate average score
+        if ($grade_count > 0) {
+            $stats['average_score'] = round($total_grades / $grade_count, 1);
+        }
+
+        return $stats;
+    }
+
+    private function get_all_classes()
+    {
+        $classes = [];
+
+        // Get premium classes
+        $this->load->model('Kelas_model');
+        $premium_classes = $this->Kelas_model->get_all_kelas();
+        foreach ($premium_classes as $class) {
+            $classes[] = [
+                'id' => $class->id,
+                'name' => $class->nama_kelas,
+                'type' => 'premium'
+            ];
+        }
+
+        // Get free classes
+        $this->load->model('Free_class_model');
+        $free_classes = $this->Free_class_model->get_all_free_classes();
+        foreach ($free_classes as $class) {
+            $classes[] = [
+                'id' => $class->id,
+                'name' => $class->title,
+                'type' => 'gratis'
+            ];
+        }
+
+        return $classes;
     }
 }

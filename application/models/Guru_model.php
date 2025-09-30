@@ -9,42 +9,83 @@ class Guru_model extends CI_Model {
         $this->load->database();
     }
 
-    // Get classes assigned to a teacher
+    // Get classes assigned to a teacher (both premium and free) - FIXED STRUCTURE
     public function get_guru_kelas($guru_id)
     {
-        $this->db->select('kp.*, gk.assigned_at');
+        // Get premium classes
+        $this->db->select('kp.id, kp.nama_kelas, kp.bahasa_program, kp.level, kp.deskripsi, kp.durasi, kp.harga, kp.status, gk.assigned_at, "premium" as class_type');
         $this->db->from('guru_kelas gk');
         $this->db->join('kelas_programming kp', 'gk.kelas_id = kp.id');
         $this->db->where('gk.guru_id', $guru_id);
         $this->db->where('gk.status', 'Aktif');
-        $this->db->order_by('kp.nama_kelas', 'ASC');
-        return $this->db->get()->result();
+        $this->db->where('kp.status', 'Aktif');
+        $premium_classes = $this->db->get()->result();
+
+        // Get free classes
+        $this->db->select('fc.id, fc.title, fc.category, fc.level, fc.description, NULL as duration, fc.status, NULL as assigned_at, "gratis" as class_type, fc.online_meet_link', false);
+        $this->db->from('free_classes fc');
+        $this->db->where('fc.mentor_id', $guru_id);
+        $this->db->where('fc.status', 'Published');
+        $free_classes = $this->db->get()->result();
+
+        // Combine results
+        return array_merge($premium_classes, $free_classes);
     }
 
-    // Get students in teacher's classes
+    // Get students in teacher's classes (both premium and free) - FIXED STRUCTURE
     public function get_guru_siswa($guru_id)
     {
-        $this->db->select('s.*, kp.nama_kelas');
+        // Get students in premium classes (from siswa table)
+        $this->db->select('s.id, s.nama_lengkap, s.nis, s.email, s.foto_profil, s.kelas, s.jurusan, s.status, kp.nama_kelas, "premium" as class_type');
         $this->db->from('siswa s');
         $this->db->join('kelas_programming kp', 's.kelas = kp.nama_kelas');
         $this->db->join('guru_kelas gk', 'kp.id = gk.kelas_id');
         $this->db->where('gk.guru_id', $guru_id);
         $this->db->where('gk.status', 'Aktif');
-        $this->db->order_by('s.nama_lengkap', 'ASC');
-        return $this->db->get()->result();
+        $this->db->where('kp.status', 'Aktif');
+        $premium_students = $this->db->get()->result();
+
+        // Get students in free classes (from users table via enrollments)
+        $this->db->select('u.id, u.nama_lengkap, "" as nis, u.email, "" as foto_profil, fc.title as kelas, "" as jurusan, u.status, fc.title as nama_kelas, "gratis" as class_type');
+        $this->db->from('free_class_enrollments fce');
+        $this->db->join('free_classes fc', 'fce.class_id = fc.id');
+        $this->db->join('users u', 'fce.student_id = u.id');
+        $this->db->where('fc.mentor_id', $guru_id);
+        $this->db->where('fc.status', 'Published');
+        $this->db->where_in('fce.status', ['Enrolled', 'Completed']);
+        $free_students = $this->db->get()->result();
+
+        // Combine results
+        return array_merge($premium_students, $free_students);
     }
 
-    // Get materials for teacher's classes
+    // Get materials for teacher's classes (both premium and free)
     public function get_guru_materi($guru_id)
     {
-        $this->db->select('m.*, kp.nama_kelas, (SELECT COUNT(mp.id) FROM materi_parts mp WHERE mp.materi_id = m.id) as jumlah_part');
+        // Get materials from premium classes
+        $this->db->select('m.*, kp.nama_kelas, (SELECT COUNT(mp.id) FROM materi_parts mp WHERE mp.materi_id = m.id) as jumlah_part, "premium" as class_type');
         $this->db->from('materi m');
         $this->db->join('kelas_programming kp', 'm.kelas_id = kp.id');
         $this->db->join('guru_kelas gk', 'kp.id = gk.kelas_id');
         $this->db->where('gk.guru_id', $guru_id);
         $this->db->where('gk.status', 'Aktif');
-        $this->db->order_by('m.created_at', 'DESC');
-        return $this->db->get()->result();
+        $premium_materials = $this->db->get()->result();
+
+        // Get materials from free classes
+        $this->db->select('fcm.*, fc.title as nama_kelas, "gratis" as class_type');
+        $this->db->from('free_class_materials fcm');
+        $this->db->join('free_classes fc', 'fcm.class_id = fc.id');
+        $this->db->where('fc.mentor_id', $guru_id);
+        $this->db->where('fc.status', 'Published');
+        $free_materials = $this->db->get()->result();
+
+        // Add jumlah_part field to free materials for consistency
+        foreach ($free_materials as $material) {
+            $material->jumlah_part = 0;
+        }
+
+        // Combine results
+        return array_merge($premium_materials, $free_materials);
     }
 
     // Check if teacher has access to specific class
@@ -99,13 +140,22 @@ class Guru_model extends CI_Model {
     {
         $stats = [];
         
-        // Count assigned classes
+        // Count assigned premium classes
         $this->db->from('guru_kelas');
         $this->db->where('guru_id', $guru_id);
         $this->db->where('status', 'Aktif');
-        $stats['total_kelas'] = $this->db->count_all_results();
+        $stats['total_premium_kelas'] = $this->db->count_all_results();
         
-        // Count students in assigned classes
+        // Count assigned free classes
+        $this->db->from('free_classes');
+        $this->db->where('mentor_id', $guru_id);
+        $this->db->where('status', 'Published');
+        $stats['total_free_kelas'] = $this->db->count_all_results();
+        
+        // Total classes (premium + free)
+        $stats['total_kelas'] = $stats['total_premium_kelas'] + $stats['total_free_kelas'];
+        
+        // Count students in assigned premium classes
         $this->db->select('COUNT(DISTINCT s.id) as total');
         $this->db->from('siswa s');
         $this->db->join('kelas_programming kp', 's.kelas = kp.nama_kelas');
@@ -114,6 +164,19 @@ class Guru_model extends CI_Model {
         $this->db->where('gk.status', 'Aktif');
         $result = $this->db->get()->row();
         $stats['total_siswa'] = $result->total;
+        
+        // Count students in assigned free classes
+        $this->db->select('COUNT(DISTINCT fce.student_id) as total');
+        $this->db->from('free_class_enrollments fce');
+        $this->db->join('free_classes fc', 'fce.class_id = fc.id');
+        $this->db->where('fc.mentor_id', $guru_id);
+        $this->db->where('fc.status', 'Published');
+        $this->db->where_in('fce.status', ['Enrolled', 'Completed']);
+        $result = $this->db->get()->row();
+        $stats['total_free_students'] = $result->total;
+        
+        // Total students (premium + free)
+        $stats['total_all_students'] = $stats['total_siswa'] + $stats['total_free_students'];
         
         // Count materials in assigned classes
         $this->db->select('COUNT(m.id) as total');
@@ -127,18 +190,35 @@ class Guru_model extends CI_Model {
         return $stats;
     }
 
-    // Save or update teacher attendance
-    public function save_absensi_guru($data)
+    // Get free classes assigned to a teacher (mentor_id based)
+    public function get_guru_free_classes($guru_id)
     {
-        $this->db->where('jadwal_id', $data['jadwal_id']);
-        $this->db->where('guru_id', $data['guru_id']);
-        $q = $this->db->get('absensi_guru');
+        $this->db->select('fc.*');
+        $this->db->from('free_classes fc');
+        $this->db->where('fc.mentor_id', $guru_id);
+        $this->db->where('fc.status', 'Published');
+        $this->db->order_by('fc.title', 'ASC');
+        return $this->db->get()->result();
+    }
 
-        if ($q->num_rows() > 0) {
-            $this->db->where('id', $q->row('id'));
-            $this->db->update('absensi_guru', $data);
-        } else {
-            $this->db->insert('absensi_guru', $data);
-        }
+    // Assign teacher to free class (update mentor_id)
+    public function assign_guru_free_class($guru_id, $class_id)
+    {
+        $this->db->where('id', $class_id);
+        return $this->db->update('free_classes', ['mentor_id' => $guru_id]);
+    }
+
+    // Remove teacher from free class (set mentor_id to NULL)
+    public function remove_guru_free_class($guru_id, $class_id)
+    {
+        $this->db->where('id', $class_id);
+        $this->db->where('mentor_id', $guru_id);
+        return $this->db->update('free_classes', ['mentor_id' => NULL]);
+    }
+
+    // Check if teacher has access to specific free class
+    public function count_total_absensi_guru()
+    {
+        return $this->db->count_all('absensi_guru');
     }
 }

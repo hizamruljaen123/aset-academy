@@ -118,7 +118,13 @@
                             <div class="relative h-48 bg-gradient-to-br from-blue-100 to-indigo-200 overflow-hidden">
                                 <?php if ($workshop->thumbnail): ?>
                                     <img src="<?= base_url($workshop->thumbnail) ?>" alt="<?= $workshop->title ?>"
-                                         class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+                                         class="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                                         onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <div class="w-full h-full flex items-center justify-center" style="display: none;">
+                                        <div class="text-center">
+                                            <i class="fas fa-chalkboard-teacher text-4xl text-blue-300 mb-2"></i>
+                                        </div>
+                                    </div>
                                     <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-all duration-300"></div>
                                 <?php else: ?>
                                     <div class="w-full h-full flex items-center justify-center">
@@ -146,6 +152,11 @@
                                 <!-- Quick Actions Overlay -->
                                 <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center opacity-0 hover:opacity-100">
                                     <div class="flex space-x-2">
+                                        <a href="<?= site_url('admin/workshops/detail/' . encrypt_url($workshop->id)) ?>"
+                                           class="p-2 bg-white rounded-full text-gray-700 hover:text-purple-600 transition-colors"
+                                           title="Detail">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
                                         <a href="<?= site_url('admin/workshops/edit/'.$workshop->id) ?>"
                                            class="p-2 bg-white rounded-full text-gray-700 hover:text-blue-600 transition-colors"
                                            title="Edit">
@@ -249,7 +260,11 @@
                                     <div class="flex items-center">
                                         <div class="h-10 w-10 flex-shrink-0 mr-3">
                                             <?php if ($workshop->thumbnail): ?>
-                                                <img class="h-10 w-10 rounded-full object-cover" src="<?= base_url($workshop->thumbnail) ?>" alt="<?= $workshop->title ?>">
+                                                <img class="h-10 w-10 rounded-full object-cover" src="<?= base_url($workshop->thumbnail) ?>" alt="<?= $workshop->title ?>"
+                                                     onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                                <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center" style="display: none;">
+                                                    <i class="fas fa-chalkboard-teacher text-blue-600"></i>
+                                                </div>
                                             <?php else: ?>
                                                 <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
                                                     <i class="fas fa-chalkboard-teacher text-blue-600"></i>
@@ -283,6 +298,9 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex space-x-2">
+                                        <a href="<?= site_url('admin/workshops/detail/' . encrypt_url($workshop->id)) ?>" class="text-purple-600 hover:text-purple-900" title="Detail">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
                                         <a href="<?= admin_workshop_url($workshop->id) ?>" class="text-indigo-600 hover:text-indigo-900" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
@@ -429,9 +447,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const modal = document.createElement('div');
         modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-75';
         modal.innerHTML = `
-            <div class="relative max-w-4xl max-h-full">
-                <img src="${src}" alt="${alt}" class="max-w-full max-h-full object-contain rounded-lg">
-                <button class="absolute top-4 right-4 text-white text-2xl hover:text-gray-300" onclick="this.closest('.fixed').remove()">
+            <div class="relative max-w-4xl max-h-full flex items-center justify-center">
+                <img src="${src}" alt="${alt}" class="max-w-full max-h-full object-contain rounded-lg" 
+                     onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="max-w-full max-h-full flex items-center justify-center" style="display: none;">
+                    <div class="text-center text-white">
+                        <i class="fas fa-chalkboard-teacher text-6xl mb-4"></i>
+                        <p class="text-lg font-medium">Poster Error</p>
+                    </div>
+                </div>
+                <button class="absolute top-4 right-4 text-white text-2xl hover:text-gray-300 bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center" onclick="this.closest('.fixed').remove()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>

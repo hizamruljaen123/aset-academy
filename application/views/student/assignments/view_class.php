@@ -1,7 +1,7 @@
 <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
     <div class="flex justify-between items-center mb-6">
         <div>
-            <h1 class="text-2xl font-bold text-gray-800">Daftar Tugas: <?= htmlspecialchars($class->nama_kelas, ENT_QUOTES, 'UTF-8'); ?></h1>
+            <h1 class="text-2xl font-bold text-gray-800">Daftar Tugas: <?= htmlspecialchars((isset($class->nama_kelas) ? $class->nama_kelas : (isset($class->title) ? $class->title : 'Kelas Tidak Diketahui')), ENT_QUOTES, 'UTF-8'); ?></h1>
             <a href="<?= site_url('student/assignments'); ?>" class="text-sm text-blue-600 hover:underline">&larr; Kembali ke Daftar Kelas</a>
         </div>
     </div>

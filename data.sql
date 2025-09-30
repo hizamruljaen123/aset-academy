@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `absensi` (
   KEY `fk_absensi_siswa` (`siswa_id`),
   CONSTRAINT `fk_absensi_jadwal` FOREIGN KEY (`jadwal_id`) REFERENCES `jadwal_kelas` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_absensi_siswa` FOREIGN KEY (`siswa_id`) REFERENCES `siswa` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=131 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=132 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS `forum_categories` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `slug` (`slug`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Data exporting was unselected.
 
@@ -130,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `forum_likes` (
   CONSTRAINT `forum_likes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `forum_likes_ibfk_2` FOREIGN KEY (`thread_id`) REFERENCES `forum_threads` (`id`) ON DELETE CASCADE,
   CONSTRAINT `forum_likes_ibfk_3` FOREIGN KEY (`post_id`) REFERENCES `forum_posts` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Data exporting was unselected.
 
@@ -150,7 +150,7 @@ CREATE TABLE IF NOT EXISTS `forum_posts` (
   CONSTRAINT `forum_posts_ibfk_1` FOREIGN KEY (`thread_id`) REFERENCES `forum_threads` (`id`) ON DELETE CASCADE,
   CONSTRAINT `forum_posts_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `forum_posts_ibfk_3` FOREIGN KEY (`parent_id`) REFERENCES `forum_posts` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Data exporting was unselected.
 
@@ -173,7 +173,7 @@ CREATE TABLE IF NOT EXISTS `forum_threads` (
   KEY `idx_slug` (`slug`),
   CONSTRAINT `forum_threads_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `forum_threads_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `forum_categories` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Data exporting was unselected.
 
@@ -188,7 +188,7 @@ CREATE TABLE IF NOT EXISTS `forum_thread_views` (
   KEY `user_id` (`user_id`),
   CONSTRAINT `forum_thread_views_ibfk_1` FOREIGN KEY (`thread_id`) REFERENCES `forum_threads` (`id`) ON DELETE CASCADE,
   CONSTRAINT `forum_thread_views_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Data exporting was unselected.
 
@@ -253,7 +253,7 @@ CREATE TABLE IF NOT EXISTS `free_class_enrollments` (
   KEY `student_id` (`student_id`),
   CONSTRAINT `free_class_enrollments_ibfk_1` FOREIGN KEY (`class_id`) REFERENCES `free_classes` (`id`) ON DELETE CASCADE,
   CONSTRAINT `free_class_enrollments_ibfk_2` FOREIGN KEY (`student_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -307,7 +307,7 @@ CREATE TABLE IF NOT EXISTS `guru_kelas` (
   KEY `kelas_id` (`kelas_id`),
   CONSTRAINT `guru_kelas_ibfk_1` FOREIGN KEY (`guru_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `guru_kelas_ibfk_2` FOREIGN KEY (`kelas_id`) REFERENCES `kelas_programming` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -329,9 +329,35 @@ CREATE TABLE IF NOT EXISTS `jadwal_kelas` (
   KEY `fk_jadwal_guru` (`guru_id`),
   CONSTRAINT `fk_jadwal_guru` FOREIGN KEY (`guru_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
   CONSTRAINT `jadwal_kelas_ibfk_1` FOREIGN KEY (`kelas_id`) REFERENCES `kelas_programming` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
+
+-- Dumping structure for view academy_lite.jadwal_kelas_view
+-- Creating temporary table to overcome VIEW dependency errors
+CREATE TABLE `jadwal_kelas_view` (
+	`id` INT(10) NOT NULL,
+	`kelas_id` INT(10) NOT NULL,
+	`class_type` VARCHAR(50) NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`guru_id` INT(10) NULL,
+	`pertemuan_ke` INT(10) NOT NULL COMMENT 'Meeting number (e.g., 1, 2, 3)',
+	`judul_pertemuan` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`tanggal_pertemuan` DATE NOT NULL,
+	`waktu_mulai` TIME NOT NULL,
+	`waktu_selesai` TIME NOT NULL,
+	`created_at` TIMESTAMP NULL,
+	`updated_at` TIMESTAMP NULL,
+	`nama_kelas` VARCHAR(255) NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`deskripsi_kelas` MEDIUMTEXT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`level_kelas` VARCHAR(8) NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`kategori_kelas` VARCHAR(100) NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`status_kelas` VARCHAR(11) NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`nama_guru` VARCHAR(100) NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`username_guru` VARCHAR(50) NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`role_guru` ENUM('super_admin','admin','guru','siswa','user') NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`durasi_kelas` BIGINT(19) NULL,
+	`harga_kelas` DECIMAL(10,2) NULL
+) ENGINE=MyISAM;
 
 -- Dumping structure for table academy_lite.kelas_programming
 CREATE TABLE IF NOT EXISTS `kelas_programming` (
@@ -342,6 +368,7 @@ CREATE TABLE IF NOT EXISTS `kelas_programming` (
   `bahasa_program` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `durasi` int NOT NULL DEFAULT '1' COMMENT 'Durasi dalam jam',
   `harga` decimal(10,2) NOT NULL,
+  `diskon` decimal(5,2) DEFAULT '0.00',
   `gambar` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `status` enum('Aktif','Tidak Aktif') NOT NULL DEFAULT 'Aktif',
   `online_meet_link` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
@@ -535,7 +562,7 @@ CREATE TABLE IF NOT EXISTS `siswa` (
   KEY `idx_nis` (`nis`),
   KEY `idx_nama` (`nama_lengkap`),
   KEY `idx_kelas` (`kelas`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -583,13 +610,17 @@ CREATE TABLE IF NOT EXISTS `users` (
   `role` enum('super_admin','admin','guru','siswa','user') NOT NULL DEFAULT 'user',
   `level` enum('1','2','3','4','5') NOT NULL DEFAULT '5' COMMENT '1=Super Admin, 2=Admin, 3=Guru, 4=Siswa, 5=User',
   `department` varchar(50) DEFAULT NULL COMMENT 'Department or division',
+  `timezone` varchar(50) DEFAULT 'Asia/Jakarta' COMMENT 'User timezone for attendance calculations',
   `status` enum('Aktif','Tidak Aktif') NOT NULL DEFAULT 'Aktif',
   `last_login` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `user_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE KEY `username` (`username`),
+  KEY `FK1_users` (`user_id`),
+  CONSTRAINT `FK1_users` FOREIGN KEY (`user_id`) REFERENCES `siswa` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -684,6 +715,10 @@ CREATE TABLE IF NOT EXISTS `workshop_participants` (
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb3;
 
 -- Data exporting was unselected.
+
+-- Removing temporary table and create final VIEW structure
+DROP TABLE IF EXISTS `jadwal_kelas_view`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `jadwal_kelas_view` AS select `jk`.`id` AS `id`,`jk`.`kelas_id` AS `kelas_id`,`jk`.`class_type` AS `class_type`,`jk`.`guru_id` AS `guru_id`,`jk`.`pertemuan_ke` AS `pertemuan_ke`,`jk`.`judul_pertemuan` AS `judul_pertemuan`,`jk`.`tanggal_pertemuan` AS `tanggal_pertemuan`,`jk`.`waktu_mulai` AS `waktu_mulai`,`jk`.`waktu_selesai` AS `waktu_selesai`,`jk`.`created_at` AS `created_at`,`jk`.`updated_at` AS `updated_at`,(case when (`jk`.`class_type` = 'premium') then `kp`.`nama_kelas` when (`jk`.`class_type` = 'gratis') then `fc`.`title` else 'Unknown Class' end) AS `nama_kelas`,(case when (`jk`.`class_type` = 'premium') then `kp`.`deskripsi` when (`jk`.`class_type` = 'gratis') then `fc`.`description` else NULL end) AS `deskripsi_kelas`,(case when (`jk`.`class_type` = 'premium') then `kp`.`level` when (`jk`.`class_type` = 'gratis') then `fc`.`level` else NULL end) AS `level_kelas`,(case when (`jk`.`class_type` = 'premium') then `kp`.`bahasa_program` when (`jk`.`class_type` = 'gratis') then `fc`.`category` else NULL end) AS `kategori_kelas`,(case when (`jk`.`class_type` = 'premium') then `kp`.`status` when (`jk`.`class_type` = 'gratis') then `fc`.`status` else 'Unknown' end) AS `status_kelas`,`u`.`nama_lengkap` AS `nama_guru`,`u`.`username` AS `username_guru`,`u`.`role` AS `role_guru`,(case when (`jk`.`class_type` = 'premium') then `kp`.`durasi` else NULL end) AS `durasi_kelas`,(case when (`jk`.`class_type` = 'premium') then `kp`.`harga` else 0 end) AS `harga_kelas` from (((`jadwal_kelas` `jk` left join `kelas_programming` `kp` on(((`jk`.`kelas_id` = `kp`.`id`) and (`jk`.`class_type` = 'premium')))) left join `free_classes` `fc` on(((`jk`.`kelas_id` = `fc`.`id`) and (`jk`.`class_type` = 'gratis')))) left join `users` `u` on((`jk`.`guru_id` = `u`.`id`))) where ((`jk`.`class_type` is not null) and (`jk`.`guru_id` is not null) and (((`jk`.`class_type` = 'premium') and (`kp`.`status` = 'Aktif')) or ((`jk`.`class_type` = 'gratis') and (`fc`.`status` = 'Published'))));
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

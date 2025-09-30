@@ -159,8 +159,8 @@
                             foreach ($jadwal as $j):
                         ?>
                             <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
-                                <p class="font-semibold text-gray-800">Pertemuan <?php echo $j['pertemuan_ke']; ?>: <?php echo $j['judul_pertemuan']; ?></p>
-                                <p class="text-sm text-gray-600 mt-1"><?php echo date('d M Y', strtotime($j['tanggal_pertemuan'])); ?> | <?php echo date('H:i', strtotime($j['waktu_mulai'])); ?> - <?php echo date('H:i', strtotime($j['waktu_selesai'])); ?></p>
+                                <p class="font-semibold text-gray-800">Pertemuan <?php echo $j->pertemuan_ke; ?>: <?php echo $j->judul_pertemuan; ?></p>
+                                <p class="text-sm text-gray-600 mt-1"><?php echo date('d M Y', strtotime($j->tanggal_pertemuan)); ?> | <?php echo date('H:i', strtotime($j->waktu_mulai)); ?> - <?php echo date('H:i', strtotime($j->waktu_selesai)); ?></p>
                             </div>
                         <?php 
                             endforeach;
@@ -221,6 +221,88 @@
                             <?php endif; ?>
                         </div>
                     </div>
+                </div>
+            </div>
+            
+            <!-- Attendance Section -->
+            <div class="bg-white rounded-2xl shadow-xl ring-1 ring-gray-200/50 overflow-hidden mb-8 fade-in">
+                <div class="p-6 border-b border-gray-200/50 bg-gradient-to-r from-gray-50 to-white">
+                    <h2 class="text-xl font-bold text-gray-800">Absensi Kelas</h2>
+                </div>
+                <div class="p-6">
+                    <?php if (!empty($jadwal)): ?>
+                        <div class="space-y-4">
+                            <?php foreach ($jadwal as $j): ?>
+                                <?php 
+                                $attendance = isset($attendance_status[$j->id]) ? $attendance_status[$j->id] : null;
+                                ?>
+                                <div class="border border-gray-200 rounded-lg p-4">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <h4 class="font-semibold text-gray-800">Pertemuan <?php echo $j->pertemuan_ke; ?>: <?php echo $j->judul_pertemuan; ?></h4>
+                                            <p class="text-sm text-gray-600 mt-1">
+                                                <?php echo date('d M Y', strtotime($j->tanggal_pertemuan)); ?> | 
+                                                <?php echo date('H:i', strtotime($j->waktu_mulai)); ?> - <?php echo date('H:i', strtotime($j->waktu_selesai)); ?>
+                                            </p>
+                                        </div>
+                                        <div class="text-right">
+                                            <?php if ($attendance && $attendance['status'] !== 'not_attended'): ?>
+                                                <!-- Already attended -->
+                                                <div class="text-center">
+                                                    <div class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                                                        <i class="fas fa-check-circle mr-2"></i>
+                                                        Hadir
+                                                    </div>
+                                                    <p class="text-xs text-gray-500 mt-1">
+                                                        <?php echo isset($attendance['waktu_absen']) ? date('d M Y H:i', strtotime($attendance['waktu_absen'])) : ''; ?>
+                                                    </p>
+                                                </div>
+                                            <?php elseif ($attendance && $attendance['can_attend']): ?>
+                                                <!-- Can attend now -->
+                                                <button onclick="submitAttendance(<?php echo $j->id; ?>, <?php echo $enrollment->id; ?>)" 
+                                                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300">
+                                                    <i class="fas fa-user-check mr-2"></i>
+                                                    Isi Absen
+                                                </button>
+                                            <?php elseif ($attendance && $attendance['attendance_status'] === 'early'): ?>
+                                                <!-- Too early -->
+                                                <div class="text-center">
+                                                    <div class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                                        <i class="fas fa-clock mr-2"></i>
+                                                        Belum Waktunya
+                                                    </div>
+                                                </div>
+                                            <?php elseif ($attendance && $attendance['attendance_status'] === 'late'): ?>
+                                                <!-- Too late -->
+                                                <div class="text-center">
+                                                    <div class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                                                        <i class="fas fa-times-circle mr-2"></i>
+                                                        Terlambat
+                                                    </div>
+                                                </div>
+                                            <?php else: ?>
+                                                <!-- Not attended, outside window -->
+                                                <div class="text-center">
+                                                    <div class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+                                                        <i class="fas fa-minus-circle mr-2"></i>
+                                                        Belum Absen
+                                                    </div>
+                                                </div>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="text-center py-8">
+                            <div class="mx-auto w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mb-4">
+                                <i class="fas fa-calendar-times text-blue-600 text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-900 mb-1">Belum Ada Jadwal</h3>
+                            <p class="text-gray-500 max-w-md mx-auto">Jadwal pertemuan untuk kelas ini belum tersedia.</p>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
             
@@ -408,6 +490,46 @@
     </div>
 </div>
 
+<!-- Timezone Settings Modal -->
+<div id="timezoneModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-medium text-gray-900">Pengaturan Zona Waktu</h3>
+                <button onclick="closeTimezoneModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="timezoneForm">
+                <div class="mb-4">
+                    <label for="timezone_select" class="block text-sm font-medium text-gray-700 mb-2">
+                        Pilih Zona Waktu Anda
+                    </label>
+                    <select id="timezone_select" name="timezone" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Pilih Zona Waktu</option>
+                        <option value="Asia/Jakarta">WIB (UTC+7) - Indonesia</option>
+                        <option value="Asia/Makassar">WITA (UTC+8) - Indonesia Timur</option>
+                        <option value="Asia/Jayapura">WIT (UTC+9) - Papua</option>
+                        <option value="UTC">UTC (Universal Time)</option>
+                        <option value="America/New_York">EST (UTC-5) - New York</option>
+                        <option value="Europe/London">GMT (UTC+0) - London</option>
+                        <option value="Asia/Tokyo">JST (UTC+9) - Tokyo</option>
+                        <option value="Australia/Sydney">AEDT (UTC+10) - Sydney</option>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="closeTimezoneModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">
+                        Batal
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Fade in main container
@@ -440,7 +562,105 @@
                 observer.observe(element);
             });
         }
+
+        // Timezone form submission
+        document.getElementById('timezoneForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const timezone = document.getElementById('timezone_select').value;
+
+            if (!timezone) {
+                alert('Silakan pilih zona waktu');
+                return;
+            }
+
+            // Submit timezone setting via AJAX
+            submitTimezone(timezone);
+        });
+
+        // Add timezone button to header
+        addTimezoneButtonToHeader();
     });
+
+    // Global functions
+    function submitAttendance(jadwalId, enrollmentId) {
+        if (!confirm('Apakah Anda yakin ingin mengisi absensi untuk pertemuan ini?')) {
+            return;
+        }
+
+        // Disable button
+        const button = event.target;
+        button.disabled = true;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Mengirim...';
+
+        // Submit attendance via AJAX
+        fetch('<?php echo site_url("student/free_classes/submit_attendance"); ?>', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'jadwal_id=' + jadwalId + '&enrollment_id=' + enrollmentId
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Absensi berhasil dicatat pada ' + data.attendance_time);
+                location.reload(); // Reload to update attendance status
+            } else {
+                alert('Gagal mengisi absensi: ' + data.message);
+                button.disabled = false;
+                button.innerHTML = '<i class="fas fa-user-check mr-2"></i>Isi Absen';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat mengisi absensi');
+            button.disabled = false;
+            button.innerHTML = '<i class="fas fa-user-check mr-2"></i>Isi Absen';
+        });
+    }
+
+    function submitTimezone(timezone) {
+        fetch('<?php echo site_url("student/set_timezone"); ?>', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'timezone=' + encodeURIComponent(timezone)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                closeTimezoneModal();
+                location.reload(); // Reload to update time displays
+            } else {
+                alert('Gagal menyimpan zona waktu: ' + (data.message || 'Unknown error'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat menyimpan zona waktu');
+        });
+    }
+
+    function openTimezoneModal() {
+        document.getElementById('timezoneModal').classList.remove('hidden');
+    }
+
+    function closeTimezoneModal() {
+        document.getElementById('timezoneModal').classList.add('hidden');
+    }
+
+    function addTimezoneButtonToHeader() {
+        // Add timezone button to header
+        const header = document.querySelector('.bg-gradient-to-r');
+        if (header) {
+            const timezoneBtn = document.createElement('button');
+            timezoneBtn.onclick = openTimezoneModal;
+            timezoneBtn.className = 'inline-flex items-center px-3 py-1 border border-white/30 rounded-lg text-sm font-medium text-white bg-white/10 hover:bg-white/20 transition-all duration-300 ml-4';
+            timezoneBtn.innerHTML = '<i class="fas fa-globe mr-2"></i>Zona Waktu';
+            header.appendChild(timezoneBtn);
+        }
+    }
 </script>
 
 <style>

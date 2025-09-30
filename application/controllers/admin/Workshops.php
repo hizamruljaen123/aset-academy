@@ -29,6 +29,24 @@ class Workshops extends MY_Controller {
         $this->load->view('templates/footer');
     }
 
+    public function detail($encrypted_id = null)
+    {
+        $id = $this->decrypt_id($encrypted_id, 'Workshop ID');
+
+        $data['title'] = 'Detail Workshop/Seminar';
+        $data['workshop'] = $this->Workshop_model->get_workshop($id);
+        $data['materials'] = $this->Workshop_model->get_materials($id);
+        $data['participants'] = $this->Workshop_model->get_participants($id);
+
+        if (!$data['workshop']) {
+            show_404();
+        }
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('admin/workshops/detail', $data);
+        $this->load->view('templates/footer');
+    }
+
     public function create()
     {
         $data['title'] = 'Buat Workshop/Seminar Baru';

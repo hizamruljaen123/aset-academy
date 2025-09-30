@@ -348,26 +348,75 @@ class Payment extends CI_Controller {
         redirect('payment/admin_verify');
     }
 
-    // Generate and download invoice
-    public function invoice($payment_id) {
+    // Upload payment proof for existing payment
+    public function upload_payment_proof($payment_id) {
         if (!$this->session->userdata('logged_in')) {
             redirect('auth');
         }
 
-        $payment = $this->Payment_model->get_payment_with_details($payment_id);
+        $payment = $this->Payment_model->get_payment($payment_id);
         if (!$payment || $payment->user_id != $this->session->userdata('user_id')) {
             show_404();
         }
 
+        if ($payment->status !== 'Pending') {
+            $this->session->set_flashdata('error', 'Pembayaran ini sudah diproses.');
+            redirect('student_mobile/orders');
+        }
+
         $class = $this->Kelas_programming_model->get_kelas_by_id($payment->class_id);
-        $user = $this->db->where('id', $payment->user_id)->get('users')->row();
 
         $data = [
+            'title' => 'Upload Bukti Pembayaran',
             'payment' => $payment,
-            'class' => $class,
-            'user' => $user
+            'class' => $class
         ];
 
-        $this->load->view('payment/invoice', $data);
+        $this->load->view('templates/header', $data);
+        $this->load->view('student/mobile/upload_payment_proof', $data);
+        $this->load->view('templates/footer');
+    }
+
+    // Process payment proof upload
+    public function process_payment_proof_upload($payment_id) {
+        if (!$this->session->userdata('logged_in')) {
+            redirect('auth');
+        }
+
+        $payment = $this->Payment_model->get_payment($payment_id);
+        if (!$payment || $payment->user_id != $this->session->userdata('user_id')) {
+            show_404();
+        }
+
+        if ($payment->status !== 'Pending') {
+            $this->session->set_flashdata('error', 'Pembayaran ini sudah diproses.');
+            redirect('student_mobile/orders');
+        }
+
+        $upload_dir = FCPATH . 'uploads/payments/';
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0755, true);
+        }
+
+        $config['upload_path'] = $upload_dir;
+        $config['allowed_types'] = 'jpg|jpeg|png|pdf';
+        $config['max_size'] = 2048;
+        $config['encrypt_name'] = TRUE;
+
+        $this->load->library('upload', $config);
+
+        if ($this->upload->do_upload('payment_proof')) {
+            $upload_data = $this->upload->data();
+            $payment_proof = $upload_data['file_name'];
+
+            // Update payment with proof
+            $this->Payment_model->update_payment_proof($payment_id, $payment_proof);
+
+            $this->session->set_flashdata('success', 'Bukti pembayaran berhasil diupload. Mohon tunggu verifikasi admin.');
+        } else {
+            $this->session->set_flashdata('error', 'Upload bukti pembayaran gagal: ' . $this->upload->display_errors());
+        }
+
+        redirect('student_mobile/orders');
     }
 }

@@ -27,9 +27,9 @@
                                 text-green-800
                             <?php endif; ?>
                         ">
-                            <?= htmlspecialchars($class->nama_kelas, ENT_QUOTES, 'UTF-8'); ?>
+                            <?= htmlspecialchars((isset($class->nama_kelas) ? $class->nama_kelas : (isset($class->title) ? $class->title : 'Kelas Tidak Diketahui')), ENT_QUOTES, 'UTF-8'); ?>
                         </h4>
-                        <p class="text-sm text-gray-600 mb-4">Level: <?= htmlspecialchars($class->level, ENT_QUOTES, 'UTF-8'); ?></p>
+                        <p class="text-sm text-gray-600 mb-4">Level: <?= htmlspecialchars((isset($class->level) ? $class->level : 'Tidak Diketahui'), ENT_QUOTES, 'UTF-8'); ?></p>
                         <a href="<?= site_url('student/assignments/view_class/' . $class->id . '/' . $class->type); ?>" class="inline-block text-white px-4 py-2 rounded-md text-sm font-semibold 
                             <?php if($class->type == 'premium'): ?>
                                 bg-blue-600 hover:bg-blue-700

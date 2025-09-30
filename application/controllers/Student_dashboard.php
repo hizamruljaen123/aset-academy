@@ -9,6 +9,7 @@ class Student_dashboard extends CI_Controller {
         $this->load->model('Siswa_model');
         $this->load->model('Materi_model');
         $this->load->library('Permission');
+        $this->load->library('form_validation');
         
         // Check if user is logged in and has student role
         if (!$this->session->userdata('logged_in')) {
@@ -203,6 +204,129 @@ class Student_dashboard extends CI_Controller {
         $this->load->view('templates/footer');
     }
 
+    public function edit_profile()
+    {
+        $student_id = $this->session->userdata('user_id');
+        
+        // Get user data first
+        $this->db->select('*');
+        $this->db->from('users');
+        $this->db->where('id', $student_id);
+        $user = $this->db->get()->row();
+        
+        if (!$user) {
+            show_error('User data not found. Please contact administrator.', 404);
+        }
+        
+        // Get student profile data if exists
+        $this->db->select('*');
+        $this->db->from('siswa');
+        $this->db->where('email', $user->email);
+        $student_profile = $this->db->get()->row();
+        
+        // Combine user and student data
+        $data['student'] = $user;
+        
+        // Check if student profile exists
+        $data['profile_exists'] = ($student_profile !== null);
+        
+        // If profile exists, merge the data
+        if ($data['profile_exists']) {
+            foreach ($student_profile as $key => $value) {
+                $data['student']->$key = $value;
+            }
+        } else {
+            // Set default values for missing profile data
+            $data['student']->nis = '';
+            $data['student']->kelas = '';
+            $data['student']->jurusan = '';
+            $data['student']->no_telepon = '';
+            $data['student']->alamat = '';
+            $data['student']->tanggal_lahir = '';
+            $data['student']->jenis_kelamin = '';
+            $data['student']->status = 'Aktif';
+        }
+        
+        $data['title'] = 'Edit Profil';
+        $this->load->view('templates/header', $data);
+        $this->load->view('student/edit_profile', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function update_profile()
+    {
+        $student_id = $this->session->userdata('user_id');
+        
+        // Get user data first
+        $this->db->select('*');
+        $this->db->from('users');
+        $this->db->where('id', $student_id);
+        $user = $this->db->get()->row();
+        
+        if (!$user) {
+            $this->session->set_flashdata('error', 'User data not found.');
+            redirect('student/profile');
+        }
+        
+        // Set validation rules
+        $this->form_validation->set_rules('nama_lengkap', 'Nama Lengkap', 'required|trim');
+        $this->form_validation->set_rules('nis', 'NIS', 'trim');
+        $this->form_validation->set_rules('kelas', 'Kelas', 'trim');
+        $this->form_validation->set_rules('jurusan', 'Jurusan', 'trim');
+        $this->form_validation->set_rules('no_telepon', 'No Telepon', 'trim');
+        $this->form_validation->set_rules('alamat', 'Alamat', 'trim');
+        $this->form_validation->set_rules('tanggal_lahir', 'Tanggal Lahir', 'trim');
+        $this->form_validation->set_rules('jenis_kelamin', 'Jenis Kelamin', 'trim');
+        
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('error', 'Data tidak valid. Silakan periksa kembali.');
+            redirect('student/profile/edit');
+        }
+        
+        // Prepare data for users table
+        $user_data = [
+            'nama_lengkap' => $this->input->post('nama_lengkap'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+        
+        // Update users table
+        $this->db->where('id', $student_id);
+        $this->db->update('users', $user_data);
+        
+        // Prepare data for siswa table
+        $siswa_data = [
+            'nis' => $this->input->post('nis'),
+            'nama_lengkap' => $this->input->post('nama_lengkap'),
+            'email' => $user->email,
+            'no_telepon' => $this->input->post('no_telepon'),
+            'kelas' => $this->input->post('kelas'),
+            'jurusan' => $this->input->post('jurusan'),
+            'alamat' => $this->input->post('alamat'),
+            'tanggal_lahir' => $this->input->post('tanggal_lahir') ? $this->input->post('tanggal_lahir') : null,
+            'jenis_kelamin' => $this->input->post('jenis_kelamin'),
+            'status' => 'Aktif',
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+        
+        // Check if student profile already exists
+        $this->db->select('id');
+        $this->db->from('siswa');
+        $this->db->where('email', $user->email);
+        $existing_profile = $this->db->get()->row();
+        
+        if ($existing_profile) {
+            // Update existing profile
+            $this->db->where('id', $existing_profile->id);
+            $this->db->update('siswa', $siswa_data);
+        } else {
+            // Insert new profile
+            $this->db->insert('siswa', $siswa_data);
+        }
+        
+        $this->session->set_flashdata('success', 'Profil berhasil diperbarui.');
+        redirect('student/profile');
+    }
+
     public function materi()
     {
         $student_id = $this->session->userdata('user_id');
@@ -298,5 +422,97 @@ class Student_dashboard extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('student/materi_detail', $data);
         $this->load->view('templates/footer');
+    }
+
+    public function absensi()
+    {
+        $student_id = $this->session->userdata('user_id');
+
+        // Load timezone library
+        $this->load->library('timezone_lib');
+
+        // Get all classes the student is enrolled in (both premium and free)
+        $enrolled_classes = $this->get_student_enrolled_classes($student_id);
+
+        $data['enrolled_classes'] = $enrolled_classes;
+        $data['attendance_summary'] = $this->get_student_attendance_summary($student_id, $enrolled_classes);
+
+        // Get attendance calendar data
+        $data['attendance_dates'] = $this->timezone_lib->get_student_attendance_dates($student_id);
+
+        $data['title'] = 'Absensi Saya';
+        $this->load->view('templates/header', $data);
+        $this->load->view('student/absensi', $data);
+        $this->load->view('templates/footer');
+    }
+
+    private function get_student_enrolled_classes($student_id)
+    {
+        // Get premium class enrollments (siswa.kelas matches kelas_programming.nama_kelas)
+        $this->db->select('kp.id, kp.nama_kelas as nama_kelas, kp.level, kp.bahasa_program, kp.status, "premium" as class_type, NOW() as enrollment_date');
+        $this->db->from('siswa s');
+        $this->db->join('kelas_programming kp', 's.kelas = kp.nama_kelas');
+        $this->db->where('s.id', $student_id);
+        $this->db->where('kp.status', 'Aktif');
+        $premium_classes = $this->db->get()->result();
+
+        // Get free class enrollments
+        $this->db->select('fc.id, fc.title as nama_kelas, fc.level, fc.category as bahasa_program, fc.status, "gratis" as class_type, fce.enrollment_date');
+        $this->db->from('free_classes fc');
+        $this->db->join('free_class_enrollments fce', 'fc.id = fce.class_id');
+        $this->db->where('fce.student_id', $student_id);
+        $this->db->where('fce.status', 'Enrolled');
+        $this->db->where('fc.status', 'Published');
+        $free_classes = $this->db->get()->result();
+
+        return array_merge($premium_classes, $free_classes);
+    }
+
+    private function get_student_attendance_summary($student_id, $enrolled_classes)
+    {
+        $summary = [
+            'present_classes' => [],
+            'absent_classes' => []
+        ];
+
+        foreach ($enrolled_classes as $class) {
+            // Get attendance records for this class
+            $this->db->select('a.*, jk.judul_pertemuan, jk.tanggal_pertemuan, jk.waktu_mulai, jk.waktu_selesai');
+            $this->db->from('absensi a');
+            $this->db->join('jadwal_kelas jk', 'a.jadwal_id = jk.id');
+            $this->db->where('a.siswa_id', $student_id);
+            $this->db->where('jk.kelas_id', $class->id);
+            $this->db->where('jk.class_type', $class->class_type);
+            $this->db->order_by('jk.tanggal_pertemuan', 'DESC');
+            $attendance_records = $this->db->get()->result();
+
+            if (!empty($attendance_records)) {
+                // Student has attendance records for this class
+                $class->attendance_records = $attendance_records;
+                $class->total_sessions = count($attendance_records);
+                $class->present_count = 0;
+                $class->absent_count = 0;
+
+                foreach ($attendance_records as $record) {
+                    if ($record->status == 'Hadir') {
+                        $class->present_count++;
+                    } else {
+                        $class->absent_count++;
+                    }
+                }
+
+                $summary['present_classes'][] = $class;
+            } else {
+                // Student has no attendance records for this class
+                $class->attendance_records = [];
+                $class->total_sessions = 0;
+                $class->present_count = 0;
+                $class->absent_count = 0;
+
+                $summary['absent_classes'][] = $class;
+            }
+        }
+
+        return $summary;
     }
 }

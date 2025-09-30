@@ -202,4 +202,15 @@ class Absensi_model extends CI_Model {
                 return 'bg-gray-100 text-gray-800';
         }
     }
+
+    public function count_total_absensi()
+    {
+        return $this->db->count_all('absensi');
+    }
+
+    public function count_absensi_by_status($status)
+    {
+        $this->db->where('status', $status);
+        return $this->db->count_all_results('absensi');
+    }
 }

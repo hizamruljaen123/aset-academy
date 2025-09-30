@@ -12,7 +12,38 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         try {
-            tailwind.config = {darkMode: 'class'};
+            tailwind.config = {
+                darkMode: 'class',
+                theme: {
+                    extend: {
+                        fontSize: {
+                            'input': '1rem', // Larger base font for inputs
+                        },
+                        padding: {
+                            'input': '0.75rem', // Better padding for inputs
+                        },
+                        colors: {
+                            'input-border': {
+                                DEFAULT: '#d1d5db', // Gray-300 for better visibility
+                                focus: '#3b82f6', // Blue-500 for focus
+                            },
+                        },
+                    },
+                },
+                plugins: function({ addUtilities }) {
+                    addUtilities({
+                        '.form-input': {
+                            '@apply block w-full rounded-md border border-input-border px-input py-input text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-input-border-focus focus:border-input-border-focus text-input leading-6': {},
+                        },
+                        '.form-textarea': {
+                            '@apply block w-full rounded-md border border-input-border px-input py-input text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-input-border-focus focus:border-input-border-focus text-input leading-6 resize-vertical': {},
+                        },
+                        '.form-select': {
+                            '@apply block w-full rounded-md border border-input-border px-input py-input text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-input-border-focus focus:border-input-border-focus text-input leading-6': {},
+                        },
+                    });
+                },
+            };
         } catch (error) {
             console.warn('Tailwind config error:', error);
         }
@@ -34,6 +65,98 @@
     
     <!-- Custom Form Input Styles -->
     <link href="<?php echo base_url('assets/css/form-inputs.css'); ?>" rel="stylesheet">
+    
+    <!-- Global Form Styles (Inline for immediate effect) -->
+    <style>
+        /* Enhanced form input readability */
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="number"],
+        input[type="tel"],
+        input[type="url"],
+        input[type="search"],
+        textarea,
+        select {
+            font-size: 1rem; /* text-input */
+            line-height: 1.5; /* leading-6 */
+            padding: 0.75rem; /* px-input py-input */
+            border: 1px solid #d1d5db; /* border-input-border */
+            border-radius: 0.375rem; /* rounded-md */
+            background-color: #ffffff;
+            color: #111827; /* text-gray-900 */
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        input[type="number"]:focus,
+        input[type="tel"]:focus,
+        input[type="url"]:focus,
+        input[type="search"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            ring: 2px solid #3b82f6; /* focus:ring-input-border-focus */
+            border-color: #3b82f6; /* focus:border-input-border-focus */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #6b7280; /* placeholder-gray-500 */
+            opacity: 1;
+        }
+
+        /* Ensure better contrast on dark mode if enabled */
+        @media (prefers-color-scheme: dark) {
+            input[type="text"],
+            input[type="email"],
+            input[type="password"],
+            input[type="number"],
+            input[type="tel"],
+            input[type="url"],
+            input[type="search"],
+            textarea,
+            select {
+                background-color: #1f2937; /* bg-gray-800 */
+                color: #f9fafb; /* text-gray-100 */
+                border-color: #4b5563; /* border-gray-600 */
+            }
+
+            input[type="text"]:focus,
+            input[type="email"]:focus,
+            input[type="password"]:focus,
+            input[type="number"]:focus,
+            input[type="tel"]:focus,
+            input[type="url"]:focus,
+            input[type="search"]:focus,
+            textarea:focus,
+            select:focus {
+                border-color: #60a5fa; /* border-blue-400 */
+                ring-color: #60a5fa; /* ring-blue-400 */
+                box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+            }
+
+            input::placeholder,
+            textarea::placeholder {
+                color: #9ca3af; /* placeholder-gray-400 */
+            }
+        }
+
+        /* Form labels for better readability */
+        label {
+            font-weight: 500;
+            color: #374151; /* text-gray-700 */
+            font-size: 0.875rem; /* text-sm */
+        }
+
+        /* Form buttons */
+        button[type="submit"],
+        input[type="submit"] {
+            @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+        }
+    </style>
     
     <!-- Admin Assignments Styles -->
     <link href="<?php echo base_url('assets/css/assignments-admin.css'); ?>" rel="stylesheet">    
@@ -169,7 +292,7 @@
                     </a>
                     <a href="<?php echo site_url('absensi'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'absensi') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-user-check w-5 text-center mr-3"></i>
-                        Data Absensi
+                        Kelola Absensi
                     </a>
                     <a href="<?php echo site_url('admin/jadwal'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(2) == 'jadwal') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-calendar-alt w-5 text-center mr-3"></i>

@@ -79,7 +79,7 @@
                                                 <?php echo $class->enrollment_count ?? 0; ?> siswa
                                             </div>
                                         </div>
-                                        <a href="<?php echo site_url('student/free_classes/view/' . $class->id); ?>" class="block w-full text-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 transition-colors">
+                                        <a href="<?php echo site_url('student_mobile/free_class_detail/' . $class->id); ?>" class="block w-full text-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 transition-colors">
                                             Lihat Detail & Daftar
                                         </a>
                                     </div>

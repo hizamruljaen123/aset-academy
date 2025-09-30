@@ -17,7 +17,7 @@
                             <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 group">
                                 <div class="h-48 bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center">
                                     <?php if ($class->gambar): ?>
-                                        <img src="<?= base_url('uploads/kelas/'.$class->gambar) ?>" alt="<?= $class->nama_kelas ?>" class="h-full w-full object-cover">
+                                        <img src="<?= $class->gambar ?>" alt="<?= $class->nama_kelas ?>" class="h-full w-full object-cover">
                                     <?php else: ?>
                                         <div class="text-white text-5xl">
                                             <i class="fas fa-laptop-code"></i>

@@ -1,7 +1,13 @@
 <div class="p-4 sm:p-6 lg:p-8">
     <!-- Header -->
     <div class="bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-2xl p-6 mb-8 shadow-lg">
-        <h1 class="text-3xl font-bold"><?= $title; ?></h1>
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-3xl font-bold"><?= $title; ?></h1>
+            <a href="<?php echo site_url('teacher/siswa'); ?>" class="inline-flex items-center px-4 py-2 bg-white text-indigo-600 font-bold rounded-lg shadow-md hover:bg-gray-100 transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Kembali ke Daftar Siswa
+            </a>
+        </div>
         <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
                 <p class="text-sm opacity-90">NIS: <?= $siswa->nis; ?></p>

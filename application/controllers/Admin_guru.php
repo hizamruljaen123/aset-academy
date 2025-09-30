@@ -142,11 +142,24 @@ class Admin_guru extends CI_Controller {
             show_404();
         }
 
-        // Get all classes
-        $data['all_kelas'] = $this->Kelas_model->get_all_kelas();
+        // Get all premium classes
+        $data['all_premium_kelas'] = $this->Kelas_model->get_all_kelas();
         
-        // Get assigned classes
-        $data['assigned_kelas'] = $this->Guru_model->get_guru_kelas($teacher_id);
+        // Get all free classes
+        $this->load->model('Free_class_model');
+        $data['all_free_kelas'] = $this->Free_class_model->get_all_free_classes();
+        
+        // Get assigned classes (both premium and free)
+        $assigned_classes = $this->Guru_model->get_guru_kelas($teacher_id);
+        
+        // Separate assigned classes by type
+        $data['assigned_premium_kelas'] = array_filter($assigned_classes, function($kelas) {
+            return $kelas->class_type === 'premium';
+        });
+        
+        $data['assigned_free_kelas'] = array_filter($assigned_classes, function($kelas) {
+            return $kelas->class_type === 'gratis';
+        });
         
         $data['teacher'] = $teacher;
         $data['title'] = 'Kelola Penugasan - ' . $teacher->nama_lengkap;
@@ -159,8 +172,16 @@ class Admin_guru extends CI_Controller {
     {
         $teacher_id = $this->input->post('teacher_id');
         $class_id = $this->input->post('class_id');
+        $class_type = $this->input->post('class_type'); // 'premium' or 'gratis'
         
-        if ($this->Guru_model->assign_guru_kelas($teacher_id, $class_id)) {
+        $success = false;
+        if ($class_type == 'premium') {
+            $success = $this->Guru_model->assign_guru_kelas($teacher_id, $class_id);
+        } else {
+            $success = $this->Guru_model->assign_guru_free_class($teacher_id, $class_id);
+        }
+        
+        if ($success) {
             $this->session->set_flashdata('success', 'Kelas berhasil ditugaskan');
         } else {
             $this->session->set_flashdata('error', 'Gagal menugaskan kelas');
@@ -173,8 +194,16 @@ class Admin_guru extends CI_Controller {
     {
         $teacher_id = $this->input->post('teacher_id');
         $class_id = $this->input->post('class_id');
+        $class_type = $this->input->post('class_type'); // 'premium' or 'gratis'
         
-        if ($this->Guru_model->remove_guru_kelas($teacher_id, $class_id)) {
+        $success = false;
+        if ($class_type == 'premium') {
+            $success = $this->Guru_model->remove_guru_kelas($teacher_id, $class_id);
+        } else {
+            $success = $this->Guru_model->remove_guru_free_class($teacher_id, $class_id);
+        }
+        
+        if ($success) {
             $this->session->set_flashdata('success', 'Penugasan kelas berhasil dihapus');
         } else {
             $this->session->set_flashdata('error', 'Gagal menghapus penugasan kelas');

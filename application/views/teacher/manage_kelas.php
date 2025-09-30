@@ -28,8 +28,8 @@
                     $now = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
                     if (!empty($jadwal)) {
                         foreach ($jadwal as $j) {
-                            $start_time = new DateTime($j['tanggal_pertemuan'] . ' ' . $j['waktu_mulai']);
-                            $end_time = new DateTime($j['tanggal_pertemuan'] . ' ' . $j['waktu_selesai']);
+                            $start_time = new DateTime($j->tanggal_pertemuan . ' ' . $j->waktu_mulai);
+                            $end_time = new DateTime($j->tanggal_pertemuan . ' ' . $j->waktu_selesai);
                             if ($now >= $start_time && $now <= $end_time) {
                                 $active_schedule = $j;
                                 break;
@@ -43,7 +43,7 @@
                         <a href="<?php echo site_url('teacher/rekap_absensi/' . $kelas->id); ?>" class="inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-lg shadow-sm transition-colors">
                             <i class="fas fa-chart-bar mr-2"></i> Rekap
                         </a>
-                        <button id="takeAttendanceBtn" data-jadwal-id="<?= $active_schedule ? $active_schedule['id'] : '' ?>" data-tanggal="<?= $active_schedule ? $active_schedule['tanggal_pertemuan'] : '' ?>" class="inline-flex items-center px-4 py-2 bg-blue-500 text-white font-bold rounded-lg shadow-sm transition-colors <?= !$active_schedule ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600' ?>" <?= !$active_schedule ? 'disabled' : '' ?>>
+                        <button id="takeAttendanceBtn" data-jadwal-id="<?= $active_schedule ? $active_schedule->id : '' ?>" data-tanggal="<?= $active_schedule ? $active_schedule->tanggal_pertemuan : '' ?>" class="inline-flex items-center px-4 py-2 bg-blue-500 text-white font-bold rounded-lg shadow-sm transition-colors <?= !$active_schedule ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600' ?>" <?= !$active_schedule ? 'disabled' : '' ?>>
                             <i class="fas fa-edit mr-2"></i> Isi Absensi
                         </button>
                     </div>
@@ -103,9 +103,9 @@
                     <?php if (!empty($jadwal)): ?>
                         <?php foreach ($jadwal as $j): ?>
                             <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                                <h4 class="font-semibold text-gray-900">Pertemuan <?php echo $j['pertemuan_ke']; ?>: <?php echo $j['judul_pertemuan']; ?></h4>
-                                <p class="text-sm text-gray-600 mt-1"><?php echo date('d M Y', strtotime($j['tanggal_pertemuan'])); ?> | <?php echo date('H:i', strtotime($j['waktu_mulai'])); ?> - <?php echo date('H:i', strtotime($j['waktu_selesai'])); ?></p>
-                                <a href="<?= site_url('teacher/absensi/' . $j['id']); ?>" class="text-sm text-blue-600 hover:underline">Lihat Absensi</a>
+                                <h4 class="font-semibold text-gray-900">Pertemuan <?php echo $j->pertemuan_ke; ?>: <?php echo $j->judul_pertemuan; ?></h4>
+                                <p class="text-sm text-gray-600 mt-1"><?php echo date('d M Y', strtotime($j->tanggal_pertemuan)); ?> | <?php echo date('H:i', strtotime($j->waktu_mulai)); ?> - <?php echo date('H:i', strtotime($j->waktu_selesai)); ?></p>
+                                <a href="<?= site_url('teacher/absensi/' . $j->id); ?>" class="text-sm text-blue-600 hover:underline">Lihat Absensi</a>
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>

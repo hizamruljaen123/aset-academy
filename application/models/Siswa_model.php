@@ -126,23 +126,23 @@ class Siswa_model extends CI_Model {
 
     public function get_enrolled_programming_classes($siswa_id)
     {
-        $this->db->select('kp.*, gk.assigned_at as enrollment_date');
+        // For premium students: check siswa.kelas matches kelas_programming.nama_kelas
+        $this->db->select('kp.*, NOW() as enrollment_date, "Enrolled" as enrollment_status');
         $this->db->from('kelas_programming kp');
-        $this->db->join('guru_kelas gk', 'kp.id = gk.kelas_id');
-        $this->db->join('users u', 'gk.guru_id = u.id');
-        $this->db->join('siswa s', 'u.email = s.email');
+        $this->db->join('siswa s', 'kp.nama_kelas = s.kelas');
         $this->db->where('s.id', $siswa_id);
+        $this->db->where('kp.status', 'Aktif');
         return $this->db->get()->result_array();
     }
 
     public function get_enrolled_free_classes($siswa_id)
     {
-        $this->db->select('fc.*, fce.enrollment_date');
+        // For free class students: check free_class_enrollments table
+        $this->db->select('fc.*, fce.enrollment_date, fce.status as enrollment_status');
         $this->db->from('free_classes fc');
         $this->db->join('free_class_enrollments fce', 'fc.id = fce.class_id');
-        $this->db->join('users u', 'fce.student_id = u.id');
-        $this->db->join('siswa s', 'u.email = s.email');
-        $this->db->where('s.id', $siswa_id);
+        $this->db->where('fce.student_id', $siswa_id);
+        $this->db->where_in('fce.status', ['Enrolled', 'Completed']);
         return $this->db->get()->result_array();
     }
 }

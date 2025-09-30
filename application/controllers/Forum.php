@@ -32,6 +32,12 @@ class Forum extends CI_Controller {
         // Get popular threads (most commented)
         $data['popular_threads'] = $this->forum->get_popular_threads(5);
         
+        // Check if forum has any threads
+        $data['has_threads'] = $this->forum->count_all_threads() > 0;
+        
+        // Check if user is admin or super admin
+        $data['is_admin'] = in_array($this->session->userdata('role'), ['admin', 'super_admin']);
+        
         // Load views with layout
         $this->load->view('templates/header', $data);
         $this->load->view('forum/index', $data);
@@ -156,32 +162,38 @@ class Forum extends CI_Controller {
         $this->load->view('templates/footer', $data);
     }
 
-    public function create_thread($category_slug)
+    public function create_first_thread()
     {
-        $data['category'] = $this->forum->get_category_by_slug($category_slug);
-        if (!$data['category']) {
-            show_404();
+        // Check if user is super admin
+        if ($this->session->userdata('role') !== 'super_admin') {
+            show_error('Access denied. Only Super Admin can create the first forum thread.', 403);
         }
 
-        $data['title'] = 'Buat Topik Baru';
-
+        $this->form_validation->set_rules('category_id', 'Kategori', 'required|numeric');
         $this->form_validation->set_rules('title', 'Judul', 'required|trim|min_length[5]');
         $this->form_validation->set_rules('content', 'Konten', 'required|trim|min_length[10]');
 
         if ($this->form_validation->run() == FALSE) {
-            $this->load->view('templates/header', $data);
-            $this->load->view('forum/create_thread', $data);
-            $this->load->view('templates/footer');
+            // Redirect back with validation errors
+            $this->session->set_flashdata('error', validation_errors());
+            redirect('forum');
         } else {
             $thread_data = [
                 'user_id' => $this->session->userdata('user_id'),
-                'category_id' => $data['category']->id,
+                'category_id' => $this->input->post('category_id'),
                 'title' => $this->input->post('title'),
                 'content' => $this->input->post('content'),
             ];
 
             $thread_id = $this->forum->create_thread($thread_data);
-            redirect('forum/thread/' . $thread_id);
+            
+            if ($thread_id) {
+                $this->session->set_flashdata('success', 'Topik forum pertama berhasil dibuat!');
+                redirect('forum/thread/' . $thread_id);
+            } else {
+                $this->session->set_flashdata('error', 'Gagal membuat topik forum. Silakan coba lagi.');
+                redirect('forum');
+            }
         }
     }
 
@@ -244,5 +256,51 @@ class Forum extends CI_Controller {
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($viewers));
+    }
+    // AJAX method for creating category from public forum (admin only)
+    public function ajax_create_category()
+    {
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        }
+
+        // Check if user is admin or super admin
+        if (!in_array($this->session->userdata('role'), ['admin', 'super_admin'])) {
+            echo json_encode(['success' => false, 'message' => 'Akses ditolak. Hanya admin yang dapat membuat kategori.']);
+            return;
+        }
+
+        $this->form_validation->set_rules('name', 'Nama Kategori', 'required|trim|min_length[3]');
+        $this->form_validation->set_rules('description', 'Deskripsi', 'trim|max_length[255]');
+        $this->form_validation->set_rules('slug', 'Slug', 'required|trim|alpha_dash|is_unique[forum_categories.slug]');
+
+        if ($this->form_validation->run() == FALSE) {
+            echo json_encode([
+                'success' => false,
+                'message' => validation_errors()
+            ]);
+            return;
+        }
+
+        $category_data = [
+            'name' => $this->input->post('name'),
+            'description' => $this->input->post('description'),
+            'slug' => $this->input->post('slug')
+        ];
+
+        if ($this->db->insert('forum_categories', $category_data)) {
+            $new_id = $this->db->insert_id();
+            $new_category = $this->forum->get_category($new_id);
+            echo json_encode([
+                'success' => true,
+                'message' => 'Kategori berhasil ditambahkan!',
+                'data' => $new_category
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Gagal menambahkan kategori'
+            ]);
+        }
     }
 }

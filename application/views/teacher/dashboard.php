@@ -76,7 +76,7 @@
                                     </div>
                                     <h4 class="font-medium text-gray-900 mb-1"><?php echo $k->nama_kelas; ?></h4>
                                     <p class="text-sm text-gray-500 mb-2"><?php echo $k->level; ?> • <?php echo $k->durasi; ?> Jam</p>
-                                    <p class="text-sm font-medium text-gray-900">Rp <?php echo number_format($k->harga, 0, ',', '.'); ?></p>
+                                    <p class="text-sm font-medium text-gray-900">Rp <?php echo number_format(($k->harga ?? 0), 0, ',', '.'); ?></p>
                                 </div>
                             <?php endforeach; ?>
                         </div>

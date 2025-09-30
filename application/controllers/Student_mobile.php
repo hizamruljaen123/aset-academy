@@ -810,4 +810,70 @@ class Student_mobile extends CI_Controller
             redirect('student_mobile/forum/thread/' . $thread_id . '/' . url_title($thread->title, '-', true) . '#reply-' . $reply_id);
         }
     }
+
+    public function free_class_detail($class_id)
+    {
+        $user_id = $this->session->userdata('user_id');
+        
+        // Get student profile
+        $data['student_profile'] = $this->Siswa_model->get_siswa_by_id($user_id);
+        
+        // Get class details
+        $data['free_class'] = $this->free_class->get_free_class_by_id($class_id);
+        if (!$data['free_class'] || $data['free_class']->status != 'Published') {
+            show_404();
+        }
+        
+        // Get class materials
+        $data['materials'] = $this->free_class->get_free_class_materials($class_id);
+        $data['enrolled_count'] = $this->free_class->count_enrolled_students($class_id);
+        $data['is_enrolled'] = $this->free_class->is_enrolled($user_id, $class_id);
+        $data['is_full'] = ($data['free_class']->max_students && $data['enrolled_count'] >= $data['free_class']->max_students);
+        $data['discussions'] = $this->free_class->get_free_class_discussions($class_id);
+        $data['enrolled_students'] = $this->free_class->get_enrolled_students($class_id);
+        $data['jadwal'] = $this->free_class->get_class_schedule($class_id);
+        
+        if ($data['is_enrolled']) {
+            $data['enrollment'] = $this->free_class->get_enrollment($user_id, $class_id);
+        }
+        
+        // Set page title
+        $data['title'] = $data['free_class']->title . ' - Mobile';
+        
+        // Load mobile views
+        $this->load->view('templates/mobile_header', $data);
+        $this->load->view('student/mobile/free_class_detail', $data);
+        $this->load->view('templates/mobile_footer');
+    }
+
+    public function enroll_free_class($class_id)
+    {
+        $user_id = $this->session->userdata('user_id');
+        
+        $class = $this->free_class->get_free_class_by_id($class_id);
+
+        if (!$class || $class->status != 'Published') {
+            $this->session->set_flashdata('error', 'Kelas tidak ditemukan.');
+            redirect('student_mobile/browse_classes');
+        }
+
+        if ($this->free_class->is_enrolled($user_id, $class_id)) {
+            $this->session->set_flashdata('error', 'Anda sudah terdaftar di kelas ini.');
+            redirect('student_mobile/free_class_detail/' . $class_id);
+        }
+
+        $enrolled_count = $this->free_class->count_enrolled_students($class_id);
+        if ($class->max_students && $enrolled_count >= $class->max_students) {
+            $this->session->set_flashdata('error', 'Kelas ini sudah penuh.');
+            redirect('student_mobile/free_class_detail/' . $class_id);
+        }
+
+        if ($this->free_class->enroll_student($user_id, $class_id)) {
+            $this->session->set_flashdata('success', 'Anda berhasil mendaftar di kelas ini!');
+            redirect('student_mobile/my_classes');
+        } else {
+            $this->session->set_flashdata('error', 'Terjadi kesalahan saat mendaftar.');
+            redirect('student_mobile/free_class_detail/' . $class_id);
+        }
+    }
 }

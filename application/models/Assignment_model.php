@@ -123,6 +123,16 @@ class Assignment_model extends CI_Model {
         return $assignments;
     }
 
+    public function get_all_teachers()
+    {
+        $this->db->select('id, nama_lengkap');
+        $this->db->from('users');
+        $this->db->where('role', 'guru');
+        $this->db->where('status', 'Aktif');
+        $this->db->order_by('nama_lengkap', 'ASC');
+        return $this->db->get()->result();
+    }
+
     public function get_submissions($assignment_id)
     {
         $this->db->select('ss.*, u.nama_lengkap as student_name, u.email as student_email, ss.submission_file as file_name, ss.submission_content as content, ss.status as submission_status');
@@ -131,5 +141,22 @@ class Assignment_model extends CI_Model {
         $this->db->where('ss.assignment_id', $assignment_id);
         $this->db->order_by('ss.submitted_at', 'DESC');
         return $this->db->get()->result();
+    }
+
+    public function get_class_student_count($class_id, $class_type)
+    {
+        if ($class_type == 'premium') {
+            // Count students enrolled in premium class
+            $this->db->from('premium_class_enrollments');
+            $this->db->where('class_id', $class_id);
+            $this->db->where_in('status', ['Active', 'Pending']);
+            return $this->db->count_all_results();
+        } else {
+            // Count students enrolled in free class
+            $this->db->from('free_class_enrollments');
+            $this->db->where('class_id', $class_id);
+            $this->db->where_in('status', ['Enrolled', 'Completed']);
+            return $this->db->count_all_results();
+        }
     }
 }

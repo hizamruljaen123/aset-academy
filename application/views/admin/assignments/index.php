@@ -37,7 +37,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-green-100 text-sm">Sudah Dinilai</p>
-                    <p class="text-2xl font-bold">0</p>
+                    <p class="text-2xl font-bold"><?= $stats['graded_submissions'] ?? 0 ?></p>
                 </div>
                 <div class="bg-green-400 bg-opacity-50 p-3 rounded-lg">
                     <i class="fas fa-check-circle text-xl"></i>
@@ -49,7 +49,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-yellow-100 text-sm">Belum Dinilai</p>
-                    <p class="text-2xl font-bold">0</p>
+                    <p class="text-2xl font-bold"><?= $stats['ungraded_submissions'] ?? 0 ?></p>
                 </div>
                 <div class="bg-yellow-400 bg-opacity-50 p-3 rounded-lg">
                     <i class="fas fa-clock text-xl"></i>
@@ -61,7 +61,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-purple-100 text-sm">Rata-rata Nilai</p>
-                    <p class="text-2xl font-bold">85.5</p>
+                    <p class="text-2xl font-bold"><?= $stats['average_score'] ?? 0 ?></p>
                 </div>
                 <div class="bg-purple-400 bg-opacity-50 p-3 rounded-lg">
                     <i class="fas fa-star text-xl"></i>
@@ -82,14 +82,15 @@
             <div class="flex gap-3">
                 <select class="form-select">
                     <option>Semua Kelas</option>
-                    <option>Basic Programming</option>
-                    <option>Intermediate</option>
-                    <option>Advanced</option>
+                    <?php foreach ($classes as $class): ?>
+                        <option value="<?= $class['id'] ?>-<?= $class['type'] ?>"><?= htmlspecialchars($class['name'], ENT_QUOTES, 'UTF-8'); ?> (<?= ucfirst($class['type']) ?>)</option>
+                    <?php endforeach; ?>
                 </select>
                 <select class="form-select">
                     <option>Semua Guru</option>
-                    <option>John Doe</option>
-                    <option>Jane Smith</option>
+                    <?php foreach ($teachers as $teacher): ?>
+                        <option value="<?= $teacher->id ?>"><?= htmlspecialchars($teacher->nama_lengkap, ENT_QUOTES, 'UTF-8'); ?></option>
+                    <?php endforeach; ?>
                 </select>
                 <select class="form-select">
                     <option>Semua Status</option>
@@ -118,6 +119,21 @@
             </div>
         <?php else: ?>
             <?php foreach ($assignments as $assignment): ?>
+                <?php
+                // Calculate submission stats for this assignment
+                $submissions = $this->assignment->get_submissions($assignment->id);
+                $total_submissions = count($submissions);
+                $graded_submissions = 0;
+                foreach ($submissions as $submission) {
+                    if ($submission->status == 'graded' && $submission->grade !== null) {
+                        $graded_submissions++;
+                    }
+                }
+                $progress_percentage = $total_submissions > 0 ? round(($graded_submissions / $total_submissions) * 100) : 0;
+                
+                // Get total students in the class
+                $total_students = $this->assignment->get_class_student_count($assignment->class_id, $assignment->class_type);
+                ?>
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
                     <div class="p-6">
                         <!-- Header -->
@@ -154,18 +170,18 @@
                             </div>
                             <div class="flex items-center text-sm text-gray-600">
                                 <i class="fas fa-users mr-2 w-4"></i>
-                                <span>25 siswa terdaftar</span>
+                                <span><?= $total_submissions ?>/<?= $total_students ?> siswa mengumpulkan</span>
                             </div>
                         </div>
 
                         <!-- Progress Bar -->
                         <div class="mb-4">
                             <div class="flex justify-between text-sm text-gray-600 mb-1">
-                                <span>Progres Pengumpulan</span>
-                                <span>12/25 (48%)</span>
+                                <span>Progres Penilaian</span>
+                                <span><?= $graded_submissions ?>/<?= $total_submissions ?> (<?= $progress_percentage ?>%)</span>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-blue-600 h-2 rounded-full" style="width: 48%"></div>
+                                <div class="bg-blue-600 h-2 rounded-full" style="width: <?= $progress_percentage ?>%"></div>
                             </div>
                         </div>
 

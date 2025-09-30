@@ -46,11 +46,18 @@
     <?php endif; ?>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Profile Card -->
         <div class="lg:col-span-2">
             <div class="bg-white rounded-2xl shadow-xl ring-1 ring-gray-200/50 overflow-hidden mb-8 fade-in">
                 <div class="p-6 border-b border-gray-200/50 bg-gradient-to-r from-gray-50 to-white">
-                    <h2 class="text-2xl font-bold text-gray-800">Informasi Pribadi</h2>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800">Informasi Pribadi</h2>
+                        </div>
+                        <a href="<?php echo site_url('student/profile/edit'); ?>" class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 hover:scale-105">
+                            <i class="fas fa-edit mr-2"></i>
+                            Edit Profil
+                        </a>
+                    </div>
                 </div>
                 <div class="p-6">
                     <?php if (isset($student) && $student): ?>
@@ -129,7 +136,7 @@
                             
                             <?php if (isset($profile_exists) && !$profile_exists): ?>
                             <div class="sm:col-span-2 flex items-center justify-center p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-                                <a href="#" class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-transform hover:scale-105">
+                                <a href="<?php echo site_url('student/profile/edit'); ?>" class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-transform hover:scale-105">
                                     <i class="fas fa-user-edit mr-2"></i>
                                     Lengkapi Profil
                                 </a>

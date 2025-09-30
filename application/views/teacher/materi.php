@@ -50,9 +50,9 @@
             </div>
             <h3 class="text-2xl font-bold text-gray-800 mb-2">Belum Ada Materi</h3>
             <p class="text-gray-500 mb-6">Anda belum membuat materi untuk kelas manapun.</p>
-            <button class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+            <a href="<?php echo site_url('teacher/create_materi'); ?>" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
                 Buat Materi Baru
-            </button>
+            </a>
         </div>
     <?php else: ?>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

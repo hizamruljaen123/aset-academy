@@ -59,19 +59,25 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <div class="flex-shrink-0 h-10 w-10">
-                                            <img class="h-10 w-10 rounded-full object-cover" src="<?php echo base_url('uploads/siswa/' . ($s->foto_profil ?: 'default_avatar.png')); ?>" alt="Foto profil <?php echo $s->nama_lengkap; ?>">
+                                            <?php if (isset($s->foto_profil) && !empty($s->foto_profil)): ?>
+                                                <img class="h-10 w-10 rounded-full object-cover" src="<?php echo base_url('uploads/siswa/' . $s->foto_profil); ?>" alt="Foto profil <?php echo $s->nama_lengkap; ?>">
+                                            <?php else: ?>
+                                                <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                                                    <i class="fas fa-user text-gray-600 text-lg"></i>
+                                                </div>
+                                            <?php endif; ?>
                                         </div>
                                         <div class="ml-4">
                                             <div class="text-sm font-medium text-gray-900"><?php echo $s->nama_lengkap; ?></div>
-                                            <div class="text-sm text-gray-500"><?php echo $s->email; ?></div>
+                                            <div class="text-sm text-gray-500"><?php echo isset($s->email) ? $s->email : '-'; ?></div>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo $s->kelas; ?></td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo $s->jurusan; ?></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo isset($s->kelas) ? $s->kelas : '-'; ?></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo isset($s->jurusan) ? $s->jurusan : '-'; ?></td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?php echo ($s->status == 'Aktif') ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'; ?>">
-                                        <?php echo $s->status; ?>
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?php echo ((isset($s->status) && $s->status == 'Aktif') ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'); ?>">
+                                        <?php echo isset($s->status) ? $s->status : 'Tidak Aktif'; ?>
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

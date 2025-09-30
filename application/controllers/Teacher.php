@@ -42,8 +42,17 @@ class Teacher extends CI_Controller {
     public function kelas()
     {
         $guru_id = $this->session->userdata('user_id');
-        $data['kelas'] = $this->Guru_model->get_guru_kelas($guru_id);
-        
+        $all_kelas = $this->Guru_model->get_guru_kelas($guru_id);
+
+        // Separate classes by type
+        $data['premium_kelas'] = array_filter($all_kelas, function($k) {
+            return $k->class_type === 'premium';
+        });
+
+        $data['gratis_kelas'] = array_filter($all_kelas, function($k) {
+            return $k->class_type === 'gratis';
+        });
+
         $data['title'] = 'Kelas Saya';
         $this->load->view('templates/header', $data);
         $this->load->view('teacher/kelas', $data);
@@ -77,18 +86,38 @@ class Teacher extends CI_Controller {
     {
         $guru_id = $this->session->userdata('user_id');
 
-        // Check if teacher has access to this class
-        if (!$this->Guru_model->has_class_access($guru_id, $kelas_id)) {
+        // Check if teacher has access to this class (both premium and free)
+        $has_premium_access = $this->Guru_model->has_class_access($guru_id, $kelas_id);
+        $has_free_access = $this->Guru_model->has_free_class_access($guru_id, $kelas_id);
+
+        if (!$has_premium_access && !$has_free_access) {
             show_error('Anda tidak memiliki akses ke kelas ini.', 403);
         }
 
-        $data['kelas'] = $this->Kelas_model->get_kelas_by_id($kelas_id);
-        $data['siswa'] = $this->Siswa_model->get_siswa_by_kelas($kelas_id);
-        $data['materi'] = $this->Materi_model->get_materi_by_kelas($kelas_id);
+        // Determine class type and get appropriate data
+        $premium_class = $this->Kelas_model->get_kelas_by_id($kelas_id);
+        if ($premium_class) {
+            $data['kelas'] = $premium_class;
+            $data['siswa'] = $this->Siswa_model->get_siswa_by_kelas($kelas_id);
+            $data['materi'] = $this->Materi_model->get_materi_by_kelas($kelas_id);
+            $data['class_type'] = 'premium';
+        } else {
+            // Check if it's a free class
+            $this->load->model('Free_class_model');
+            $free_class = $this->Free_class_model->get_free_class_by_id($kelas_id);
+            if (!$free_class) {
+                show_404();
+            }
+            $data['kelas'] = $free_class;
+            $data['siswa'] = $this->Free_class_model->get_enrolled_students($kelas_id);
+            $data['materi'] = $this->Free_class_model->get_free_class_materials($kelas_id);
+            $data['class_type'] = 'gratis';
+        }
+
         $this->load->model('Jadwal_model');
         $data['jadwal'] = $this->Jadwal_model->get_jadwal_by_kelas($kelas_id);
 
-        $data['title'] = 'Kelola Kelas - ' . $data['kelas']->nama_kelas;
+        $data['title'] = 'Kelola Kelas - ' . ($data['kelas']->nama_kelas ?? $data['kelas']->title);
         $this->load->view('templates/header', $data);
         $this->load->view('teacher/manage_kelas', $data);
         $this->load->view('templates/footer');
@@ -103,9 +132,27 @@ class Teacher extends CI_Controller {
             show_404();
         }
 
-        // Get class ID from student's class name
+        // Check if teacher has access to this student
+        // First check if it's a premium class student
         $kelas = $this->db->get_where('kelas_programming', ['nama_kelas' => $siswa->kelas])->row();
-        if (!$kelas || !$this->Guru_model->has_class_access($guru_id, $kelas->id)) {
+        $has_premium_access = $kelas && $this->Guru_model->has_class_access($guru_id, $kelas->id);
+
+        // Then check if it's a free class student
+        $has_free_access = false;
+        if (!$has_premium_access) {
+            // Check if student is enrolled in any free class taught by this teacher
+            $this->db->select('fce.class_id');
+            $this->db->from('free_class_enrollments fce');
+            $this->db->join('free_classes fc', 'fce.class_id = fc.id');
+            $this->db->where('fce.student_id', $siswa_id);
+            $this->db->where('fc.mentor_id', $guru_id);
+            $this->db->where('fc.status', 'Published');
+            $this->db->where_in('fce.status', ['Enrolled', 'Completed']);
+            $free_enrollment = $this->db->get()->row();
+            $has_free_access = $free_enrollment !== null;
+        }
+
+        if (!$has_premium_access && !$has_free_access) {
             show_error('Anda tidak memiliki akses ke siswa ini.', 403);
         }
 
@@ -128,13 +175,13 @@ class Teacher extends CI_Controller {
         }
 
         $guru_id = $this->session->userdata('user_id');
-        if (!$this->Guru_model->has_class_access($guru_id, $jadwal['kelas_id'])) {
+        if (!$this->Guru_model->has_class_access($guru_id, $jadwal->kelas_id)) {
             show_error('Anda tidak memiliki akses ke absensi ini.', 403);
         }
 
         $data['jadwal'] = $jadwal;
         $data['absensi'] = $this->Absensi_model->get_absensi($jadwal_id);
-        $data['title'] = 'Detail Absensi - ' . $jadwal['judul_pertemuan'];
+        $data['title'] = 'Detail Absensi - ' . $jadwal->judul_pertemuan;
 
         $this->load->view('templates/header', $data);
         $this->load->view('teacher/absensi_detail', $data);
@@ -294,8 +341,12 @@ class Teacher extends CI_Controller {
             $this->load->model('Assignment_model', 'assignment');
         }
         
-        // Use kelas_programming table for both premium and gratis classes
-        $data['class'] = $this->db->get_where('kelas_programming', ['id' => $class_id])->row();
+        // Get class from appropriate table based on class_type
+        if ($class_type == 'premium') {
+            $data['class'] = $this->db->get_where('kelas_programming', ['id' => $class_id])->row();
+        } else {
+            $data['class'] = $this->db->get_where('free_classes', ['id' => $class_id])->row();
+        }
 
         if (!$data['class']) {
             show_404();
@@ -303,7 +354,7 @@ class Teacher extends CI_Controller {
 
         $data['assignments'] = $this->assignment->get_assignments_by_class($class_id, $class_type);
         $data['class_type'] = $class_type;
-        $data['title'] = 'Tugas untuk ' . $data['class']->nama_kelas;
+        $data['title'] = 'Tugas untuk ' . ($data['class']->nama_kelas ?? $data['class']->title);
 
         $this->load->view('templates/header', $data);
         $this->load->view('teacher/assignments/view_class', $data);
@@ -323,8 +374,12 @@ class Teacher extends CI_Controller {
         $this->form_validation->set_rules('description', 'Deskripsi', 'trim');
         $this->form_validation->set_rules('due_date', 'Batas Waktu', 'trim');
 
-        // Use kelas_programming table for both premium and gratis classes
-        $data['class'] = $this->db->get_where('kelas_programming', ['id' => $class_id])->row();
+        // Get class from appropriate table based on class_type
+        if ($class_type == 'premium') {
+            $data['class'] = $this->db->get_where('kelas_programming', ['id' => $class_id])->row();
+        } else {
+            $data['class'] = $this->db->get_where('free_classes', ['id' => $class_id])->row();
+        }
         
         if (!$data['class']) {
             show_404();
@@ -367,8 +422,12 @@ class Teacher extends CI_Controller {
             show_404();
         }
 
-        // Use kelas_programming table for both premium and gratis classes
-        $data['class'] = $this->db->get_where('kelas_programming', ['id' => $data['assignment']->class_id])->row();
+        // Get class from appropriate table based on assignment class_type
+        if ($data['assignment']->class_type == 'premium') {
+            $data['class'] = $this->db->get_where('kelas_programming', ['id' => $data['assignment']->class_id])->row();
+        } else {
+            $data['class'] = $this->db->get_where('free_classes', ['id' => $data['assignment']->class_id])->row();
+        }
 
         $data['class_type'] = $data['assignment']->class_type;
         $data['title'] = 'Edit Tugas: ' . $data['assignment']->title;
@@ -470,5 +529,106 @@ class Teacher extends CI_Controller {
             $this->session->set_flashdata('success', 'Nilai berhasil disimpan.');
             redirect('teacher/assignment_submissions/' . $data['submission']->assignment_id);
         }
+    }
+
+    public function akhiri_pertemuan()
+    {
+        $jadwal_id = $this->input->post('jadwal_id');
+        $kelas_id = $this->input->post('kelas_id');
+        $class_type = $this->input->post('class_type');
+
+        if (!$jadwal_id || !$kelas_id || !$class_type) {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => false,
+                'message' => 'Data tidak lengkap'
+            ]));
+            return;
+        }
+
+        $guru_id = $this->session->userdata('user_id');
+
+        // Validasi akses guru ke kelas
+        if (!$this->Guru_model->has_class_access($guru_id, $kelas_id)) {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => false,
+                'message' => 'Anda tidak memiliki akses ke kelas ini'
+            ]));
+            return;
+        }
+
+        // Get all enrolled students for this class
+        $enrolled_students = [];
+        if ($class_type == 'premium') {
+            // Get students enrolled in premium class
+            $this->db->select('s.id, s.nama_lengkap, s.nis');
+            $this->db->from('siswa s');
+            $this->db->join('enrollments e', 's.id = e.student_id');
+            $this->db->where('e.class_id', $kelas_id);
+            $this->db->where('e.class_type', 'premium');
+            $this->db->where('e.status', 'active');
+            $enrolled_students = $this->db->get()->result_array();
+        } elseif ($class_type == 'gratis') {
+            // Get students enrolled in free class
+            $this->db->select('s.id, s.nama_lengkap, s.nis');
+            $this->db->from('siswa s');
+            $this->db->join('free_class_enrollments fce', 's.id = fce.student_id');
+            $this->db->where('fce.class_id', $kelas_id);
+            $this->db->where('fce.status', 'enrolled');
+            $enrolled_students = $this->db->get()->result_array();
+        }
+
+        if (empty($enrolled_students)) {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => false,
+                'message' => 'Tidak ada siswa yang terdaftar di kelas ini'
+            ]));
+            return;
+        }
+
+        // Get existing attendance records
+        $existing_attendance = $this->Absensi_model->get_absensi($jadwal_id);
+        $existing_student_ids = array_column($existing_attendance, 'siswa_id');
+
+        // Process each enrolled student
+        $absent_students = [];
+        $present_students = [];
+
+        foreach ($enrolled_students as $student) {
+            if (!in_array($student['id'], $existing_student_ids)) {
+                // Student hasn't attended, mark as "Tidak Hadir"
+                $attendance_data = [
+                    'jadwal_id' => $jadwal_id,
+                    'siswa_id' => $student['id'],
+                    'status' => 'Alpa',
+                    'catatan' => 'Otomatis ditandai tidak hadir (pertemuan diakhiri)',
+                    'created_at' => date('Y-m-d H:i:s')
+                ];
+
+                $this->Absensi_model->save_absensi($attendance_data);
+                $absent_students[] = $student;
+            } else {
+                // Student has attendance record
+                $present_students[] = $student;
+            }
+        }
+
+        // Prepare response summary
+        $summary = [
+            'total_students' => count($enrolled_students),
+            'present_count' => count($present_students),
+            'absent_count' => count($absent_students),
+            'present_students' => $present_students,
+            'absent_students' => $absent_students
+        ];
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode([
+            'success' => true,
+            'message' => 'Pertemuan berhasil diakhiri. ' . count($absent_students) . ' siswa ditandai tidak hadir.',
+            'summary' => $summary
+        ]));
     }
 }

@@ -138,32 +138,190 @@ class Free_classes extends CI_Controller {
     {
         $student_id = $this->session->userdata('user_id');
         $enrollment = $this->Enrollment_model->get_enrollment_details($enrollment_id);
-        
+
         if (!$enrollment || $enrollment->student_id != $student_id) {
             show_error('Data pendaftaran tidak ditemukan', 404);
         }
-        
+
         // Get class materials
         $data['materials'] = $this->Free_class_model->get_free_class_materials($enrollment->class_id);
 
         // Get class schedule
         $this->load->model('Jadwal_model');
-        $data['jadwal'] = $this->Jadwal_model->get_jadwal_by_kelas($enrollment->class_id, 'free');
-        
+        $data['jadwal'] = $this->Jadwal_model->get_free_class_jadwal($enrollment->class_id);
+
+        // Load timezone library
+        $this->load->library('timezone_lib');
+
+        // Check attendance status for each schedule
+        $data['attendance_status'] = [];
+        $data['can_attend_now'] = false;
+
+        foreach ($data['jadwal'] as $jadwal) {
+            $attendance_record = $this->timezone_lib->get_student_attendance($jadwal->id, $student_id);
+
+            if ($attendance_record) {
+                $data['attendance_status'][$jadwal->id] = [
+                    'status' => $attendance_record->status,
+                    'catatan' => $attendance_record->catatan,
+                    'waktu_absen' => $attendance_record->created_at
+                ];
+            } else {
+                // Check if can attend now
+                $can_attend = $this->timezone_lib->can_attend_schedule($jadwal, $student_id);
+                $attendance_status = $this->timezone_lib->get_attendance_status($jadwal, $student_id);
+
+                $data['attendance_status'][$jadwal->id] = [
+                    'status' => 'not_attended',
+                    'can_attend' => $can_attend,
+                    'attendance_status' => $attendance_status
+                ];
+
+                if ($can_attend) {
+                    $data['can_attend_now'] = true;
+                    $data['current_schedule'] = $jadwal;
+                }
+            }
+        }
+
         // Get material progress
         $data['progress'] = $this->Enrollment_model->get_all_material_progress($enrollment_id);
-        
+
         // Get discussions
         $data['discussions'] = $this->Free_class_model->get_free_class_discussions($enrollment->class_id);
-        
+
         $data['enrollment'] = $enrollment;
         $data['title'] = 'Belajar - ' . $enrollment->title;
-        
+
         $this->load->view('templates/header', $data);
         $this->load->view('student/free_classes/learn', $data);
         $this->load->view('templates/footer');
     }
-    
+
+    public function submit_attendance()
+    {
+        $student_id = $this->session->userdata('user_id');
+        $jadwal_id = $this->input->post('jadwal_id');
+        $enrollment_id = $this->input->post('enrollment_id');
+
+        if (!$student_id || !$jadwal_id) {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => false,
+                'message' => 'Data tidak lengkap'
+            ]));
+            return;
+        }
+
+        // Validasi enrollment
+        $enrollment = $this->Enrollment_model->get_enrollment_details($enrollment_id);
+        if (!$enrollment || $enrollment->student_id != $student_id) {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => false,
+                'message' => 'Data pendaftaran tidak valid'
+            ]));
+            return;
+        }
+
+        // Load timezone library
+        $this->load->library('timezone_lib');
+
+        // Check if already attended
+        if ($this->timezone_lib->has_student_attended($jadwal_id, $student_id)) {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => false,
+                'message' => 'Anda sudah mengisi absensi untuk jadwal ini'
+            ]));
+            return;
+        }
+
+        // Get jadwal details
+        $jadwal = $this->db->get_where('jadwal_kelas_view', ['id' => $jadwal_id])->row();
+        if (!$jadwal) {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => false,
+                'message' => 'Jadwal tidak ditemukan'
+            ]));
+            return;
+        }
+
+        // Check if within attendance window
+        if (!$this->timezone_lib->can_attend_schedule($jadwal, $student_id)) {
+            $status = $this->timezone_lib->get_attendance_status($jadwal, $student_id);
+            $message = ($status === 'late') ? 'Waktu absensi sudah terlewat' : 'Belum waktunya absensi';
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => false,
+                'message' => $message
+            ]));
+            return;
+        }
+
+        // Insert attendance record
+        $attendance_data = [
+            'jadwal_id' => $jadwal_id,
+            'siswa_id' => $student_id,
+            'status' => 'Hadir',
+            'catatan' => 'Absensi otomatis via sistem',
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+
+        $result = $this->db->insert('absensi', $attendance_data);
+
+        if ($result) {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => true,
+                'message' => 'Absensi berhasil dicatat',
+                'attendance_time' => date('d M Y H:i:s')
+            ]));
+        } else {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => false,
+                'message' => 'Gagal mencatat absensi'
+            ]));
+        }
+    }
+
+    public function set_timezone()
+    {
+        $student_id = $this->session->userdata('user_id');
+        $timezone = $this->input->post('timezone');
+
+        if (!$student_id) {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => false,
+                'message' => 'User tidak terautentikasi'
+            ]));
+            return;
+        }
+
+        // Load timezone library
+        $this->load->library('timezone_lib');
+
+        // Set timezone for user
+        $result = $this->timezone_lib->set_user_timezone($student_id, $timezone);
+
+        if ($result) {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => true,
+                'message' => 'Zona waktu berhasil disimpan'
+            ]));
+        } else {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => false,
+                'message' => 'Zona waktu tidak valid'
+            ]));
+        }
+    }
+
     public function material($enrollment_id, $material_id)
     {
         $student_id = $this->session->userdata('user_id');

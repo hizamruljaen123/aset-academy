@@ -39,7 +39,7 @@
                             <?php
                                 $absen = null;
                                 foreach ($absensi as $a) {
-                                    if ($a['siswa_id'] == $s->id) {
+                                    if ($a->siswa_id == $s->id) {
                                         $absen = $a;
                                         break;
                                     }
@@ -69,7 +69,7 @@
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <input type="text" name="catatan[<?php echo $s->id; ?>]" class="w-full bg-white border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:outline-none focus:ring-1 focus:ring-teal-500" value="<?php echo $absen['catatan'] ?? ''; ?>">
+                                    <input type="text" name="catatan[<?php echo $s->id; ?>]" class="w-full bg-white border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:outline-none focus:ring-1 focus:ring-teal-500" value="<?php echo $absen->catatan ?? ''; ?>">
                                 </td>
                             </tr>
                         <?php endforeach; ?>

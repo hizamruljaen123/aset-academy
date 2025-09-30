@@ -18,7 +18,7 @@
                 <div class="md:w-1/3">
                     <div class="h-48 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
                         <?php if ($class->gambar): ?>
-                            <img src="<?= base_url('uploads/kelas/'.$class->gambar) ?>" alt="<?= $class->nama_kelas ?>" class="h-full w-full object-cover rounded-lg">
+                            <img src="<?= $class->gambar ?>" alt="<?= $class->nama_kelas ?>" class="h-full w-full object-cover rounded-lg">
                         <?php else: ?>
                             <i class="fas fa-laptop-code text-white text-5xl"></i>
                         <?php endif; ?>
