@@ -35,7 +35,7 @@ class Forum_model extends CI_Model {
 
     public function get_threads_by_category($category_id, $limit, $offset)
     {
-        $this->db->select('ft.*, u.nama_lengkap, u.username, (SELECT COUNT(id) FROM forum_posts WHERE thread_id = ft.id) as post_count');
+        $this->db->select('ft.*, u.nama_lengkap, u.username, u.role as user_role, (SELECT COUNT(id) FROM forum_posts WHERE thread_id = ft.id) as post_count');
         $this->db->from('forum_threads ft');
         $this->db->join('users u', 'ft.user_id = u.id');
         $this->db->where('ft.category_id', $category_id);
@@ -52,7 +52,7 @@ class Forum_model extends CI_Model {
 
     public function get_thread($thread_id)
     {
-        $this->db->select('ft.*, u.nama_lengkap, u.username,
+        $this->db->select('ft.*, u.nama_lengkap, u.username, u.role as user_role,
                           fc.name as category_name,
                           (SELECT COUNT(*) FROM forum_posts WHERE thread_id = ft.id) as post_count,
                           (SELECT COUNT(*) FROM forum_thread_views WHERE thread_id = ft.id) as views');
@@ -71,7 +71,7 @@ class Forum_model extends CI_Model {
 
     public function get_recent_threads($limit = 10, $offset = 0)
     {
-        $this->db->select('ft.*, u.nama_lengkap, u.username,
+        $this->db->select('ft.*, u.nama_lengkap, u.username, u.role as user_role,
                           (SELECT COUNT(*) FROM forum_posts WHERE thread_id = ft.id) as post_count,
                           (SELECT COUNT(*) FROM forum_likes WHERE thread_id = ft.id) as like_count,
                           (SELECT name FROM forum_categories WHERE id = ft.category_id) as category_name,
@@ -86,7 +86,7 @@ class Forum_model extends CI_Model {
     public function get_popular_threads($limit = 5)
     {
         $this->db->select('ft.id, ft.title, ft.created_at, ft.slug,
-                         u.nama_lengkap as author_name, u.username,
+                         u.nama_lengkap as author_name, u.username, u.role as user_role,
                          (SELECT COUNT(*) FROM forum_posts fp WHERE fp.thread_id = ft.id) as reply_count,
                          (SELECT COUNT(*) FROM forum_likes WHERE thread_id = ft.id) as like_count');
         $this->db->from('forum_threads ft');
@@ -203,7 +203,7 @@ class Forum_model extends CI_Model {
     public function get_thread_posts_with_replies($thread_id, $user_id = null)
     {
         // Get all posts (including replies) for the thread with like information
-        $this->db->select('fp.*, COALESCE(u.nama_lengkap, "User Deleted") as author_name, COALESCE(u.username, "deleted") as username');
+        $this->db->select('fp.*, COALESCE(u.nama_lengkap, "User Deleted") as author_name, COALESCE(u.username, "deleted") as username, COALESCE(u.role, "user") as user_role');
         $this->db->select('(SELECT COUNT(*) FROM forum_likes WHERE post_id = fp.id) as like_count');
         if ($user_id) {
             $this->db->select('IF((SELECT COUNT(*) FROM forum_likes WHERE post_id = fp.id AND user_id = ' . (int)$user_id . ') > 0, 1, 0) as user_has_liked');

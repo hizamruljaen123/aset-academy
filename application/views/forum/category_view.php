@@ -48,6 +48,35 @@
                                     <div class="mt-1 text-sm text-gray-500">
                                         <span>Oleh </span>
                                         <span class="font-medium text-gray-700"><?php echo $thread->nama_lengkap; ?></span>
+                                        <?php 
+                                        // Add role badge
+                                        if (isset($thread->user_role)) {
+                                            $role_class = 'bg-gray-100 text-gray-800';
+                                            $role_text = 'User';
+                                            switch ($thread->user_role) {
+                                                case 'super_admin':
+                                                    $role_class = 'bg-red-100 text-red-800';
+                                                    $role_text = 'Super Admin';
+                                                    break;
+                                                case 'admin':
+                                                    $role_class = 'bg-blue-100 text-blue-800';
+                                                    $role_text = 'Admin';
+                                                    break;
+                                                case 'guru':
+                                                    $role_class = 'bg-green-100 text-green-800';
+                                                    $role_text = 'Guru';
+                                                    break;
+                                                case 'siswa':
+                                                    $role_class = 'bg-purple-100 text-purple-800';
+                                                    $role_text = 'Siswa';
+                                                    break;
+                                                default:
+                                                    $role_class = 'bg-gray-100 text-gray-800';
+                                                    $role_text = 'User';
+                                            }
+                                            echo '<span class="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ' . $role_class . '">' . $role_text . '</span>';
+                                        }
+                                        ?>
                                         <span class="mx-1">•</span>
                                         <time datetime="<?php echo $thread->created_at; ?>">
                                             <?php echo timespan(strtotime($thread->created_at), time()) . ' yang lalu'; ?>

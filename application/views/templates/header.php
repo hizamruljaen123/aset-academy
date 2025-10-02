@@ -521,6 +521,27 @@
     <!-- Admin Assignments Scripts -->
     <script src="<?php echo base_url('assets/js/assignments-admin.js'); ?>"></script>
 
+    <!-- Dynamic Scripts and Styles -->
+    <?php if (isset($scripts) && is_array($scripts)): ?>
+        <?php foreach ($scripts as $script): ?>
+            <?php if (filter_var($script, FILTER_VALIDATE_URL)): ?>
+                <script src="<?php echo $script; ?>"></script>
+            <?php else: ?>
+                <script src="<?php echo base_url($script); ?>"></script>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    <?php endif; ?>
+    
+    <?php if (isset($styles) && is_array($styles)): ?>
+        <?php foreach ($styles as $style): ?>
+            <?php if (filter_var($style, FILTER_VALIDATE_URL)): ?>
+                <link href="<?php echo $style; ?>" rel="stylesheet">
+            <?php else: ?>
+                <link href="<?php echo base_url($style); ?>" rel="stylesheet">
+            <?php endif; ?>
+        <?php endforeach; ?>
+    <?php endif; ?>
+
     <!-- Global JavaScript Error Handler -->
     <script>
         // Global error handler to catch and log JavaScript errors
@@ -541,6 +562,9 @@
             if (args[0] && typeof args[0] === 'string') {
                 if (args[0].includes('cdn.tailwindcss.com should not be used in production')) {
                     return; // Suppress Tailwind warning
+                }
+                if (args[0].includes('cdn.jsdelivr.net should not be used in production')) {
+                    return; // Suppress jsDelivr warning
                 }
             }
             originalWarn.apply(console, args);

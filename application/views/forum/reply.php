@@ -46,18 +46,44 @@
             </div>
             <div class="px-8 py-6">
                 <div class="flex items-start space-x-4">
-                    <div class="flex-shrink-0">
                         <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold text-lg shadow-lg">
                             <?= strtoupper(substr(($post->nama_lengkap ?? 'U'), 0, 1)); ?>
                         </div>
                     </div>
                     <div class="flex-1">
-                        <div class="flex items-center space-x-3 mb-2">
-                            <h4 class="font-semibold text-gray-900"><?php echo html_escape($post->nama_lengkap ?? 'User Tidak Dikenal'); ?></h4>
+                        <h4 class="font-semibold text-gray-900"><?php echo html_escape($post->nama_lengkap ?? 'User Tidak Dikenal'); ?></h4>
+                        <?php 
+                            // Add role badge
+                            if (isset($post->user_role)) {
+                                $role_class = 'bg-gray-100 text-gray-800';
+                                $role_text = 'User';
+                                switch ($post->user_role) {
+                                    case 'super_admin':
+                                        $role_class = 'bg-red-100 text-red-800';
+                                        $role_text = 'Super Admin';
+                                        break;
+                                    case 'admin':
+                                        $role_class = 'bg-blue-100 text-blue-800';
+                                        $role_text = 'Admin';
+                                        break;
+                                    case 'guru':
+                                        $role_class = 'bg-green-100 text-green-800';
+                                        $role_text = 'Guru';
+                                        break;
+                                    case 'siswa':
+                                        $role_class = 'bg-purple-100 text-purple-800';
+                                        $role_text = 'Siswa';
+                                        break;
+                                    default:
+                                        $role_class = 'bg-gray-100 text-gray-800';
+                                        $role_text = 'User';
+                                }
+                                echo '<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ' . $role_class . '">' . $role_text . '</span>';
+                            }
+                            ?>
                             <time class="text-sm text-gray-500" datetime="<?php echo $post->created_at; ?>">
                                 <?php echo timespan(strtotime($post->created_at), time()) . ' yang lalu'; ?>
                             </time>
-                        </div>
                         <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
                             <?php echo $post->content; ?>
                         </div>
@@ -86,7 +112,10 @@
                         <div class="flex-1">
                             <div class="mb-4">
                                 <label for="content" class="block text-sm font-medium text-gray-700 mb-2">Balasan Anda</label>
-                                <textarea id="content" name="content" rows="8" class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 resize-vertical" placeholder="Tulis balasan Anda di sini..." required></textarea>
+                                <div id="quill-reply-container" class="bg-white rounded-xl border border-gray-300 shadow-sm">
+                                    <div id="quill-reply" class="min-h-[120px] p-4"></div>
+                                </div>
+                                <input type="hidden" name="content" id="content-reply-hidden" required>
                             </div>
                             <div class="flex justify-end space-x-3">
                                 <a href="<?php echo site_url('forum/thread/' . $thread->id); ?>" class="px-6 py-3 border border-gray-300 rounded-xl shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all duration-200">
@@ -247,3 +276,43 @@ input:focus, textarea:focus {
     }
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Quill for reply form
+    if (document.getElementById('quill-reply')) {
+        const quillReply = new Quill('#quill-reply', {
+            theme: 'snow',
+            placeholder: 'Tulis balasan Anda di sini...',
+            modules: {
+                toolbar: [
+                    ['bold', 'italic', 'underline'],
+                    ['link'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['clean']
+                ]
+            }
+        });
+
+        // Update hidden input when content changes
+        quillReply.on('text-change', function() {
+            const html = quillReply.root.innerHTML;
+            const hiddenInput = document.getElementById('content-reply-hidden');
+            hiddenInput.value = html;
+        });
+
+        // Validate content before form submission
+        const replyForm = document.querySelector('form');
+        if (replyForm) {
+            replyForm.addEventListener('submit', function(e) {
+                const content = quillReply.getText().trim();
+                if (!content) {
+                    e.preventDefault();
+                    alert('Balasan tidak boleh kosong');
+                    return false;
+                }
+            });
+        }
+    }
+});
+</script>

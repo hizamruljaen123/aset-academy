@@ -122,8 +122,7 @@ class Forum extends CI_Controller {
         // Load views
         $data['title'] = $data['thread']->title;
         $data['scripts'] = [
-            'https://cdn.quilljs.com/1.3.6/quill.min.js',
-            base_url('assets/js/forum.js')
+            'https://cdn.quilljs.com/1.3.6/quill.min.js'
         ];
         $data['styles'] = [
             'https://cdn.quilljs.com/1.3.6/quill.snow.css',
@@ -360,8 +359,12 @@ class Forum extends CI_Controller {
 
     public function reply($post_id)
     {
-        // Validate post exists
-        $post = $this->db->get_where('forum_posts', ['id' => $post_id])->row();
+        // Validate post exists and get user info
+        $this->db->select('fp.*, u.nama_lengkap, u.username, u.role as user_role');
+        $this->db->from('forum_posts fp');
+        $this->db->join('users u', 'fp.user_id = u.id', 'left');
+        $this->db->where('fp.id', $post_id);
+        $post = $this->db->get()->row();
         if (!$post) {
             show_404();
         }
@@ -378,6 +381,14 @@ class Forum extends CI_Controller {
         $data['post'] = $post;
         $data['thread'] = $thread;
         $data['category'] = $category;
+
+        // Add Quill.js scripts and styles
+        $data['scripts'] = [
+            'https://cdn.quilljs.com/1.3.6/quill.min.js'
+        ];
+        $data['styles'] = [
+            'https://cdn.quilljs.com/1.3.6/quill.snow.css'
+        ];
 
         $this->load->view('templates/header', $data);
         $this->load->view('forum/reply', $data);

@@ -5,13 +5,44 @@
             <div>
                 <h1 class="text-3xl font-bold"><?= $title; ?></h1>
                 <p class="text-sm opacity-90 mt-1">Pertemuan: <?= $jadwal->judul_pertemuan; ?> (<?= date('d M Y', strtotime($jadwal->tanggal_pertemuan)); ?>)</p>
+                <div class="flex items-center mt-2">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                        <?php
+                        switch($jadwal->status) {
+                            case 'Selesai':
+                                echo 'bg-green-100 text-green-800';
+                                break;
+                            case 'Proses':
+                                echo 'bg-blue-100 text-blue-800';
+                                break;
+                            case 'Ditunda':
+                                echo 'bg-yellow-100 text-yellow-800';
+                                break;
+                            case 'Dibatalkan':
+                                echo 'bg-red-100 text-red-800';
+                                break;
+                            default:
+                                echo 'bg-gray-100 text-gray-800';
+                        }
+                        ?>">
+                        <i class="fas fa-circle mr-1 text-xs"></i>
+                        <?= $jadwal->status; ?>
+                    </span>
+                </div>
             </div>
             <div class="flex space-x-3">
+                <?php if ($jadwal->status !== 'Selesai'): ?>
                 <button onclick="akhiriPertemuan(<?= $jadwal->id; ?>, <?= $jadwal->kelas_id; ?>, '<?= $jadwal->class_type; ?>')"
                         class="inline-flex items-center px-6 py-3 bg-red-600 text-white font-bold rounded-lg shadow-md hover:bg-red-700 transition-colors">
                     <i class="fas fa-stop-circle mr-2"></i>
                     Akhiri Pertemuan
                 </button>
+                <?php else: ?>
+                <div class="inline-flex items-center px-6 py-3 bg-green-100 text-green-800 font-bold rounded-lg">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    Pertemuan Selesai
+                </div>
+                <?php endif; ?>
                 <a href="<?= site_url('teacher/manage_kelas/' . $jadwal->kelas_id); ?>" class="inline-flex items-center px-4 py-2 bg-white text-teal-600 font-bold rounded-lg shadow-md hover:bg-gray-100 transition-colors">
                     <i class="fas fa-arrow-left mr-2"></i>
                     Kembali ke Kelas
@@ -111,7 +142,7 @@ function akhiriPertemuan(jadwalId, kelasId, classType) {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: 'jadwal_id=' + jadwalId + '&kelas_id=' + kelasId + '&class_type=' + classType
+        body: 'jadwal_id=' + jadwalId + '&kelas_id=' + kelasId + '&class_type=' + classType + '&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>'
     })
     .then(response => response.json())
     .then(data => {

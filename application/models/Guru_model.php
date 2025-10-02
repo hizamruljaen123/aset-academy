@@ -22,7 +22,7 @@ class Guru_model extends CI_Model {
         $premium_classes = $this->db->get()->result();
 
         // Get free classes
-        $this->db->select('fc.id, fc.title, fc.category, fc.level, fc.description, NULL as duration, fc.status, NULL as assigned_at, "gratis" as class_type, fc.online_meet_link', false);
+        $this->db->select('fc.id, fc.title as nama_kelas, fc.category as bahasa_program, fc.level, fc.description, fc.duration as durasi, 0 as harga, fc.status, NULL as assigned_at, "gratis" as class_type, fc.online_meet_link', false);
         $this->db->from('free_classes fc');
         $this->db->where('fc.mentor_id', $guru_id);
         $this->db->where('fc.status', 'Published');
@@ -95,6 +95,16 @@ class Guru_model extends CI_Model {
         $this->db->where('guru_id', $guru_id);
         $this->db->where('kelas_id', $kelas_id);
         $this->db->where('status', 'Aktif');
+        return $this->db->count_all_results() > 0;
+    }
+
+    // Check if teacher has access to specific free class
+    public function has_free_class_access($guru_id, $kelas_id)
+    {
+        $this->db->from('free_classes');
+        $this->db->where('id', $kelas_id);
+        $this->db->where('mentor_id', $guru_id);
+        $this->db->where('status', 'Published');
         return $this->db->count_all_results() > 0;
     }
 

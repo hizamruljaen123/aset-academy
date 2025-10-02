@@ -41,6 +41,35 @@
                                     <i class="fas fa-clock mr-1.5 text-indigo-500"></i>
                                     <time datetime="<?= $thread->created_at; ?>"><?= timespan(strtotime($thread->created_at), time()) . ' yang lalu'; ?></time>
                                 </div>
+                                <?php 
+                                // Get user role for thread creator
+                                $creator_role = 'User';
+                                $creator_role_class = 'bg-gray-100 text-gray-800';
+                                if (isset($thread->user_role)) {
+                                    switch ($thread->user_role) {
+                                        case 'super_admin':
+                                            $creator_role = 'Super Admin';
+                                            $creator_role_class = 'bg-red-100 text-red-800';
+                                            break;
+                                        case 'admin':
+                                            $creator_role = 'Admin';
+                                            $creator_role_class = 'bg-blue-100 text-blue-800';
+                                            break;
+                                        case 'guru':
+                                            $creator_role = 'Guru';
+                                            $creator_role_class = 'bg-green-100 text-green-800';
+                                            break;
+                                        case 'siswa':
+                                            $creator_role = 'Siswa';
+                                            $creator_role_class = 'bg-purple-100 text-purple-800';
+                                            break;
+                                        default:
+                                            $creator_role = 'User';
+                                            $creator_role_class = 'bg-gray-100 text-gray-800';
+                                    }
+                                }
+                                ?>
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold <?php echo $creator_role_class; ?>"><?php echo $creator_role; ?></span>
                                 <?php if ($thread->is_pinned): ?>
                                     <div class="flex items-center text-amber-600 font-medium">
                                         <i class="fas fa-thumbtack mr-1"></i>
@@ -170,7 +199,10 @@
                     <div class="flex-1">
                         <div class="mb-4">
                             <label for="content-main" class="block text-sm font-medium text-gray-700 mb-2">Komentar Anda</label>
-                            <textarea id="content-main" name="content" rows="6" class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 resize-vertical" placeholder="Tulis komentar Anda di sini..." required></textarea>
+                            <div id="quill-main-container" class="bg-white rounded-xl border border-gray-300 shadow-sm">
+                                <div id="quill-main" class="min-h-[120px] p-4"></div>
+                            </div>
+                            <input type="hidden" name="content" id="content-main-hidden" required>
                         </div>
                         <div class="flex justify-end space-x-3">
                             <button type="submit" class="px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300 transform hover:scale-105">
@@ -353,6 +385,42 @@ input:focus, textarea:focus, .ql-editor:focus {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Quill for main reply form
+    if (document.getElementById('quill-main')) {
+        const quillMain = new Quill('#quill-main', {
+            theme: 'snow',
+            placeholder: 'Tulis komentar Anda di sini...',
+            modules: {
+                toolbar: [
+                    ['bold', 'italic', 'underline'],
+                    ['link'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['clean']
+                ]
+            }
+        });
+
+        // Update hidden input when content changes
+        quillMain.on('text-change', function() {
+            const html = quillMain.root.innerHTML;
+            const hiddenInput = document.getElementById('content-main-hidden');
+            hiddenInput.value = html;
+        });
+
+        // Validate content before form submission
+        const mainForm = document.querySelector('#reply-form-main form');
+        if (mainForm) {
+            mainForm.addEventListener('submit', function(e) {
+                const content = quillMain.getText().trim();
+                if (!content) {
+                    e.preventDefault();
+                    alert('Komentar tidak boleh kosong');
+                    return false;
+                }
+            });
+        }
+    }
+
     // Enhanced Viewers Modal
     const viewersModal = document.getElementById('viewers-modal');
     const openViewersModalBtn = document.getElementById('open-viewers-modal');
@@ -565,6 +633,35 @@ function render_comment($post, $thread, $depth = 0, $max_depth = 5) {
     $output .= '<div class="flex items-center space-x-3">';
     $output .= '<h4 class="font-semibold text-gray-900">';
     $output .= html_escape($post->author_name ?? 'User Tidak Dikenal');
+    
+    // Add role badge
+    $role_class = 'bg-gray-100 text-gray-800';
+    $role_text = 'User';
+    if (isset($post->user_role)) {
+        switch ($post->user_role) {
+            case 'super_admin':
+                $role_class = 'bg-red-100 text-red-800';
+                $role_text = 'Super Admin';
+                break;
+            case 'admin':
+                $role_class = 'bg-blue-100 text-blue-800';
+                $role_text = 'Admin';
+                break;
+            case 'guru':
+                $role_class = 'bg-green-100 text-green-800';
+                $role_text = 'Guru';
+                break;
+            case 'siswa':
+                $role_class = 'bg-purple-100 text-purple-800';
+                $role_text = 'Siswa';
+                break;
+            default:
+                $role_class = 'bg-gray-100 text-gray-800';
+                $role_text = 'User';
+        }
+    }
+    $output .= '<span class="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ' . $role_class . '">' . $role_text . '</span>';
+    
     if ($is_author) {
         $output .= '<span class="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800">Penulis</span>';
     }

@@ -175,7 +175,12 @@ class Teacher extends CI_Controller {
         }
 
         $guru_id = $this->session->userdata('user_id');
-        if (!$this->Guru_model->has_class_access($guru_id, $jadwal->kelas_id)) {
+
+        // Check access for both premium and free classes
+        $has_premium_access = $this->Guru_model->has_class_access($guru_id, $jadwal->kelas_id);
+        $has_free_access = $this->Guru_model->has_free_class_access($guru_id, $jadwal->kelas_id);
+
+        if (!$has_premium_access && !$has_free_access) {
             show_error('Anda tidak memiliki akses ke absensi ini.', 403);
         }
 
@@ -191,7 +196,12 @@ class Teacher extends CI_Controller {
     public function simpan_absensi($kelas_id)
     {
         $guru_id = $this->session->userdata('user_id');
-        if (!$this->Guru_model->has_class_access($guru_id, $kelas_id)) {
+
+        // Check access for both premium and free classes
+        $has_premium_access = $this->Guru_model->has_class_access($guru_id, $kelas_id);
+        $has_free_access = $this->Guru_model->has_free_class_access($guru_id, $kelas_id);
+
+        if (!$has_premium_access && !$has_free_access) {
             show_error('Anda tidak memiliki akses ke kelas ini.', 403);
         }
 
@@ -227,7 +237,12 @@ class Teacher extends CI_Controller {
     public function rekap_absensi($kelas_id)
     {
         $guru_id = $this->session->userdata('user_id');
-        if (!$this->Guru_model->has_class_access($guru_id, $kelas_id)) {
+
+        // Check access for both premium and free classes
+        $has_premium_access = $this->Guru_model->has_class_access($guru_id, $kelas_id);
+        $has_free_access = $this->Guru_model->has_free_class_access($guru_id, $kelas_id);
+
+        if (!$has_premium_access && !$has_free_access) {
             show_error('Anda tidak memiliki akses ke kelas ini.', 403);
         }
 
@@ -549,7 +564,10 @@ class Teacher extends CI_Controller {
         $guru_id = $this->session->userdata('user_id');
 
         // Validasi akses guru ke kelas
-        if (!$this->Guru_model->has_class_access($guru_id, $kelas_id)) {
+        $has_premium_access = $this->Guru_model->has_class_access($guru_id, $kelas_id);
+        $has_free_access = $this->Guru_model->has_free_class_access($guru_id, $kelas_id);
+
+        if (!$has_premium_access && !$has_free_access) {
             $this->output->set_content_type('application/json');
             $this->output->set_output(json_encode([
                 'success' => false,
@@ -558,24 +576,27 @@ class Teacher extends CI_Controller {
             return;
         }
 
+        // Update jadwal status to 'Selesai'
+        $this->db->where('id', $jadwal_id);
+        $this->db->update('jadwal_kelas', ['status' => 'Selesai']);
+
         // Get all enrolled students for this class
         $enrolled_students = [];
         if ($class_type == 'premium') {
             // Get students enrolled in premium class
-            $this->db->select('s.id, s.nama_lengkap, s.nis');
-            $this->db->from('siswa s');
-            $this->db->join('enrollments e', 's.id = e.student_id');
-            $this->db->where('e.class_id', $kelas_id);
-            $this->db->where('e.class_type', 'premium');
-            $this->db->where('e.status', 'active');
+            $this->db->select('u.id, u.nama_lengkap, "" as nis');
+            $this->db->from('premium_class_enrollments pce');
+            $this->db->join('users u', 'pce.student_id = u.id');
+            $this->db->where('pce.class_id', $kelas_id);
+            $this->db->where('pce.status', 'Active');
             $enrolled_students = $this->db->get()->result_array();
         } elseif ($class_type == 'gratis') {
             // Get students enrolled in free class
-            $this->db->select('s.id, s.nama_lengkap, s.nis');
-            $this->db->from('siswa s');
-            $this->db->join('free_class_enrollments fce', 's.id = fce.student_id');
+            $this->db->select('u.id, u.nama_lengkap, "" as nis');
+            $this->db->from('free_class_enrollments fce');
+            $this->db->join('users u', 'fce.student_id = u.id');
             $this->db->where('fce.class_id', $kelas_id);
-            $this->db->where('fce.status', 'enrolled');
+            $this->db->where('fce.status', 'Enrolled');
             $enrolled_students = $this->db->get()->result_array();
         }
 
