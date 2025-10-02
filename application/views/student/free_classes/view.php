@@ -44,7 +44,10 @@
             <div class="bg-white rounded-2xl shadow-xl ring-1 ring-gray-200/50 overflow-hidden mb-8 fade-in">
                 <div class="h-64 bg-gray-200 relative">
                     <?php if (!empty($free_class->thumbnail)): ?>
-                        <img src="<?php echo base_url($free_class->thumbnail); ?>" alt="<?php echo $free_class->title; ?>" class="w-full h-full object-cover">
+                        <img src="<?php echo base_url($free_class->thumbnail); ?>" alt="<?php echo $free_class->title; ?>" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center hidden">
+                            <i class="fas fa-graduation-cap text-white text-6xl"></i>
+                        </div>
                     <?php else: ?>
                         <div class="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
                             <i class="fas fa-graduation-cap text-white text-6xl"></i>
@@ -179,7 +182,7 @@
                                             <div class="border-t border-gray-200">
                                                 <div class="p-4 pl-12">
                                                     <form action="<?php echo site_url('student/free_classes/post_discussion'); ?>" method="post">
-                                                        <input type="hidden" name="class_id" value="<?php echo $free_class->id; ?>">
+                                                        <input type="hidden" name="enrollment_id" value="<?php echo $enrollment->id; ?>">
                                                         <input type="hidden" name="parent_id" value="<?php echo $discussion->id; ?>">
                                                         <div class="flex">
                                                             <textarea name="message" rows="1" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-lg mr-2" placeholder="Balas diskusi..."></textarea>
@@ -208,7 +211,7 @@
                     <?php if ($is_enrolled): ?>
                         <div class="mt-6 pt-6 border-t border-gray-200">
                             <form action="<?php echo site_url('student/free_classes/post_discussion'); ?>" method="post">
-                                <input type="hidden" name="class_id" value="<?php echo $free_class->id; ?>">
+                                <input type="hidden" name="enrollment_id" value="<?php echo $enrollment->id; ?>">
                                 <div class="space-y-4">
                                     <textarea name="message" rows="3" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-lg" placeholder="Tulis pertanyaan atau diskusi Anda..."></textarea>
                                     <div class="flex justify-end">
@@ -357,8 +360,8 @@
                             foreach ($jadwal as $j):
                         ?>
                             <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
-                                <p class="font-semibold text-gray-800">Pertemuan <?php echo $j['pertemuan_ke']; ?>: <?php echo $j['judul_pertemuan']; ?></p>
-                                <p class="text-sm text-gray-600 mt-1"><?php echo date('d M Y', strtotime($j['tanggal_pertemuan'])); ?> | <?php echo date('H:i', strtotime($j['waktu_mulai'])); ?> - <?php echo date('H:i', strtotime($j['waktu_selesai'])); ?></p>
+                                <p class="font-semibold text-gray-800">Pertemuan <?php echo $j->pertemuan_ke; ?>: <?php echo $j->judul_pertemuan; ?></p>
+                                <p class="text-sm text-gray-600 mt-1"><?php echo date('d M Y', strtotime($j->tanggal_pertemuan)); ?> | <?php echo date('H:i', strtotime($j->waktu_mulai)); ?> - <?php echo date('H:i', strtotime($j->waktu_selesai)); ?></p>
                             </div>
                         <?php 
                             endforeach;
@@ -406,13 +409,13 @@
                         <button id="copyLinkBtn" class="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors" title="Salin Link">
                             <i class="fas fa-link"></i>
                         </button>
-                        <a href="https://wa.me/?text=<?php echo urlencode('Kelas gratis: ' . $free_class->title . ' - ' . site_url('student/free_classes/view/' . $free_class->id)); ?>" target="_blank" class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 hover:bg-green-200 transition-colors" title="Bagikan ke WhatsApp">
+                        <a href="https://wa.me/?text=<?php echo urlencode('Kelas gratis: ' . $free_class->title . ' - ' . site_url('student/free_classes/view/' . $enrollment->id)); ?>" target="_blank" class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 hover:bg-green-200 transition-colors" title="Bagikan ke WhatsApp">
                             <i class="fab fa-whatsapp"></i>
                         </a>
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(site_url('student/free_classes/view/' . $free_class->id)); ?>" target="_blank" class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 hover:bg-blue-200 transition-colors" title="Bagikan ke Facebook">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(site_url('student/free_classes/view/' . $enrollment->id)); ?>" target="_blank" class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 hover:bg-blue-200 transition-colors" title="Bagikan ke Facebook">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="https://twitter.com/intent/tweet?text=<?php echo urlencode('Kelas gratis: ' . $free_class->title); ?>&url=<?php echo urlencode(site_url('student/free_classes/view/' . $free_class->id)); ?>" target="_blank" class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-400 hover:bg-blue-200 transition-colors" title="Bagikan ke Twitter">
+                        <a href="https://twitter.com/intent/tweet?text=<?php echo urlencode('Kelas gratis: ' . $free_class->title); ?>&url=<?php echo urlencode(site_url('student/free_classes/view/' . $enrollment->id)); ?>" target="_blank" class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-400 hover:bg-blue-200 transition-colors" title="Bagikan ke Twitter">
                             <i class="fab fa-twitter"></i>
                         </a>
                     </div>
@@ -460,7 +463,7 @@
         if (copyLinkBtn) {
             copyLinkBtn.addEventListener('click', function() {
                 const tempInput = document.createElement('input');
-                tempInput.value = window.location.href;
+                tempInput.value = '<?php echo site_url('student/free_classes/view/' . $enrollment->id); ?>';
                 document.body.appendChild(tempInput);
                 tempInput.select();
                 document.execCommand('copy');

@@ -97,6 +97,30 @@
                 </div>
             <?php endif; ?>
             
+            <?php if ($payment->status == 'Pending' && empty($payment->payment_proof)): ?>
+                <div class="mb-6 p-4 bg-orange-50 border-l-4 border-orange-400 rounded-lg">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-upload text-orange-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-orange-800">
+                                Upload Bukti Pembayaran
+                            </h3>
+                            <div class="mt-2 text-sm text-orange-700">
+                                <p>Silakan upload bukti pembayaran Anda untuk diverifikasi admin.</p>
+                            </div>
+                            <div class="mt-3">
+                                <a href="<?= site_url('payment/upload_payment_proof/' . $payment->id) ?>" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
+                                    <i class="fas fa-upload mr-2"></i>
+                                    Upload Bukti Pembayaran
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <?php if ($payment->status == 'Verified'): ?>
                 <div class="text-center mt-6 space-y-3">
                     <a href="<?= site_url('kelas/enroll/' . $payment->class_id) ?>" class="inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline">
@@ -114,7 +138,7 @@
                     <h3 class="text-lg font-semibold text-red-800 mb-2">Catatan Admin</h3>
                     <p class="text-gray-700"><?= $payment->notes ?></p>
                 </div>
-                
+
                 <div class="text-center mt-6">
                     <a href="<?= site_url('payment/initiate/' . $payment->class_id) ?>" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline">
                         Ajukan Pembayaran Ulang

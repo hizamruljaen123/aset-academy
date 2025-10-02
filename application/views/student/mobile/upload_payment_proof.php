@@ -53,7 +53,8 @@
                 </div>
             <?php endif; ?>
 
-            <form id="uploadForm" action="<?php echo site_url('payment/process_payment_proof_upload/' . $payment->id); ?>" method="post" enctype="multipart/form-data">
+            <form action="<?php echo site_url('payment/process_payment_proof_upload/' . $payment->id); ?>" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
                 <!-- Current Payment Proof -->
                 <?php if (!empty($payment->payment_proof)): ?>
                     <div class="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
@@ -172,26 +173,12 @@
     }
 
     // Form submission
-    document.getElementById('uploadForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-
+    // Optionally display loading overlay when file selected and form submitted via native submission
+    document.querySelector('form[action^="<?php echo site_url('payment/process_payment_proof_upload/'); ?>"]').addEventListener('submit', function() {
         const fileInput = document.getElementById('paymentProof');
-        if (!fileInput.files[0]) {
-            alert('Mohon pilih file bukti pembayaran terlebih dahulu');
-            return;
+        if (fileInput.files[0] && fileInput.files[0].size <= 2 * 1024 * 1024) {
+            document.getElementById('loadingOverlay').classList.remove('hidden');
         }
-
-        // Validate file size (2MB max)
-        if (fileInput.files[0].size > 2 * 1024 * 1024) {
-            alert('Ukuran file maksimal 2MB');
-            return;
-        }
-
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        loadingOverlay.classList.remove('hidden');
-
-        // Submit form
-        this.submit();
     });
 
     // Initialize Feather icons

@@ -24,7 +24,7 @@
                     <span class="text-gray-600">Metode Pembayaran:</span>
                     <span class="font-bold"><?= $payment_data['payment_method'] == 'Transfer' ? 'Transfer Bank' : 'Tunai' ?></span>
                 </div>
-                <?php if ($payment_data['payment_method'] == 'Transfer'): ?>
+                <?php if ($payment_data['payment_method'] == 'Transfer') { ?>
                 <div class="flex justify-between">
                     <span class="text-gray-600">Bank Tujuan:</span>
                     <span class="font-bold"><?= $payment_data['bank_name'] ?></span>
@@ -33,42 +33,41 @@
                     <span class="text-gray-600">Nomor Rekening:</span>
                     <span class="font-bold"><?= $payment_data['account_number'] ?></span>
                 </div>
-                <?php if (!empty($payment_data['user_bank_name'])): ?>
+                <?php if (!empty($payment_data['user_bank_name'])) { ?>
                 <div class="flex justify-between">
                     <span class="text-gray-600">Bank Pengirim:</span>
                     <span class="font-bold"><?= $payment_data['user_bank_name'] ?></span>
                 </div>
-                <?php endif; ?>
-                <?php if (!empty($payment_data['user_account_holder'])): ?>
+                <?php } ?>
+                <?php if (!empty($payment_data['user_account_holder'])) { ?>
                 <div class="flex justify-between">
                     <span class="text-gray-600">Nama Pemilik Rekening:</span>
                     <span class="font-bold"><?= $payment_data['user_account_holder'] ?></span>
                 </div>
-                <?php endif; ?>
-                <?php if (!empty($payment_data['payment_description'])): ?>
+                <?php } ?>
+                <?php if (!empty($payment_data['payment_description'])) { ?>
                 <div class="flex justify-between">
                     <span class="text-gray-600">Keterangan:</span>
                     <span class="font-bold"><?= $payment_data['payment_description'] ?></span>
                 </div>
-                <?php endif; ?>
-                <?php endif; ?>
+                <?php } ?>
+                <?php } ?>
             </div>
             </div>
 
-            <?php if ($payment_data['payment_method'] == 'Transfer'): ?>
+            <?php if ($payment_data['payment_method'] == 'Transfer') { ?>
             <div class="mb-6 p-4 bg-yellow-50 rounded-lg">
                 <h3 class="text-lg font-semibold text-yellow-800 mb-2">Instruksi Transfer</h3>
                 <ol class="list-decimal list-inside space-y-2 text-sm text-gray-700">
                     <li>Lakukan transfer ke rekening <?= $payment_data['bank_name'] ?>: <?= $payment_data['account_number'] ?></li>
                     <li>Transfer sesuai dengan jumlah: Rp <?= number_format($class->harga, 0, ',', '.') ?></li>
-                    <li>Simpan bukti transfer untuk diunggah</li>
                     <li>Setelah transfer, unggah bukti pembayaran di form berikut</li>
                 </ol>
             </div>
-            <?php endif; ?>
-
+            <?php } ?>
             <form action="<?= site_url('payment/process/' . $class->id) ?>" method="POST" enctype="multipart/form-data">
-                <?php if ($payment_data['payment_method'] == 'Transfer'): ?>
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
+                <?php if ($payment_data['payment_method'] == 'Transfer') { ?>
                 <div class="mb-4">
                     <label class="block text-gray-700 font-bold mb-2" for="payment_proof">
                         Unggah Bukti Pembayaran
@@ -76,7 +75,7 @@
                     <input type="file" name="payment_proof" id="payment_proof" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                     <p class="text-sm text-gray-500 mt-1">Format: JPG, PNG, atau PDF (max 2MB)</p>
                 </div>
-                <?php endif; ?>
+                <?php } ?>
 
                 <!-- Hidden fields to preserve payment data -->
                 <input type="hidden" name="amount" value="<?= $payment_data['amount'] ?>">
@@ -97,51 +96,3 @@
         </div>
     </div>
 </div>
-
-<script>
-(function(){
-    const form = document.querySelector('form[action^="<?= site_url('payment/process/') ?>"]');
-    if(!form) return;
-
-    form.addEventListener('submit', function(e){
-        e.preventDefault();
-        const formData = new FormData(form);
-        Swal.fire({
-            title: 'Mengirim Bukti Pembayaran...',
-            html: 'Mohon tunggu sebentar',
-            allowOutsideClick: false,
-            didOpen: () => {
-                Swal.showLoading();
-            }
-        });
-
-        fetch(form.getAttribute('action'), {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(r => r.json())
-        .then(res => {
-            if(res.success){
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil Dikirim',
-                    text: 'Pembayaran berhasil diajukan. Menunggu verifikasi admin.'
-                }).then(()=>{
-                    window.location.href = res.redirect;
-                });
-            }else{
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal',
-                    text: res.message || 'Terjadi kesalahan. Coba lagi.'
-                });
-            }
-        }).catch(() => {
-            Swal.fire({ icon:'error', title:'Gagal', text:'Terjadi kesalahan jaringan.' });
-        });
-    });
-})();
-</script>

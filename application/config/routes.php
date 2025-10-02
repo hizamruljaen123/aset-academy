@@ -38,22 +38,26 @@ $route['kelas/index'] = 'kelas';
 $route['kelas/create'] = 'kelas/create';
 $route['kelas/edit/(:any)'] = 'kelas/edit/$1';
 $route['kelas/delete/(:any)'] = 'kelas/delete/$1';
-$route['kelas/by_level/(:any)'] = 'kelas/by_level/$1';
 // Routes untuk Dashboard
 $route['dashboard'] = 'dashboard';
 $route['dashboard/index'] = 'dashboard';
+$route['dashboard/statistics'] = 'dashboard/statistics';
 
 // Routes untuk Student Absensi Routes
+$route['student'] = 'student_dashboard';
 $route['student/absensi'] = 'student_dashboard/absensi';
-$route['absensi'] = 'absensi';
 $route['student/index'] = 'student_dashboard';
 $route['student/profile'] = 'student_dashboard/profile';
 $route['student/profile/edit'] = 'student_dashboard/edit_profile';
 $route['student/profile/update'] = 'student_dashboard/update_profile';
 $route['student/materi'] = 'student_dashboard/materi';
 $route['student/materi_detail/(:any)'] = 'student_dashboard/materi_detail/$1';
+$route['student/set_timezone'] = 'student_dashboard/set_timezone';
+$route['student/all_classes'] = 'student_dashboard/all_classes';
 $route['student/premium'] = 'student_premium';
+$route['student/premium/learn/(:num)'] = 'student_premium/learn/$1';
 $route['student/premium/detail/(:any)'] = 'student_premium/detail/$1';
+$route['student/orders'] = 'payment/orders';
 $route['student/premium/orders'] = 'payment/orders';
 $route['student/premium/payment/(:any)'] = 'payment/purchase/$1';
 
@@ -121,7 +125,7 @@ $route['admin/jadwal/get_classes_by_teacher'] = 'admin/jadwal/get_classes_by_tea
 // Routes untuk Payment Management
 $route['payment/initiate/(:any)'] = 'payment/initiate/$1';
 $route['payment/confirm/(:any)'] = 'payment/confirm/$1';
-$route['payment/process/(:any)'] = 'payment/process/$1';
+$route['payment/process/(:any)'] = 'payment/process_payment/$1';
 $route['payment/status/(:any)'] = 'payment/status/$1';
 $route['payment/orders'] = 'payment/orders';
 $route['payment/admin_verify'] = 'payment/admin_verify';

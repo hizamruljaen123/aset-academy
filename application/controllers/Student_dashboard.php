@@ -133,7 +133,8 @@ class Student_dashboard extends CI_Controller {
 
                 // Get class schedule
                 $this->load->model('Jadwal_model');
-                $data['jadwal'] = $this->Jadwal_model->get_jadwal_by_kelas($kelas_id);
+                $jadwal_objects = $this->Jadwal_model->get_jadwal_by_kelas($kelas_id);
+                $data['jadwal'] = array_map(function($j) { return (array)$j; }, $jadwal_objects);
             }
         } else {
             $data['class_materials'] = [];
@@ -148,6 +149,22 @@ class Student_dashboard extends CI_Controller {
         $data['title'] = 'Dashboard Siswa';
         $this->load->view('templates/header', $data);
         $this->load->view('student/dashboard', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function all_classes()
+    {
+        $student_id = $this->session->userdata('user_id');
+
+        $this->load->model('Enrollment_model');
+        $this->load->model('Premium_enrollment_model');
+
+        $data['free_classes'] = $this->Enrollment_model->get_student_enrollments($student_id);
+        $data['premium_classes'] = $this->Premium_enrollment_model->get_student_enrollments($student_id);
+
+        $data['title'] = 'Semua Kelas Saya';
+        $this->load->view('templates/header', $data);
+        $this->load->view('student/all_classes', $data);
         $this->load->view('templates/footer');
     }
 
@@ -514,5 +531,40 @@ class Student_dashboard extends CI_Controller {
         }
 
         return $summary;
+    }
+
+    public function set_timezone()
+    {
+        $student_id = $this->session->userdata('user_id');
+        $timezone = $this->input->post('timezone');
+
+        if (!$student_id) {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => false,
+                'message' => 'User tidak terautentikasi'
+            ]));
+            return;
+        }
+
+        // Load timezone library
+        $this->load->library('timezone_lib');
+
+        // Set timezone for user
+        $result = $this->timezone_lib->set_user_timezone($student_id, $timezone);
+
+        if ($result) {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => true,
+                'message' => 'Zona waktu berhasil disimpan'
+            ]));
+        } else {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => false,
+                'message' => 'Zona waktu tidak valid'
+            ]));
+        }
     }
 }

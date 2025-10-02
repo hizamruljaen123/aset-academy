@@ -101,7 +101,10 @@
                             <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                                 <div class="h-40 bg-gray-200 relative">
                                     <?php if (!empty($enrollment->thumbnail)): ?>
-                                        <img src="<?php echo base_url($enrollment->thumbnail); ?>" alt="<?php echo $enrollment->title; ?>" class="w-full h-full object-cover">
+                                        <img src="<?php echo base_url($enrollment->thumbnail); ?>" alt="<?php echo $enrollment->title; ?>" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                        <div class="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center hidden">
+                                            <i class="fas fa-graduation-cap text-white text-4xl"></i>
+                                        </div>
                                     <?php else: ?>
                                         <div class="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
                                             <i class="fas fa-graduation-cap text-white text-4xl"></i>
@@ -219,7 +222,10 @@
                             <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                                 <div class="h-40 bg-gray-200 relative">
                                     <?php if (!empty($enrollment->thumbnail)): ?>
-                                        <img src="<?php echo base_url($enrollment->thumbnail); ?>" alt="<?php echo $enrollment->title; ?>" class="w-full h-full object-cover">
+                                        <img src="<?php echo base_url($enrollment->thumbnail); ?>" alt="<?php echo $enrollment->title; ?>" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                        <div class="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center hidden">
+                                            <i class="fas fa-graduation-cap text-white text-4xl"></i>
+                                        </div>
                                     <?php else: ?>
                                         <div class="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
                                             <i class="fas fa-graduation-cap text-white text-4xl"></i>
@@ -312,7 +318,10 @@
                             <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                                 <div class="h-40 bg-gray-200 relative">
                                     <?php if (!empty($enrollment->thumbnail)): ?>
-                                        <img src="<?php echo base_url($enrollment->thumbnail); ?>" alt="<?php echo $enrollment->title; ?>" class="w-full h-full object-cover">
+                                        <img src="<?php echo base_url($enrollment->thumbnail); ?>" alt="<?php echo $enrollment->title; ?>" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                        <div class="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center hidden">
+                                            <i class="fas fa-graduation-cap text-white text-4xl"></i>
+                                        </div>
                                     <?php else: ?>
                                         <div class="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
                                             <i class="fas fa-graduation-cap text-white text-4xl"></i>

@@ -67,36 +67,54 @@ class Free_classes extends CI_Controller {
         $this->load->view('templates/footer');
     }
     
-    public function view($class_id)
+    public function view($enrollment_id)
     {
         $student_id = $this->session->userdata('user_id');
-        $free_class = $this->Free_class_model->get_free_class_by_id($class_id);
-        
+
+        // Get enrollment details
+        $enrollment = $this->Enrollment_model->get_enrollment_details($enrollment_id);
+
+        if (!$enrollment || $enrollment->student_id != $student_id) {
+            show_error('Data pendaftaran tidak ditemukan', 404);
+        }
+
+        // Get class details
+        $free_class = $this->Free_class_model->get_free_class_by_id($enrollment->class_id);
+
         if (!$free_class) {
             show_error('Kelas gratis tidak ditemukan', 404);
         }
-        
+
         if ($free_class->status != 'Published') {
             show_error('Kelas ini belum dipublikasikan', 403);
         }
-        
-        // Check if student is enrolled
-        $enrollment = $this->Enrollment_model->get_enrollment($class_id, $student_id);
-        $data['is_enrolled'] = ($enrollment !== null);
+
+        // Check if student is enrolled (should be true since we got enrollment details)
+        $data['is_enrolled'] = true;
         $data['enrollment'] = $enrollment;
-        
+
         // Get class materials
-        $data['materials'] = $this->Free_class_model->get_free_class_materials($class_id);
-        
+        $data['materials'] = $this->Free_class_model->get_free_class_materials($enrollment->class_id);
+
         // Get enrolled students count
-        $data['enrolled_count'] = $this->Free_class_model->count_enrolled_students($class_id);
-        
+        $data['enrolled_count'] = $this->Free_class_model->count_enrolled_students($enrollment->class_id);
+
         // Check if class has reached max students
         $data['is_full'] = ($free_class->max_students !== null && $data['enrolled_count'] >= $free_class->max_students);
-        
+
+        // Get discussions
+        $data['discussions'] = $this->Free_class_model->get_free_class_discussions($enrollment->class_id);
+
+        // Get class schedule
+        $this->load->model('Jadwal_model');
+        $data['jadwal'] = $this->Jadwal_model->get_free_class_jadwal($enrollment->class_id);
+
+        // Get enrolled students list for display
+        $data['enrolled_students'] = $this->Free_class_model->get_enrolled_students($enrollment->class_id);
+
         $data['free_class'] = $free_class;
         $data['title'] = $free_class->title;
-        
+
         $this->load->view('templates/header', $data);
         $this->load->view('student/free_classes/view', $data);
         $this->load->view('templates/footer');
@@ -287,71 +305,36 @@ class Free_classes extends CI_Controller {
         }
     }
 
-    public function set_timezone()
-    {
-        $student_id = $this->session->userdata('user_id');
-        $timezone = $this->input->post('timezone');
-
-        if (!$student_id) {
-            $this->output->set_content_type('application/json');
-            $this->output->set_output(json_encode([
-                'success' => false,
-                'message' => 'User tidak terautentikasi'
-            ]));
-            return;
-        }
-
-        // Load timezone library
-        $this->load->library('timezone_lib');
-
-        // Set timezone for user
-        $result = $this->timezone_lib->set_user_timezone($student_id, $timezone);
-
-        if ($result) {
-            $this->output->set_content_type('application/json');
-            $this->output->set_output(json_encode([
-                'success' => true,
-                'message' => 'Zona waktu berhasil disimpan'
-            ]));
-        } else {
-            $this->output->set_content_type('application/json');
-            $this->output->set_output(json_encode([
-                'success' => false,
-                'message' => 'Zona waktu tidak valid'
-            ]));
-        }
-    }
-
     public function material($enrollment_id, $material_id)
     {
         $student_id = $this->session->userdata('user_id');
         $enrollment = $this->Enrollment_model->get_enrollment_details($enrollment_id);
-        
+
         if (!$enrollment || $enrollment->student_id != $student_id) {
             show_error('Data pendaftaran tidak ditemukan', 404);
         }
-        
+
         $material = $this->Free_class_model->get_free_class_material_by_id($material_id);
-        
+
         if (!$material || $material->class_id != $enrollment->class_id) {
             show_error('Materi tidak ditemukan', 404);
         }
-        
+
         // Get material progress
         $progress = $this->Enrollment_model->get_material_progress($enrollment_id, $material_id);
-        
+
         // Update last accessed time if not completed
         if ($progress && $progress->status != 'Completed') {
             $this->Enrollment_model->update_material_progress($enrollment_id, $material_id, 'In Progress');
         }
-        
+
         // Get all materials for navigation
         $data['all_materials'] = $this->Free_class_model->get_free_class_materials($enrollment->class_id);
-        
+
         // Find next and previous materials
         $data['next_material'] = null;
         $data['prev_material'] = null;
-        
+
         foreach ($data['all_materials'] as $index => $m) {
             if ($m->id == $material_id) {
                 if ($index > 0) {
@@ -363,12 +346,12 @@ class Free_classes extends CI_Controller {
                 break;
             }
         }
-        
+
         $data['enrollment'] = $enrollment;
         $data['material'] = $material;
         $data['progress'] = $progress;
         $data['title'] = $material->title;
-        
+
         $this->load->view('templates/header', $data);
         $this->load->view('student/free_classes/material', $data);
         $this->load->view('templates/footer');
@@ -378,33 +361,33 @@ class Free_classes extends CI_Controller {
     {
         $student_id = $this->session->userdata('user_id');
         $enrollment = $this->Enrollment_model->get_enrollment_details($enrollment_id);
-        
+
         if (!$enrollment || $enrollment->student_id != $student_id) {
             show_error('Data pendaftaran tidak ditemukan', 404);
         }
-        
+
         $material = $this->Free_class_model->get_free_class_material_by_id($material_id);
-        
+
         if (!$material || $material->class_id != $enrollment->class_id) {
             show_error('Materi tidak ditemukan', 404);
         }
-        
+
         // Mark material as completed
         $this->Enrollment_model->update_material_progress($enrollment_id, $material_id, 'Completed');
-        
+
         // Find next material
         $next_material = null;
         $materials = $this->Free_class_model->get_free_class_materials($enrollment->class_id);
-        
+
         foreach ($materials as $index => $m) {
             if ($m->id == $material_id && $index < count($materials) - 1) {
                 $next_material = $materials[$index + 1];
                 break;
             }
         }
-        
+
         $this->session->set_flashdata('success', 'Materi berhasil diselesaikan');
-        
+
         if ($next_material) {
             redirect('student/free_classes/material/' . $enrollment_id . '/' . $next_material->id);
         } else {
@@ -415,29 +398,35 @@ class Free_classes extends CI_Controller {
     public function post_discussion()
     {
         $student_id = $this->session->userdata('user_id');
-        $class_id = $this->input->post('class_id');
+        $enrollment_id = $this->input->post('enrollment_id');
         $parent_id = $this->input->post('parent_id');
         $message = $this->input->post('message');
-        
+
         if (empty($message)) {
             $this->session->set_flashdata('error', 'Pesan tidak boleh kosong');
-            redirect('student/free_classes/view/' . $class_id);
+            redirect('student/free_classes/learn/' . $enrollment_id);
         }
-        
+
+        // Get enrollment to get class_id
+        $enrollment = $this->Enrollment_model->get_enrollment_details($enrollment_id);
+        if (!$enrollment || $enrollment->student_id != $student_id) {
+            show_error('Data pendaftaran tidak ditemukan', 404);
+        }
+
         $discussion_data = [
-            'class_id' => $class_id,
+            'class_id' => $enrollment->class_id,
             'user_id' => $student_id,
             'parent_id' => $parent_id ? $parent_id : null,
             'message' => $message
         ];
-        
+
         if ($this->Free_class_model->create_free_class_discussion($discussion_data)) {
             $this->session->set_flashdata('success', 'Diskusi berhasil ditambahkan');
         } else {
             $this->session->set_flashdata('error', 'Gagal menambahkan diskusi');
         }
-        
-        redirect('student/free_classes/view/' . $class_id);
+
+        redirect('student/free_classes/learn/' . $enrollment_id);
     }
     
     public function my_classes()

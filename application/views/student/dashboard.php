@@ -117,6 +117,7 @@
                             </span>
                         </div>
                     </div>
+
                     <div class="p-6">
                         <div class="flex flex-col md:flex-row gap-6">
                             <div class="md:w-1/3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl p-6 text-white shadow-lg">
@@ -158,6 +159,7 @@
                         </div>
                     </div>
                 </div>
+                <br>
                 <?php endif; ?>
                 
                 <!-- Recent Materials -->
@@ -203,7 +205,7 @@
                         <?php endif; ?>
                     </div>
                 </div>
-                
+                <br>
                 <!-- Available Classes -->
                 <div class="bg-white rounded-2xl shadow-xl ring-1 ring-gray-200/50 overflow-hidden fade-in">
                     <div class="p-6 border-b border-gray-200/50 bg-gradient-to-r from-gray-50 to-white">
@@ -270,9 +272,10 @@
                                     <h3 class="text-lg font-bold text-gray-800 mb-4">Kelas yang Telah Dibeli</h3>
                                     <div class="grid grid-cols-1 gap-4 mb-6">
                                         <?php foreach($paid_classes as $class): ?>
+                                            <?php $premiumClassName = $class->nama_kelas ?? ($class->class_name ?? 'Kelas Premium'); ?>
                                             <div class="border border-green-100 rounded-xl p-4 bg-green-50/50">
                                                 <div class="flex justify-between items-start">
-                                                    <h4 class="text-lg font-bold text-gray-900"><?php echo $class->nama_kelas; ?></h4>
+                                                    <h4 class="text-lg font-bold text-gray-900"><?php echo $premiumClassName; ?></h4>
                                                     <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
                                                         Sudah Dibeli
                                                     </span>
@@ -442,17 +445,17 @@
                             </div>
                             <span class="font-medium text-gray-900">Materi</span>
                         </a>
-                        <a href="#" class="flex flex-col items-center p-4 rounded-xl hover:bg-green-50 transition-colors text-center group">
-                            <div class="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center text-green-600 mb-3 group-hover:scale-110 transition-transform">
-                                <i class="fas fa-graduation-cap text-xl"></i>
+                        <a href="<?php echo site_url('student/orders'); ?>" class="flex flex-col items-center p-4 rounded-xl hover:bg-orange-50 transition-colors text-center group">
+                            <div class="h-12 w-12 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 mb-3 group-hover:scale-110 transition-transform">
+                                <i class="fas fa-shopping-cart text-xl"></i>
                             </div>
-                            <span class="font-medium text-gray-900">Kelas</span>
+                            <span class="font-medium text-gray-900">Pesanan Saya</span>
                         </a>
-                        <a href="#" class="flex flex-col items-center p-4 rounded-xl hover:bg-purple-50 transition-colors text-center group">
-                            <div class="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mb-3 group-hover:scale-110 transition-transform">
-                                <i class="fas fa-question-circle text-xl"></i>
+                        <a href="<?php echo site_url('absensi'); ?>" class="flex flex-col items-center p-4 rounded-xl hover:bg-green-50 transition-colors text-center group">
+                            <div class="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center text-green-600 mb-3 group-hover:scale-110 transition-transform">
+                                <i class="fas fa-user-check text-xl"></i>
                             </div>
-                            <span class="font-medium text-gray-900">Bantuan</span>
+                            <span class="font-medium text-gray-900">Absensi</span>
                         </a>
                     </div>
                 </div>

@@ -248,22 +248,35 @@
                         <i class="fas fa-user w-5 text-center mr-3"></i>
                         Profil Saya
                     </a>
-                    <a href="<?php echo site_url('student/materi'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'materi') ? 'bg-blue-50 text-blue-600' : ''; ?>">
-                        <i class="fas fa-book-open w-5 text-center mr-3"></i>
-                        Materi Pembelajaran
+                    <a href="<?php echo site_url('student/orders'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'orders') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-shopping-cart w-5 text-center mr-3"></i>
+                        Pesanan Saya
+                    </a>
+                    
+
+                    <div class="border-t border-gray-200 my-2"></div>
+                    <div class="px-2 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">Pembelajaran</div>
+                    <a href="<?php echo site_url('student/all_classes'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'all_classes') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-layer-group w-5 text-center mr-3"></i>
+                        Semua Kelas Saya
                     </a>
                     <a href="<?php echo site_url('student/premium'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'premium') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-crown w-5 text-center mr-3 text-yellow-500"></i>
                         Kelas Premium
                     </a>
-                    <a href="<?php echo site_url('student/free_classes'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'free_classes') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                    <a href="<?php echo site_url('student/free_classes'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'free_classes' && $this->uri->segment(3) != 'my_classes') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-graduation-cap w-5 text-center mr-3"></i>
                         Kelas Gratis
                     </a>
-                    <a href="<?php echo site_url('student/free_classes/my_classes'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'free_classes' && $this->uri->segment(3) == 'my_classes') ? 'bg-blue-50 text-blue-600' : ''; ?>">
-                        <i class="fas fa-chalkboard w-5 text-center mr-3"></i>
-                        Kelas Saya
+                    <a href="<?php echo site_url('student/materi'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'materi') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-book-open w-5 text-center mr-3"></i>
+                        Materi Pembelajaran
                     </a>
+
+                    <div class="border-t border-gray-200 my-2"></div>
+                    <div class="px-2 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">Operasional</div>
+                   
+
                     <a href="<?php echo site_url('absensi'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'absensi') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-user-check w-5 text-center mr-3"></i>
                         Absensi Saya
@@ -272,6 +285,8 @@
                         <i class="fas fa-tasks w-5 text-center mr-3"></i>
                         Penilaian
                     </a>
+                    <div class="border-t border-gray-200 my-2"></div>
+                    <div class="px-2 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">Diskusi</div>
                     <a href="<?php echo site_url('forum'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'forum') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-comments w-5 text-center mr-3"></i>
                         Forum

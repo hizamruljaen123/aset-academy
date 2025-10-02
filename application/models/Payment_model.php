@@ -83,4 +83,15 @@ class Payment_model extends CI_Model {
 
         return $payments;
     }
+
+    // Get single payment with related details
+    public function get_payment_with_details($payment_id) {
+        return $this->db->select('payments.*, kelas_programming.nama_kelas as class_name, kelas_programming.harga as class_price')
+                        ->from('payments')
+                        ->join('kelas_programming', 'kelas_programming.id = payments.class_id', 'left')
+                        ->where('payments.id', $payment_id)
+                        ->limit(1)
+                        ->get()
+                        ->row();
+    }
 }

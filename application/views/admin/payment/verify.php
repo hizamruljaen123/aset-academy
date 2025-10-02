@@ -83,6 +83,7 @@
                 <p class="text-sm text-gray-500">Apakah Anda yakin ingin memverifikasi pembayaran ini?</p>
             </div>
             <form id="verifyForm" method="POST" action="">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                 <input type="hidden" name="action" value="verify">
                 <input type="hidden" name="payment_id" id="verify_payment_id" value="">
                 <div class="mb-4">
@@ -111,6 +112,7 @@
                 <p class="text-sm text-gray-500">Apakah Anda yakin ingin menolak pembayaran ini?</p>
             </div>
             <form id="rejectForm" method="POST" action="">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                 <input type="hidden" name="action" value="reject">
                 <input type="hidden" name="payment_id" id="reject_payment_id" value="">
                 <div class="mb-4">
