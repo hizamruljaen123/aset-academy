@@ -76,7 +76,7 @@ class Siswa extends CI_Controller {
             $this->load->view('siswa/create', $data);
             $this->load->view('templates/footer');
         } else {
-            $data = [
+            $new_siswa_data = [
                 'nis' => $this->input->post('nis'),
                 'nama_lengkap' => $this->input->post('nama_lengkap'),
                 'email' => $this->input->post('email'),
@@ -93,7 +93,7 @@ class Siswa extends CI_Controller {
             if (!empty($_FILES['foto_profil']['name'])) {
                 if ($this->upload->do_upload('foto_profil')) {
                     $upload_data = $this->upload->data();
-                    $data['foto_profil'] = $upload_data['file_name'];
+                    $new_siswa_data['foto_profil'] = $upload_data['file_name'];
                 } else {
                     // Jika upload gagal, tampilkan error
                     $data['error_upload'] = $this->upload->display_errors();
@@ -104,7 +104,7 @@ class Siswa extends CI_Controller {
                 }
             }
 
-            $this->Siswa_model->insert_siswa($data);
+            $this->Siswa_model->insert_siswa($new_siswa_data);
             $this->session->set_flashdata('success', 'Data siswa berhasil ditambahkan');
             redirect('siswa');
         }
@@ -142,7 +142,7 @@ class Siswa extends CI_Controller {
             $this->load->view('siswa/edit', $data);
             $this->load->view('templates/footer');
         } else {
-            $data = [
+            $update_data = [
                 'nis' => $this->input->post('nis'),
                 'nama_lengkap' => $this->input->post('nama_lengkap'),
                 'email' => $this->input->post('email'),
@@ -155,7 +155,7 @@ class Siswa extends CI_Controller {
                 'status' => $this->input->post('status')
             ];
 
-            $this->Siswa_model->update_siswa($id, $data);
+            $this->Siswa_model->update_siswa($id, $update_data);
             $this->session->set_flashdata('success', 'Data siswa berhasil diupdate');
             redirect('siswa');
         }

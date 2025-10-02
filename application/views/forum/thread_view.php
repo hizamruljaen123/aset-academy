@@ -418,5 +418,112 @@ document.addEventListener('DOMContentLoaded', function() {
 
     closeModalBtn.addEventListener('click', closeModal);
     loadMoreBtn.addEventListener('click', loadComments);
+
+    // Load More Comments Button
+    const loadMoreCommentsBtn = document.getElementById('load-more-comments');
+    if (loadMoreCommentsBtn) {
+        loadMoreCommentsBtn.addEventListener('click', function() {
+            const offset = this.getAttribute('data-offset');
+            const threadId = <?php echo $thread->id; ?>;
+            
+            fetch(`<?php echo site_url('forum/get_comments_ajax/' . $thread->id); ?>?offset=${offset}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        const commentsContainer = document.getElementById('comments-container');
+                        
+                        data.forEach(post => {
+                            const commentEl = document.createElement('div');
+                            commentEl.className = 'p-6 hover:bg-gray-50 transition-colors duration-150';
+                            commentEl.id = 'post-' + post.id;
+                            
+                            let repliesHtml = '';
+                            if (post.replies && post.replies.length > 0) {
+                                repliesHtml = `
+                                    <div class="mt-4 pl-4 border-l-2 border-gray-200 space-y-4">
+                                        ${post.replies.map(reply => `
+                                            <div class="pt-4 first:pt-0">
+                                                <div class="flex">
+                                                    <div class="flex-shrink-0 mr-3">
+                                                        <div class="h-8 w-8 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-sm font-medium">
+                                                            ${reply.nama_lengkap.charAt(0).toUpperCase()}
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex-1 bg-gray-50 rounded-lg p-3">
+                                                        <div class="flex items-center justify-between">
+                                                            <p class="text-sm font-medium text-gray-900">
+                                                                ${reply.nama_lengkap}
+                                                                ${reply.user_id == <?php echo $thread->user_id; ?> ? '<span class="ml-1 text-xs text-blue-600">(Penulis)</span>' : ''}
+                                                            </p>
+                                                            <span class="text-xs text-gray-500">
+                                                                ${timespan(strtotime(reply.created_at), time(), 1)} lalu
+                                                            </span>
+                                                        </div>
+                                                        <div class="mt-1 text-sm text-gray-600">
+                                                            ${reply.content}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                `;
+                            }
+                            
+                            commentEl.innerHTML = `
+                                <div class="flex">
+                                    <div class="flex-shrink-0 mr-4">
+                                        <div class="h-10 w-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-medium text-lg">
+                                            ${post.nama_lengkap.charAt(0).toUpperCase()}
+                                        </div>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <p class="text-sm font-medium text-gray-900">
+                                                    ${post.nama_lengkap}
+                                                    ${post.user_id == <?php echo $thread->user_id; ?> ? '<span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Penulis</span>' : ''}
+                                                </p>
+                                                <p class="text-xs text-gray-500">
+                                                    <time datetime="${post.created_at}">
+                                                        ${timespan(strtotime(post.created_at), time())} yang lalu
+                                                    </time>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 text-sm text-gray-700 prose max-w-none">
+                                            ${post.content}
+                                        </div>
+                                        <div class="mt-3 flex items-center text-sm text-gray-500">
+                                            <button type="button" class="inline-flex items-center mr-4 hover:text-blue-600">
+                                                <i class="far fa-thumbs-up mr-1"></i>
+                                                <span>Suka</span>
+                                            </button>
+                                            <button type="button" class="inline-flex items-center hover:text-blue-600" onclick="document.getElementById('reply-to-${post.id}').classList.toggle('hidden'); document.getElementById('reply-to-${post.id}').scrollIntoView({ behavior: 'smooth' });">
+                                                <i class="far fa-comment-dots mr-1"></i>
+                                                <span>Balas</span>
+                                            </button>
+                                        </div>
+                                        ${repliesHtml}
+                                    </div>
+                                </div>
+                            `;
+                            
+                            commentsContainer.appendChild(commentEl);
+                        });
+                        
+                        // Update offset
+                        this.setAttribute('data-offset', parseInt(offset) + data.length);
+                        
+                        // Hide button if no more comments
+                        if (data.length < 10) {
+                            this.style.display = 'none';
+                        }
+                    } else {
+                        this.style.display = 'none';
+                    }
+                });
+        });
+    }
 });
 </script>

@@ -193,7 +193,7 @@ class Kelas_model extends CI_Model {
 
     public function get_all_free_classes()
     {
-        $this->db->select('id, title as nama_kelas');
+        $this->db->select('id, title as nama_kelas, description as deskripsi, category as bahasa_program, level');
         $this->db->from('free_classes');
         $this->db->where('status', 'Published');
         $this->db->order_by('title', 'ASC');

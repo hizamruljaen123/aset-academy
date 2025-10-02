@@ -40,10 +40,74 @@
         <!-- Admin Button for Adding Category -->
         <?php if (isset($is_admin) && $is_admin): ?>
         <div class="mb-8 text-right">
-            <button onclick="openCategoryModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
+            <button onclick="toggleCategoryForm()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
                 <i class="fas fa-plus"></i>
                 Tambah Kategori Baru
             </button>
+        </div>
+        <?php endif; ?>
+
+        <!-- Category Creation Form (for Admins) -->
+        <?php if (isset($is_admin) && $is_admin): ?>
+        <div id="categoryForm" class="mb-8 bg-white rounded-xl shadow-lg p-6 hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-gray-900">Tambah Kategori Baru</h3>
+                <button onclick="toggleCategoryForm()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <form action="<?php echo site_url('forum/create_category'); ?>" method="post" class="max-w-2xl">
+                <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label for="name" class="block text-sm font-medium text-gray-700">
+                            <i class="fas fa-tag text-blue-500 mr-2"></i>
+                            Nama Kategori
+                            <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="name" name="name"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+                               placeholder="Masukkan nama kategori"
+                               required>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="slug" class="block text-sm font-medium text-gray-700">
+                            <i class="fas fa-link text-green-500 mr-2"></i>
+                            Slug
+                            <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="slug" name="slug"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+                               placeholder="nama-kategori"
+                               required>
+                    </div>
+                </div>
+
+                <div class="space-y-2 mt-6">
+                    <label for="description" class="block text-sm font-medium text-gray-700">
+                        <i class="fas fa-file-alt text-yellow-500 mr-2"></i>
+                        Deskripsi
+                    </label>
+                    <textarea id="description" name="description" rows="4"
+                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white resize-vertical"
+                              placeholder="Deskripsikan kategori ini (opsional)"></textarea>
+                </div>
+
+                <div class="flex justify-end space-x-4 mt-8">
+                    <button type="button" onclick="toggleCategoryForm()"
+                            class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200">
+                        Batal
+                    </button>
+                    <button type="submit"
+                            class="px-6 py-3 bg-blue-600 border border-transparent rounded-lg text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200">
+                        <i class="fas fa-save mr-2"></i>
+                        Simpan Kategori
+                    </button>
+                </div>
+            </form>
         </div>
         <?php endif; ?>
 
@@ -193,105 +257,28 @@
     </div>
 </div>
 
-<!-- Category Creation Modal for Admins -->
-<?php if (isset($is_admin) && $is_admin): ?>
-<div id="categoryModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
-    <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
-        <div class="mt-3">
-            <div class="flex justify-between items-center pb-3">
-                <h3 id="categoryModalTitle" class="text-lg font-medium text-gray-900">Tambah Kategori Baru</h3>
-                <button onclick="closeCategoryModal()" class="text-gray-400 hover:text-gray-600">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
-            <form id="categoryForm">
-                <input type="hidden" id="categoryId" name="id" value="">
-                <div class="mb-4">
-                    <label for="name" class="block text-sm font-medium text-gray-700">Nama Kategori</label>
-                    <input type="text" id="name" name="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
-                </div>
-                <div class="mb-4">
-                    <label for="description" class="block text-sm font-medium text-gray-700">Deskripsi</label>
-                    <textarea id="description" name="description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
-                </div>
-                <div class="mb-4">
-                    <label for="slug" class="block text-sm font-medium text-gray-700">Slug</label>
-                    <input type="text" id="slug" name="slug" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
-                </div>
-                <div class="flex justify-end space-x-3 pt-4">
-                    <button type="button" onclick="closeCategoryModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Simpan</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<?php endif; ?>
-
 <script>
-    // Category Modal Functions (for admins)
-    function openCategoryModal() {
-        const modal = document.getElementById('categoryModal');
+    // Toggle Category Form
+    function toggleCategoryForm() {
         const form = document.getElementById('categoryForm');
-        const title = document.getElementById('categoryModalTitle');
-        const categoryId = document.getElementById('categoryId');
-
-        form.reset();
-        categoryId.value = '';
-        title.textContent = 'Tambah Kategori Baru';
-        form.action = '<?php echo site_url('forum/ajax_create_category'); ?>';
-
-        modal.classList.remove('hidden');
+        form.classList.toggle('hidden');
     }
 
-    function closeCategoryModal() {
-        document.getElementById('categoryModal').classList.add('hidden');
-    }
-
-    // Category Form Submission
+    // Auto-generate slug from name
     document.addEventListener('DOMContentLoaded', function() {
-        const categoryForm = document.getElementById('categoryForm');
-        if (categoryForm) {
-            categoryForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const formData = new FormData(this);
-                const actionUrl = this.action;
+        const nameInput = document.getElementById('name');
+        const slugInput = document.getElementById('slug');
 
-                fetch(actionUrl, {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert(data.message);
-                        location.reload(); // Reload to show new category
-                    } else {
-                        alert(data.message);
-                    }
-                    closeCategoryModal();
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Terjadi kesalahan. Silakan coba lagi.');
-                    closeCategoryModal();
-                });
-            });
-
-            // Auto-generate slug from name
-            document.getElementById('name').addEventListener('input', function() {
+        if (nameInput && slugInput) {
+            nameInput.addEventListener('input', function() {
                 const name = this.value;
-                const slug = name.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
-                document.getElementById('slug').value = slug;
+                const slug = name.toLowerCase()
+                    .replace(/[^a-z0-9\s-]/g, '')
+                    .replace(/\s+/g, '-')
+                    .replace(/-+/g, '-')
+                    .replace(/^-|-$/g, '');
+                slugInput.value = slug;
             });
         }
     });
-
-    // Close modal on outside click
-    window.onclick = function(event) {
-        const categoryModal = document.getElementById('categoryModal');
-        if (event.target === categoryModal) {
-            closeCategoryModal();
-        }
-    }
 </script>

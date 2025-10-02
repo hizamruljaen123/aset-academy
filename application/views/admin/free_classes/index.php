@@ -37,8 +37,9 @@
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-10 w-10">
-                                            <img class="h-10 w-10 rounded-full object-cover" src="<?php echo base_url($class->thumbnail ?: 'assets/images/default_class_thumbnail.png'); ?>" alt="">
+                                        <div class="flex-shrink-0 h-10 w-10 relative">
+                                            <i class="fas fa-graduation-cap h-10 w-10 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center text-lg"></i>
+                                            <img class="h-10 w-10 rounded-full object-cover absolute inset-0" src="<?php echo base_url($class->thumbnail ?: 'assets/images/default_class_thumbnail.png'); ?>" alt="" onerror="this.style.display='none'; this.previousElementSibling.style.display='flex';">
                                         </div>
                                         <div class="ml-4">
                                             <div class="text-sm font-medium text-gray-900"><?php echo $class->title; ?></div>

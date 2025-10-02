@@ -23,15 +23,54 @@ class Materi extends CI_Controller {
     public function index($kelas_id = null)
     {
         if ($kelas_id) {
-            $data['title'] = 'Materi Kelas';
-            $data['kelas'] = $this->Kelas_model->get_kelas_by_id($kelas_id);
-            $data['materi'] = $this->Materi_model->get_materi_by_kelas($kelas_id);
+            // Check if it's a free class (assuming format 'free_{id}')
+            if (strpos($kelas_id, 'free_') === 0) {
+                $free_class_id = substr($kelas_id, 5);
+                $this->load->model('Free_class_model');
+                $data['title'] = 'Materi Kelas Gratis';
+                $data['kelas'] = $this->Free_class_model->get_free_class_by_id($free_class_id);
+                if ($data['kelas']) {
+                    $data['kelas']->type = 'free';
+                    // Map properties to match what the view expects
+                    $data['kelas']->nama_kelas = $data['kelas']->title ?? '';
+                    $data['kelas']->bahasa_program = $data['kelas']->category ?? 'Umum';
+                    $data['kelas']->level = $data['kelas']->level ?? 'Dasar';
+                    $data['materi'] = $this->Free_class_model->get_free_class_materials($free_class_id);
+                } else {
+                    show_404();
+                }
+            } else {
+                $data['title'] = 'Materi Kelas';
+                $data['kelas'] = $this->Kelas_model->get_kelas_by_id($kelas_id);
+                $data['kelas']->type = 'premium';
+                if (!$data['kelas']) {
+                    show_404();
+                }
+                $data['materi'] = $this->Materi_model->get_materi_by_kelas($kelas_id);
+            }
             $this->load->view('templates/header', $data);
             $this->load->view('materi/index', $data);
             $this->load->view('templates/footer');
         } else {
             $data['title'] = 'Pilih Kelas';
-            $data['kelas_list'] = $this->Kelas_model->get_all_kelas();
+            $premium_kelas = $this->Kelas_model->get_all_kelas();
+            $free_kelas = $this->Kelas_model->get_all_free_classes();
+            
+            // Add type to each class
+            foreach ($premium_kelas as $kelas) {
+                $kelas->type = 'premium';
+                $kelas->url = site_url('materi/index/' . $kelas->id);
+            }
+            foreach ($free_kelas as $kelas) {
+                $kelas->type = 'free';
+                $kelas->url = site_url('materi/index/free_' . $kelas->id);
+                // Set defaults for missing fields that the view expects
+                $kelas->deskripsi = $kelas->deskripsi ?? '';
+                $kelas->bahasa_program = $kelas->bahasa_program ?? 'Umum';
+                $kelas->level = $kelas->level ?? 'Dasar'; // Set default level for free classes
+            }
+            
+            $data['kelas_list'] = array_merge($premium_kelas, $free_kelas);
             $this->load->view('templates/header', $data);
             $this->load->view('materi/pilih_kelas', $data);
             $this->load->view('templates/footer');
@@ -124,11 +163,21 @@ class Materi extends CI_Controller {
 
     public function delete($id)
     {
-        $materi = $this->Materi_model->get_materi_by_id($id);
-        $kelas_id = $materi->kelas_id;
-        $this->Materi_model->delete_materi($id);
-        $this->session->set_flashdata('success', 'Materi berhasil dihapus.');
-        redirect('materi/index/' . $kelas_id);
+        $this->load->model('Free_class_model');
+        $free_material = $this->Free_class_model->get_free_class_material_by_id($id);
+        
+        if ($free_material) {
+            $class_id = $free_material->class_id;
+            $this->Free_class_model->delete_free_class_material($id);
+            $this->session->set_flashdata('success', 'Materi berhasil dihapus.');
+            redirect('materi/index/free_' . $class_id);
+        } else {
+            $materi = $this->Materi_model->get_materi_by_id($id);
+            $kelas_id = $materi->kelas_id;
+            $this->Materi_model->delete_materi($id);
+            $this->session->set_flashdata('success', 'Materi berhasil dihapus.');
+            redirect('materi/index/' . $kelas_id);
+        }
     }
 
     public function detail($materi_id)

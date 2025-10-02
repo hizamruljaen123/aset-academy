@@ -39,7 +39,7 @@
         </div>
     <?php else: ?>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="classGrid">
-            <?php foreach ($kelas_list as $k): 
+            <?php foreach ($kelas_list as $k):
                 // Determine badge color based on level
                 $levelColors = [
                     'Dasar' => 'bg-green-100 text-green-800',
@@ -48,16 +48,26 @@
                     'default' => 'bg-gray-100 text-gray-800'
                 ];
                 $badgeColor = $levelColors[$k->level] ?? $levelColors['default'];
+                
+                // Type badge
+                $typeBadge = '';
+                if (isset($k->type)) {
+                    if ($k->type === 'free') {
+                        $typeBadge = '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 ml-2">Gratis</span>';
+                    } elseif ($k->type === 'premium') {
+                        $typeBadge = '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 ml-2">Premium</span>';
+                    }
+                }
             ?>
-                <a href="<?php echo site_url('materi/index/' . $k->id); ?>" 
+                <a href="<?php echo isset($k->url) ? $k->url : site_url('materi/index/' . $k->id); ?>"
                    class="group bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col h-full"
-                   data-level="<?php echo strtolower($k->level); ?>"
-                   data-search="<?php echo strtolower(html_escape($k->nama_kelas . ' ' . $k->deskripsi . ' ' . $k->bahasa_program)); ?>">
+                   data-level="<?php echo strtolower($k->level ?? 'dasar'); ?>"
+                   data-search="<?php echo strtolower(html_escape(($k->nama_kelas ?? '') . ' ' . ($k->deskripsi ?? '') . ' ' . ($k->bahasa_program ?? ''))); ?>">
                     <div class="p-5 flex-1 flex flex-col">
                         <div class="flex items-start">
                             <div class="flex-shrink-0 mr-4">
-                                <div class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
-                                    <i class="fas fa-code text-xl"></i>
+                                <div class="w-12 h-12 rounded-lg <?php echo ($k->type ?? 'premium') === 'free' ? 'bg-green-50 text-green-600' : 'bg-blue-50 text-blue-600'; ?> flex items-center justify-center">
+                                    <i class="fas fa-<?php echo ($k->type ?? 'premium') === 'free' ? 'gift' : 'code'; ?> text-xl"></i>
                                 </div>
                             </div>
                             <div class="flex-1 min-w-0">
@@ -69,12 +79,13 @@
                                 </p>
                                 <div class="flex flex-wrap gap-2 mt-auto">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo $badgeColor; ?>">
-                                        <?php echo html_escape($k->level); ?>
+                                        <?php echo html_escape($k->level ?? 'Dasar'); ?>
                                     </span>
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                                         <i class="fas fa-code-branch text-xs mr-1"></i>
                                         <?php echo html_escape($k->bahasa_program); ?>
                                     </span>
+                                    <?php echo $typeBadge; ?>
                                 </div>
                             </div>
                         </div>
