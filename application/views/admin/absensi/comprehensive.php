@@ -15,8 +15,24 @@
         </div>
     </div>
 
-    <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-8">
+    <!-- Tab Navigation -->
+    <div>
+        <div class="border-b border-gray-200">
+            <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                <a href="#" id="tab-siswa" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-red-500 text-red-600">
+                    Absensi Siswa
+                </a>
+                <a href="#" id="tab-guru" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                    Absensi Guru
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Tab Content - Siswa -->
+    <div id="tab-content-siswa" class="mt-8">
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-6 mb-8">
         <div class="bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl p-6 text-white">
             <div class="flex items-center justify-between">
                 <div>
@@ -57,13 +73,13 @@
             </div>
         </div>
 
-        <div class="bg-gradient-to-r from-cyan-500 to-teal-600 rounded-xl p-6 text-white">
+        <div class="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-xl p-6 text-white">
             <div class="flex items-center justify-between">
                 <div>
-                    <div class="text-2xl font-bold"><?php echo isset($stats['total_guru_hadir']) ? $stats['total_guru_hadir'] : 0; ?></div>
-                    <div class="text-sm opacity-80">Guru Hadir</div>
+                    <div class="text-2xl font-bold"><?php echo isset($stats['total_guru_tidak_hadir']) ? $stats['total_guru_tidak_hadir'] : 0; ?></div>
+                    <div class="text-sm opacity-80">Guru Tidak Hadir</div>
                 </div>
-                <i class="fas fa-chalkboard-teacher text-3xl opacity-80"></i>
+                <i class="fas fa-user-times text-3xl opacity-80"></i>
             </div>
         </div>
     </div>
@@ -78,7 +94,7 @@
         <div class="p-6">
             <?php if (!empty($absensi_comprehensive)): ?>
                 <div class="space-y-8">
-                    <?php foreach ($absensi_comprehensive as $jadwal_key => $jadwal_data): ?>
+                        <?php foreach ($absensi_comprehensive as $jadwal_key => $jadwal_data): ?>
                         <?php $jadwal = $jadwal_data['jadwal_info']; ?>
                         <div class="border border-gray-200 rounded-lg overflow-hidden">
                             <!-- Jadwal Header -->
@@ -109,15 +125,24 @@
                                     <div class="text-right">
                                         <div class="text-lg font-bold text-gray-800">
                                             <?php
-                                            $total_siswa = count($jadwal_data['absensi']);
+                                            $total_siswa = count($jadwal_data['absensi_siswa']);
                                             $hadir_count = 0;
-                                            foreach ($jadwal_data['absensi'] as $absen) {
+                                            foreach ($jadwal_data['absensi_siswa'] as $absen) {
                                                 if ($absen->status == 'Hadir') $hadir_count++;
                                             }
                                             echo $hadir_count . '/' . $total_siswa;
                                             ?>
                                         </div>
                                         <div class="text-sm text-gray-600">Siswa Hadir</div>
+                                        <?php if ($jadwal_data['absensi_guru']): ?>
+                                        <div class="text-sm font-medium text-green-600 mt-1">
+                                            <i class="fas fa-check-circle mr-1"></i>Guru Hadir
+                                        </div>
+                                        <?php else: ?>
+                                        <div class="text-sm font-medium text-red-600 mt-1">
+                                            <i class="fas fa-times-circle mr-1"></i>Guru Tidak Hadir
+                                        </div>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
@@ -137,7 +162,7 @@
                                         </tr>
                                     </thead>
                                     <tbody class="bg-white divide-y divide-gray-200">
-                                        <?php foreach ($jadwal_data['absensi'] as $absen): ?>
+                                        <?php foreach ($jadwal_data['absensi_siswa'] as $absen): ?>
                                             <tr>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                                     <?php echo $absen->nis ?: '-'; ?>
@@ -192,151 +217,159 @@
                         </div>
                     <?php endforeach; ?>
                 </div>
-            <?php else: ?>
-                <div class="text-center py-12">
-                    <i class="fas fa-calendar-times text-6xl text-gray-300 mb-4"></i>
-                    <h3 class="text-xl font-semibold text-gray-600 mb-2">Belum Ada Data Absensi</h3>
-                    <p class="text-gray-500">Belum ada siswa yang mengisi absensi di sistem.</p>
-                </div>
             <?php endif; ?>
     </div>
 
-    <!-- Teacher Attendance Section -->
-    <?php if (!empty($absensi_guru)): ?>
-    <div class="mt-8 bg-white rounded-xl shadow-lg overflow-hidden">
-        <div class="p-6 border-b border-gray-200">
-            <h2 class="text-xl font-bold text-gray-800">Absensi Guru</h2>
-            <p class="text-gray-600 text-sm mt-1">Data kehadiran guru dalam mengajar</p>
+    <!-- Tab Content - Guru -->
+    <div id="tab-content-guru" class="mt-8 hidden">
+        <!-- Guru Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-2xl font-bold"><?php echo isset($stats['total_guru_hadir']) ? $stats['total_guru_hadir'] : 0; ?></div>
+                        <div class="text-sm opacity-80">Guru Hadir</div>
+                    </div>
+                    <i class="fas fa-chalkboard-teacher text-3xl opacity-80"></i>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-red-500 to-pink-600 rounded-xl p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-2xl font-bold"><?php echo isset($stats['total_guru_tidak_hadir']) ? $stats['total_guru_tidak_hadir'] : 0; ?></div>
+                        <div class="text-sm opacity-80">Guru Tidak Hadir</div>
+                    </div>
+                    <i class="fas fa-user-times text-3xl opacity-80"></i>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-2xl font-bold"><?php echo (isset($stats['total_guru_hadir']) ? $stats['total_guru_hadir'] : 0) + (isset($stats['total_guru_tidak_hadir']) ? $stats['total_guru_tidak_hadir'] : 0); ?></div>
+                        <div class="text-sm opacity-80">Total Absensi Guru</div>
+                    </div>
+                    <i class="fas fa-users text-3xl opacity-80"></i>
+                </div>
+            </div>
         </div>
-        <div class="p-6">
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Guru</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pertemuan</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jadwal</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catatan</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <?php foreach ($absensi_guru as $absen): ?>
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    <?php echo isset($absen['tanggal_pertemuan']) ? date('d M Y', strtotime($absen['tanggal_pertemuan'])) : 'N/A'; ?>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-8 w-8">
-                                            <div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
-                                                <i class="fas fa-chalkboard-teacher text-blue-600 text-sm"></i>
+
+        <!-- Guru Attendance Table -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="p-6 border-b border-gray-200">
+                <h2 class="text-xl font-bold text-gray-800">Riwayat Absensi Guru</h2>
+                <p class="text-gray-600 text-sm mt-1">Data kehadiran guru dalam mengajar</p>
+            </div>
+            <div class="p-6">
+                <?php if (!empty($absensi_guru)): ?>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Guru</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pertemuan</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jadwal</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis Kelas</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catatan</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Waktu Absen</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <?php foreach ($absensi_guru as $absen): ?>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            <?php echo isset($absen['tanggal_pertemuan']) ? date('d M Y', strtotime($absen['tanggal_pertemuan'])) : 'N/A'; ?>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-8 w-8">
+                                                    <div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+                                                        <i class="fas fa-chalkboard-teacher text-blue-600 text-sm"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <div class="text-sm font-medium text-gray-900"><?php echo $absen['nama_guru']; ?></div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="ml-3">
-                                            <div class="text-sm font-medium text-gray-900"><?php echo $absen['nama_guru']; ?></div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <?php echo isset($absen['judul_pertemuan']) ? $absen['judul_pertemuan'] : 'N/A'; ?>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <?php
-                                    if (isset($absen['tanggal_pertemuan']) && isset($absen['waktu_mulai']) && isset($absen['waktu_selesai'])) {
-                                        echo date('H:i', strtotime($absen['waktu_mulai'])) . ' - ' . date('H:i', strtotime($absen['waktu_selesai']));
-                                    } else {
-                                        echo 'N/A';
-                                    }
-                                    ?>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                        <?php echo isset($absen['status']) ? $absen['status'] : 'Hadir'; ?>
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <?php echo isset($absen['catatan']) ? $absen['catatan'] : 'Mengajar di kelas'; ?>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <?php echo isset($absen['judul_pertemuan']) ? $absen['judul_pertemuan'] : 'N/A'; ?>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <?php
+                                            if (isset($absen['waktu_mulai']) && isset($absen['waktu_selesai'])) {
+                                                echo date('H:i', strtotime($absen['waktu_mulai'])) . ' - ' . date('H:i', strtotime($absen['waktu_selesai']));
+                                            } else {
+                                                echo 'N/A';
+                                            }
+                                            ?>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                                <?php echo isset($absen['class_type']) && $absen['class_type'] == 'premium' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'; ?>">
+                                                <?php echo isset($absen['class_type']) && $absen['class_type'] == 'premium' ? 'Premium' : 'Gratis'; ?>
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                                <?php echo isset($absen['status']) && $absen['status'] == 'Hadir' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'; ?>">
+                                                <?php echo isset($absen['status']) ? $absen['status'] : 'Tidak Hadir'; ?>
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <?php echo isset($absen['catatan']) ? $absen['catatan'] : 'Mengajar di kelas'; ?>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <?php echo isset($absen['waktu_absensi']) ? date('d M Y H:i', strtotime($absen['waktu_absensi'])) : 'N/A'; ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php else: ?>
+                    <div class="text-center py-12">
+                        <i class="fas fa-user-times text-6xl text-gray-300 mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-600 mb-2">Belum Ada Data Absensi Guru</h3>
+                        <p class="text-gray-500">Belum ada guru yang mengisi absensi di sistem.</p>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
-    <?php endif; ?>
-
-    <!-- Legacy Data (if needed for backward compatibility) -->
-    <?php if (!empty($absensi_siswa) || !empty($absensi_guru)): ?>
-    <div class="mt-8 bg-white rounded-xl shadow-lg overflow-hidden">
-        <div class="p-6 border-b border-gray-200">
-            <h2 class="text-xl font-bold text-gray-800">Data Absensi Lama</h2>
-            <p class="text-gray-600 text-sm mt-1">Data untuk backward compatibility</p>
-        </div>
-        <div class="p-6">
-            <!-- Include legacy view if needed -->
-            <?php if (!empty($absensi_siswa)): ?>
-                <h3 class="text-lg font-semibold mb-4">Absensi Siswa</h3>
-                <div class="overflow-x-auto mb-6">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Siswa</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Guru</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <?php foreach ($absensi_siswa as $absen): ?>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo date('d M Y', strtotime($absen['tanggal_pertemuan'])); ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo $absen['nama_siswa']; ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo $absen['nama_guru']; ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                            <?php echo $absen['status']; ?>
-                                        </span>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            <?php endif; ?>
-
-            <?php if (!empty($absensi_guru)): ?>
-                <h3 class="text-lg font-semibold mb-4">Absensi Guru</h3>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Guru</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jadwal</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <?php foreach ($absensi_guru as $absen): ?>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo date('d M Y', strtotime($absen['tanggal_pertemuan'])); ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo $absen['nama_guru']; ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo $absen['judul_pertemuan']; ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                            Hadir
-                                        </span>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            <?php endif; ?>
-        </div>
-    </div>
-    <?php endif; ?>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tabSiswa = document.getElementById('tab-siswa');
+    const tabGuru = document.getElementById('tab-guru');
+    const contentSiswa = document.getElementById('tab-content-siswa');
+    const contentGuru = document.getElementById('tab-content-guru');
+
+    const activeClasses = ['border-red-500', 'text-red-600'];
+    const inactiveClasses = ['border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300'];
+
+    tabSiswa.addEventListener('click', function(e) {
+        e.preventDefault();
+        contentSiswa.classList.remove('hidden');
+        contentGuru.classList.add('hidden');
+        tabSiswa.classList.add(...activeClasses);
+        tabSiswa.classList.remove(...inactiveClasses);
+        tabGuru.classList.add(...inactiveClasses);
+        tabGuru.classList.remove(...activeClasses);
+    });
+
+    tabGuru.addEventListener('click', function(e) {
+        e.preventDefault();
+        contentGuru.classList.remove('hidden');
+        contentSiswa.classList.add('hidden');
+        tabGuru.classList.add(...activeClasses);
+        tabGuru.classList.remove(...inactiveClasses);
+        tabSiswa.classList.add(...inactiveClasses);
+        tabSiswa.classList.remove(...activeClasses);
+    });
+});
+</script>

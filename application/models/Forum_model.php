@@ -63,19 +63,11 @@ class Forum_model extends CI_Model {
         return $this->db->get()->row();
     }
 
-    public function get_popular_threads($limit = 5)
+    public function get_thread_replies($thread_id)
     {
-        $this->db->select('ft.id, ft.title, ft.created_at,
-                         u.nama_lengkap as author_name, u.username,
-                         (SELECT COUNT(*) FROM forum_posts fp WHERE fp.thread_id = ft.id) as reply_count,
-                         (SELECT COUNT(*) FROM forum_likes WHERE thread_id = ft.id) as like_count');
-        $this->db->from('forum_threads ft');
-        $this->db->join('users u', 'u.id = ft.user_id', 'left');
-        $this->db->order_by('like_count', 'DESC');
-        $this->db->order_by('ft.created_at', 'DESC');
-        $this->db->limit($limit);
-        return $this->db->get()->result();
+        return $this->get_posts_by_thread($thread_id, 50, 0); // Get all replies with limit
     }
+
 
     public function get_recent_threads($limit = 10, $offset = 0)
     {
@@ -88,6 +80,20 @@ class Forum_model extends CI_Model {
         $this->db->join('users u', 'u.id = ft.user_id', 'left');
         $this->db->order_by('ft.is_pinned DESC, ft.updated_at DESC, ft.created_at DESC');
         $this->db->limit($limit, $offset);
+        return $this->db->get()->result();
+    }
+
+    public function get_popular_threads($limit = 5)
+    {
+        $this->db->select('ft.id, ft.title, ft.created_at, ft.slug,
+                         u.nama_lengkap as author_name, u.username,
+                         (SELECT COUNT(*) FROM forum_posts fp WHERE fp.thread_id = ft.id) as reply_count,
+                         (SELECT COUNT(*) FROM forum_likes WHERE thread_id = ft.id) as like_count');
+        $this->db->from('forum_threads ft');
+        $this->db->join('users u', 'u.id = ft.user_id', 'left');
+        $this->db->order_by('like_count', 'DESC');
+        $this->db->order_by('ft.created_at', 'DESC');
+        $this->db->limit($limit);
         return $this->db->get()->result();
     }
 
@@ -104,6 +110,12 @@ class Forum_model extends CI_Model {
         }
 
         $this->db->insert('forum_threads', $data);
+        return $this->db->insert_id();
+    }
+
+    public function create_reply($data)
+    {
+        $this->db->insert('forum_posts', $data);
         return $this->db->insert_id();
     }
 
@@ -149,14 +161,7 @@ class Forum_model extends CI_Model {
         $this->db->order_by('fp.created_at', 'ASC');
         $this->db->limit($limit, $offset);
 
-        $posts = $this->db->get()->result();
-
-        // Get replies for each post
-        foreach ($posts as $post) {
-            $post->replies = $this->get_replies($post->id);
-        }
-
-        return $posts;
+        return $this->db->get()->result();
     }
 
     public function get_replies($post_id)
@@ -193,6 +198,77 @@ class Forum_model extends CI_Model {
         $this->db->limit($limit, $offset);
 
         return $this->db->get()->result();
+    }
+
+    public function get_thread_posts_with_replies($thread_id, $user_id = null)
+    {
+        // Get all posts (including replies) for the thread with like information
+        $this->db->select('fp.*, COALESCE(u.nama_lengkap, "User Deleted") as author_name, COALESCE(u.username, "deleted") as username');
+        $this->db->select('(SELECT COUNT(*) FROM forum_likes WHERE post_id = fp.id) as like_count');
+        if ($user_id) {
+            $this->db->select('IF((SELECT COUNT(*) FROM forum_likes WHERE post_id = fp.id AND user_id = ' . (int)$user_id . ') > 0, 1, 0) as user_has_liked');
+        } else {
+            $this->db->select('0 as user_has_liked');
+        }
+        $this->db->from('forum_posts fp');
+        $this->db->join('users u', 'u.id = fp.user_id', 'LEFT');
+        $this->db->where('fp.thread_id', $thread_id);
+        $this->db->order_by('fp.created_at', 'ASC');
+        
+        $posts = $this->db->get()->result();
+        
+        // Organize posts by parent_id to create hierarchical structure
+        $posts_by_id = [];
+        $top_level_posts = [];
+        
+        foreach ($posts as $post) {
+            $posts_by_id[$post->id] = $post;
+            if ($post->parent_id == 0 || $post->parent_id == null) {
+                $top_level_posts[] = $post;
+            } else {
+                if (!isset($posts_by_id[$post->parent_id]->replies)) {
+                    $posts_by_id[$post->parent_id]->replies = [];
+                }
+                $posts_by_id[$post->parent_id]->replies[] = $post;
+            }
+        }
+        
+        return $top_level_posts;
+    }
+
+    public function get_thread_with_all_data($thread_id, $user_id = null)
+    {
+        // Get thread details
+        $thread = $this->get_thread($thread_id);
+        if (!$thread) {
+            return null;
+        }
+
+        // Get posts with hierarchical structure
+        $thread->posts = $this->get_thread_posts_with_replies($thread_id, $user_id);
+        
+        // Get view count
+        $thread->view_count = $this->get_thread_view_count($thread_id);
+        
+        // Check if user has viewed this thread
+        if ($user_id) {
+            $thread->user_has_viewed = $this->has_user_viewed($thread_id, $user_id);
+        }
+        
+        // Get like count and user's like status
+        $thread->like_count = $this->count_likes($thread_id, 'thread');
+        if ($user_id) {
+            $thread->user_has_liked = $this->has_user_liked($user_id, $thread_id, 'thread');
+        }
+        
+        return $thread;
+    }
+
+    public function has_user_viewed($thread_id, $user_id)
+    {
+        $this->db->where('thread_id', $thread_id);
+        $this->db->where('user_id', $user_id);
+        return $this->db->count_all_results('forum_thread_views') > 0;
     }
 
     // ========================================
@@ -265,6 +341,11 @@ class Forum_model extends CI_Model {
             ];
             $this->db->insert('forum_thread_views', $data);
         }
+    }
+
+    public function record_thread_view($thread_id, $user_id)
+    {
+        return $this->record_view($thread_id, $user_id);
     }
 
     public function get_thread_view_count($thread_id)

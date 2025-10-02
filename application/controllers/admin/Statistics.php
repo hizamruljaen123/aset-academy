@@ -68,6 +68,21 @@ class Statistics extends CI_Controller {
         $data['pay_status_labels'] = json_encode($status_labels);
         $data['pay_status_values'] = json_encode($status_values);
 
+        // Additional statistics data
+        $data['jurusan_dist'] = $this->Statistics_model->get_student_jurusan_distribution();
+        $data['attendance_stats'] = $this->Statistics_model->get_attendance_statistics();
+        $data['revenue_by_method'] = $this->Statistics_model->get_revenue_by_payment_method();
+        $data['class_levels'] = $this->Statistics_model->get_class_level_distribution();
+        $data['workshop_stats'] = $this->Statistics_model->get_workshop_statistics();
+        $data['assignment_stats'] = $this->Statistics_model->get_assignment_statistics();
+        $data['forum_stats'] = $this->Statistics_model->get_forum_statistics();
+        $data['user_roles'] = $this->Statistics_model->get_user_role_distribution();
+        $data['top_classes'] = $this->Statistics_model->get_top_classes_by_enrollment();
+        $data['monthly_revenue'] = $this->Statistics_model->get_monthly_revenue_comparison();
+        $data['teacher_workload'] = $this->Statistics_model->get_teacher_workload();
+        $data['enrollment_comparison'] = $this->Statistics_model->get_enrollment_comparison();
+        $data['daily_activity'] = $this->Statistics_model->get_daily_activity_stats();
+
         $this->load->view('admin/statistics/index', $data);
     }
 }

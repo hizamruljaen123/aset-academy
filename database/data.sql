@@ -1,3 +1,16 @@
+-- No structural changes needed for nested comments and likes functionality.
+-- The existing schema already supports:
+-- - Nested replies via `parent_id` in `forum_posts` (self-referencing foreign key)
+-- - Likes on posts via `post_id` in `forum_likes`
+--
+-- Optional: Add indexes for better performance on nested queries and likes
+-- Uncomment and run if needed:
+
+-- ALTER TABLE `forum_posts` ADD INDEX `idx_parent_id` (`parent_id`);
+-- ALTER TABLE `forum_likes` ADD INDEX `idx_post_id` (`post_id`);
+-- ALTER TABLE `forum_likes` ADD INDEX `idx_user_post` (`user_id`, `post_id`);
+
+-- Existing structure dump (unchanged)
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
 -- Server version:               8.0.30 - MySQL Community Server - GPL
@@ -9,7 +22,7 @@
 /*!40101 SET NAMES utf8 */;
 /*!50503 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40101 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;

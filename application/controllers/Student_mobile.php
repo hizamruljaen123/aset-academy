@@ -33,6 +33,7 @@ class Student_mobile extends CI_Controller
         $this->load->helper('form');
         $this->load->helper('text');
         $this->load->helper('date');
+        $this->load->helper('forum_helper');
     }
 
     public function index()
@@ -630,8 +631,16 @@ class Student_mobile extends CI_Controller
             redirect('student_mobile/forum_thread_clean/' . $thread_id . '/' . $correct_slug);
         }
         
-        // Get thread replies
-        $data['replies'] = $this->Forum_model->get_thread_replies($thread_id);
+        // Get thread with all data efficiently
+        $user_id = $this->session->userdata('user_id');
+        $thread_data = $this->Forum_model->get_thread_with_all_data($thread_id, $user_id);
+        
+        if (!$thread_data) {
+            show_404();
+        }
+        
+        $data['thread'] = $thread_data;
+        $data['replies'] = $thread_data->posts;
         
         // Record view
         $this->Forum_model->record_view($thread_id, $user_id);
@@ -665,8 +674,16 @@ class Student_mobile extends CI_Controller
             redirect('student_mobile/forum/thread/' . $thread_id . '/' . $correct_slug);
         }
         
-        // Get thread replies
-        $data['replies'] = $this->Forum_model->get_thread_replies($thread_id);
+        // Get thread with all data efficiently
+        $user_id = $this->session->userdata('user_id');
+        $thread_data = $this->Forum_model->get_thread_with_all_data($thread_id, $user_id);
+        
+        if (!$thread_data) {
+            show_404();
+        }
+        
+        $data['thread'] = $thread_data;
+        $data['replies'] = $thread_data->posts;
         
         // Record view
         $this->Forum_model->record_view($thread_id, $user_id);
@@ -796,19 +813,31 @@ class Student_mobile extends CI_Controller
             );
             
             // Save reply
-            $reply_id = $this->Forum_model->create_post($reply_data);
-            
-            if ($reply_id) {
-                // Reply created successfully
-                $this->session->set_flashdata('success', 'Balasan berhasil dikirim!');
-            } else {
-                // Error creating reply
-                $this->session->set_flashdata('error', 'Gagal mengirim balasan. Silakan coba lagi.');
-            }
-            
-            // Redirect back to thread
-            redirect('student_mobile/forum/thread/' . $thread_id . '/' . url_title($thread->title, '-', true) . '#reply-' . $reply_id);
+            $reply_id = $this->Forum_model->create_reply($reply_data);
         }
+    }
+
+    public function toggle_like()
+    {
+        $thread_id = $this->input->post('thread_id');
+        $user_id = $this->session->userdata('user_id');
+        
+        if (!$thread_id || !$user_id) {
+            $this->output->set_status_header(400);
+            echo json_encode(['success' => false, 'message' => 'Invalid request']);
+            return;
+        }
+        
+        $liked = $this->Forum_model->toggle_like($user_id, $thread_id);
+        $like_count = $this->Forum_model->count_likes($thread_id, 'thread');
+        
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode([
+                'success' => true,
+                'liked' => $liked,
+                'count' => $like_count
+            ]));
     }
 
     public function free_class_detail($class_id)

@@ -127,12 +127,73 @@ class Guru_model extends CI_Model {
 
     public function get_all_absensi_guru()
     {
-        $this->db->select('ag.*, u.nama_lengkap as nama_guru, jk.judul_pertemuan, jk.tanggal_pertemuan');
+        $this->db->select('ag.*, 
+            u.nama_lengkap as nama_guru, 
+            u.foto_profil,
+            jk.id as jadwal_id,
+            jk.pertemuan_ke,
+            jk.judul_pertemuan, 
+            jk.tanggal_pertemuan, 
+            jk.waktu_mulai, 
+            jk.waktu_selesai, 
+            jk.class_type,
+            COALESCE(kp.nama_kelas, fc.title) as mata_pelajaran,
+            kp.bahasa_program,
+            kp.level as level_kelas,
+            kp.deskripsi as deskripsi_kelas'
+        );
         $this->db->from('absensi_guru ag');
         $this->db->join('users u', 'ag.guru_id = u.id');
         $this->db->join('jadwal_kelas jk', 'ag.jadwal_id = jk.id', 'left');
+        $this->db->join('kelas_programming kp', 'jk.kelas_id = kp.id AND jk.class_type = "premium"', 'left');
+        $this->db->join('free_classes fc', 'jk.kelas_id = fc.id AND jk.class_type = "gratis"', 'left');
         $this->db->order_by('jk.tanggal_pertemuan', 'DESC');
-        return $this->db->get()->result_array();
+        $this->db->order_by('jk.waktu_mulai', 'DESC');
+        
+        $result = $this->db->get()->result_array();
+        
+        // Add waktu_absensi if not present (using current time as fallback)
+        foreach ($result as &$row) {
+            if (!isset($row['waktu_absensi']) || empty($row['waktu_absensi'])) {
+                $row['waktu_absensi'] = date('Y-m-d H:i:s');
+            }
+            
+            // Set default photo if not exists
+            if (empty($row['foto_profil'])) {
+                $row['foto_profil'] = 'default.jpg';
+            }
+            
+            // Set default class type
+            if (empty($row['class_type'])) {
+                $row['class_type'] = 'premium';
+            }
+        }
+        
+        // Debug: Log query result
+        log_message('debug', 'Guru_model get_all_absensi_guru result: ' . print_r($result, true));
+        
+        return $result;
+    }
+
+    public function get_absensi_guru_by_jadwal_ids(array $jadwal_ids)
+    {
+        if (empty($jadwal_ids)) {
+            return [];
+        }
+
+        $this->db->select('ag.*, u.nama_lengkap as nama_guru, jk.judul_pertemuan, jk.tanggal_pertemuan, jk.waktu_mulai, jk.waktu_selesai, jk.class_type');
+        $this->db->from('absensi_guru ag');
+        $this->db->join('users u', 'ag.guru_id = u.id');
+        $this->db->join('jadwal_kelas jk', 'ag.jadwal_id = jk.id', 'left');
+        $this->db->where_in('ag.jadwal_id', $jadwal_ids);
+        $results = $this->db->get()->result();
+
+        $mapped = [];
+        foreach ($results as $row) {
+            $mapped[$row->jadwal_id] = $row;
+        }
+
+        return $mapped;
     }
 
     // Get dashboard stats for teacher
@@ -217,8 +278,12 @@ class Guru_model extends CI_Model {
     }
 
     // Check if teacher has access to specific free class
-    public function count_total_absensi_guru()
+    public function count_total_absensi_guru($status = null)
     {
-        return $this->db->count_all('absensi_guru');
+        if ($status !== null) {
+            $this->db->where('status', $status);
+        }
+
+        return $this->db->count_all_results('absensi_guru');
     }
 }

@@ -145,7 +145,40 @@
                     <h2 class="text-lg font-medium text-gray-900">Distribusi Jurusan</h2>
                 </div>
                 <div class="p-4">
-                    <div id="jurusanChart" style="width: 100%; height: 300px;"></div>
+                    <div id="jurusanChart" style="width: 100%; height: 500px;"></div>
+                    <?php if (!empty($jurusan_dist)): ?>
+                    <div class="mt-6">
+                        <h3 class="text-sm font-semibold text-gray-700 mb-3">Ringkasan Jumlah Siswa per Jurusan</h3>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 text-sm">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-4 py-2 text-left font-medium text-gray-600 uppercase tracking-wider">Jurusan</th>
+                                        <th scope="col" class="px-4 py-2 text-right font-medium text-gray-600 uppercase tracking-wider">Total Siswa</th>
+                                        <th scope="col" class="px-4 py-2 text-right font-medium text-gray-600 uppercase tracking-wider">Persentase</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <?php 
+                                        $totalJurusan = array_sum(array_map(function($item) { return $item['total'] ?? 0; }, $jurusan_dist));
+                                    ?>
+                                    <?php foreach ($jurusan_dist as $index => $item): 
+                                        $count = $item['total'] ?? 0;
+                                        $percentage = $totalJurusan > 0 ? round(($count / $totalJurusan) * 100, 1) : 0;
+                                    ?>
+                                    <tr data-chart-index="<?php echo $index; ?>" class="transition hover:bg-sky-50 cursor-pointer">
+                                        <td class="px-4 py-2 text-gray-800"><?php echo $item['jurusan'] ?? '-'; ?></td>
+                                        <td class="px-4 py-2 text-right font-semibold text-gray-900"><?php echo number_format($count); ?></td>
+                                        <td class="px-4 py-2 text-right text-gray-700"><?php echo number_format($percentage, 1); ?>%</td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <?php else: ?>
+                    <p class="mt-6 text-sm text-gray-500">Data jurusan belum tersedia.</p>
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -198,12 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
             formatter: '{b}: {c} ({d}%)'
         },
         legend: {
-            orient: 'horizontal',
-            bottom: 10,
-            left: 'center',
-            textStyle: {
-                color: '#374151'
-            }
+            show: false
         },
         series: [
             {
@@ -237,6 +265,34 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     option && myChart.setOption(option);
+
+    const resetHighlights = () => {
+        myChart.dispatchAction({ type: 'downplay', seriesIndex: 0 });
+    };
+
+    const tableRows = document.querySelectorAll('[data-chart-index]');
+    tableRows.forEach(row => {
+        const dataIndex = parseInt(row.dataset.chartIndex, 10);
+        row.addEventListener('mouseenter', () => {
+            resetHighlights();
+            myChart.dispatchAction({ type: 'highlight', seriesIndex: 0, dataIndex });
+            myChart.dispatchAction({ type: 'showTip', seriesIndex: 0, dataIndex });
+        });
+        row.addEventListener('mouseleave', () => {
+            myChart.dispatchAction({ type: 'hideTip' });
+            resetHighlights();
+        });
+        row.addEventListener('focus', () => {
+            resetHighlights();
+            myChart.dispatchAction({ type: 'highlight', seriesIndex: 0, dataIndex });
+            myChart.dispatchAction({ type: 'showTip', seriesIndex: 0, dataIndex });
+        });
+        row.addEventListener('blur', () => {
+            myChart.dispatchAction({ type: 'hideTip' });
+            resetHighlights();
+        });
+        row.setAttribute('tabindex', '0');
+    });
 
     window.addEventListener('resize', function() {
         myChart.resize();

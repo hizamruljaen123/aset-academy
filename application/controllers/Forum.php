@@ -92,10 +92,9 @@ class Forum extends CI_Controller {
         // Get category info
         $data['category'] = $this->forum->get_category($data['thread']->category_id);
         
-        // Get posts with pagination
-        $limit = 10;
-        $offset = $this->uri->segment(4, 0);
-        $data['posts'] = $this->forum->get_posts($data['thread']->id, $limit, $offset);
+        // Get posts with hierarchical structure (all posts for now, to ensure display)
+        $user_id = $this->session->userdata('user_id');
+        $data['posts'] = $this->forum->get_thread_posts_with_replies($data['thread']->id, $user_id);
         $data['post_count'] = $this->forum->count_posts($data['thread']->id);
         $data['likes'] = $this->forum->count_likes($data['thread']->id, 'thread');
         $data['view_count'] = $this->forum->get_thread_view_count($thread_id);
@@ -117,34 +116,8 @@ class Forum extends CI_Controller {
             5
         );
         
-        // Set up pagination
-        $this->load->library('pagination');
-        $config['base_url'] = site_url('forum/thread/' . $thread_id);
-        $config['total_rows'] = $data['post_count'];
-        $config['per_page'] = $limit;
-        $config['uri_segment'] = 4;
-        $config['full_tag_open'] = '<ul class="pagination">';
-        $config['full_tag_close'] = '</ul>';
-        $config['first_link'] = '&laquo; First';
-        $config['first_tag_open'] = '<li class="page-item">';
-        $config['first_tag_close'] = '</li>';
-        $config['last_link'] = 'Last &raquo;';
-        $config['last_tag_open'] = '<li class="page-item">';
-        $config['last_tag_close'] = '</li>';
-        $config['next_link'] = 'Next &rarr;';
-        $config['next_tag_open'] = '<li class="page-item">';
-        $config['next_tag_close'] = '</li>';
-        $config['prev_link'] = '&larr; Previous';
-        $config['prev_tag_open'] = '<li class="page-item">';
-        $config['prev_tag_close'] = '</li>';
-        $config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="#">';
-        $config['cur_tag_close'] = '</a></li>';
-        $config['num_tag_open'] = '<li class="page-item">';
-        $config['num_tag_close'] = '</li>';
-        $config['attributes'] = array('class' => 'page-link');
-        
-        $this->pagination->initialize($config);
-        $data['pagination'] = $this->pagination->create_links();
+        // Note: Pagination temporarily disabled to ensure all comments display; can be re-implemented for top-level posts if needed
+        $data['pagination'] = '';
         
         // Load views
         $data['title'] = $data['thread']->title;
@@ -267,11 +240,19 @@ class Forum extends CI_Controller {
     {
         // Validate user is logged in
         if (!$this->session->userdata('user_id')) {
+            if ($this->input->is_ajax_request()) {
+                $this->output->set_content_type('application/json')->set_output(json_encode(['success' => false, 'message' => 'Please log in to like.']));
+                return;
+            }
             redirect('auth/login');
         }
 
         // Validate input
         if (!in_array($type, ['thread', 'post']) || !is_numeric($id)) {
+            if ($this->input->is_ajax_request()) {
+                $this->output->set_content_type('application/json')->set_output(json_encode(['success' => false, 'message' => 'Invalid request.']));
+                return;
+            }
             show_404();
         }
 
@@ -283,6 +264,10 @@ class Forum extends CI_Controller {
         if ($type == 'thread') {
             $thread = $this->forum->get_thread($id);
             if (!$thread) {
+                if ($this->input->is_ajax_request()) {
+                    $this->output->set_content_type('application/json')->set_output(json_encode(['success' => false, 'message' => 'Thread not found.']));
+                    return;
+                }
                 show_404();
             }
         }
@@ -291,11 +276,27 @@ class Forum extends CI_Controller {
         if ($type == 'post') {
             $post = $this->db->get_where('forum_posts', ['id' => $id])->row();
             if (!$post) {
+                if ($this->input->is_ajax_request()) {
+                    $this->output->set_content_type('application/json')->set_output(json_encode(['success' => false, 'message' => 'Post not found.']));
+                    return;
+                }
                 show_404();
             }
         }
 
-        $this->forum->toggle_like($user_id, $thread_id, $post_id);
+        $liked = $this->forum->toggle_like($user_id, $thread_id, $post_id);
+        $new_count = $this->forum->count_likes($type == 'thread' ? $thread_id : $post_id, $type);
+
+        if ($this->input->is_ajax_request()) {
+            $this->output->set_content_type('application/json')->set_output(json_encode([
+                'success' => true,
+                'liked' => $liked,
+                'count' => $new_count,
+                'type' => $type,
+                'id' => $id
+            ]));
+            return;
+        }
 
         if ($type == 'thread') {
             redirect('forum/thread/' . $id);
@@ -355,5 +356,31 @@ class Forum extends CI_Controller {
                 redirect('forum');
             }
         }
+    }
+
+    public function reply($post_id)
+    {
+        // Validate post exists
+        $post = $this->db->get_where('forum_posts', ['id' => $post_id])->row();
+        if (!$post) {
+            show_404();
+        }
+
+        // Get thread and category
+        $thread = $this->forum->get_thread($post->thread_id);
+        if (!$thread) {
+            show_404();
+        }
+
+        $category = $this->forum->get_category($thread->category_id);
+
+        $data['title'] = 'Balas Komentar - ' . $thread->title;
+        $data['post'] = $post;
+        $data['thread'] = $thread;
+        $data['category'] = $category;
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('forum/reply', $data);
+        $this->load->view('templates/footer');
     }
 }

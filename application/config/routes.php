@@ -1,54 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-/*
-| -------------------------------------------------------------------------
-| URI ROUTING
-| -------------------------------------------------------------------------
-| This file lets you re-map URI requests to specific controller functions.
-|
-| Typically there is a one-to-one relationship between a URL string
-| and its corresponding controller class/method. The segments in a
-| URL normally follow this pattern:
-|
-|	example.com/class/method/id/
-|
-| In some instances, however, you may want to remap this relationship
-| so that a different class/function is called than the one
-| corresponding to the URL.
-|
-| Please see the user guide for complete details:
-|
-|	https://codeigniter.com/userguide3/general/routing.html
-|
-| -------------------------------------------------------------------------
-| RESERVED ROUTES
-| -------------------------------------------------------------------------
-|
-| There are three reserved routes:
-|
-|	$route['default_controller'] = 'welcome';
-|
-| This route indicates which controller class should be loaded if the
-| URI contains no data. In the above example, the "welcome" class
-| would be loaded.
-|
-|	$route['404_override'] = 'errors/page_missing';
-|
-| This route will tell the Router which controller/method to use if those
-| provided in the URL cannot be matched to a valid route.
-|
-|	$route['translate_uri_dashes'] = FALSE;
-|
-| This is not exactly a route, but allows you to automatically route
-| controller and method names that contain dashes. '-' isn't a valid
-| class or method name character, so it requires translation.
-| When you set this option to TRUE, it will replace ALL dashes in the
-| controller and method URI segments.
-|
-| Examples:	my-controller/index	-> my_controller/index
-|		my-controller/my-method	-> my_controller/my_method
-*/
+
 $route['default_controller'] = 'home';
 $route['404_override'] = '';
 
@@ -230,6 +183,7 @@ $route['admin/workshops/create'] = 'admin/workshops/create';
 $route['admin/workshops/detail/(:any)'] = 'admin/workshops/detail/$1';
 $route['admin/workshops/edit/(:any)'] = 'admin/workshops/edit/$1';
 $route['admin/workshops/delete/(:any)'] = 'admin/workshops/delete/$1';
+$route['admin/workshops/participants/(:any)'] = 'admin/workshops/participants/$1';
 $route['admin/workshops/manage_materials/(:any)'] = 'admin/workshops/manage_materials/$1';
 $route['admin/workshops/add_material/(:any)'] = 'admin/workshops/add_material/$1';
 $route['admin/workshops/edit_material/(:any)'] = 'admin/workshops/edit_material/$1';
@@ -297,6 +251,21 @@ $route['mobile/register/process'] = 'auth/process_mobile_register';
 
 // Sitemap
 $route['sitemap.xml'] = 'sitemap';
+
+// Forum Routes
+$route['forum'] = 'forum';
+$route['forum/category/(:any)'] = 'forum/category/$1';
+$route['forum/thread/(:num)'] = 'forum/thread/$1';
+$route['forum/thread/(:num)/(:any)'] = 'forum/thread/$1/$2';
+$route['forum/create'] = 'forum/create';
+$route['forum/create_post/(:num)'] = 'forum/create_post/$1';
+$route['forum/reply/(:num)'] = 'forum/reply/$1';
+$route['forum/edit_thread/(:num)'] = 'forum/edit_thread/$1';
+$route['forum/delete_thread/(:num)'] = 'forum/delete_thread/$1';
+$route['forum/delete_post/(:num)/(:num)'] = 'forum/delete_post/$1/$2';
+$route['forum/toggle_pin/(:num)'] = 'forum/toggle_pin/$1';
+$route['forum/get_comments_ajax/(:num)'] = 'forum/get_comments_ajax/$1';
+$route['forum/get_viewers/(:num)'] = 'forum/get_viewers/$1';
 
 // Test Routes (only for development)
 $route['test/encryption'] = 'test_encryption';
