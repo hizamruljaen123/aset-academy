@@ -92,11 +92,11 @@ class Absensi_model extends CI_Model {
     // Get attendance statistics by class
     public function get_attendance_stats_by_class($kelas_id)
     {
-        $this->db->select('status, COUNT(*) as count');
+        $this->db->select('a.status, COUNT(*) as count');
         $this->db->from('absensi a');
         $this->db->join('jadwal_kelas jk', 'a.jadwal_id = jk.id');
         $this->db->where('jk.kelas_id', $kelas_id);
-        $this->db->group_by('status');
+        $this->db->group_by('a.status');
         $result = $this->db->get()->result_array();
         
         $stats = [

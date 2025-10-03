@@ -67,19 +67,12 @@ class Free_classes extends CI_Controller {
         $this->load->view('templates/footer');
     }
     
-    public function view($enrollment_id)
+    public function view($class_id)
     {
         $student_id = $this->session->userdata('user_id');
 
-        // Get enrollment details
-        $enrollment = $this->Enrollment_model->get_enrollment_details($enrollment_id);
-
-        if (!$enrollment || $enrollment->student_id != $student_id) {
-            show_error('Data pendaftaran tidak ditemukan', 404);
-        }
-
         // Get class details
-        $free_class = $this->Free_class_model->get_free_class_by_id($enrollment->class_id);
+        $free_class = $this->Free_class_model->get_free_class_by_id($class_id);
 
         if (!$free_class) {
             show_error('Kelas gratis tidak ditemukan', 404);
@@ -89,28 +82,45 @@ class Free_classes extends CI_Controller {
             show_error('Kelas ini belum dipublikasikan', 403);
         }
 
-        // Check if student is enrolled (should be true since we got enrollment details)
-        $data['is_enrolled'] = true;
-        $data['enrollment'] = $enrollment;
+        // Check if student is enrolled in this class
+        $enrollment = $this->Enrollment_model->get_enrollment($class_id, $student_id);
 
-        // Get class materials
-        $data['materials'] = $this->Free_class_model->get_free_class_materials($enrollment->class_id);
+        if (!$enrollment) {
+            // Student is not enrolled, show class details with enroll option
+            $data['is_enrolled'] = false;
+            $data['enrollment'] = null;
+        } else {
+            // Student is enrolled
+            $data['is_enrolled'] = true;
+            $data['enrollment'] = $enrollment;
+        }
+
+        // Get class materials (only show if enrolled)
+        if ($data['is_enrolled']) {
+            $data['materials'] = $this->Free_class_model->get_free_class_materials($class_id);
+        } else {
+            $data['materials'] = [];
+        }
 
         // Get enrolled students count
-        $data['enrolled_count'] = $this->Free_class_model->count_enrolled_students($enrollment->class_id);
+        $data['enrolled_count'] = $this->Free_class_model->count_enrolled_students($class_id);
 
         // Check if class has reached max students
         $data['is_full'] = ($free_class->max_students !== null && $data['enrolled_count'] >= $free_class->max_students);
 
-        // Get discussions
-        $data['discussions'] = $this->Free_class_model->get_free_class_discussions($enrollment->class_id);
+        // Get discussions (only show if enrolled)
+        if ($data['is_enrolled']) {
+            $data['discussions'] = $this->Free_class_model->get_free_class_discussions($class_id);
+        } else {
+            $data['discussions'] = [];
+        }
 
         // Get class schedule
         $this->load->model('Jadwal_model');
-        $data['jadwal'] = $this->Jadwal_model->get_free_class_jadwal($enrollment->class_id);
+        $data['jadwal'] = $this->Jadwal_model->get_free_class_jadwal($class_id);
 
         // Get enrolled students list for display
-        $data['enrolled_students'] = $this->Free_class_model->get_enrolled_students($enrollment->class_id);
+        $data['enrolled_students'] = $this->Free_class_model->get_enrolled_students($class_id);
 
         $data['free_class'] = $free_class;
         $data['title'] = $free_class->title;

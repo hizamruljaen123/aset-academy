@@ -1,10 +1,16 @@
 <div class="p-4 sm:p-6 lg:p-8">
     <!-- Header -->
+    <?php
+        $is_free_class = isset($class_type) && $class_type === 'gratis';
+        $class_name = $is_free_class ? ($kelas->title ?? 'Kelas Gratis') : ($kelas->nama_kelas ?? 'Kelas');
+        $class_tag = $is_free_class ? ($kelas->category ?? '-') : ($kelas->bahasa_program ?? '-');
+        $class_level = $kelas->level ?? '-';
+    ?>
     <div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-2xl p-6 mb-8 shadow-lg">
         <div class="flex justify-between items-center">
             <div>
-                <h1 class="text-3xl font-bold"><?php echo $kelas->nama_kelas; ?></h1>
-                <p class="text-sm opacity-90 mt-1">Level: <?php echo $kelas->level; ?> | <?php echo $kelas->bahasa_program; ?></p>
+                <h1 class="text-3xl font-bold"><?php echo $class_name; ?></h1>
+                <p class="text-sm opacity-90 mt-1">Level: <?php echo $class_level; ?> | <?php echo $class_tag; ?></p>
             </div>
             <div class="flex items-center space-x-4">
                 <?php if (!empty($kelas->online_meet_link)): ?>
@@ -61,6 +67,12 @@
                         <tbody class="divide-y divide-gray-200">
                             <?php if (!empty($siswa)): ?>
                                 <?php foreach ($siswa as $s): ?>
+                                    <?php
+                                        $student_email = $s->email ?? ($s->username ?? '-');
+                                        $student_identifier = $s->nis ?? ($s->username ?? '-');
+                                        $student_status = $s->status ?? ($s->account_status ?? '-');
+                                        $detail_link = !$is_free_class ? site_url('teacher/siswa_detail/' . $s->id) : null;
+                                    ?>
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
@@ -69,18 +81,22 @@
                                                 </div>
                                                 <div class="ml-4">
                                                     <div class="text-sm font-medium text-gray-900"><?php echo $s->nama_lengkap; ?></div>
-                                                    <div class="text-sm text-gray-500"><?php echo $s->nis; ?></div>
+                                                    <div class="text-sm text-gray-500"><?php echo $student_identifier; ?></div>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo $s->email; ?></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo $student_email; ?></td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                <?php echo $s->status; ?>
+                                                <?php echo $student_status; ?>
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <a href="<?php echo site_url('teacher/siswa_detail/' . $s->id); ?>" class="text-indigo-600 hover:text-indigo-900">Detail</a>
+                                            <?php if ($detail_link): ?>
+                                                <a href="<?php echo $detail_link; ?>" class="text-indigo-600 hover:text-indigo-900">Detail</a>
+                                            <?php else: ?>
+                                                <span class="text-gray-400">-</span>
+                                            <?php endif; ?>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -118,11 +134,23 @@
                 <div class="space-y-4">
                     <?php if (!empty($materi)): ?>
                         <?php foreach ($materi as $m): ?>
+                            <?php
+                                $material_title = $is_free_class ? ($m->title ?? 'Materi') : ($m->judul ?? 'Materi');
+                                $material_desc = $is_free_class ? ($m->description ?? '') : ($m->deskripsi ?? '');
+                                $material_link = !$is_free_class ? site_url('teacher/materi_detail/' . $m->id) : null;
+                            ?>
                             <div class="p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">
-                                <a href="<?php echo site_url('teacher/materi_detail/' . $m->id); ?>" class="block">
-                                    <h4 class="font-semibold text-gray-900"><?php echo $m->judul; ?></h4>
-                                    <p class="text-sm text-gray-600 mt-1"><?php echo character_limiter($m->deskripsi, 50); ?></p>
-                                </a>
+                                <?php if ($material_link): ?>
+                                    <a href="<?php echo $material_link; ?>" class="block">
+                                        <h4 class="font-semibold text-gray-900"><?php echo $material_title; ?></h4>
+                                        <p class="text-sm text-gray-600 mt-1"><?php echo character_limiter($material_desc, 50); ?></p>
+                                    </a>
+                                <?php else: ?>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900"><?php echo $material_title; ?></h4>
+                                        <p class="text-sm text-gray-600 mt-1"><?php echo character_limiter($material_desc, 50); ?></p>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>

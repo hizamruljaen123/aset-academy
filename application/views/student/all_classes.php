@@ -52,8 +52,19 @@
                 <?php endforeach; ?>
             </div>
         <?php else: ?>
-            <div class="text-center py-10 text-gray-500">
-                Belum ada kelas premium yang aktif.
+            <!-- Banner untuk menambah kelas premium -->
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-dashed border-blue-200 rounded-2xl p-8 text-center">
+                <div class="max-w-md mx-auto">
+                    <div class="h-16 w-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-crown text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Belum Ada Kelas Premium</h3>
+                    <p class="text-gray-600 mb-6">Mulai perjalanan belajar Anda dengan kelas premium berkualitas tinggi. Dapatkan akses ke materi eksklusif dan sertifikat resmi.</p>
+                    <a href="<?= site_url('student/premium'); ?>" class="inline-flex items-center px-6 py-3 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform hover:scale-105">
+                        <i class="fas fa-plus mr-2"></i>
+                        Tambah Kelas Premium
+                    </a>
+                </div>
             </div>
         <?php endif; ?>
     </section>
@@ -88,7 +99,7 @@
                             <div class="bg-blue-500 h-2" style="width: <?= isset($free->progress) ? (int)$free->progress : 0; ?>%"></div>
                         </div>
                         <div class="flex items-center justify-end gap-3">
-                            <a href="<?= site_url('student/free_classes/view/' . $free->id); ?>" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-blue-600">
+                            <a href="<?= site_url('student/free_classes/view/' . $free->class_id); ?>" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-blue-600">
                                 Lihat Detail
                             </a>
                             <a href="<?= site_url('student/free_classes/learn/' . $free->id); ?>" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition">
@@ -99,8 +110,19 @@
                 <?php endforeach; ?>
             </div>
         <?php else: ?>
-            <div class="text-center py-10 text-gray-500">
-                Belum ada kelas gratis yang diikuti.
+            <!-- Banner untuk menambah kelas gratis -->
+            <div class="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-dashed border-green-200 rounded-2xl p-8 text-center">
+                <div class="max-w-md mx-auto">
+                    <div class="h-16 w-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-graduation-cap text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Belum Ada Kelas Gratis</h3>
+                    <p class="text-gray-600 mb-6">Jelajahi berbagai kelas gratis untuk meningkatkan pengetahuan Anda. Belajar kapan saja dan di mana saja tanpa biaya.</p>
+                    <a href="<?= site_url('student/free_classes'); ?>" class="inline-flex items-center px-6 py-3 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-transform hover:scale-105">
+                        <i class="fas fa-plus mr-2"></i>
+                        Jelajahi Kelas Gratis
+                    </a>
+                </div>
             </div>
         <?php endif; ?>
     </section>

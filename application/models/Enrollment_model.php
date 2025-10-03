@@ -84,7 +84,7 @@ class Enrollment_model extends CI_Model
      */
     public function get_student_enrollments($student_id, $status = null)
     {
-        $this->db->select('e.*, fc.title, fc.thumbnail, fc.level, fc.category, fc.online_meet_link, u.nama_lengkap as mentor_name');
+        $this->db->select('e.*, fc.id as class_id, fc.title, fc.thumbnail, fc.level, fc.category, fc.online_meet_link, u.nama_lengkap as mentor_name');
         $this->db->from('free_class_enrollments e');
         $this->db->join('free_classes fc', 'e.class_id = fc.id', 'left');
         $this->db->join('users u', 'fc.mentor_id = u.id', 'left');

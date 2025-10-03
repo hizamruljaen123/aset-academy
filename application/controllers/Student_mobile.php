@@ -817,29 +817,7 @@ class Student_mobile extends CI_Controller
         }
     }
 
-    public function toggle_like()
-    {
-        $thread_id = $this->input->post('thread_id');
-        $user_id = $this->session->userdata('user_id');
         
-        if (!$thread_id || !$user_id) {
-            $this->output->set_status_header(400);
-            echo json_encode(['success' => false, 'message' => 'Invalid request']);
-            return;
-        }
-        
-        $liked = $this->Forum_model->toggle_like($user_id, $thread_id);
-        $like_count = $this->Forum_model->count_likes($thread_id, 'thread');
-        
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode([
-                'success' => true,
-                'liked' => $liked,
-                'count' => $like_count
-            ]));
-    }
-
     public function free_class_detail($class_id)
     {
         $user_id = $this->session->userdata('user_id');

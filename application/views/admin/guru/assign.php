@@ -71,8 +71,8 @@
                                             <i class="fas fa-check"></i>
                                         </div>
                                         <div class="flex-1 min-w-0">
-                                            <h4 class="text-base font-medium text-gray-900 truncate"><?php echo html_escape($kelas->title); ?></h4>
-                                            <p class="text-sm text-gray-500"><?php echo html_escape($kelas->category); ?> • <?php echo html_escape($kelas->level); ?></p>
+                                            <h4 class="text-base font-medium text-gray-900 truncate"><?php echo html_escape(isset($kelas->nama_kelas) ? $kelas->nama_kelas : $kelas->title); ?></h4>
+                                            <p class="text-sm text-gray-500"><?php echo html_escape(isset($kelas->bahasa_program) ? $kelas->bahasa_program : $kelas->category); ?> • <?php echo html_escape($kelas->level); ?></p>
                                         </div>
                                         <?php echo form_open('admin_guru/remove_class', ['class' => 'ml-4']); ?>
                                             <input type="hidden" name="teacher_id" value="<?php echo $teacher->id; ?>">

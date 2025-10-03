@@ -4,6 +4,7 @@ class Student_premium extends CI_Controller {
         parent::__construct();
         $this->load->model('Kelas_programming_model');
         $this->load->model('Payment_model');
+        $this->load->model('Premium_enrollment_model');
         
         if (!$this->session->userdata('logged_in')) {
             redirect('auth');
@@ -40,13 +41,69 @@ class Student_premium extends CI_Controller {
     }
     
     public function detail($class_id) {
-        $data['class'] = $this->Kelas_programming_model->get_kelas_by_id($class_id);
-        if (!$data['class']) show_404();
+        // Validate class exists
+        $class = $this->Kelas_programming_model->get_kelas_by_id($class_id);
+        if (!$class) {
+            show_404();
+        }
         
-        $data['title'] = 'Detail Kelas - ' . $data['class']->nama_kelas;
+        $data['class'] = $class;
+        $data['title'] = 'Detail Kelas - ' . $class->nama_kelas;
+        
         $this->load->view('templates/header', $data);
         $this->load->view('student/premium_detail', $data);
         $this->load->view('templates/footer');
+    }
+    
+    public function buy($class_id) {
+        // Check if user is logged in and is a student
+        if (!$this->session->userdata('logged_in')) {
+            redirect('auth');
+        }
+
+        if ($this->session->userdata('role') != 'siswa') {
+            show_error('Hanya siswa yang dapat membeli kelas premium.', 403);
+        }
+
+        // Validate class exists
+        $class = $this->Kelas_programming_model->get_kelas_by_id($class_id);
+        if (!$class) {
+            show_404();
+        }
+
+        // Check if already enrolled in premium class (avoid duplicate payment for premium classes)
+        $premium_enrollment = $this->db->where([
+            'class_id' => $class_id,
+            'student_id' => $this->session->userdata('user_id')
+        ])
+        ->where_in('status', ['Pending', 'Active', 'Completed'])
+        ->get('premium_class_enrollments')
+        ->row();
+
+        if ($premium_enrollment) {
+            // If enrollment exists, send to payment status if we have the payment id, else to student premium page
+            if (!empty($premium_enrollment->payment_id)) {
+                redirect('payment/status/' . $premium_enrollment->payment_id);
+            } else {
+                $this->session->set_flashdata('message', 'Anda sudah terdaftar di kelas ini.');
+                redirect('student/premium');
+            }
+        }
+
+        // Check if already has pending payment
+        $pending_payment = $this->db->where([
+            'class_id' => $class_id,
+            'user_id' => $this->session->userdata('user_id'),
+            'status' => 'Pending'
+        ])->get('payments')->row();
+
+        if ($pending_payment) {
+            $this->session->set_flashdata('message', 'Anda sudah memiliki pembayaran yang sedang diverifikasi');
+            redirect('payment/status/' . $pending_payment->id);
+        }
+
+        // Redirect to payment initiate page
+        redirect('payment/initiate/' . $class_id);
     }
     
     public function learn($enrollment_id)
@@ -296,32 +353,46 @@ class Student_premium extends CI_Controller {
         // Update last accessed time if not completed
         if ($progress && $progress->status != 'Completed') {
             $this->Premium_enrollment_model->update_material_progress($enrollment_id, $material_id, 'In Progress');
+            $progress = $this->Premium_enrollment_model->get_material_progress($enrollment_id, $material_id);
         }
 
         // Get all materials for navigation
         $this->load->model('Materi_model');
-        $data['all_materials'] = $this->Materi_model->get_materi_by_kelas($enrollment->class_id);
+        $all_materials = $this->Materi_model->get_materi_by_kelas($enrollment->class_id);
+
+        // Prepare progress map for quick lookup in view
+        $material_progress_records = $this->Premium_enrollment_model->get_all_material_progress($enrollment_id);
+        $material_progress_map = [];
+        foreach ($material_progress_records as $record) {
+            $material_progress_map[$record->material_id] = $record;
+        }
 
         // Find next and previous materials
-        $data['next_material'] = null;
-        $data['prev_material'] = null;
+        $prev_material = null;
+        $next_material = null;
 
-        foreach ($data['all_materials'] as $index => $m) {
+        foreach ($all_materials as $index => $m) {
             if ($m->id == $material_id) {
                 if ($index > 0) {
-                    $data['prev_material'] = $data['all_materials'][$index - 1];
+                    $prev_material = $all_materials[$index - 1];
                 }
-                if ($index < count($data['all_materials']) - 1) {
-                    $data['next_material'] = $data['all_materials'][$index + 1];
+                if ($index < count($all_materials) - 1) {
+                    $next_material = $all_materials[$index + 1];
                 }
                 break;
             }
         }
 
-        $data['enrollment'] = $enrollment;
-        $data['material'] = $material;
-        $data['progress'] = $progress;
-        $data['title'] = $material->judul;
+        $data = [
+            'enrollment' => $enrollment,
+            'material' => $material,
+            'progress' => $progress,
+            'all_materials' => $all_materials,
+            'material_progress_map' => $material_progress_map,
+            'prev_material' => $prev_material,
+            'next_material' => $next_material,
+            'title' => $material->judul
+        ];
 
         $this->load->view('templates/header', $data);
         $this->load->view('student/premium/material', $data);

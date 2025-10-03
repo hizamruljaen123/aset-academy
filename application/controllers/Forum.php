@@ -96,18 +96,7 @@ class Forum extends CI_Controller {
         $user_id = $this->session->userdata('user_id');
         $data['posts'] = $this->forum->get_thread_posts_with_replies($data['thread']->id, $user_id);
         $data['post_count'] = $this->forum->count_posts($data['thread']->id);
-        $data['likes'] = $this->forum->count_likes($data['thread']->id, 'thread');
         $data['view_count'] = $this->forum->get_thread_view_count($thread_id);
-        
-        // Check if user has liked the thread
-        $data['user_has_liked'] = false;
-        if ($this->session->userdata('user_id')) {
-            $data['user_has_liked'] = $this->forum->has_user_liked(
-                $this->session->userdata('user_id'), 
-                $data['thread']->id, 
-                'thread'
-            );
-        }
         
         // Get similar threads
         $data['similar_threads'] = $this->forum->get_similar_threads(
@@ -220,6 +209,9 @@ class Forum extends CI_Controller {
         $limit = 10;
         $posts = $this->forum->get_posts_by_thread($thread_id, $limit, $offset);
         
+        // Debug logging
+        log_message('debug', 'get_comments_ajax called for thread: ' . $thread_id . ', offset: ' . $offset . ', posts found: ' . count($posts));
+        
         // Format posts for AJAX response
         $formatted_posts = [];
         foreach ($posts as $post) {
@@ -233,77 +225,6 @@ class Forum extends CI_Controller {
         }
         
         $this->output->set_content_type('application/json')->set_output(json_encode($formatted_posts));
-    }
-
-    public function like($type, $id)
-    {
-        // Validate user is logged in
-        if (!$this->session->userdata('user_id')) {
-            if ($this->input->is_ajax_request()) {
-                $this->output->set_content_type('application/json')->set_output(json_encode(['success' => false, 'message' => 'Please log in to like.']));
-                return;
-            }
-            redirect('auth/login');
-        }
-
-        // Validate input
-        if (!in_array($type, ['thread', 'post']) || !is_numeric($id)) {
-            if ($this->input->is_ajax_request()) {
-                $this->output->set_content_type('application/json')->set_output(json_encode(['success' => false, 'message' => 'Invalid request.']));
-                return;
-            }
-            show_404();
-        }
-
-        $user_id = $this->session->userdata('user_id');
-        $thread_id = ($type == 'thread') ? $id : null;
-        $post_id = ($type == 'post') ? $id : null;
-
-        // Validate thread exists if liking thread
-        if ($type == 'thread') {
-            $thread = $this->forum->get_thread($id);
-            if (!$thread) {
-                if ($this->input->is_ajax_request()) {
-                    $this->output->set_content_type('application/json')->set_output(json_encode(['success' => false, 'message' => 'Thread not found.']));
-                    return;
-                }
-                show_404();
-            }
-        }
-
-        // Validate post exists if liking post
-        if ($type == 'post') {
-            $post = $this->db->get_where('forum_posts', ['id' => $id])->row();
-            if (!$post) {
-                if ($this->input->is_ajax_request()) {
-                    $this->output->set_content_type('application/json')->set_output(json_encode(['success' => false, 'message' => 'Post not found.']));
-                    return;
-                }
-                show_404();
-            }
-        }
-
-        $liked = $this->forum->toggle_like($user_id, $thread_id, $post_id);
-        $new_count = $this->forum->count_likes($type == 'thread' ? $thread_id : $post_id, $type);
-
-        if ($this->input->is_ajax_request()) {
-            $this->output->set_content_type('application/json')->set_output(json_encode([
-                'success' => true,
-                'liked' => $liked,
-                'count' => $new_count,
-                'type' => $type,
-                'id' => $id
-            ]));
-            return;
-        }
-
-        if ($type == 'thread') {
-            redirect('forum/thread/' . $id);
-        } else {
-            // Need to get thread_id from post_id to redirect correctly
-            $post = $this->db->get_where('forum_posts', ['id' => $post_id])->row();
-            redirect('forum/thread/' . $post->thread_id);
-        }
     }
 
     public function get_viewers($thread_id)

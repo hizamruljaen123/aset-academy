@@ -127,6 +127,38 @@ class Guru_model extends CI_Model {
         return $this->db->delete('guru_kelas');
     }
 
+    public function get_active_assignment_by_class($kelas_id)
+    {
+        $this->db->from('guru_kelas');
+        $this->db->where('kelas_id', $kelas_id);
+        $this->db->where('status', 'Aktif');
+        return $this->db->get()->row();
+    }
+
+    public function get_active_premium_assignments_with_teacher()
+    {
+        $this->db->select('gk.kelas_id, gk.guru_id, u.nama_lengkap as guru_name, kp.nama_kelas');
+        $this->db->from('guru_kelas gk');
+        $this->db->join('users u', 'gk.guru_id = u.id');
+        $this->db->join('kelas_programming kp', 'gk.kelas_id = kp.id');
+        $this->db->where('gk.status', 'Aktif');
+        return $this->db->get()->result();
+    }
+
+    public function get_assignment_record($kelas_id, $guru_id)
+    {
+        $this->db->from('guru_kelas');
+        $this->db->where('kelas_id', $kelas_id);
+        $this->db->where('guru_id', $guru_id);
+        return $this->db->get()->row();
+    }
+
+    public function update_assignment_status($assignment_id, $status = 'Aktif')
+    {
+        $this->db->where('id', $assignment_id);
+        return $this->db->update('guru_kelas', ['status' => $status, 'assigned_at' => date('Y-m-d H:i:s')]);
+    }
+
     // Get dashboard stats for teacher
     public function get_all_gurus()
     {

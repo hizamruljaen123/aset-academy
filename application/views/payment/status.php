@@ -123,7 +123,7 @@
 
             <?php if ($payment->status == 'Verified'): ?>
                 <div class="text-center mt-6 space-y-3">
-                    <a href="<?= site_url('kelas/enroll/' . $payment->class_id) ?>" class="inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline">
+                    <a href="<?= isset($enrollment) && $enrollment ? site_url('student/premium/learn/' . $enrollment->id) : site_url('kelas/enroll/' . $payment->class_id) ?>" class="inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline">
                         Akses Kelas Sekarang
                     </a>
                     <?php if (!empty($payment->invoice_number)): ?>

@@ -23,7 +23,17 @@ class Auth_model extends CI_Model {
             $users = $query->result();
             $user = $users[0]; // Get first row for user data
             
-            if (md5($password) == $user->password) {
+            // Check password - support both BCRYPT and MD5 for migration
+            $password_valid = false;
+            if (password_verify($password, $user->password)) {
+                $password_valid = true;
+            } elseif (md5($password) == $user->password) {
+                // If MD5 matches, update to BCRYPT hash
+                $this->update_password_to_bcrypt($user->id, $password);
+                $password_valid = true;
+            }
+            
+            if ($password_valid) {
                 // Build permissions array
                 $permissions = [];
                 foreach ($users as $perm) {
@@ -133,11 +143,29 @@ class Auth_model extends CI_Model {
         $query = $this->db->query("SELECT u.* FROM users u LEFT JOIN siswa s ON u.id = s.id WHERE u.username = ? OR s.nis = ?", array($username, $username));
         $user = $query->row();
         
-        // Verifikasi password (cek bcrypt atau md5 untuk kompatibilitas)
-        if ($user && (password_verify($password, $user->password) || md5($password) == $user->password)) {
+        // Check password - support both BCRYPT and MD5 for migration
+        $password_valid = false;
+        if ($user && password_verify($password, $user->password)) {
+            $password_valid = true;
+        } elseif ($user && md5($password) == $user->password) {
+            // If MD5 matches, update to BCRYPT hash
+            $this->update_password_to_bcrypt($user->id, $password);
+            $password_valid = true;
+        }
+        
+        if ($password_valid) {
             return $user;
         }
         
         return false;
+    }
+
+    // Update MD5 password to BCRYPT hash
+    private function update_password_to_bcrypt($user_id, $plain_password)
+    {
+        $hashed_password = password_hash($plain_password, PASSWORD_BCRYPT);
+        $this->db->set('password', $hashed_password);
+        $this->db->where('id', $user_id);
+        $this->db->update('users');
     }
 }

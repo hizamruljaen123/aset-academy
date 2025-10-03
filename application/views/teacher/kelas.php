@@ -76,12 +76,14 @@
                                 <div class="text-xs text-gray-500">Ditugaskan: <?php echo date('d M Y', strtotime($k->assigned_at)); ?></div>
                                 <div class="flex items-center space-x-2">
                                     <?php if (!empty($k->online_meet_link)): ?>
-                                        <a href="<?php echo $k->online_meet_link; ?>" target="_blank" class="text-green-500 hover:text-green-600 transition-colors" title="Join Meeting">
-                                            <i class="fas fa-video"></i>
+                                        <a href="<?php echo $k->online_meet_link; ?>" target="_blank" class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-white bg-green-500 hover:bg-green-600 rounded-lg transition-colors" title="Join Meeting">
+                                            <i class="fas fa-video mr-1"></i>
+                                            Join
                                         </a>
                                     <?php endif; ?>
-                                    <a href="<?php echo site_url('teacher/manage_kelas/' . $k->id); ?>" class="text-gray-400 hover:text-cyan-500 transition-colors" title="Kelola Kelas">
-                                        <i class="fas fa-cog"></i>
+                                    <a href="<?php echo site_url('teacher/manage_kelas/' . $k->id); ?>" class="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-white bg-cyan-500 hover:bg-cyan-600 rounded-lg transition-all" title="Kelola Kelas">
+                                        <i class="fas fa-cog mr-1"></i>
+                                        Kelola
                                     </a>
                                 </div>
                             </div>
@@ -122,12 +124,14 @@
                                 <div class="text-xs text-gray-500">Ditugaskan sebagai mentor</div>
                                 <div class="flex items-center space-x-2">
                                     <?php if (!empty($k->online_meet_link)): ?>
-                                        <a href="<?php echo $k->online_meet_link; ?>" target="_blank" class="text-green-500 hover:text-green-600 transition-colors" title="Join Meeting">
-                                            <i class="fas fa-video"></i>
+                                        <a href="<?php echo $k->online_meet_link; ?>" target="_blank" class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-white bg-green-500 hover:bg-green-600 rounded-lg transition-colors" title="Join Meeting">
+                                            <i class="fas fa-video mr-1"></i>
+                                            Join
                                         </a>
                                     <?php endif; ?>
-                                    <a href="<?php echo site_url('teacher/manage_kelas/' . $k->id); ?>" class="text-gray-400 hover:text-green-500 transition-colors" title="Kelola Kelas">
-                                        <i class="fas fa-cog"></i>
+                                    <a href="<?php echo site_url('teacher/manage_kelas/' . $k->id); ?>" class="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-white bg-emerald-500 hover:bg-emerald-600 rounded-lg transition-all" title="Kelola Kelas">
+                                        <i class="fas fa-cog mr-1"></i>
+                                        Kelola
                                     </a>
                                 </div>
                             </div>
@@ -145,10 +149,7 @@
                 <i class="fas fa-chalkboard-teacher text-4xl text-gray-400"></i>
             </div>
             <h3 class="text-2xl font-bold text-gray-800 mb-2">Anda Belum Mengampu Kelas</h3>
-            <p class="text-gray-500 mb-6">Saat ini Anda belum ditugaskan untuk mengajar di kelas manapun.</p>
-            <button class="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
-                Minta Penugasan Kelas
-            </button>
+            <p class="text-gray-500">Saat ini Anda belum ditugaskan untuk mengajar di kelas manapun. Silakan menunggu penugasan dari admin.</p>
         </div>
     <?php endif; ?>
 </div>

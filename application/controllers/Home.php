@@ -8,7 +8,7 @@ class Home extends MY_Controller {
         parent::__construct();
         $this->load->model('Kelas_model', 'kelas_model');
         $this->load->model('Free_class_model', 'free_class_model');
-        $this->load->model('Testimonial_model', 'testimonial_model');
+        // $this->load->model('Testimonial_model', 'testimonial_model'); // Model doesn't exist
         $this->load->model('Kelas_programming_model', 'kelas_programming_model');
         $this->load->model('Materi_model', 'materi_model');
         $this->load->model('User_model', 'user_model');
@@ -32,7 +32,7 @@ class Home extends MY_Controller {
         $data['featured_free'] = $this->free_class_model->get_popular_free_classes(3);
 
         // Get testimonials
-        $data['testimonials'] = $this->testimonial_model->get_featured_testimonials(5);
+        $data['testimonials'] = []; // Initialize as empty array since model doesn't exist
 
         // Get upcoming workshops and seminars
         $data['upcoming_workshops'] = $this->workshop_model->get_upcoming_workshops(3);
@@ -203,7 +203,7 @@ class Home extends MY_Controller {
         $this->db->where('guru_kelas.kelas_id', $data['kelas']->id);
         $data['instruktur'] = $this->db->get()->row();
 
-        $data['testimonials'] = $this->testimonial_model->get_testimonials_for_class();
+        $data['testimonials'] = []; // Initialize as empty array since model doesn't exist
         $data['total_siswa'] = $this->kelas_programming_model->count_siswa($id);
         $data['avg_rating'] = $this->kelas_programming_model->get_average_rating($id);
 

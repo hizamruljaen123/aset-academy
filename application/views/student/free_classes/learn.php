@@ -20,29 +20,6 @@
         </div>
     </div>
 
-    <!-- Alert Messages -->
-    <?php if ($this->session->flashdata('success')): ?>
-        <div class="mb-6 p-4 rounded-lg bg-green-50 border-l-4 border-green-500 flex items-center fade-in">
-            <div class="rounded-full bg-green-100 p-2 mr-3">
-                <i class="fas fa-check-circle text-green-600"></i>
-            </div>
-            <div class="flex-1 text-green-700">
-                <?php echo $this->session->flashdata('success'); ?>
-            </div>
-        </div>
-    <?php endif; ?>
-
-    <?php if ($this->session->flashdata('error')): ?>
-        <div class="mb-6 p-4 rounded-lg bg-red-50 border-l-4 border-red-500 flex items-center fade-in">
-            <div class="rounded-full bg-red-100 p-2 mr-3">
-                <i class="fas fa-exclamation-circle text-red-600"></i>
-            </div>
-            <div class="flex-1 text-red-700">
-                <?php echo $this->session->flashdata('error'); ?>
-            </div>
-        </div>
-    <?php endif; ?>
-
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <!-- Sidebar -->
         <div class="lg:col-span-1">

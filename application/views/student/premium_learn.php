@@ -8,7 +8,8 @@
                 <p><?php echo $enrollment->bahasa_program ?? 'Programming'; ?> - <?php echo $enrollment->level; ?></p>
             </div>
         </div>
-        <div class="flex space-x-3">
+        <div class="flex flex-col md:flex-row md:space-x-3 space-y-3 md:space-y-0">
+            
             <a href="<?php echo site_url('student/premium/detail/' . $enrollment->class_id); ?>" class="inline-flex items-center px-4 py-2 border border-white/30 rounded-lg text-sm font-medium text-white bg-white/10 hover:bg-white/20 transition-all duration-300 hover:scale-105">
                 <i class="fas fa-arrow-left mr-2"></i>
                 Kembali ke Detail Kelas
@@ -19,29 +20,6 @@
             </a>
         </div>
     </div>
-
-    <!-- Alert Messages -->
-    <?php if ($this->session->flashdata('success')): ?>
-        <div class="mb-6 p-4 rounded-lg bg-green-50 border-l-4 border-green-500 flex items-center fade-in">
-            <div class="rounded-full bg-green-100 p-2 mr-3">
-                <i class="fas fa-check-circle text-green-600"></i>
-            </div>
-            <div class="flex-1 text-green-700">
-                <?php echo $this->session->flashdata('success'); ?>
-            </div>
-        </div>
-    <?php endif; ?>
-
-    <?php if ($this->session->flashdata('error')): ?>
-        <div class="mb-6 p-4 rounded-lg bg-red-50 border-l-4 border-red-500 flex items-center fade-in">
-            <div class="rounded-full bg-red-100 p-2 mr-3">
-                <i class="fas fa-exclamation-circle text-red-600"></i>
-            </div>
-            <div class="flex-1 text-red-700">
-                <?php echo $this->session->flashdata('error'); ?>
-            </div>
-        </div>
-    <?php endif; ?>
 
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <!-- Sidebar -->
@@ -124,15 +102,7 @@
                             </div>
                         </div>
 
-                        <div class="flex items-center">
-                            <div class="rounded-full bg-yellow-100 p-2 mr-3">
-                                <i class="fas fa-dollar-sign text-yellow-600"></i>
-                            </div>
-                            <div>
-                                <p class="text-xs text-gray-500">Harga</p>
-                                <p class="font-medium">Rp <?php echo number_format($enrollment->harga, 0, ',', '.'); ?></p>
-                            </div>
-                        </div>
+                        
 
                         <?php if (!empty($enrollment->online_meet_link)): ?>
                         <div class="mt-4 pt-4 border-t border-gray-200">

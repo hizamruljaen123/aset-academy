@@ -16,8 +16,11 @@ class Payment extends CI_Controller {
 
         $class = $this->Kelas_programming_model->get_kelas_by_id($class_id);
         if (!$class) {
+            log_message('error', 'Class not found: ' . $class_id);
             show_404();
         }
+
+        log_message('info', 'Payment initiate for class_id: ' . $class_id . ', user_id: ' . $this->session->userdata('user_id'));
 
         // Check if already enrolled in premium class (avoid duplicate payment for premium classes)
         $premium_enrollment = $this->db->where([
@@ -49,14 +52,18 @@ class Payment extends CI_Controller {
             redirect('payment/status/' . $pending_payment->id);
         }
 
-        // Get active bank accounts
+        // Get active bank accounts (destination banks)
         $bank_accounts = $this->Company_bank_model->get_active_bank_accounts();
+
+        // Get available banks for sender selection
+        $sender_banks = $this->db->order_by('nama_bank', 'ASC')->get('daftar_bank')->result();
 
         $data = [
             'title' => 'Pembayaran Kelas',
             'class' => $class,
             'user' => $this->db->where('id', $this->session->userdata('user_id'))->get('users')->row(),
-            'bank_accounts' => $bank_accounts
+            'bank_accounts' => $bank_accounts,
+            'sender_banks' => $sender_banks
         ];
 
         $this->load->view('templates/header', $data);
@@ -115,12 +122,17 @@ class Payment extends CI_Controller {
 
     // Process payment creation (without proof initially)
     public function process_payment($class_id) {
+        log_message('info', 'Process payment called for class_id: ' . $class_id . ', user_id: ' . $this->session->userdata('user_id'));
+        log_message('info', 'Request method: ' . $this->input->server('REQUEST_METHOD'));
+        
         if (!$this->session->userdata('logged_in')) {
+            log_message('error', 'User not logged in');
             redirect('auth');
         }
 
         // Only allow POST submissions to prevent CSRF token errors on direct URL access
         if (strtoupper($this->input->server('REQUEST_METHOD')) !== 'POST') {
+            log_message('error', 'Invalid request method: ' . $this->input->server('REQUEST_METHOD'));
             redirect('payment/initiate/' . $class_id);
         }
 
@@ -158,6 +170,13 @@ class Payment extends CI_Controller {
         }
 
         if ($this->form_validation->run() == FALSE) {
+            // Debug: Log validation errors
+            log_message('error', 'Payment validation failed: ' . validation_errors());
+            log_message('error', 'POST data: ' . print_r($this->input->post(), true));
+
+            // Set flashdata for validation errors
+            $this->session->set_flashdata('error', 'Harap lengkapi semua field yang diperlukan: ' . validation_errors());
+
             $this->initiate($class_id);
             return;
         }
@@ -201,10 +220,15 @@ class Payment extends CI_Controller {
         ];
 
         $this->db->insert('payments', $payment_data);
-        $payment_id = $this->db->insert_id();
+        if ($this->db->affected_rows() > 0) {
+            $payment_id = $this->db->insert_id();
 
-        $this->session->set_flashdata('success', 'Pesanan pembayaran berhasil dibuat. Silakan lakukan pembayaran dan upload bukti pembayaran.');
-        redirect('payment/status/' . $payment_id);
+            $this->session->set_flashdata('success', 'Pesanan pembayaran berhasil dibuat. Silakan lakukan pembayaran dan upload bukti pembayaran.');
+            redirect('payment/status/' . $payment_id);
+        } else {
+            $this->session->set_flashdata('error', 'Gagal membuat pesanan pembayaran. Silakan coba lagi.');
+            redirect('payment/initiate/' . $class_id);
+        }
     }
 
     // View payment status
@@ -224,10 +248,18 @@ class Payment extends CI_Controller {
 
         $class = $this->Kelas_programming_model->get_kelas_by_id($payment->class_id);
 
+        // Get enrollment if payment is verified
+        $enrollment = null;
+        if ($payment->status == 'Verified') {
+            $this->load->model('Premium_enrollment_model');
+            $enrollment = $this->Premium_enrollment_model->get_enrollment($payment->user_id, $payment->class_id);
+        }
+
         $data = [
             'title' => 'Status Pembayaran',
             'payment' => $payment,
-            'class' => $class
+            'class' => $class,
+            'enrollment' => $enrollment
         ];
 
         $this->load->view('templates/header', $data);
@@ -345,11 +377,11 @@ class Payment extends CI_Controller {
                 'class_id' => $payment->class_id,
                 'student_id' => $payment->user_id,
                 'payment_id' => $payment->id,
-                'status' => 'Pending'
+                'status' => 'Active'
             ];
             $this->Premium_enrollment_model->create_enrollment($enrollment_data);
             
-            $this->session->set_flashdata('success', 'Pembayaran berhasil diverifikasi. Enrollment dibuat dan menunggu aktivasi.');
+            $this->session->set_flashdata('success', 'Pembayaran berhasil diverifikasi. Akses kelas telah diaktifkan.');
         } elseif ($action == 'reject') {
             $this->db->where('id', $payment_id)->update('payments', [
                 'status' => 'Rejected',

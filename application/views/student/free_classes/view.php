@@ -14,29 +14,6 @@
         </a>
     </div>
 
-    <!-- Alert Messages -->
-    <?php if ($this->session->flashdata('success')): ?>
-        <div class="mb-6 p-4 rounded-lg bg-green-50 border-l-4 border-green-500 flex items-center fade-in">
-            <div class="rounded-full bg-green-100 p-2 mr-3">
-                <i class="fas fa-check-circle text-green-600"></i>
-            </div>
-            <div class="flex-1 text-green-700">
-                <?php echo $this->session->flashdata('success'); ?>
-            </div>
-        </div>
-    <?php endif; ?>
-
-    <?php if ($this->session->flashdata('error')): ?>
-        <div class="mb-6 p-4 rounded-lg bg-red-50 border-l-4 border-red-500 flex items-center fade-in">
-            <div class="rounded-full bg-red-100 p-2 mr-3">
-                <i class="fas fa-exclamation-circle text-red-600"></i>
-            </div>
-            <div class="flex-1 text-red-700">
-                <?php echo $this->session->flashdata('error'); ?>
-            </div>
-        </div>
-    <?php endif; ?>
-
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Main Content -->
         <div class="lg:col-span-2">
@@ -409,13 +386,13 @@
                         <button id="copyLinkBtn" class="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors" title="Salin Link">
                             <i class="fas fa-link"></i>
                         </button>
-                        <a href="https://wa.me/?text=<?php echo urlencode('Kelas gratis: ' . $free_class->title . ' - ' . site_url('student/free_classes/view/' . $enrollment->id)); ?>" target="_blank" class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 hover:bg-green-200 transition-colors" title="Bagikan ke WhatsApp">
+                        <a href="https://wa.me/?text=<?php echo urlencode('Kelas gratis: ' . $free_class->title . ' - ' . site_url('student/free_classes/view/' . $free_class->id)); ?>" target="_blank" class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 hover:bg-green-200 transition-colors" title="Bagikan ke WhatsApp">
                             <i class="fab fa-whatsapp"></i>
                         </a>
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(site_url('student/free_classes/view/' . $enrollment->id)); ?>" target="_blank" class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 hover:bg-blue-200 transition-colors" title="Bagikan ke Facebook">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(site_url('student/free_classes/view/' . $free_class->id)); ?>" target="_blank" class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 hover:bg-blue-200 transition-colors" title="Bagikan ke Facebook">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="https://twitter.com/intent/tweet?text=<?php echo urlencode('Kelas gratis: ' . $free_class->title); ?>&url=<?php echo urlencode(site_url('student/free_classes/view/' . $enrollment->id)); ?>" target="_blank" class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-400 hover:bg-blue-200 transition-colors" title="Bagikan ke Twitter">
+                        <a href="https://twitter.com/intent/tweet?text=<?php echo urlencode('Kelas gratis: ' . $free_class->title); ?>&url=<?php echo urlencode(site_url('student/free_classes/view/' . $free_class->id)); ?>" target="_blank" class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-400 hover:bg-blue-200 transition-colors" title="Bagikan ke Twitter">
                             <i class="fab fa-twitter"></i>
                         </a>
                     </div>
@@ -463,7 +440,7 @@
         if (copyLinkBtn) {
             copyLinkBtn.addEventListener('click', function() {
                 const tempInput = document.createElement('input');
-                tempInput.value = '<?php echo site_url('student/free_classes/view/' . $enrollment->id); ?>';
+                tempInput.value = '<?php echo site_url('student/free_classes/view/' . $free_class->id); ?>';
                 document.body.appendChild(tempInput);
                 tempInput.select();
                 document.execCommand('copy');

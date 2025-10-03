@@ -48,12 +48,6 @@
                             <p class="text-xl font-bold text-blue-600">Rp <?= number_format($class->harga, 0, ',', '.') ?></p>
                         </div>
                     </div>
-                    
-                    <div class="flex justify-end">
-                        <a href="<?= site_url('student/premium/payment/'.$class->id) ?>" class="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 font-medium">
-                            Lanjut ke Pembayaran
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>

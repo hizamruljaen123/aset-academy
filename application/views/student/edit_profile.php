@@ -51,6 +51,7 @@
                     </h3>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Nama Lengkap -->
                         <div class="space-y-2">
                             <label for="nama_lengkap" class="block text-sm font-medium text-gray-700">
                                 Nama Lengkap <span class="text-red-500">*</span>
@@ -67,9 +68,10 @@
                             <?php echo form_error('nama_lengkap', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
                         </div>
 
+                        <!-- NIS (Disabled) -->
                         <div class="space-y-2">
                             <label for="nis" class="block text-sm font-medium text-gray-700">
-                                NIS (Nomor Induk Siswa)
+                                NIS (Nomor Induk Siswa) <span class="text-xs text-gray-500 font-normal">(Tidak dapat diubah)</span>
                             </label>
                             <div class="relative rounded-md shadow-sm">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -77,12 +79,14 @@
                                 </div>
                                 <input type="text" id="nis" name="nis"
                                        value="<?php echo isset($student->nis) ? $student->nis : ''; ?>"
-                                       class="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 pr-3 sm:text-sm border-gray-300 rounded-lg py-3"
-                                       placeholder="Masukkan NIS">
+                                       class="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 pr-3 sm:text-sm border-gray-300 rounded-lg py-3 bg-gray-100 text-gray-500 cursor-not-allowed"
+                                       placeholder="Masukkan NIS" readonly disabled>
                             </div>
-                            <?php echo form_error('nis', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
+                            <p class="mt-1 text-xs text-gray-500">NIS dikelola oleh sistem dan tidak dapat diubah oleh siswa</p>
+                            <input type="hidden" name="nis" value="<?php echo isset($student->nis) ? $student->nis : ''; ?>">
                         </div>
 
+                        <!-- Email (Readonly) -->
                         <div class="space-y-2">
                             <label for="email" class="block text-sm font-medium text-gray-700">
                                 Email <span class="text-red-500">*</span>
@@ -99,6 +103,7 @@
                             </div>
                         </div>
 
+                        <!-- No Telepon -->
                         <div class="space-y-2">
                             <label for="no_telepon" class="block text-sm font-medium text-gray-700">
                                 No. Telepon
@@ -115,6 +120,7 @@
                             <?php echo form_error('no_telepon', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
                         </div>
 
+                        <!-- Tanggal Lahir -->
                         <div class="space-y-2">
                             <label for="tanggal_lahir" class="block text-sm font-medium text-gray-700">
                                 Tanggal Lahir
@@ -130,6 +136,7 @@
                             <?php echo form_error('tanggal_lahir', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
                         </div>
 
+                        <!-- Jenis Kelamin -->
                         <div class="space-y-2">
                             <label for="jenis_kelamin" class="block text-sm font-medium text-gray-700">
                                 Jenis Kelamin
@@ -148,7 +155,6 @@
                             <?php echo form_error('jenis_kelamin', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
                         </div>
                     </div>
-                </div>
 
                 <!-- Informasi Akademik -->
                 <div class="border-b border-gray-200 pb-8">
@@ -158,9 +164,10 @@
                     </h3>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Kelas -->
                         <div class="space-y-2">
                             <label for="kelas" class="block text-sm font-medium text-gray-700">
-                                Kelas
+                                Kelas/Semester ke
                             </label>
                             <div class="relative rounded-md shadow-sm">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -174,9 +181,10 @@
                             <?php echo form_error('kelas', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
                         </div>
 
+                        <!-- Jurusan -->
                         <div class="space-y-2">
                             <label for="jurusan" class="block text-sm font-medium text-gray-700">
-                                Jurusan
+                                Jurusan/ Prodi
                             </label>
                             <div class="relative rounded-md shadow-sm">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -200,6 +208,7 @@
                     </h3>
 
                     <div class="space-y-6">
+                        <!-- Alamat -->
                         <div class="space-y-2">
                             <label for="alamat" class="block text-sm font-medium text-gray-700">
                                 Alamat Lengkap

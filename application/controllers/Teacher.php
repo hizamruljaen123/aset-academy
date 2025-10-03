@@ -95,14 +95,19 @@ class Teacher extends CI_Controller {
         }
 
         // Determine class type and get appropriate data
-        $premium_class = $this->Kelas_model->get_kelas_by_id($kelas_id);
-        if ($premium_class) {
-            $data['kelas'] = $premium_class;
-            $data['siswa'] = $this->Siswa_model->get_siswa_by_kelas($kelas_id);
-            $data['materi'] = $this->Materi_model->get_materi_by_kelas($kelas_id);
-            $data['class_type'] = 'premium';
-        } else {
-            // Check if it's a free class
+        $data['class_type'] = null;
+
+        if ($has_premium_access) {
+            $premium_class = $this->Kelas_model->get_kelas_by_id($kelas_id);
+            if ($premium_class) {
+                $data['kelas'] = $premium_class;
+                $data['siswa'] = $this->Siswa_model->get_siswa_by_kelas($kelas_id);
+                $data['materi'] = $this->Materi_model->get_materi_by_kelas($kelas_id);
+                $data['class_type'] = 'premium';
+            }
+        }
+
+        if ($data['class_type'] === null && $has_free_access) {
             $this->load->model('Free_class_model');
             $free_class = $this->Free_class_model->get_free_class_by_id($kelas_id);
             if (!$free_class) {
@@ -114,8 +119,12 @@ class Teacher extends CI_Controller {
             $data['class_type'] = 'gratis';
         }
 
+        if ($data['class_type'] === null) {
+            show_404();
+        }
+
         $this->load->model('Jadwal_model');
-        $data['jadwal'] = $this->Jadwal_model->get_jadwal_by_kelas($kelas_id);
+        $data['jadwal'] = $this->Jadwal_model->get_jadwal_by_kelas($kelas_id, $data['class_type']);
 
         $data['title'] = 'Kelola Kelas - ' . ($data['kelas']->nama_kelas ?? $data['kelas']->title);
         $this->load->view('templates/header', $data);

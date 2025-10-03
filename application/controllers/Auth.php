@@ -131,19 +131,18 @@ class Auth extends CI_Controller {
                 'nis' => $new_nis,
                 'nama_lengkap' => $this->input->post('nama_lengkap'),
                 'email' => $this->input->post('email'),
-                'no_telepon' => '-',
-                'kelas' => 'X',
-                'jurusan' => '-',
-                'alamat' => '-',
-                'tanggal_lahir' => date('Y-m-d'),
-                'jenis_kelamin' => 'L',
+                'no_telepon' => NULL,
+                'kelas' => NULL,
+                'jurusan' => NULL,
+                'alamat' => NULL,
+                'tanggal_lahir' => NULL,
+                'jenis_kelamin' => NULL,
                 'status' => 'Aktif'
             );
             
             $this->db->trans_start();
             $this->db->insert('users', $user_data);
             $this->db->insert('siswa', $siswa_data);
-            $this->db->trans_complete();
 
             if ($this->db->trans_status() === FALSE) {
                 $this->session->set_flashdata('error', 'Registrasi gagal');
@@ -287,10 +286,10 @@ class Auth extends CI_Controller {
                 'nis' => $new_nis,
                 'nama_lengkap' => $this->input->post('nama_lengkap'),
                 'email' => $this->input->post('email'),
-                'no_telepon' => '-',
-                'kelas' => 'X', // Default kelas X
-                'jurusan' => '-',
-                'alamat' => '-',
+                'no_telepon' => '',
+                'kelas' => '', // Biarkan kosong
+                'jurusan' => '',
+                'alamat' => '',
                 'tanggal_lahir' => date('Y-m-d'), // Default tanggal lahir hari ini
                 'jenis_kelamin' => 'L', // Default Laki-laki
                 'status' => 'Aktif'

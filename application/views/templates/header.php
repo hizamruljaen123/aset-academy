@@ -11,6 +11,10 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
+        window.baseUrl = '<?php echo rtrim(base_url(), '/'); ?>/';
+        window.siteUrl = '<?php echo rtrim(site_url(), '/'); ?>/';
+    </script>
+    <script>
         try {
             tailwind.config = {
                 darkMode: 'class',

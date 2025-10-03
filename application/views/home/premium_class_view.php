@@ -46,11 +46,11 @@
                             <?php foreach ($materi as $index => $m): ?>
                                 <div class="border border-gray-200 rounded-lg overflow-hidden">
                                     <div class="bg-gray-50 px-4 py-3 flex justify-between items-center">
-                                        <h3 class="font-medium text-gray-800"><?= $m->judul_materi ?></h3>
-                                        <span class="text-sm text-gray-500"><?= $m->durasi ?> menit</span>
+                                        <h3 class="font-medium text-gray-800"><?= isset($m->judul) ? $m->judul : 'Materi ' . ($index + 1) ?></h3>
+                                        <span class="text-sm text-gray-500">-</span>
                                     </div>
                                     <div class="p-4">
-                                        <p class="text-gray-600"><?= $m->deskripsi ?></p>
+                                        <p class="text-gray-600"><?= isset($m->deskripsi) ? $m->deskripsi : 'Deskripsi materi belum tersedia.' ?></p>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
@@ -65,13 +65,13 @@
                 <div class="bg-white rounded-xl shadow-lg p-6">
                     <h2 class="text-2xl font-bold mb-6 text-gray-800">Tentang Instruktur</h2>
                     <div class="flex items-start space-x-4">
-                        <img src="<?= base_url('assets/img/instructors/' . $instruktur->foto) ?>" 
-                             alt="<?= $instruktur->nama ?>" 
+                        <img src="<?= base_url('assets/img/instructors/' . (isset($instruktur->foto_profil) ? $instruktur->foto_profil : 'default.jpg')) ?>" 
+                             alt="<?= isset($instruktur->nama_lengkap) ? $instruktur->nama_lengkap : 'Instruktur' ?>" 
                              class="w-20 h-20 rounded-full object-cover">
                         <div>
-                            <h3 class="text-xl font-semibold"><?= $instruktur->nama ?></h3>
-                            <p class="text-blue-600 mb-2"><?= $instruktur->jabatan ?></p>
-                            <p class="text-gray-600"><?= $instruktur->bio ?></p>
+                            <h3 class="text-xl font-semibold"><?= isset($instruktur->nama_lengkap) ? $instruktur->nama_lengkap : 'Nama Instruktur' ?></h3>
+                            <p class="text-blue-600 mb-2"><?= isset($instruktur->role) ? ucfirst($instruktur->role) : 'Instruktur' ?></p>
+                            <p class="text-gray-600">Instruktur profesional di bidang programming dengan pengalaman mengajar yang luas.</p>
                         </div>
                     </div>
                 </div>

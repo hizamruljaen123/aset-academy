@@ -442,7 +442,7 @@ class Free_class_model extends CI_Model
      */
     public function get_enrolled_students($class_id)
     {
-        $this->db->select('u.nama_lengkap, u.username');
+        $this->db->select('u.id, u.nama_lengkap, u.email, u.username as nis, u.foto_profil, u.status as account_status, fce.status as status');
         $this->db->from('free_class_enrollments fce');
         $this->db->join('users u', 'fce.student_id = u.id');
         $this->db->where('fce.class_id', $class_id);

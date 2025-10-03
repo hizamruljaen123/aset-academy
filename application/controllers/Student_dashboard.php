@@ -60,6 +60,38 @@ class Student_dashboard extends CI_Controller {
             }
         }
         
+        // Check if profile data is incomplete (NULL or empty values)
+        $data['profile_incomplete'] = false;
+        if ($data['student_profile'] && $data['student_profile']->id) {
+            $incomplete_fields = [];
+            
+            // Check each required field
+            if (empty($data['student_profile']->no_telepon) || $data['student_profile']->no_telepon === null) {
+                $incomplete_fields[] = 'no_telepon';
+            }
+            if (empty($data['student_profile']->kelas) || $data['student_profile']->kelas === null) {
+                $incomplete_fields[] = 'kelas';
+            }
+            if (empty($data['student_profile']->jurusan) || $data['student_profile']->jurusan === null) {
+                $incomplete_fields[] = 'jurusan';
+            }
+            if (empty($data['student_profile']->alamat) || $data['student_profile']->alamat === null) {
+                $incomplete_fields[] = 'alamat';
+            }
+            if (empty($data['student_profile']->tanggal_lahir) || $data['student_profile']->tanggal_lahir === null) {
+                $incomplete_fields[] = 'tanggal_lahir';
+            }
+            if (empty($data['student_profile']->jenis_kelamin) || $data['student_profile']->jenis_kelamin === null) {
+                $incomplete_fields[] = 'jenis_kelamin';
+            }
+            
+            if (!empty($incomplete_fields)) {
+                $data['profile_incomplete'] = true;
+                $data['incomplete_fields'] = $incomplete_fields;
+                $data['incomplete_count'] = count($incomplete_fields);
+            }
+        }
+        
         // Get available classes for student's major
         $this->db->where('status', 'Aktif');
         $data['available_classes'] = $this->db->get('kelas_programming')->result();

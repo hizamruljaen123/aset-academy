@@ -252,7 +252,7 @@ class Kelas_model extends CI_Model {
     
     /**
      * Get all premium classes available for enrollment
-     * 
+     *
      * @return array
      */
     public function get_premium_classes()
@@ -264,6 +264,26 @@ class Kelas_model extends CI_Model {
         $this->db->group_by('kp.id, kp.nama_kelas, kp.deskripsi, kp.level, kp.harga, kp.gambar');
         $this->db->order_by('kp.nama_kelas', 'ASC');
         
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    /**
+     * Get teachers assigned to a specific class
+     *
+     * @param int $kelas_id
+     * @return array
+     */
+    public function get_teachers_by_kelas($kelas_id)
+    {
+        $this->db->select('u.id, u.nama_lengkap, u.foto_profil, u.email');
+        $this->db->from('guru_kelas gk');
+        $this->db->join('users u', 'u.id = gk.guru_id');
+        $this->db->where('gk.kelas_id', $kelas_id);
+        $this->db->where('gk.status', 'Aktif');
+        $this->db->where('u.role', 'guru');
+        $this->db->where('u.status', 'Aktif');
+        $this->db->order_by('u.nama_lengkap', 'ASC');
         $query = $this->db->get();
         return $query->result();
     }

@@ -32,9 +32,14 @@
                                     <p class="text-gray-600 mb-4 text-sm"><?= substr($class->deskripsi, 0, 120) ?><?= strlen($class->deskripsi) > 120 ? '...' : '' ?></p>
                                     <div class="flex justify-between items-center">
                                         <span class="text-lg font-bold text-blue-600">Rp <?= number_format($class->harga, 0, ',', '.') ?></span>
-                                        <a href="<?= site_url('student/premium/detail/'.$class->id) ?>" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105">
-                                            Lihat Detail
-                                        </a>
+                                        <div class="flex space-x-2">
+                                            <a href="<?= site_url('kelas/detail/'.$class->id) ?>" class="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all text-sm font-medium">
+                                                Lihat Detail
+                                            </a>
+                                            <a href="<?= site_url('student/premium/buy/'.$class->id) ?>" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 text-sm font-medium">
+                                                Beli Sekarang
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

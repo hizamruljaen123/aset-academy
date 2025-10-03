@@ -24,6 +24,52 @@
             </div>
         </div>
     </div>
+    <!-- Profile Completion Warning Card -->
+    <?php if (isset($profile_incomplete) && $profile_incomplete && isset($student_profile) && $student_profile && $student_profile->id): ?>
+    <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-6 mb-8 ring-1 ring-amber-200/50 fade-in">
+        <div class="flex items-start space-x-4">
+            <div class="flex-shrink-0">
+                <div class="h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center">
+                    <i class="fas fa-exclamation-triangle text-amber-600 text-xl"></i>
+                </div>
+            </div>
+            <div class="flex-1 min-w-0">
+                <h3 class="text-lg font-semibold text-amber-800 mb-2">
+                    Lengkapi Data Profil Anda
+                </h3>
+                <p class="text-amber-700 mb-4">
+                    Data profil Anda masih belum lengkap. Lengkapi data berikut untuk pengalaman belajar yang lebih baik:
+                </p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <?php
+                    $field_names = [
+                        'no_telepon' => 'No. Telepon',
+                        'kelas' => 'Kelas',
+                        'jurusan' => 'Jurusan',
+                        'alamat' => 'Alamat',
+                        'tanggal_lahir' => 'Tanggal Lahir',
+                        'jenis_kelamin' => 'Jenis Kelamin'
+                    ];
+                    foreach ($incomplete_fields as $field): ?>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-amber-100 text-amber-800">
+                            <i class="fas fa-circle text-xs mr-1.5"></i>
+                            <?php echo $field_names[$field] ?? $field; ?>
+                        </span>
+                    <?php endforeach; ?>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-amber-600">
+                        <?php echo $incomplete_count; ?> data belum diisi
+                    </span>
+                    <a href="<?php echo site_url('student/profile/edit'); ?>" class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-transform hover:scale-105">
+                        <i class="fas fa-user-edit mr-2"></i>
+                        Lengkapi Sekarang
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
 
     <!-- Student Profile Card -->
     <?php if (isset($student_profile) && $student_profile): ?>
