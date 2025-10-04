@@ -32,22 +32,55 @@
     </div>
 
     <!-- Level Navigation Tabs -->
-    <div class="mb-8">
-        <div class="border-b border-gray-200">
-            <nav class="-mb-px flex space-x-8" id="levelTabs">
-                <button class="level-tab active whitespace-nowrap py-2 px-1 border-b-2 border-blue-500 font-medium text-sm text-blue-600" data-level="all">
-                    <i class="fas fa-th-large mr-2"></i>Semua Kelas
-                </button>
-                <button class="level-tab whitespace-nowrap py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300" data-level="Dasar">
-                    <i class="fas fa-seedling mr-2"></i>Dasar
-                </button>
-                <button class="level-tab whitespace-nowrap py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300" data-level="Menengah">
-                    <i class="fas fa-chart-line mr-2"></i>Menengah
-                </button>
-                <button class="level-tab whitespace-nowrap py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300" data-level="Lanjutan">
-                    <i class="fas fa-rocket mr-2"></i>Lanjutan
-                </button>
-            </nav>
+    <?php
+        $levels = ['All', 'Dasar', 'Menengah', 'Lanjutan'];
+        $levelDescriptions = [
+            'All' => 'Semua kelas tersedia',
+            'Dasar' => 'Fondasi keterampilan',
+            'Menengah' => 'Tingkatkan kemampuan',
+            'Lanjutan' => 'Eksplorasi lanjutan'
+        ];
+        $levelCounts = [
+            'All' => count($kelas),
+            'Dasar' => 0,
+            'Menengah' => 0,
+            'Lanjutan' => 0
+        ];
+
+        foreach ($kelas as $item) {
+            $level = $item->level ?? 'Dasar';
+            if (isset($levelCounts[$level])) {
+                $levelCounts[$level]++;
+            }
+        }
+    ?>
+    <div class="mb-10">
+        <div class="tab-wrapper">
+            <div class="tab-nav" role="tablist" id="levelTabs">
+                <?php foreach ($levels as $index => $level): ?>
+                    <?php $levelKey = strtolower($level); ?>
+                    <button type="button" class="tab-pill tab-pill-<?php echo $levelKey; ?> <?php echo $index === 0 ? 'tab-pill-active' : ''; ?>" data-level="<?php echo $levelKey; ?>">
+                        <span class="tab-pill-body">
+                            <span class="tab-icon">
+                                <?php if ($level === 'All'): ?>
+                                    <i class="fas fa-layer-group"></i>
+                                <?php elseif ($level === 'Dasar'): ?>
+                                    <i class="fas fa-seedling"></i>
+                                <?php elseif ($level === 'Menengah'): ?>
+                                    <i class="fas fa-rocket"></i>
+                                <?php else: ?>
+                                    <i class="fas fa-crown"></i>
+                                <?php endif; ?>
+                            </span>
+                            <span class="tab-text">
+                                <span class="tab-label"><?php echo $level; ?></span>
+                                <span class="tab-subtitle"><?php echo $levelDescriptions[$level]; ?></span>
+                            </span>
+                        </span>
+                        <span class="tab-count"><?php echo $levelCounts[$level]; ?></span>
+                    </button>
+                <?php endforeach; ?>
+            </div>
         </div>
     </div>
 
@@ -64,68 +97,90 @@
             </a>
         </div>
     <?php else: ?>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="classGrid">
+        <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3" id="classGrid">
             <?php foreach ($kelas as $k):
-                // Determine badge color based on level
-                $levelColors = [
-                    'Dasar' => 'bg-green-100 text-green-800',
-                    'Menengah' => 'bg-yellow-100 text-yellow-800',
-                    'Lanjutan' => 'bg-red-100 text-red-800',
-                    'default' => 'bg-gray-100 text-gray-800'
-                ];
-                $badgeColor = $levelColors[$k->level] ?? $levelColors['default'];
+                $levelKey = strtolower($k->level ?? 'Dasar');
+                $hasThumbnail = !empty($k->gambar);
+                $thumbnailPath = $hasThumbnail ? base_url($k->gambar) : '';
+                $mentor = $this->Kelas_model->get_teachers_by_kelas($k->id);
+                $mentor_name = !empty($mentor) ? $mentor[0]->nama_lengkap : 'Belum ada mentor';
+                $mentor_photo = !empty($mentor) && !empty($mentor[0]->foto_profil) ? $mentor[0]->foto_profil : null;
+                $enrolled = $this->Kelas_model->count_enrolled_students($k->id);
             ?>
-                <div class="class-card group bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 overflow-hidden" data-level="<?php echo strtolower($k->level ?? 'dasar'); ?>" data-search="<?php echo strtolower(html_escape(($k->nama_kelas ?? '') . ' ' . ($k->deskripsi ?? '') . ' ' . ($k->bahasa_program ?? ''))); ?>">
-                    <div class="p-6">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0 mr-4">
-                                    <div class="w-12 h-12 rounded-lg <?php echo ($k->status == 'Aktif') ? 'bg-green-50 text-green-600' : 'bg-gray-50 text-gray-600'; ?> flex items-center justify-center">
-                                        <i class="fas fa-code text-xl"></i>
+                <div class="class-card group rounded-3xl border border-gray-100 bg-white/80 shadow-sm hover:shadow-xl transition-all overflow-hidden" data-level="<?php echo strtolower($k->level ?? 'dasar'); ?>" data-search="<?php echo strtolower(html_escape(($k->nama_kelas ?? '') . ' ' . ($k->deskripsi ?? '') . ' ' . ($k->bahasa_program ?? ''))); ?>">
+                    <div class="relative">
+                        <div class="aspect-[16/9] bg-gradient-to-br from-gray-100 via-gray-50 to-white flex items-center justify-center overflow-hidden relative">
+                            <?php if ($hasThumbnail): ?>
+                                <img src="<?php echo $thumbnailPath; ?>" alt="<?php echo html_escape($k->nama_kelas); ?>" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.style.display='none'; this.parentElement.querySelector('.fallback-icon').classList.remove('hidden');">
+                            <?php endif; ?>
+                            <div class="fallback-icon absolute inset-0 flex items-center justify-center text-4xl text-gray-300 z-10 <?php echo $hasThumbnail ? 'hidden' : ''; ?>">
+                                <i class="fas fa-image"></i>
+                            </div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent z-0"></div>
+                        </div>
+                        <div class="absolute top-4 left-4 inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold text-white bg-emerald-500/90 backdrop-blur">
+                            <i class="fas fa-code mr-2"></i>
+                            <?php echo html_escape($k->bahasa_program ?? 'Programming'); ?>
+                        </div>
+                        <div class="absolute top-4 right-4 inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold text-white <?php echo ($k->level == 'Dasar') ? 'bg-emerald-500/90' : (($k->level == 'Menengah') ? 'bg-amber-500/90' : 'bg-rose-500/90'); ?>">
+                            <i class="fas fa-signal mr-2"></i>
+                            <?php echo html_escape($k->level ?? 'Dasar'); ?>
+                        </div>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <div class="space-y-3">
+                            <div class="flex flex-wrap items-center gap-3 text-xs text-gray-400 uppercase tracking-[.25em]">
+                                <span><i class="fas fa-clock mr-1"></i><?php echo intval($k->durasi); ?> jam</span>
+                                <span><i class="fas fa-money-bill-wave mr-1"></i>Rp <?php echo number_format($k->harga, 0, ',', '.'); ?></span>
+                                <span><i class="fas fa-users mr-1"></i><?php echo $enrolled; ?> siswa</span>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-900 leading-tight group-hover:text-indigo-600 transition-colors">
+                                <?php echo html_escape($k->nama_kelas); ?>
+                            </h3>
+                            <p class="text-sm text-gray-500 line-clamp-3"><?php echo html_escape($k->deskripsi); ?></p>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <?php if ($mentor_photo): ?>
+                                    <img src="<?php echo base_url($mentor_photo); ?>" alt="<?php echo $mentor_name; ?>" class="h-12 w-12 rounded-full object-cover shadow-inner">
+                                <?php else: ?>
+                                    <div class="h-12 w-12 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 text-white flex items-center justify-center text-lg font-semibold shadow-inner">
+                                        <i class="fas fa-user-tie"></i>
                                     </div>
-                                </div>
+                                <?php endif; ?>
                                 <div>
-                                    <h3 class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
-                                        <?php echo html_escape($k->nama_kelas); ?>
-                                    </h3>
-                                    <p class="text-sm text-gray-500"><?php echo html_escape($k->bahasa_program); ?></p>
+                                    <p class="text-sm font-semibold text-gray-800"><?php echo $mentor_name; ?></p>
+                                    <p class="text-xs text-gray-400">Mentor Kelas</p>
                                 </div>
                             </div>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo $badgeColor; ?>">
-                                <?php echo html_escape($k->level ?? 'Dasar'); ?>
-                            </span>
-                        </div>
-                        
-                        <p class="text-sm text-gray-600 mb-4 line-clamp-2">
-                            <?php echo html_escape($k->deskripsi); ?>
-                        </p>
-                        
-                        <div class="grid grid-cols-2 gap-4 mb-4">
-                            <div class="text-center p-3 bg-gray-50 rounded-lg">
-                                <div class="text-lg font-bold text-gray-800"><?php echo $k->durasi; ?></div>
-                                <div class="text-xs text-gray-500">Jam</div>
-                            </div>
-                            <div class="text-center p-3 bg-gray-50 rounded-lg">
-                                <div class="text-lg font-bold text-gray-800">Rp <?php echo number_format($k->harga, 0, ',', '.'); ?></div>
-                                <div class="text-xs text-gray-500">Harga</div>
+                            <div class="text-right">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold <?php echo ($k->status == 'Aktif') ? 'text-emerald-600 bg-emerald-100' : 'text-gray-600 bg-gray-100'; ?>">
+                                    <span class="w-2 h-2 rounded-full mr-2 <?php echo ($k->status == 'Aktif') ? 'bg-emerald-500' : 'bg-gray-400'; ?>"></span>
+                                    <?php echo $k->status; ?>
+                                </span>
+                                <?php if (!empty($k->online_meet_link)): ?>
+                                    <div class="text-xs text-indigo-500 mt-2 inline-flex items-center gap-1">
+                                        <i class="fas fa-video"></i>
+                                        Online session
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
-                        
-                        <div class="flex justify-between items-center">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo ($k->status == 'Aktif') ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'; ?>">
-                                <?php echo $k->status; ?>
-                            </span>
-                            <div class="flex space-x-2">
-                                <a href="<?php echo site_url('kelas/detail/'.$k->id); ?>" class="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-50 transition-colors" title="Detail">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                <a href="<?php echo site_url('kelas/edit/'.$k->id); ?>" class="text-indigo-600 hover:text-indigo-800 p-1 rounded-full hover:bg-indigo-50 transition-colors" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <a href="<?php echo site_url('kelas/delete/'.$k->id); ?>" class="text-red-600 hover:text-red-800 p-1 rounded-full hover:bg-red-50 transition-colors" title="Hapus" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
-                                    <i class="fas fa-trash"></i>
-                                </a>
-                            </div>
+                    </div>
+                    <div class="border-t border-gray-100 px-6 py-4 flex items-center justify-between bg-gray-50/60">
+                        <a href="<?php echo site_url('kelas/detail/'.$k->id); ?>" class="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700">
+                            <i class="fas fa-eye"></i>
+                            Detail
+                        </a>
+                        <div class="flex items-center gap-3">
+                            <a href="<?php echo site_url('kelas/edit/'.$k->id); ?>" class="inline-flex items-center gap-1 text-sm font-semibold text-emerald-600 hover:text-emerald-700">
+                                <i class="fas fa-pencil-alt"></i>
+                                Edit
+                            </a>
+                            <a href="<?php echo site_url('kelas/delete/'.$k->id); ?>" class="inline-flex items-center gap-1 text-sm font-semibold text-rose-500 hover:text-rose-600" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                                <i class="fas fa-trash-alt"></i>
+                                Hapus
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -157,24 +212,15 @@ document.addEventListener('DOMContentLoaded', function() {
     let noResultsElement = null;
     
     // Level tab functionality
-    const levelTabs = document.querySelectorAll('.level-tab');
+    const levelTabs = document.querySelectorAll('.tab-pill');
     levelTabs.forEach(tab => {
         tab.addEventListener('click', function() {
-            // Remove active class from all tabs
-            levelTabs.forEach(t => {
-                t.classList.remove('active', 'border-blue-500', 'text-blue-600');
-                t.classList.add('border-transparent', 'text-gray-500');
-            });
-            
-            // Add active class to clicked tab
-            this.classList.add('active', 'border-blue-500', 'text-blue-600');
-            this.classList.remove('border-transparent', 'text-gray-500');
-            
-            // Update filter level
+            levelTabs.forEach(t => t.classList.remove('tab-pill-active'));
+            this.classList.add('tab-pill-active');
+
             const level = this.getAttribute('data-level');
-            filterLevel.value = level;
-            
-            // Trigger filter
+            filterLevel.value = level === 'all' ? '' : level.charAt(0).toUpperCase() + level.slice(1);
+
             filterClasses();
         });
     });
@@ -192,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const itemLevel = item.getAttribute('data-level');
                 
                 const matchesSearch = searchText.includes(searchTerm);
-                const matchesLevel = !selectedLevel || itemLevel === selectedLevel.toLowerCase() || selectedLevel === 'all';
+                const matchesLevel = !selectedLevel || itemLevel === selectedLevel.toLowerCase();
                 
                 if (matchesSearch && matchesLevel) {
                     item.style.display = 'block';
@@ -233,3 +279,194 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <?php $this->load->view('templates/footer'); ?>
+
+<style>
+    .tab-wrapper {
+        position: relative;
+    }
+
+    .tab-nav {
+        display: flex;
+        gap: 0.75rem;
+        background: linear-gradient(135deg, rgba(226, 232, 240, 0.7), rgba(237, 233, 254, 0.7));
+        padding: 0.75rem;
+        border-radius: 9999px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(12px);
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .tab-nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .tab-pill {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.25rem;
+        padding: 0.9rem 1.4rem;
+        border-radius: 9999px;
+        min-width: 200px;
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        background: rgba(255, 255, 255, 0.65);
+        color: #475569;
+        font-weight: 600;
+        transition: all 0.25s ease;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+    }
+
+    .tab-pill:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 20px rgba(15, 23, 42, 0.12);
+        border-color: rgba(99, 102, 241, 0.35);
+    }
+
+    .tab-pill:focus {
+        outline: none;
+        border-color: rgba(99, 102, 241, 0.45);
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+    }
+
+    .tab-pill-body {
+        display: inline-flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .tab-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 9999px;
+        color: #fff;
+        font-size: 1.1rem;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+        transition: transform 0.25s ease;
+    }
+
+    .tab-pill:hover .tab-icon {
+        transform: scale(1.05) rotate(-2deg);
+    }
+
+    .tab-text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.15rem;
+    }
+
+    .tab-label {
+        font-size: 0.95rem;
+        letter-spacing: 0.02em;
+    }
+
+    .tab-subtitle {
+        font-size: 0.7rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        color: rgba(71, 85, 105, 0.7);
+    }
+
+    .tab-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.3rem 0.7rem;
+        border-radius: 9999px;
+        background: rgba(15, 23, 42, 0.08);
+        color: #0f172a;
+        font-size: 0.75rem;
+        min-width: 38px;
+        font-weight: 700;
+    }
+
+    .tab-pill-active {
+        color: #0f172a;
+        border-color: transparent;
+        box-shadow: 0 18px 28px rgba(79, 70, 229, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        transform: translateY(-3px);
+    }
+
+    .tab-pill-active .tab-subtitle {
+        color: rgba(15, 23, 42, 0.7);
+    }
+
+    .tab-pill-active .tab-count {
+        background: rgba(255, 255, 255, 0.35);
+        color: #0f172a;
+    }
+
+    .tab-pill-all {
+        background: rgba(237, 233, 254, 0.7);
+    }
+
+    .tab-pill-all .tab-icon {
+        background: linear-gradient(135deg, #38bdf8, #6366f1);
+    }
+
+    .tab-pill-dasar .tab-icon {
+        background: linear-gradient(135deg, #22c55e, #0ea5e9);
+    }
+
+    .tab-pill-menengah .tab-icon {
+        background: linear-gradient(135deg, #f97316, #facc15);
+    }
+
+    .tab-pill-lanjutan .tab-icon {
+        background: linear-gradient(135deg, #ef4444, #ec4899);
+    }
+
+    .tab-pill-all.tab-pill-active {
+        background: linear-gradient(135deg, rgba(238, 242, 255, 0.95), rgba(224, 231, 255, 0.95));
+    }
+
+    .tab-pill-dasar.tab-pill-active {
+        background: linear-gradient(135deg, rgba(187, 247, 208, 0.95), rgba(134, 239, 172, 0.95));
+    }
+
+    .tab-pill-menengah.tab-pill-active {
+        background: linear-gradient(135deg, rgba(254, 215, 170, 0.95), rgba(254, 240, 138, 0.95));
+    }
+
+    .tab-pill-lanjutan.tab-pill-active {
+        background: linear-gradient(135deg, rgba(254, 205, 211, 0.95), rgba(251, 207, 232, 0.95));
+    }
+
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    @media (max-width: 640px) {
+        .tab-pill {
+            min-width: 180px;
+            padding: 0.75rem 1.15rem;
+        }
+
+        .tab-pill-body {
+            gap: 0.75rem;
+        }
+
+        .tab-icon {
+            width: 36px;
+            height: 36px;
+            font-size: 1rem;
+        }
+
+        .tab-text {
+            gap: 0.05rem;
+        }
+
+        .tab-subtitle {
+            font-size: 0.62rem;
+        }
+    }
+</style>

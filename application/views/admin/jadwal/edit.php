@@ -2,6 +2,7 @@
     <div class="bg-white rounded-2xl shadow-md p-6">
         <h1 class="text-2xl font-bold text-gray-800 mb-6">Edit Jadwal Kelas</h1>
         <form action="<?= site_url('admin/jadwal/update/' . $jadwal->id); ?>" method="post">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label for="kelas_id" class="block text-sm font-medium text-gray-700">Kelas</label>
