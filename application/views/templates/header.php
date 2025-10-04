@@ -69,12 +69,14 @@
     
     <!-- Custom Form Input Styles -->
     <link href="<?php echo base_url('assets/css/form-inputs.css'); ?>" rel="stylesheet">
+    <!-- Form Enhancement Utilities -->
+    <link href="<?php echo base_url('assets/css/form-enhancements.css'); ?>" rel="stylesheet">
     <!-- Permissions Styles -->
     <link href="<?php echo base_url('assets/css/permissions.css'); ?>" rel="stylesheet">
     
-    <!-- Global Form Styles (Inline for immediate effect) -->
+    <!-- Global Form Styles - Enhanced & Cleaner -->
     <style>
-        /* Enhanced form input readability */
+        /* Enhanced Form Input Styling */
         input[type="text"],
         input[type="email"],
         input[type="password"],
@@ -82,33 +84,26 @@
         input[type="tel"],
         input[type="url"],
         input[type="search"],
+        input[type="date"],
+        input[type="time"],
+        input[type="datetime-local"],
         textarea,
         select {
-            font-size: 1rem; /* text-input */
-            line-height: 1.5; /* leading-6 */
-            padding: 0.75rem 2.5rem 0.75rem 0.75rem; /* px-input py-input, extra right padding for arrow */
-            border: 1px solid #d1d5db; /* border-input-border */
-            border-radius: 0.375rem; /* rounded-md */
+            /* Base styling with better readability */
+            font-size: 1rem; /* 16px base font */
+            line-height: 1.5; /* Better line height for readability */
+            padding: 0.75rem 1rem; /* Consistent padding */
+            border: 1px solid #d1d5db; /* Gray-300 */
+            border-radius: 0.5rem; /* rounded-lg */
             background-color: #ffffff;
-            color: #111827; /* text-gray-900 */
+            color: #111827; /* Gray-900 */
             font-family: inherit;
-            cursor: pointer;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 0.75rem center;
-            background-size: 1rem;
-            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            transition: all 0.2s ease-in-out;
+            width: 100%;
+            box-sizing: border-box;
         }
 
-        select:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-
+        /* Enhanced focus states */
         input[type="text"]:focus,
         input[type="email"]:focus,
         input[type="password"]:focus,
@@ -116,21 +111,35 @@
         input[type="tel"]:focus,
         input[type="url"]:focus,
         input[type="search"]:focus,
+        input[type="date"]:focus,
+        input[type="time"]:focus,
+        input[type="datetime-local"]:focus,
         textarea:focus,
         select:focus {
             outline: none;
-            ring: 2px solid #3b82f6; /* focus:ring-input-border-focus */
-            border-color: #3b82f6; /* focus:border-input-border-focus */
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            border-color: #3b82f6; /* Blue-500 */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); /* Blue-500 with opacity */
+            background-color: #fefefe;
         }
 
+        /* Placeholder styling */
         input::placeholder,
         textarea::placeholder {
-            color: #6b7280; /* placeholder-gray-500 */
+            color: #9ca3af; /* Gray-400 */
             opacity: 1;
         }
 
-        /* Ensure better contrast on dark mode if enabled */
+        /* Select dropdown arrow styling */
+        select {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1rem;
+            padding-right: 2.5rem;
+            cursor: pointer;
+        }
+
+        /* Dark mode support */
         @media (prefers-color-scheme: dark) {
             input[type="text"],
             input[type="email"],
@@ -139,12 +148,14 @@
             input[type="tel"],
             input[type="url"],
             input[type="search"],
+            input[type="date"],
+            input[type="time"],
+            input[type="datetime-local"],
             textarea,
             select {
-                background-color: #1f2937; /* bg-gray-800 */
-                color: #f9fafb; /* text-gray-100 */
-                border-color: #4b5563; /* border-gray-600 */
-                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+                background-color: #1f2937; /* Gray-800 */
+                color: #f9fafb; /* Gray-50 */
+                border-color: #374151; /* Gray-700 */
             }
 
             input[type="text"]:focus,
@@ -154,30 +165,202 @@
             input[type="tel"]:focus,
             input[type="url"]:focus,
             input[type="search"]:focus,
+            input[type="date"]:focus,
+            input[type="time"]:focus,
+            input[type="datetime-local"]:focus,
             textarea:focus,
             select:focus {
-                border-color: #60a5fa; /* border-blue-400 */
+                border-color: #60a5fa; /* Blue-400 */
                 box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
-                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2360a5fa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
             }
 
             input::placeholder,
             textarea::placeholder {
-                color: #9ca3af; /* placeholder-gray-400 */
+                color: #6b7280; /* Gray-500 */
+            }
+
+            select {
+                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
             }
         }
 
-        /* Form labels for better readability */
+        /* Form labels - Enhanced styling */
         label {
+            display: block;
             font-weight: 500;
-            color: #374151; /* text-gray-700 */
+            color: #374151; /* Gray-700 */
             font-size: 0.875rem; /* text-sm */
+            margin-bottom: 0.5rem;
+            line-height: 1.25;
         }
 
-        /* Form buttons */
+        /* Required field indicator */
+        label:has(+ input[required]),
+        label:has(+ select[required]),
+        label:has(+ textarea[required]) {
+            position: relative;
+        }
+
+        label:has(+ input[required])::after,
+        label:has(+ select[required])::after,
+        label:has(+ textarea[required])::after {
+            content: "*";
+            color: #ef4444; /* Red-500 */
+            margin-left: 0.25rem;
+            font-weight: 600;
+        }
+
+        /* Form groups - Better spacing */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Error state styling */
+        .form-error input,
+        .form-error select,
+        .form-error textarea {
+            border-color: #ef4444; /* Red-500 */
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        }
+
+        .form-error input:focus,
+        .form-error select:focus,
+        .form-error textarea:focus {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        }
+
+        /* Success state styling */
+        .form-success input,
+        .form-success select,
+        .form-success textarea {
+            border-color: #10b981; /* Emerald-500 */
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .form-success input:focus,
+        .form-success select:focus,
+        .form-success textarea:focus {
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        /* Disabled state styling */
+        input:disabled,
+        select:disabled,
+        textarea:disabled {
+            background-color: #f9fafb; /* Gray-50 */
+            color: #6b7280; /* Gray-500 */
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* Readonly state styling */
+        input:read-only,
+        select:read-only,
+        textarea:read-only {
+            background-color: #f9fafb; /* Gray-50 */
+            color: #374151; /* Gray-700 */
+            cursor: default;
+        }
+
+        /* Button styling */
         button[type="submit"],
-        input[type="submit"] {
-            @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+        input[type="submit"],
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        button[type="submit"]:hover,
+        input[type="submit"]:hover,
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
+        }
+
+        button[type="submit"]:focus,
+        input[type="submit"]:focus,
+        .btn-primary:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Secondary button styling */
+        .btn-secondary {
+            background-color: #f9fafb; /* Gray-50 */
+            color: #374151; /* Gray-700 */
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid #d1d5db; /* Gray-300 */
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-secondary:hover {
+            background-color: #f3f4f6; /* Gray-100 */
+            border-color: #9ca3af; /* Gray-400 */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            input[type="text"],
+            input[type="email"],
+            input[type="password"],
+            input[type="number"],
+            input[type="tel"],
+            input[type="url"],
+            input[type="search"],
+            input[type="date"],
+            input[type="time"],
+            input[type="datetime-local"],
+            textarea,
+            select {
+                font-size: 1rem; /* Prevent zoom on iOS */
+                padding: 1rem; /* Larger touch targets */
+            }
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            input[type="text"],
+            input[type="email"],
+            input[type="password"],
+            input[type="number"],
+            input[type="tel"],
+            input[type="url"],
+            input[type="search"],
+            input[type="date"],
+            input[type="time"],
+            input[type="datetime-local"],
+            textarea,
+            select {
+                border-width: 2px;
+            }
+
+            input[type="text"]:focus,
+            input[type="email"]:focus,
+            input[type="password"]:focus,
+            input[type="number"]:focus,
+            input[type="tel"]:focus,
+            input[type="url"]:focus,
+            input[type="search"]:focus,
+            input[type="date"]:focus,
+            input[type="time"]:focus,
+            input[type="datetime-local"]:focus,
+            textarea:focus,
+            select:focus {
+                border-width: 3px;
+            }
         }
     </style>
     
@@ -327,6 +510,10 @@
                     <a href="<?php echo site_url('admin/free_classes'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'free_classes') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-graduation-cap w-5 text-center mr-3"></i>
                         Kelas Gratis
+                    </a>
+                    <a href="<?php echo site_url('admin/class_categories'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'class_categories') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-tags w-5 text-center mr-3"></i>
+                        Kategori Kelas
                     </a>
                     <a href="<?php echo site_url('absensi'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'absensi') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-user-check w-5 text-center mr-3"></i>

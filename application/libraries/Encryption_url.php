@@ -85,8 +85,12 @@ class Encryption_url {
         
         try {
             // Kembalikan dari URL-safe base64 ke standard base64
-            $encrypted = str_pad(strtr($encrypted_id, '-_', '+/'), strlen($encrypted_id) % 4, '=', STR_PAD_RIGHT);
-            
+            $encrypted = strtr($encrypted_id, '-_', '+/');
+            $pad = strlen($encrypted) % 4;
+            if ($pad > 0) {
+                $encrypted .= str_repeat('=', 4 - $pad);
+            }
+
             // Decode dari base64
             $decoded = base64_decode($encrypted);
             

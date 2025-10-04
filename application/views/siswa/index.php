@@ -10,7 +10,6 @@
         </a>
     </div>
 
-    <!-- Search and Table -->
     <div class="bg-white rounded-lg shadow overflow-hidden">
         <div class="p-4 border-b border-gray-200">
             <h2 class="text-lg font-medium text-gray-900">Daftar Siswa</h2>
@@ -33,10 +32,28 @@
                     <p class="text-gray-500">Mulai dengan menambahkan siswa baru untuk kelas ini</p>
                 </div>
             <?php else: ?>
+                <form method="post" action="<?php echo site_url('siswa/bulk_delete'); ?>" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data yang dipilih?');">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4 space-y-2 md:space-y-0">
+                        <div class="text-sm text-gray-600">
+                            Pilih data siswa yang ingin dihapus menggunakan checkbox di tabel.
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <select name="bulk_action" class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                                <option value="">Pilih Aksi</option>
+                                <option value="delete">Hapus</option>
+                            </select>
+                            <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-900 focus:outline-none focus:border-red-900 focus:ring ring-red-300 disabled:opacity-25 transition">
+                                <i class="fas fa-trash-alt mr-2"></i> Terapkan
+                            </button>
+                        </div>
+                    </div>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <input type="checkbox" id="select-all" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIS</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Lengkap</th>
@@ -50,6 +67,9 @@
                         <tbody class="bg-white divide-y divide-gray-200">
                             <?php $no = 1; foreach ($siswa as $s): ?>
                                 <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <input type="checkbox" name="selected_siswa[]" value="<?php echo $s->id; ?>" class="row-checkbox rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo $no++; ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600"><?php echo $s->nis; ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap">
@@ -96,6 +116,7 @@
                         </tbody>
                     </table>
                 </div>
+                </form>
             <?php endif; ?>
         </div>
     </div>
@@ -106,6 +127,28 @@
         const siswaPage = document.querySelector('.transition-opacity');
         if (siswaPage) {
             siswaPage.classList.add('opacity-100');
+        }
+
+        const selectAll = document.getElementById('select-all');
+        const rowCheckboxes = document.querySelectorAll('.row-checkbox');
+
+        if (selectAll && rowCheckboxes.length > 0) {
+            selectAll.addEventListener('change', function() {
+                rowCheckboxes.forEach(function(checkbox) {
+                    checkbox.checked = selectAll.checked;
+                });
+            });
+
+            rowCheckboxes.forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                    if (!checkbox.checked) {
+                        selectAll.checked = false;
+                    } else {
+                        const allChecked = Array.from(rowCheckboxes).every(function(cb) { return cb.checked; });
+                        selectAll.checked = allChecked;
+                    }
+                });
+            });
         }
     });
 </script>

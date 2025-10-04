@@ -165,13 +165,45 @@ class Siswa extends CI_Controller {
     public function delete($id)
     {
         $siswa = $this->Siswa_model->get_siswa_by_id($id);
-        
+
         if (empty($siswa)) {
             show_404();
         }
 
-        $this->Siswa_model->delete_siswa($id);
-        $this->session->set_flashdata('success', 'Data siswa berhasil dihapus');
+        $deleted = $this->Siswa_model->delete_siswa($id);
+
+        if ($deleted > 0) {
+            $this->session->set_flashdata('success', 'Data siswa berhasil dihapus');
+        } else {
+            $this->session->set_flashdata('error', 'Data siswa gagal dihapus.');
+        }
+        redirect('siswa');
+    }
+
+    // Menghapus banyak data siswa sekaligus
+    public function bulk_delete()
+    {
+        $action = $this->input->post('bulk_action');
+        $selected_ids = $this->input->post('selected_siswa');
+
+        if ($action !== 'delete') {
+            $this->session->set_flashdata('error', 'Pilih aksi yang valid.');
+            redirect('siswa');
+        }
+
+        if (empty($selected_ids)) {
+            $this->session->set_flashdata('error', 'Pilih minimal satu data siswa.');
+            redirect('siswa');
+        }
+
+        $deleted = $this->Siswa_model->delete_many($selected_ids);
+
+        if ($deleted > 0) {
+            $this->session->set_flashdata('success', $deleted . ' data siswa berhasil dihapus.');
+        } else {
+            $this->session->set_flashdata('error', 'Tidak ada data yang dihapus.');
+        }
+
         redirect('siswa');
     }
 
@@ -180,7 +212,6 @@ class Siswa extends CI_Controller {
     {
         $keyword = $this->input->post('keyword');
         $data['title'] = 'Hasil Pencarian Siswa';
-        $data['siswa'] = $this->Siswa_model->search_siswa($keyword);
         $data['keyword'] = $keyword;
         
         $this->load->view('templates/header', $data);

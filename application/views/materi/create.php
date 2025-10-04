@@ -1,3 +1,6 @@
+<!-- Quill CSS -->
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
 <div class="p-4 transition-opacity duration-500 opacity-0">
     <!-- Card -->
     <div class="bg-white rounded-2xl shadow-xl ring-1 ring-gray-200/50 overflow-hidden">
@@ -21,7 +24,10 @@
                 <!-- Deskripsi -->
                 <div class="space-y-2">
                     <label for="deskripsi" class="block text-sm font-medium text-gray-700">Deskripsi Singkat <span class="text-red-500">*</span></label>
-                    <textarea id="deskripsi" name="deskripsi" rows="3" class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required><?php echo set_value('deskripsi'); ?></textarea>
+                    <!-- Quill Editor -->
+                    <div id="editor" style="height: 150px;"></div>
+                    <!-- Hidden textarea for form submission -->
+                    <textarea id="deskripsi" name="deskripsi" style="display: none;" required><?php echo set_value('deskripsi'); ?></textarea>
                     <?php echo form_error('deskripsi', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
                 </div>
 
@@ -111,6 +117,40 @@ document.addEventListener('DOMContentLoaded', function() {
 
         contentInputArea.innerHTML = html;
     });
+});
+</script>
+
+<!-- Quill JS -->
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+<script>
+// Initialize Quill editor
+var quill = new Quill('#editor', {
+    theme: 'snow',
+    placeholder: 'Jelaskan singkat tentang materi ini...',
+    modules: {
+        toolbar: [
+            ['bold', 'italic', 'underline'],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            ['link'],
+            ['clean']
+        ]
+    }
+});
+
+// Set initial content if available
+<?php if (set_value('deskripsi')): ?>
+    quill.root.innerHTML = <?= json_encode(set_value('deskripsi')) ?>;
+<?php endif; ?>
+
+// Update hidden textarea when content changes
+quill.on('text-change', function() {
+    document.getElementById('deskripsi').value = quill.root.innerHTML;
+});
+
+// Update textarea on form submit
+document.querySelector('form').addEventListener('submit', function() {
+    document.getElementById('deskripsi').value = quill.root.innerHTML;
 });
 </script>
 

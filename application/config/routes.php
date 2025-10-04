@@ -29,6 +29,7 @@ $route['siswa/index'] = 'siswa';
 $route['siswa/create'] = 'siswa/create';
 $route['siswa/edit/(:any)'] = 'siswa/edit/$1';
 $route['siswa/delete/(:any)'] = 'siswa/delete/$1';
+$route['siswa/bulk_delete'] = 'siswa/bulk_delete';
 $route['siswa/detail/(:any)'] = 'siswa/detail/$1';
 $route['siswa/search'] = 'siswa/search';
 

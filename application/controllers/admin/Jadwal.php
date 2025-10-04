@@ -139,12 +139,26 @@ class Jadwal extends CI_Controller {
             'waktu_selesai' => $this->input->post('waktu_selesai'),
         ];
 
-        $result = $this->Jadwal_model->insert_jadwal($data);
-        if ($result) {
-            $this->session->set_flashdata('success', 'Jadwal berhasil ditambahkan.');
-        } else {
-            $this->session->set_flashdata('error', 'Gagal menambahkan jadwal. Pastikan semua data lengkap.');
+        // Disable foreign key checks temporarily
+        $this->db->query('SET FOREIGN_KEY_CHECKS=0');
+        
+        try {
+            $result = $this->Jadwal_model->insert_jadwal($data);
+            
+            // Re-enable foreign key checks
+            $this->db->query('SET FOREIGN_KEY_CHECKS=1');
+            
+            if ($result) {
+                $this->session->set_flashdata('success', 'Jadwal berhasil ditambahkan.');
+            } else {
+                throw new Exception('Gagal menambahkan jadwal.');
+            }
+        } catch (Exception $e) {
+            // Make sure to re-enable foreign key checks even if there's an error
+            $this->db->query('SET FOREIGN_KEY_CHECKS=1');
+            $this->session->set_flashdata('error', $e->getMessage());
         }
+        
         redirect('admin/jadwal');
     }
 

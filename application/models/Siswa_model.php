@@ -55,23 +55,60 @@ class Siswa_model extends CI_Model {
     // Fungsi untuk menghapus data siswa
     public function delete_siswa($id)
     {
-        $this->db->where('id', $id);
-        $this->db->delete('siswa');
-        return $this->db->affected_rows();
+        if (empty($id)) {
+            return 0;
+        }
+
+        return $this->delete_many([$id]);
     }
 
-    // Fungsi untuk mencari siswa berdasarkan keyword
-    public function search_siswa($keyword)
+    public function delete_many($ids)
     {
-        $this->db->select('*');
-        $this->db->from('siswa');
-        $this->db->like('nama_lengkap', $keyword);
-        $this->db->or_like('nis', $keyword);
-        $this->db->or_like('kelas', $keyword);
-        $this->db->or_like('jurusan', $keyword);
-        $this->db->order_by('nama_lengkap', 'ASC');
-        $query = $this->db->get();
-        return $query->result();
+        if (empty($ids)) {
+            return 0;
+        }
+
+        if (!is_array($ids)) {
+            $ids = [$ids];
+        }
+
+        $ids = array_unique(array_filter($ids));
+
+        if (empty($ids)) {
+            return 0;
+        }
+
+        $this->db->trans_start();
+
+        $this->delete_users_by_siswa_ids($ids);
+
+        $this->db->where_in('id', $ids);
+        $this->db->delete('siswa');
+        $deleted = $this->db->affected_rows();
+
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE) {
+            return 0;
+        }
+
+        return $deleted;
+    }
+
+    public function delete_users_by_siswa_ids($ids)
+    {
+        if (empty($ids)) {
+            return 0;
+        }
+
+        if (!is_array($ids)) {
+            $ids = [$ids];
+        }
+
+        $this->db->where_in('user_id', $ids);
+        $this->db->delete('users');
+
+        return $this->db->affected_rows();
     }
 
     // Fungsi untuk mendapatkan jumlah total siswa

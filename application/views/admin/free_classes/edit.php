@@ -22,9 +22,16 @@
                     <?php echo form_error('title', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
                 </div>
                 <div class="space-y-2">
-                    <label for="category" class="block text-sm font-medium text-gray-700">Kategori <span class="text-red-500">*</span></label>
-                    <input type="text" id="category" name="category" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="<?php echo set_value('category', $free_class->category); ?>" required>
-                    <?php echo form_error('category', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
+                    <label for="category_id" class="block text-sm font-medium text-gray-700">Kategori <span class="text-red-500">*</span></label>
+                    <select id="category_id" name="category_id" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
+                        <option value="">Pilih Kategori</option>
+                        <?php foreach ($categories as $category): ?>
+                            <option value="<?php echo $category->id; ?>" <?php echo set_select('category_id', $category->id, ($free_class->category_id == $category->id)); ?>>
+                                <?php echo htmlspecialchars($category->name); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <?php echo form_error('category_id', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
                 </div>
                 <div class="space-y-2">
                     <label for="level" class="block text-sm font-medium text-gray-700">Level <span class="text-red-500">*</span></label>

@@ -1,0 +1,337 @@
+/**
+ * Enhanced Form Input Utilities for ASET Academy
+ *
+ * These utility classes complement the global form styling
+ * and provide additional styling options for forms.
+ */
+
+/* Form Layout Utilities */
+.form-grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.form-grid-cols-1 {
+    grid-template-columns: 1fr;
+}
+
+.form-grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.form-grid-cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 768px) {
+    .form-grid-cols-2,
+    .form-grid-cols-3 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Form Field Styling */
+.form-field {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.form-field-inline {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.form-field-inline label {
+    margin-bottom: 0;
+    white-space: nowrap;
+    min-width: fit-content;
+}
+
+/* Enhanced Input Group */
+.input-group {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+}
+
+.input-group input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: none;
+}
+
+.input-group-addon {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background-color: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-left: none;
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    color: #6b7280;
+    font-size: 0.875rem;
+    white-space: nowrap;
+}
+
+/* Form Validation States */
+.is-valid {
+    position: relative;
+}
+
+.is-valid::after {
+    content: "✓";
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #10b981;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.has-error {
+    position: relative;
+}
+
+.has-error::after {
+    content: "!";
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ef4444;
+    font-size: 0.875rem;
+    font-weight: 600;
+    background-color: #fef2f2;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Custom Checkbox and Radio Styling */
+.checkbox-group,
+.radio-group {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.checkbox-item,
+.radio-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.checkbox-item input[type="checkbox"],
+.radio-item input[type="radio"] {
+    width: 1.125rem;
+    height: 1.125rem;
+    margin: 0;
+    cursor: pointer;
+}
+
+/* File Input Styling */
+.file-input-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.file-input-wrapper input[type="file"] {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.file-input-display {
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    background-color: #ffffff;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.file-input-display:hover {
+    border-color: #3b82f6;
+    background-color: #eff6ff;
+}
+
+.file-input-display::before {
+    content: "📎";
+    font-size: 1.125rem;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    margin-top: 2rem;
+}
+
+.form-actions.center {
+    justify-content: center;
+}
+
+.form-actions.start {
+    justify-content: flex-start;
+}
+
+/* Responsive Form Utilities */
+@media (max-width: 640px) {
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .form-actions button,
+    .form-actions .btn {
+        width: 100%;
+    }
+}
+
+/* Loading State */
+.form-loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.form-loading::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid #e5e7eb;
+    border-top: 2px solid #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Form Sections */
+.form-section {
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.form-section-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-section-title::before {
+    content: "📋";
+    font-size: 1.25rem;
+}
+
+/* Help Text */
+.help-text {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.25rem;
+}
+
+.help-text::before {
+    content: "ℹ️";
+    font-size: 0.75rem;
+    margin-top: 0.125rem;
+    flex-shrink: 0;
+}
+
+/* Form Summary */
+.form-summary {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border: 1px solid #bfdbfe;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.form-summary-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e40af;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-summary-title::before {
+    content: "📋";
+    font-size: 1.125rem;
+}
+
+.form-summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e0e7ff;
+}
+
+.form-summary-item:last-child {
+    border-bottom: none;
+}
+
+.form-summary-label {
+    font-size: 0.875rem;
+    color: #374151;
+    font-weight: 500;
+}
+
+.form-summary-value {
+    font-size: 0.875rem;
+    color: #1f2937;
+    font-weight: 600;
+}
+
+/* Print Styles */
+@media print {
+    .form-actions,
+    button[type="submit"],
+    input[type="submit"] {
+        display: none !important;
+    }
+
+    input,
+    select,
+    textarea {
+        border: 1px solid #000 !important;
+        background-color: transparent !important;
+    }
+}

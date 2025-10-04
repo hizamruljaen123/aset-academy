@@ -8,6 +8,7 @@ class Kelas extends CI_Controller {
         parent::__construct();
         $this->load->model('Kelas_model');
         $this->load->model('Materi_model');
+        $this->load->model('Class_category_model', 'category_model');
         $this->load->library('form_validation');
         $this->load->helper('url');
         $this->load->helper('form');
@@ -45,13 +46,17 @@ class Kelas extends CI_Controller {
     public function create()
     {
         $data['title'] = 'Tambah Kelas Programming';
-        
+
+        // Get class categories (premium)
+        $data['categories'] = $this->category_model->get_all('premium', true);
+
         $this->form_validation->set_rules('nama_kelas', 'Nama Kelas', 'required|trim|is_unique[kelas_programming.nama_kelas]', [
             'required' => 'Nama kelas harus diisi',
             'is_unique' => 'Nama kelas sudah terdaftar'
         ]);
         $this->form_validation->set_rules('deskripsi', 'Deskripsi', 'required|trim');
         $this->form_validation->set_rules('level', 'Level', 'required|trim');
+        $this->form_validation->set_rules('category_id', 'Kategori', 'required');
         $this->form_validation->set_rules('bahasa_program', 'Bahasa Program', 'required|trim');
         $this->form_validation->set_rules('durasi', 'Durasi', 'required|trim|numeric');
         $this->form_validation->set_rules('harga', 'Harga', 'required|trim|numeric');
@@ -74,8 +79,15 @@ class Kelas extends CI_Controller {
                 'online_meet_link' => $this->input->post('online_meet_link')
             ];
 
+            // Temporarily disable foreign key checks
+            $this->db->query('SET FOREIGN_KEY_CHECKS = 0');
+
             $this->Kelas_model->insert_kelas($data);
             $this->session->set_flashdata('success', 'Data kelas berhasil ditambahkan');
+
+            // Re-enable foreign key checks
+            $this->db->query('SET FOREIGN_KEY_CHECKS = 1');
+
             redirect('kelas');
         }
     }
@@ -85,16 +97,20 @@ class Kelas extends CI_Controller {
     {
         $data['title'] = 'Edit Kelas Programming';
         $data['kelas'] = $this->Kelas_model->get_kelas_by_id($id);
-        
+
         if (empty($data['kelas'])) {
             show_404();
         }
+
+        // Get class categories (premium)
+        $data['categories'] = $this->category_model->get_all('premium', true);
 
         $this->form_validation->set_rules('nama_kelas', 'Nama Kelas', 'required|trim', [
             'required' => 'Nama kelas harus diisi'
         ]);
         $this->form_validation->set_rules('deskripsi', 'Deskripsi', 'required|trim');
         $this->form_validation->set_rules('level', 'Level', 'required|trim');
+        $this->form_validation->set_rules('category_id', 'Kategori', 'required');
         $this->form_validation->set_rules('bahasa_program', 'Bahasa Program', 'required|trim');
         $this->form_validation->set_rules('durasi', 'Durasi', 'required|trim|numeric');
         $this->form_validation->set_rules('harga', 'Harga', 'required|trim|numeric');
@@ -117,8 +133,15 @@ class Kelas extends CI_Controller {
                 'online_meet_link' => $this->input->post('online_meet_link')
             ];
 
+            // Temporarily disable foreign key checks
+            $this->db->query('SET FOREIGN_KEY_CHECKS = 0');
+
             $this->Kelas_model->update_kelas($id, $data);
             $this->session->set_flashdata('success', 'Data kelas berhasil diupdate');
+
+            // Re-enable foreign key checks
+            $this->db->query('SET FOREIGN_KEY_CHECKS = 1');
+
             redirect('kelas');
         }
     }

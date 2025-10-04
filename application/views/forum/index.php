@@ -124,7 +124,7 @@
         </div>
 
         <!-- Categories Grid -->
-        <?php if (!$has_threads && $is_super_admin): ?>
+        <?php if (!$has_threads && empty($categories) && $is_super_admin): ?>
             <!-- First Thread Creation Form -->
             <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
                 <div class="text-center mb-6">
@@ -163,7 +163,9 @@
                     </div>
                 </form>
             </div>
-        <?php elseif (!empty($categories)): ?>
+        <?php endif; ?>
+
+        <?php if (!empty($categories)): ?>
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 <?php foreach ($categories as $category): ?>
                     <a href="<?php echo site_url('forum/category/' . $category->slug); ?>" class="group relative bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-500 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1">

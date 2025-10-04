@@ -59,7 +59,7 @@ Notes:
               <i class="fas fa-book-open mr-2"></i> Lanjutkan Belajar
             </a>
           <?php endif; ?>
-        <?php else: ?>
+        <?php elseif (!$is_admin && $this->session->userdata('role') !== 'guru'): ?>
           <a href="<?= site_url('payment/initiate/' . $kelas->id) ?>" class="inline-flex items-center justify-center px-4 py-2 text-white bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold shadow focus:outline-none focus:ring-2 focus:ring-purple-500">
             <i class="fas fa-shopping-cart mr-2"></i> Pesan Kelas
           </a>
@@ -327,7 +327,7 @@ Notes:
                 <a href="<?= site_url('student/premium_learn/' . $kelas->id) ?>" class="w-full inline-flex items-center justify-center px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold shadow">
                   <i class="fas fa-book-open mr-2"></i> Lanjutkan Belajar
                 </a>
-              <?php else: ?>
+              <?php elseif (!$is_admin && $this->session->userdata('role') !== 'guru'): ?>
                 <a href="<?= site_url('payment/initiate/' . $kelas->id) ?>" class="w-full inline-flex items-center justify-center px-4 py-2 text-white bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold shadow">
                   <i class="fas fa-shopping-cart mr-2"></i> Beli Sekarang
                 </a>

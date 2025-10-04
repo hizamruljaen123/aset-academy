@@ -7,6 +7,7 @@ class Free_classes extends CI_Controller {
     {
         parent::__construct();
         $this->load->model('Free_class_model');
+        $this->load->model('Class_category_model', 'category_model');
         $this->load->model('Enrollment_model');
         $this->load->model('User_model');
         $this->load->library('Permission');
@@ -33,16 +34,42 @@ class Free_classes extends CI_Controller {
         $this->load->view('templates/footer');
     }
     
+    public function detail($id)
+    {
+        // Get class details
+        $data['free_class'] = $this->Free_class_model->get_free_class_by_id($id);
+        
+        if (!$data['free_class']) {
+            show_404();
+        }
+        
+        // Get class materials
+        $data['materials'] = $this->Free_class_model->get_free_class_materials($id);
+        
+        // Get enrolled students
+        $data['enrolled_students'] = $this->Enrollment_model->get_enrolled_students($id, 'free');
+        $data['enrolled_count'] = count($data['enrolled_students']);
+        
+        $data['title'] = 'Detail Kelas: ' . $data['free_class']->title;
+        
+        $this->load->view('templates/header', $data);
+        $this->load->view('admin/free_classes/detail', $data);
+        $this->load->view('templates/footer');
+    }
+    
     public function create()
     {
         // Get all mentors (users with guru role)
         $this->db->where('role', 'guru');
         $data['mentors'] = $this->db->get('users')->result();
+
+        // Get class categories (free)
+        $data['categories'] = $this->category_model->get_all('free', true);
         
         $this->form_validation->set_rules('title', 'Judul Kelas', 'required|trim');
         $this->form_validation->set_rules('description', 'Deskripsi', 'required|trim');
         $this->form_validation->set_rules('level', 'Level', 'required');
-        $this->form_validation->set_rules('category', 'Kategori', 'required|trim');
+        $this->form_validation->set_rules('category_id', 'Kategori', 'required');
         $this->form_validation->set_rules('duration', 'Durasi', 'required|numeric');
         $this->form_validation->set_rules('mentor_id', 'Mentor', 'required');
         
@@ -82,7 +109,8 @@ class Free_classes extends CI_Controller {
                 'description' => $this->input->post('description'),
                 'thumbnail' => $thumbnail,
                 'level' => $this->input->post('level'),
-                'category' => $this->input->post('category'),
+                'category' => $this->get_category_name($this->input->post('category_id')),
+                'category_id' => $this->input->post('category_id'),
                 'duration' => $this->input->post('duration'),
                 'mentor_id' => $this->input->post('mentor_id'),
                 'max_students' => $this->input->post('max_students'),
@@ -90,9 +118,15 @@ class Free_classes extends CI_Controller {
                 'end_date' => $this->input->post('end_date'),
                 'status' => $this->input->post('status')
             ];
-            
+
+            // Temporarily disable foreign key checks
+            $this->db->query('SET FOREIGN_KEY_CHECKS = 0');
+
             $class_id = $this->Free_class_model->create_free_class($class_data);
-            
+
+            // Re-enable foreign key checks
+            $this->db->query('SET FOREIGN_KEY_CHECKS = 1');
+
             if ($class_id) {
                 $this->session->set_flashdata('success', 'Kelas gratis berhasil ditambahkan');
                 redirect('admin/free_classes/edit/' . $class_id);
@@ -115,13 +149,16 @@ class Free_classes extends CI_Controller {
         $this->db->where('role', 'guru');
         $data['mentors'] = $this->db->get('users')->result();
         
+        // Get class categories (free)
+        $data['categories'] = $this->category_model->get_all('free', true);
+        
         // Get materials for this class
         $data['materials'] = $this->Free_class_model->get_free_class_materials($id);
         
         $this->form_validation->set_rules('title', 'Judul Kelas', 'required|trim');
         $this->form_validation->set_rules('description', 'Deskripsi', 'required|trim');
         $this->form_validation->set_rules('level', 'Level', 'required');
-        $this->form_validation->set_rules('category', 'Kategori', 'required|trim');
+        $this->form_validation->set_rules('category_id', 'Kategori', 'required');
         $this->form_validation->set_rules('duration', 'Durasi', 'required|numeric');
         $this->form_validation->set_rules('mentor_id', 'Mentor', 'required');
         
@@ -166,7 +203,8 @@ class Free_classes extends CI_Controller {
                 'description' => $this->input->post('description'),
                 'thumbnail' => $thumbnail,
                 'level' => $this->input->post('level'),
-                'category' => $this->input->post('category'),
+                'category' => $this->get_category_name($this->input->post('category_id')),
+                'category_id' => $this->input->post('category_id'),
                 'duration' => $this->input->post('duration'),
                 'mentor_id' => $this->input->post('mentor_id'),
                 'max_students' => $this->input->post('max_students'),
@@ -200,13 +238,19 @@ class Free_classes extends CI_Controller {
         
         if ($this->Free_class_model->delete_free_class($id)) {
             $this->session->set_flashdata('success', 'Kelas gratis berhasil dihapus');
+            redirect('admin/free_classes');
         } else {
             $this->session->set_flashdata('error', 'Gagal menghapus kelas gratis');
+            redirect('admin/free_classes');
         }
-        
-        redirect('admin/free_classes');
     }
-    
+
+    private function get_category_name($category_id)
+    {
+        $category = $this->category_model->get_by_id($category_id);
+        return $category ? $category->name : '';
+    }
+
     public function add_material($class_id)
     {
         $free_class = $this->Free_class_model->get_free_class_by_id($class_id);

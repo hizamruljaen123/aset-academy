@@ -119,7 +119,7 @@
                                         <?php echo $m_type === 'free' ? 'Free #' : 'Materi #'; ?><?php echo $m->id; ?>
                                     </span>
                                 </div>
-                                <p class="text-gray-500 mb-6 line-clamp-3"><?php echo $m->deskripsi; ?></p>
+                                
                                 <div class="flex flex-wrap gap-2">
                                     <a href="<?php echo $detail_url; ?>"
                                        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-sm font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200">

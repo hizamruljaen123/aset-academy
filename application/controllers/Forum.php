@@ -31,13 +31,15 @@ class Forum extends CI_Controller {
         
         // Get popular threads (most commented)
         $data['popular_threads'] = $this->forum->get_popular_threads(5);
-        
+
         // Check if forum has any threads
         $data['has_threads'] = $this->forum->count_all_threads() > 0;
-        
+
         // Check if user is admin or super admin
-        $data['is_admin'] = in_array($this->session->userdata('role'), ['admin', 'super_admin']);
-        
+        $user_role = $this->session->userdata('role');
+        $data['is_admin'] = in_array($user_role, ['admin', 'super_admin']);
+        $data['is_super_admin'] = ($user_role === 'super_admin');
+
         // Load views with layout
         $this->load->view('templates/header', $data);
         $this->load->view('forum/index', $data);

@@ -1,3 +1,6 @@
+<!-- Quill CSS -->
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
 <div class="max-w-7xl mx-auto">
     <!-- Header Section -->
     <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl shadow-lg p-6 mb-8 text-white">
@@ -42,6 +45,30 @@
                         <?php echo form_error('nama_kelas', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
                     </div>
 
+                    <!-- Kategori -->
+                    <div class="space-y-2">
+                        <label for="category_id" class="block text-sm font-medium text-gray-700 flex items-center">
+                            <i class="fas fa-folder text-blue-500 mr-2"></i>
+                            Kategori
+                            <span class="text-red-500 ml-1">*</span>
+                        </label>
+                        <select id="category_id" name="category_id"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+                                required>
+                            <option value="" disabled selected>-- Pilih Kategori --</option>
+                            <?php if (!empty($categories)): ?>
+                                <?php foreach ($categories as $category): ?>
+                                    <option value="<?php echo $category->id; ?>" <?php echo set_select('category_id', $category->id); ?>>
+                                        <?php echo $category->name; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </select>
+                        <?php echo form_error('category_id', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Bahasa Program -->
                     <div class="space-y-2">
                         <label for="bahasa_program" class="block text-sm font-medium text-gray-700 flex items-center">
@@ -56,6 +83,24 @@
                                required>
                         <?php echo form_error('bahasa_program', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
                     </div>
+
+                    <!-- Level -->
+                    <div class="space-y-2">
+                        <label for="level" class="block text-sm font-medium text-gray-700 flex items-center">
+                            <i class="fas fa-layer-group text-green-500 mr-2"></i>
+                            Level Kesulitan
+                            <span class="text-red-500 ml-1">*</span>
+                        </label>
+                        <select id="level" name="level"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+                                required>
+                            <option value="" disabled selected>-- Pilih Level --</option>
+                            <option value="Dasar" <?php echo set_select('level', 'Dasar'); ?>>Dasar</option>
+                            <option value="Menengah" <?php echo set_select('level', 'Menengah'); ?>>Menengah</option>
+                            <option value="Lanjutan" <?php echo set_select('level', 'Lanjutan'); ?>>Lanjutan</option>
+                        </select>
+                        <?php echo form_error('level', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
+                    </div>
                 </div>
 
                 <!-- Deskripsi -->
@@ -65,10 +110,10 @@
                         Deskripsi Kelas
                         <span class="text-red-500 ml-1">*</span>
                     </label>
-                    <textarea id="deskripsi" name="deskripsi" rows="5"
-                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white resize-vertical"
-                              placeholder="Jelaskan secara detail tentang kelas ini, materi yang akan dipelajari, dan target siswa"
-                              required><?php echo set_value('deskripsi'); ?></textarea>
+                    <!-- Quill Editor -->
+                    <div id="editor" style="height: 200px;"></div>
+                    <!-- Hidden textarea for form submission -->
+                    <textarea id="deskripsi" name="deskripsi" style="display: none;" required><?php echo set_value('deskripsi'); ?></textarea>
                     <?php echo form_error('deskripsi', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
                 </div>
             </div>
@@ -199,5 +244,40 @@
         </div>
     </div>
 </div>
+
+<!-- Quill JS -->
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+<script>
+// Initialize Quill editor
+var quill = new Quill('#editor', {
+    theme: 'snow',
+    placeholder: 'Jelaskan secara detail tentang kelas ini, materi yang akan dipelajari, dan target siswa',
+    modules: {
+        toolbar: [
+            [{ 'header': [1, 2, 3, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            ['link', 'image'],
+            ['clean']
+        ]
+    }
+});
+
+// Set initial content if available
+<?php if (set_value('deskripsi')): ?>
+    quill.root.innerHTML = <?= json_encode(set_value('deskripsi')) ?>;
+<?php endif; ?>
+
+// Update hidden textarea when content changes
+quill.on('text-change', function() {
+    document.getElementById('deskripsi').value = quill.root.innerHTML;
+});
+
+// Update textarea on form submit
+document.querySelector('form').addEventListener('submit', function() {
+    document.getElementById('deskripsi').value = quill.root.innerHTML;
+});
+</script>
 
 <?php $this->load->view('templates/footer'); ?>

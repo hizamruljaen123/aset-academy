@@ -146,7 +146,6 @@
                                                 <?php endif; ?>
                                             </div>
                                             <h3 class="text-xl font-semibold text-gray-900 leading-tight"><?php echo $class->title; ?></h3>
-                                            <p class="text-sm text-gray-500 line-clamp-3"><?php echo $class->description; ?></p>
                                         </div>
                                         <div class="flex items-center justify-between">
                                             <div class="flex items-center gap-3">
@@ -170,10 +169,16 @@
                                         </div>
                                     </div>
                                     <div class="border-t border-gray-100 px-6 py-4 flex items-center justify-between bg-gray-50/60">
-                                        <a href="<?php echo site_url('admin/free_classes/edit/' . $class->id); ?>" class="inline-flex items-center gap-2 text-sm font-semibold text-emerald-600 hover:text-emerald-700">
-                                            <i class="fas fa-pencil-alt"></i>
-                                            Edit Kelas
-                                        </a>
+                                        <div class="flex items-center space-x-4">
+                                            <a href="<?php echo site_url('admin/free_classes/edit/' . $class->id); ?>" class="inline-flex items-center gap-2 text-sm font-semibold text-emerald-600 hover:text-emerald-700">
+                                                <i class="fas fa-pencil-alt"></i>
+                                                Edit
+                                            </a>
+                                            <a href="<?php echo site_url('admin/free_classes/detail/' . $class->id); ?>" class="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700">
+                                                <i class="fas fa-eye"></i>
+                                                Detail
+                                            </a>
+                                        </div>
                                         <a href="<?php echo site_url('admin/free_classes/delete/' . $class->id); ?>" class="inline-flex items-center gap-2 text-sm font-semibold text-rose-500 hover:text-rose-600" onclick="return confirm('Yakin ingin menghapus kelas ini?');">
                                             <i class="fas fa-trash-alt"></i>
                                             Hapus

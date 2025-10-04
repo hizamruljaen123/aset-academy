@@ -19,12 +19,6 @@ class Home extends MY_Controller {
 
     public function index()
     {
-        // Check if workshops exist, if not, create sample data
-        $existing_workshops = $this->workshop_model->get_all_workshops();
-        if (empty($existing_workshops)) {
-            $this->create_sample_workshops();
-        }
-
         // Get featured premium classes
         $data['featured_premium'] = $this->kelas_model->get_popular_kelas(3);
 

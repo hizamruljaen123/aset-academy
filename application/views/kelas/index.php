@@ -137,7 +137,6 @@
                             <h3 class="text-xl font-semibold text-gray-900 leading-tight group-hover:text-indigo-600 transition-colors">
                                 <?php echo html_escape($k->nama_kelas); ?>
                             </h3>
-                            <p class="text-sm text-gray-500 line-clamp-3"><?php echo html_escape($k->deskripsi); ?></p>
                         </div>
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-3">
