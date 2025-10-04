@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `class_categories` (
   UNIQUE KEY `uk_class_categories_slug` (`slug`),
   KEY `idx_class_categories_class_type` (`class_type`),
   KEY `idx_class_categories_is_active` (`is_active`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -242,9 +242,9 @@ CREATE TABLE IF NOT EXISTS `free_classes` (
   PRIMARY KEY (`id`),
   KEY `mentor_id` (`mentor_id`),
   KEY `fk_free_classes_category` (`category_id`),
-  CONSTRAINT `fk_free_classes_category` FOREIGN KEY (`category_id`) REFERENCES `class_categories` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `fk_free_classes_category` FOREIGN KEY (`category_id`) REFERENCES `free_class_categories` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `free_classes_ibfk_1` FOREIGN KEY (`mentor_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -285,7 +285,7 @@ CREATE TABLE IF NOT EXISTS `free_class_enrollments` (
   KEY `student_id` (`student_id`),
   CONSTRAINT `free_class_enrollments_ibfk_1` FOREIGN KEY (`class_id`) REFERENCES `free_classes` (`id`) ON DELETE CASCADE,
   CONSTRAINT `free_class_enrollments_ibfk_2` FOREIGN KEY (`student_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -339,7 +339,7 @@ CREATE TABLE IF NOT EXISTS `guru_kelas` (
   KEY `kelas_id` (`kelas_id`),
   CONSTRAINT `guru_kelas_ibfk_1` FOREIGN KEY (`guru_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `guru_kelas_ibfk_2` FOREIGN KEY (`kelas_id`) REFERENCES `kelas_programming` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -362,7 +362,7 @@ CREATE TABLE IF NOT EXISTS `jadwal_kelas` (
   KEY `fk_jadwal_guru` (`guru_id`),
   CONSTRAINT `fk_jadwal_guru` FOREIGN KEY (`guru_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
   CONSTRAINT `jadwal_kelas_ibfk_1` FOREIGN KEY (`kelas_id`) REFERENCES `kelas_programming` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -410,7 +410,7 @@ CREATE TABLE IF NOT EXISTS `kelas_programming` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nama_kelas` (`nama_kelas`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -425,7 +425,7 @@ CREATE TABLE IF NOT EXISTS `materi` (
   PRIMARY KEY (`id`),
   KEY `kelas_id` (`kelas_id`),
   CONSTRAINT `materi_ibfk_1` FOREIGN KEY (`kelas_id`) REFERENCES `kelas_programming` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -442,7 +442,7 @@ CREATE TABLE IF NOT EXISTS `materi_parts` (
   PRIMARY KEY (`id`),
   KEY `materi_id` (`materi_id`),
   CONSTRAINT `materi_parts_ibfk_1` FOREIGN KEY (`materi_id`) REFERENCES `materi` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -637,7 +637,7 @@ CREATE TABLE IF NOT EXISTS `siswa` (
   KEY `idx_nis` (`nis`),
   KEY `idx_nama` (`nama_lengkap`),
   KEY `idx_kelas` (`kelas`)
-) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -696,7 +696,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `username` (`username`),
   KEY `FK1_users` (`user_id`),
   CONSTRAINT `FK1_users` FOREIGN KEY (`user_id`) REFERENCES `siswa` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -731,13 +731,14 @@ CREATE TABLE IF NOT EXISTS `workshops` (
   `status` enum('draft','published','completed') NOT NULL DEFAULT 'draft',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `online_meet` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `slug` (`slug`),
   KEY `idx_status` (`status`),
   KEY `idx_type` (`type`),
   KEY `idx_created_at` (`created_at`),
   KEY `idx_status_type` (`status`,`type`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb3;
 
 -- Data exporting was unselected.
 
@@ -788,7 +789,7 @@ CREATE TABLE IF NOT EXISTS `workshop_participants` (
   KEY `user_id` (`user_id`),
   CONSTRAINT `workshop_participants_ibfk_1` FOREIGN KEY (`workshop_id`) REFERENCES `workshops` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `workshop_participants_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb3;
 
 -- Data exporting was unselected.
 

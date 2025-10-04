@@ -1,4 +1,8 @@
 <div class="max-w-screen-xl mx-auto p-4">
+    <!-- Workshops Admin Styles -->
+    <link href="<?= base_url('assets/css/workshops-admin.css') ?>" rel="stylesheet">
+
+
     <!-- Header Section -->
     <div class="flex flex-col md:flex-row justify-between items-center mb-6">
         <div>
@@ -233,6 +237,7 @@
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Workshop</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lokasi</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Online Meeting</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                     </tr>
@@ -240,7 +245,7 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     <?php if (empty($workshops)): ?>
                         <tr>
-                            <td colspan="5" class="px-6 py-12 text-center">
+                            <td colspan="6" class="px-6 py-12 text-center">
                                 <div class="flex flex-col items-center">
                                     <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                                         <i class="fas fa-chalkboard-teacher text-gray-400 text-xl"></i>
@@ -284,6 +289,20 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     <?= $workshop->location ?>
                                 </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    <?php if ($workshop->online_meet): ?>
+                                        <a href="<?= $workshop->online_meet ?>" target="_blank"
+                                           class="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                                            <i class="fas fa-video mr-1"></i>
+                                            Meeting
+                                        </a>
+                                    <?php else: ?>
+                                        <span class="inline-flex items-center px-2 py-1 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-gray-50 cursor-not-allowed">
+                                            <i class="fas fa-video-slash mr-1"></i>
+                                            Tidak Ada
+                                        </span>
+                                    <?php endif; ?>
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
                                         <?php if ($workshop->status == 'published'): ?>
@@ -321,191 +340,7 @@
     </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // View switching functionality
-    const tableViewBtn = document.getElementById('table-view-btn');
-    const gridViewBtn = document.getElementById('grid-view-btn');
-    const tableView = document.getElementById('table-view');
-    const gridView = document.getElementById('grid-view');
+    
 
-    // View toggle handlers
-    tableViewBtn.addEventListener('click', function() {
-        switchToTableView();
-    });
-
-    gridViewBtn.addEventListener('click', function() {
-        switchToGridView();
-    });
-
-    function switchToTableView() {
-        tableView.classList.remove('hidden');
-        gridView.classList.add('hidden');
-        tableViewBtn.classList.add('bg-white', 'text-gray-900', 'shadow-sm');
-        tableViewBtn.classList.remove('text-gray-600');
-        gridViewBtn.classList.remove('bg-white', 'text-gray-900', 'shadow-sm');
-        gridViewBtn.classList.add('text-gray-600');
-    }
-
-    function switchToGridView() {
-        gridView.classList.remove('hidden');
-        tableView.classList.add('hidden');
-        gridViewBtn.classList.add('bg-white', 'text-gray-900', 'shadow-sm');
-        gridViewBtn.classList.remove('text-gray-600');
-        tableViewBtn.classList.remove('bg-white', 'text-gray-900', 'shadow-sm');
-        tableViewBtn.classList.add('text-gray-600');
-    }
-
-    // Enhanced search and filtering
-    const searchInput = document.getElementById('search-workshop');
-    const statusFilter = document.getElementById('status-filter');
-    const typeFilter = document.getElementById('type-filter');
-    const tableRows = document.querySelectorAll('#table-view tbody tr');
-    const gridCards = document.querySelectorAll('.workshop-card');
-
-    function filterItems() {
-        const searchTerm = searchInput.value.toLowerCase();
-        const statusValue = statusFilter.value;
-        const typeValue = typeFilter.value;
-
-        // Filter table rows
-        tableRows.forEach(row => {
-            const title = row.querySelector('td:first-child div div:first-child').textContent.toLowerCase();
-            const type = row.querySelector('td:first-child div div:last-child').textContent.toLowerCase();
-            const location = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
-            const status = row.querySelector('td:nth-child(4) span').textContent.toLowerCase();
-
-            const matchesSearch = title.includes(searchTerm) || type.includes(searchTerm) || location.includes(searchTerm);
-            const matchesStatus = !statusValue || status.toLowerCase().includes(statusValue);
-            const matchesType = !typeValue || type.includes(typeValue);
-
-            if (matchesSearch && matchesStatus && matchesType) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        });
-
-        // Filter grid cards
-        gridCards.forEach(card => {
-            const title = card.dataset.title || '';
-            const location = card.dataset.location || '';
-            const status = card.dataset.status || '';
-            const type = card.dataset.type || '';
-
-            const matchesSearch = title.includes(searchTerm) || location.includes(searchTerm);
-            const matchesStatus = !statusValue || status === statusValue;
-            const matchesType = !typeValue || type === typeValue;
-
-            if (matchesSearch && matchesStatus && matchesType) {
-                card.style.display = '';
-            } else {
-                card.style.display = 'none';
-            }
-        });
-
-        // Update empty state visibility
-        updateEmptyStates();
-    }
-
-    function updateEmptyStates() {
-        const visibleTableRows = Array.from(tableRows).filter(row => row.style.display !== 'none');
-        const visibleGridCards = Array.from(gridCards).filter(card => card.style.display !== 'none');
-
-        // Handle table empty state
-        const tableEmptyState = document.querySelector('#table-view .col-span-full');
-        if (tableEmptyState) {
-            tableEmptyState.style.display = visibleTableRows.length === 0 && tableRows.length > 0 ? '' : 'none';
-        }
-
-        // Handle grid empty state
-        const gridEmptyState = document.querySelector('#grid-view .col-span-full');
-        if (gridEmptyState) {
-            gridEmptyState.style.display = visibleGridCards.length === 0 && gridCards.length > 0 ? '' : 'none';
-        }
-    }
-
-    // Event listeners for filters
-    searchInput.addEventListener('input', filterItems);
-    statusFilter.addEventListener('change', filterItems);
-    typeFilter.addEventListener('change', filterItems);
-
-    // Poster gallery modal functionality
-    function initializePosterGallery() {
-        const posterImages = document.querySelectorAll('.workshop-card img, #table-view img');
-
-        posterImages.forEach(img => {
-            img.addEventListener('click', function(e) {
-                e.preventDefault();
-                openPosterModal(this.src, this.alt);
-            });
-        });
-    }
-
-    function openPosterModal(src, alt) {
-        // Create modal for poster gallery
-        const modal = document.createElement('div');
-        modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-75';
-        modal.innerHTML = `
-            <div class="relative max-w-4xl max-h-full flex items-center justify-center">
-                <img src="${src}" alt="${alt}" class="max-w-full max-h-full object-contain rounded-lg" 
-                     onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <div class="max-w-full max-h-full flex items-center justify-center" style="display: none;">
-                    <div class="text-center text-white">
-                        <i class="fas fa-chalkboard-teacher text-6xl mb-4"></i>
-                        <p class="text-lg font-medium">Poster Error</p>
-                    </div>
-                </div>
-                <button class="absolute top-4 right-4 text-white text-2xl hover:text-gray-300 bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center" onclick="this.closest('.fixed').remove()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        `;
-
-        modal.addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.remove();
-            }
-        });
-
-        document.body.appendChild(modal);
-    }
-
-    // Initialize poster gallery
-    initializePosterGallery();
-
-    // Add loading animation for cards
-    const cards = document.querySelectorAll('.workshop-card');
-    cards.forEach((card, index) => {
-        card.style.animationDelay = `${index * 0.1}s`;
-        card.classList.add('animate-fade-in-up');
-    });
-
-    // Add CSS for animations
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes fade-in-up {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate-fade-in-up {
-            animation: fade-in-up 0.6s ease-out forwards;
-        }
-
-        .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-    `;
-    document.head.appendChild(style);
-});
-</script>
+    <!-- Workshops Admin Scripts -->
+    <script src="<?= base_url('assets/js/workshops-admin.js') ?>"></script>

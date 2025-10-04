@@ -478,7 +478,7 @@
                     <h2 class="text-2xl font-bold text-gray-800">Aksi Cepat</h2>
                 </div>
                 <div class="p-6">
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                         <a href="<?php echo site_url('student/profile'); ?>" class="flex flex-col items-center p-4 rounded-xl hover:bg-blue-50 transition-colors text-center group">
                             <div class="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mb-3 group-hover:scale-110 transition-transform">
                                 <i class="fas fa-user-circle text-xl"></i>
@@ -491,17 +491,17 @@
                             </div>
                             <span class="font-medium text-gray-900">Materi</span>
                         </a>
-                        <a href="<?php echo site_url('student/orders'); ?>" class="flex flex-col items-center p-4 rounded-xl hover:bg-orange-50 transition-colors text-center group">
-                            <div class="h-12 w-12 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 mb-3 group-hover:scale-110 transition-transform">
-                                <i class="fas fa-shopping-cart text-xl"></i>
-                            </div>
-                            <span class="font-medium text-gray-900">Pesanan Saya</span>
-                        </a>
-                        <a href="<?php echo site_url('absensi'); ?>" class="flex flex-col items-center p-4 rounded-xl hover:bg-green-50 transition-colors text-center group">
+                        <a href="<?php echo site_url('student/workshops'); ?>" class="flex flex-col items-center p-4 rounded-xl hover:bg-green-50 transition-colors text-center group">
                             <div class="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center text-green-600 mb-3 group-hover:scale-110 transition-transform">
-                                <i class="fas fa-user-check text-xl"></i>
+                                <i class="fas fa-users text-xl"></i>
                             </div>
-                            <span class="font-medium text-gray-900">Absensi</span>
+                            <span class="font-medium text-gray-900">Workshop</span>
+                        </a>
+                        <a href="<?php echo site_url('student/free_classes'); ?>" class="flex flex-col items-center p-4 rounded-xl hover:bg-purple-50 transition-colors text-center group">
+                            <div class="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mb-3 group-hover:scale-110 transition-transform">
+                                <i class="fas fa-graduation-cap text-xl"></i>
+                            </div>
+                            <span class="font-medium text-gray-900">Kelas Gratis</span>
                         </a>
                     </div>
                 </div>

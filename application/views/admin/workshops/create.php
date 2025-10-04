@@ -61,9 +61,10 @@
                 </div>
 
                 <div class="col-span-1 md:col-span-2">
-                    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
-                    <textarea name="description" id="description" rows="6" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"><?= set_value('description') ?></textarea>
-                    <?= form_error('description', '<p class="mt-1 text-sm text-red-600">', '</p>') ?>
+                    <label for="online_meet" class="block text-sm font-medium text-gray-700 mb-1">Link Online Meeting</label>
+                    <input type="url" name="online_meet" id="online_meet" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" value="<?= set_value('online_meet') ?>" placeholder="https://zoom.us/j/example atau https://meet.google.com/abc-defg-hij">
+                    <p class="mt-1 text-xs text-gray-500">Opsional. Masukkan link untuk meeting online (Zoom, Google Meet, dll)</p>
+                    <?= form_error('online_meet', '<p class="mt-1 text-sm text-red-600">', '</p>') ?>
                 </div>
 
                 <div class="col-span-1 md:col-span-2">

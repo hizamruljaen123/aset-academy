@@ -453,6 +453,10 @@
                         <i class="fas fa-crown w-5 text-center mr-3 text-yellow-500"></i>
                         Kelas Premium
                     </a>
+                    <a href="<?php echo site_url('student/workshops'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'workshops') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-users w-5 text-center mr-3"></i>
+                        Workshop & Seminar
+                    </a>
                     <a href="<?php echo site_url('student/free_classes'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'free_classes' && $this->uri->segment(3) != 'my_classes') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-graduation-cap w-5 text-center mr-3"></i>
                         Kelas Gratis

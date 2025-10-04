@@ -141,17 +141,13 @@ $route['payment/process_payment_proof_upload/(:any)'] = 'payment/process_payment
 $route['home/premium_class_view/(:any)'] = 'home/premium_class_view/$1';
 $route['payment/purchase/(:any)'] = 'payment/purchase/$1';
 
-// Routes untuk Student Free Classes Access
-$route['student/free_classes'] = 'student/free_classes';
-$route['student/free_classes/index'] = 'student/free_classes/index';
-$route['student/free_classes/browse'] = 'student/free_classes/browse';
-$route['student/free_classes/view/(:any)'] = 'student/free_classes/view/$1';
-$route['student/free_classes/enroll/(:any)'] = 'student/free_classes/enroll/$1';
-$route['student/free_classes/learn/(:any)'] = 'student/free_classes/learn/$1';
-$route['student/free_classes/material/(:any)/(:any)'] = 'student/free_classes/material/$1/$2';
-$route['student/free_classes/complete_material/(:any)/(:any)'] = 'student/free_classes/complete_material/$1/$2';
-$route['student/free_classes/post_discussion'] = 'student/free_classes/post_discussion';
-$route['student/free_classes/my_classes'] = 'student/free_classes/my_classes';
+// Routes untuk Student Workshop Management
+$route['student/workshops'] = 'student_workshops';
+$route['student/workshops/index'] = 'student_workshops';
+$route['student/workshops/detail/(:any)'] = 'student_workshops/detail/$1';
+$route['student/workshops/register/(:any)'] = 'student_workshops/register/$1';
+$route['student/workshops/success/(:any)'] = 'student_workshops/success/$1';
+
 
 // Routes untuk Home Page
 $route['home'] = 'home';

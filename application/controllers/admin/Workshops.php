@@ -57,6 +57,7 @@ class Workshops extends MY_Controller {
         $this->form_validation->set_rules('end_datetime', 'Waktu Selesai', 'required');
         $this->form_validation->set_rules('location', 'Lokasi', 'required|trim');
         $this->form_validation->set_rules('max_participants', 'Maksimal Peserta', 'required|numeric');
+        $this->form_validation->set_rules('online_meet', 'Link Online Meeting', 'trim|valid_url');
 
         if ($this->form_validation->run() == FALSE) {
             $this->load->view('templates/header', $data);
@@ -73,6 +74,7 @@ class Workshops extends MY_Controller {
                 'end_datetime' => $this->input->post('end_datetime'),
                 'location' => $this->input->post('location'),
                 'max_participants' => $this->input->post('max_participants'),
+                'online_meet' => $this->input->post('online_meet'),
                 'status' => $this->input->post('status')
             ];
 
@@ -119,6 +121,7 @@ class Workshops extends MY_Controller {
         $this->form_validation->set_rules('end_datetime', 'Waktu Selesai', 'required');
         $this->form_validation->set_rules('location', 'Lokasi', 'required|trim');
         $this->form_validation->set_rules('max_participants', 'Maksimal Peserta', 'required|numeric');
+        $this->form_validation->set_rules('online_meet', 'Link Online Meeting', 'trim|valid_url');
 
         if ($this->form_validation->run() == FALSE) {
             $this->load->view('templates/header', $data);
@@ -135,6 +138,7 @@ class Workshops extends MY_Controller {
                 'end_datetime' => $this->input->post('end_datetime'),
                 'location' => $this->input->post('location'),
                 'max_participants' => $this->input->post('max_participants'),
+                'online_meet' => $this->input->post('online_meet'),
                 'status' => $this->input->post('status'),
                 'updated_at' => date('Y-m-d H:i:s')
             ];
@@ -164,13 +168,13 @@ class Workshops extends MY_Controller {
                     $workshop_data['thumbnail'] = 'uploads/workshops/' . $upload_data['file_name'];
                 } else {
                     $this->session->set_flashdata('error', $this->upload->display_errors());
-                    redirect('admin/workshops/edit/' . $this->encrypt_id($id));
+                    redirect('admin/workshops/edit/' . $encrypted_id);
                 }
             }
 
             $this->Workshop_model->update_workshop($id, $workshop_data);
             $this->session->set_flashdata('success', 'Workshop berhasil diperbarui!');
-            redirect('admin/workshops/edit/' . $this->encrypt_id($id));
+            redirect('admin/workshops/edit/' . $encrypted_id);
         }
     }
 
@@ -195,7 +199,7 @@ class Workshops extends MY_Controller {
 
         if ($this->form_validation->run() == FALSE) {
             $this->session->set_flashdata('error', validation_errors());
-            redirect('admin/workshops/edit/' . $this->encrypt_id($workshop_id));
+            redirect('admin/workshops/edit/' . $encrypted_workshop_id);
         }
 
         $config['upload_path'] = './uploads/workshop_materials/';
@@ -207,7 +211,7 @@ class Workshops extends MY_Controller {
 
         if (!$this->upload->do_upload('material_file')) {
             $this->session->set_flashdata('error', $this->upload->display_errors());
-            redirect('admin/workshops/edit/' . $this->encrypt_id($workshop_id));
+            redirect('admin/workshops/edit/' . $encrypted_workshop_id);
         }
 
         $upload_data = $this->upload->data();
@@ -219,7 +223,7 @@ class Workshops extends MY_Controller {
 
         $this->Workshop_model->add_material($workshop_id, $material_data);
         $this->session->set_flashdata('success', 'Materi berhasil ditambahkan!');
-        redirect('admin/workshops/edit/' . $this->encrypt_id($workshop_id));
+        redirect('admin/workshops/edit/' . $encrypted_workshop_id);
     }
 
     public function delete_material($encrypted_material_id)
