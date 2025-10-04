@@ -69,6 +69,8 @@
     
     <!-- Custom Form Input Styles -->
     <link href="<?php echo base_url('assets/css/form-inputs.css'); ?>" rel="stylesheet">
+    <!-- Permissions Styles -->
+    <link href="<?php echo base_url('assets/css/permissions.css'); ?>" rel="stylesheet">
     
     <!-- Global Form Styles (Inline for immediate effect) -->
     <style>
@@ -524,6 +526,8 @@
     
     <!-- Admin Assignments Scripts -->
     <script src="<?php echo base_url('assets/js/assignments-admin.js'); ?>"></script>
+    <!-- Permissions Scripts -->
+    <script src="<?php echo base_url('assets/js/permissions.js'); ?>"></script>
 
     <!-- Dynamic Scripts and Styles -->
     <?php if (isset($scripts) && is_array($scripts)): ?>

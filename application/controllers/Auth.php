@@ -99,9 +99,13 @@ class Auth extends CI_Controller {
 
     public function process_register()
     {
+        // Enable database debugging for detailed error messages
+        $this->db->db_debug = TRUE;
+        
+        // Load necessary libraries
         $this->load->library('form_validation');
         
-        // Set validation rules yang sama dengan mobile
+        // Set validation rules
         $this->form_validation->set_rules('username', 'Username', 'required|is_unique[users.username]');
         $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
         $this->form_validation->set_rules('confirm_password', 'Konfirmasi Password', 'required|matches[password]');
@@ -109,14 +113,19 @@ class Auth extends CI_Controller {
         $this->form_validation->set_rules('nama_lengkap', 'Nama Lengkap', 'required');
 
         if ($this->form_validation->run() === FALSE) {
+            // If validation fails, show errors
+            $this->session->set_flashdata('error', validation_errors('<div class="error">', '</div>'));
             $this->register();
-        } else {
+            return;
+        }
+
+        try {
             // Generate NIS otomatis
-            $last_siswa = $this->db->order_by('id', 'DESC')->get('siswa')->row();
+            $last_siswa = $this->db->order_by('id', 'DESC')->get('siswa', 1)->row();
             $last_id = $last_siswa ? (int) substr($last_siswa->nis, -4) : 0;
             $new_nis = date('Y') . str_pad($last_id + 1, 4, '0', STR_PAD_LEFT);
 
-            // Gunakan data yang sama dengan mobile
+            // Prepare user data
             $user_data = array(
                 'username' => $this->input->post('username'),
                 'password' => password_hash($this->input->post('password'), PASSWORD_BCRYPT),
@@ -124,10 +133,14 @@ class Auth extends CI_Controller {
                 'email' => $this->input->post('email'),
                 'role' => 'siswa',
                 'level' => '4',
-                'status' => 'Aktif'
+                'status' => 'Aktif',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
             );
             
+            // Prepare siswa data
             $siswa_data = array(
+                'id' => null, // Will be set after user creation
                 'nis' => $new_nis,
                 'nama_lengkap' => $this->input->post('nama_lengkap'),
                 'email' => $this->input->post('email'),
@@ -137,20 +150,56 @@ class Auth extends CI_Controller {
                 'alamat' => NULL,
                 'tanggal_lahir' => NULL,
                 'jenis_kelamin' => NULL,
-                'status' => 'Aktif'
+                'status' => 'Aktif',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
             );
             
-            $this->db->trans_start();
+            // Start transaction
+            $this->db->trans_begin();
+            
+            // Insert to users table
             $this->db->insert('users', $user_data);
-            $this->db->insert('siswa', $siswa_data);
-
-            if ($this->db->trans_status() === FALSE) {
-                $this->session->set_flashdata('error', 'Registrasi gagal');
-                redirect('auth/register');
-            } else {
-                $this->session->set_flashdata('success', 'Registrasi berhasil! Silakan login');
-                redirect('auth');
+            $user_id = $this->db->insert_id();
+            
+            if (!$user_id) {
+                throw new Exception('Gagal membuat akun pengguna');
             }
+            
+            // Set the ID for siswa_data
+            $siswa_data['id'] = $user_id;
+            
+            // Insert to siswa table
+            $this->db->insert('siswa', $siswa_data);
+            
+            if ($this->db->affected_rows() === 0) {
+                throw new Exception('Gagal membuat data siswa');
+            }
+            
+            // Commit transaction
+            $this->db->trans_commit();
+            
+            // Send success response
+            $this->session->set_flashdata('success', 'Registrasi berhasil! Silakan login');
+            redirect('auth');
+            
+        } catch (Exception $e) {
+            // Rollback transaction on error
+            $this->db->trans_rollback();
+            
+            // Log the error
+            log_message('error', 'Registration error: ' . $e->getMessage());
+            log_message('error', 'Last query: ' . $this->db->last_query());
+            
+            // Get database error if any
+            $db_error = $this->db->error();
+            if (!empty($db_error['message'])) {
+                log_message('error', 'Database error: ' . $db_error['message']);
+            }
+            
+            // Show user-friendly error message
+            $this->session->set_flashdata('error', 'Terjadi kesalahan saat registrasi. Silakan coba lagi atau hubungi administrator.');
+            redirect('auth/register');
         }
     }
 

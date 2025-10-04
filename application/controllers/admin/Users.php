@@ -58,9 +58,63 @@ class Users extends CI_Controller {
         // Handle update form submission
     }
 
-    public function delete($id)
+    public function delete($id = null)
     {
-        // Handle user deletion
+        if (!$id) {
+            $this->session->set_flashdata('error', 'User ID tidak valid');
+            redirect('admin/users');
+        }
+
+        // Check if user exists
+        $user = $this->User_model->get_user_by_id($id);
+        if (!$user) {
+            $this->session->set_flashdata('error', 'User tidak ditemukan');
+            redirect('admin/users');
+        }
+
+        // Prevent deleting own account
+        if ($id == $this->session->userdata('user_id')) {
+            $this->session->set_flashdata('error', 'Tidak bisa menghapus akun sendiri');
+            redirect('admin/users');
+        }
+
+        // Start transaction
+        $this->db->trans_begin();
+
+        try {
+            // Delete user from users table
+            $this->db->where('id', $id);
+            $this->db->delete('users');
+
+            // Check if user was deleted
+            if ($this->db->affected_rows() > 0) {
+                // Delete related records in other tables if needed
+                // Example: $this->db->where('user_id', $id)->delete('user_related_table');
+                
+                // Commit transaction
+                $this->db->trans_commit();
+                
+                $this->session->set_flashdata('success', 'User berhasil dihapus');
+            } else {
+                throw new Exception('Gagal menghapus user');
+            }
+        } catch (Exception $e) {
+            // Rollback transaction on error
+            $this->db->trans_rollback();
+            
+            // Log the error
+            log_message('error', 'Error deleting user: ' . $e->getMessage());
+            
+            // Get database error if any
+            $db_error = $this->db->error();
+            if (!empty($db_error['message'])) {
+                log_message('error', 'Database error: ' . $db_error['message']);
+            }
+            
+            $this->session->set_flashdata('error', 'Gagal menghapus user. ' . $e->getMessage());
+        }
+        
+        redirect('admin/users');
     }
 
     public function detail($id)

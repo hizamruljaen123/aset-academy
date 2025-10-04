@@ -49,6 +49,59 @@ class Permission_model extends CI_Model
         return $this->db->update('user_permissions', $data);
     }
 
+    public function get_permission_matrix()
+    {
+        $permissions = $this->get_all_permissions();
+        $matrix = [];
+
+        foreach ($permissions as $permission) {
+            $module = $permission->module;
+            $action = $permission->action;
+
+            if (!isset($matrix[$module])) {
+                $matrix[$module] = [];
+            }
+
+            if (!isset($matrix[$module][$action])) {
+                $matrix[$module][$action] = [];
+            }
+
+            if ($permission->allowed) {
+                $matrix[$module][$action][] = $permission->role;
+            }
+        }
+
+        return $matrix;
+    }
+
+    public function get_permissions_stats()
+    {
+        $stats = [
+            'total_permissions' => 0,
+            'active_permissions' => 0,
+            'roles_count' => 0,
+            'modules_count' => 0
+        ];
+
+        $permissions = $this->get_all_permissions();
+        $roles = [];
+        $modules = [];
+
+        foreach ($permissions as $permission) {
+            $stats['total_permissions']++;
+            if ($permission->allowed) {
+                $stats['active_permissions']++;
+            }
+            $roles[$permission->role] = true;
+            $modules[$permission->module] = true;
+        }
+
+        $stats['roles_count'] = count($roles);
+        $stats['modules_count'] = count($modules);
+
+        return $stats;
+    }
+
     public function reset_to_defaults()
     {
         // Default permissions logic here

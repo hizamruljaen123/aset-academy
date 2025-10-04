@@ -1,0 +1,119 @@
+/* Custom styles for permissions page */
+.permissions-container {
+    max-height: 70vh;
+    overflow-y: auto;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e0 #f7fafc;
+}
+
+.permissions-container::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.permissions-container::-webkit-scrollbar-track {
+    background: #f7fafc;
+    border-radius: 4px;
+}
+
+.permissions-container::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 4px;
+}
+
+.permissions-container::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0;
+}
+
+/* Ensure tables are responsive */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Z-index fixes for sticky headers */
+.table-responsive {
+    position: relative;
+}
+
+.table-responsive table thead {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: #f9fafb;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Tab content z-index */
+.tab-content {
+    position: relative;
+    z-index: 10;
+}
+
+/* Tab navigation z-index */
+.tab-button {
+    position: relative;
+    z-index: 15;
+}
+
+/* Active tab button */
+.tab-button.active {
+    z-index: 20;
+}
+
+/* Ensure tooltips are on top */
+.tooltip {
+    z-index: 50;
+}
+
+/* Search and filter section */
+.bg-white.rounded-2xl.shadow-xl {
+    position: relative;
+    z-index: 10;
+}
+
+/* Statistics cards */
+.grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 {
+    position: relative;
+    z-index: 10;
+}
+
+/* Ensure no element overlaps the content */
+.permissions-container > * {
+    position: relative;
+    z-index: 5;
+}
+
+/* Module grouping styles */
+.module-header {
+    transition: all 0.2s ease-in-out;
+}
+
+.module-header:hover {
+    background-color: #f3f4f6;
+}
+
+.module-content {
+    transition: all 0.3s ease-in-out;
+}
+
+.module-toggle-btn {
+    transition: transform 0.2s ease-in-out;
+}
+
+.module-badge {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+}
+
+/* Collapsible module animation */
+.module-content[style*="display: none"] {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.module-content {
+    opacity: 1;
+    transform: translateY(0);
+}

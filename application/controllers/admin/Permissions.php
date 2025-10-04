@@ -17,7 +17,9 @@ class Permissions extends CI_Controller {
     {
         $data = [
             'title' => 'Kelola Permissions',
-            'permissions' => $this->Permission_model->get_all_permissions()
+            'permissions' => $this->Permission_model->get_all_permissions(),
+            'permission_matrix' => $this->Permission_model->get_permission_matrix(),
+            'stats' => $this->Permission_model->get_permissions_stats()
         ];
         
         $this->load->view('templates/header', $data);

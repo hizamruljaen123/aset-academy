@@ -1,4 +1,4 @@
-<div class="p-4 transition-opacity duration-500 opacity-0">
+<div class="p-4 transition-opacity duration-500 opacity-0 h-full flex flex-col">
     <!-- Header -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 bg-white p-6 rounded-2xl shadow-xl ring-1 ring-gray-200/50">
         <div class="mb-4 md:mb-0">
@@ -117,12 +117,31 @@
     </div>
 
     <!-- Users Table -->
-    <div class="bg-white rounded-2xl shadow-lg ring-1 ring-gray-200/50 overflow-hidden">
-        <div class="p-6 border-b border-gray-200/50">
+    <div class="bg-white rounded-2xl shadow-lg ring-1 ring-gray-200/50 overflow-hidden flex-1 flex flex-col">
+        <div class="p-6 border-b border-gray-200/50 flex justify-between items-center">
             <h2 class="text-2xl font-bold text-gray-800">Daftar User</h2>
+            <div class="flex items-center space-x-2">
+                <div class="relative">
+                    <button id="exportBtn" class="flex items-center px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <i class="fas fa-file-export mr-2"></i> Ekspor
+                    </button>
+                    <div id="exportDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-file-excel text-green-600 mr-2"></i> Excel
+                        </a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-file-pdf text-red-600 mr-2"></i> PDF
+                        </a>
+                    </div>
+                </div>
+                <button id="refreshBtn" class="p-2 text-gray-500 hover:text-gray-700 focus:outline-none">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
         </div>
-        <div class="p-6">
-            <div class="overflow-x-auto">
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <div class="overflow-x-auto flex-1">
+                <div class="min-w-full inline-block align-middle">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
@@ -224,7 +243,47 @@
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </tbody>
-                </table>
+                    </table>
+                </div>
+            </div>
+            <!-- Pagination -->
+            <div class="bg-gray-50 px-6 py-3 flex items-center justify-between border-t border-gray-200">
+                <div class="flex-1 flex justify-between sm:hidden">
+                    <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        Sebelumnya
+                    </a>
+                    <a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        Selanjutnya
+                    </a>
+                </div>
+                <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                    <div>
+                        <p class="text-sm text-gray-700">
+                            Menampilkan <span class="font-medium">1</span> sampai <span class="font-medium">10</span> dari <span class="font-medium">20</span> hasil
+                        </p>
+                    </div>
+                    <div>
+                        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                            <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                <span class="sr-only">Previous</span>
+                                <i class="fas fa-chevron-left h-5 w-5"></i>
+                            </a>
+                            <a href="#" aria-current="page" class="z-10 bg-blue-50 border-blue-500 text-blue-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                1
+                            </a>
+                            <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                2
+                            </a>
+                            <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                3
+                            </a>
+                            <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                <span class="sr-only">Next</span>
+                                <i class="fas fa-chevron-right h-5 w-5"></i>
+                            </a>
+                        </nav>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -233,11 +292,61 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const materiPage = document.querySelector('.transition-opacity');
+    const exportBtn = document.getElementById('exportBtn');
+    const exportDropdown = document.getElementById('exportDropdown');
+    const refreshBtn = document.getElementById('refreshBtn');
+
+    // Show/hide export dropdown
+    if (exportBtn && exportDropdown) {
+        exportBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            exportDropdown.classList.toggle('hidden');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!exportDropdown.contains(e.target) && e.target !== exportBtn) {
+                exportDropdown.classList.add('hidden');
+            }
+        });
+    }
+
+    // Table row click handler (only for rows with data-href)
+    document.querySelectorAll('tbody tr[data-href]').forEach(row => {
+        row.addEventListener('click', function(e) {
+            // Don't navigate if clicking on action buttons
+            if (e.target.closest('a, button')) {
+                return;
+            }
+            window.location.href = this.dataset.href;
+        });
+        
+        // Add hover effect
+        row.style.cursor = 'pointer';
+        row.addEventListener('mouseenter', function() {
+            this.classList.add('bg-gray-50');
+        });
+        row.addEventListener('mouseleave', function() {
+            this.classList.remove('bg-gray-50');
+        });
+    });
+    
+    // Make table header sticky on scroll
+    const tableWrapper = document.querySelector('.overflow-x-auto');
+    if (tableWrapper) {
+        const thead = tableWrapper.querySelector('thead');
+        if (thead) {
+            thead.classList.add('sticky', 'top-0', 'z-10');
+        }
+    }
     if (materiPage) {
         materiPage.classList.add('opacity-100');
     }
 
-    const roleFilter = document.getElementById('roleFilter');
+    // Add overflow-x-auto to table wrapper
+    const table = document.querySelector('table');
+    if (table) {
+        table.classList.add('overflow-x-auto');
     const levelFilter = document.getElementById('levelFilter');
     const statusFilter = document.getElementById('statusFilter');
     const searchInput = document.getElementById('searchUser');
