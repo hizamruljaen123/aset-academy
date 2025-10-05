@@ -1,48 +1,73 @@
 <?php if (!empty($upcoming_workshops)): ?>
-<section class="py-12 bg-gray-50">
-    <div class="max-w-screen-xl mx-auto px-4">
-        <div class="flex justify-between items-center mb-8">
-            <h2 class="text-2xl font-bold">Workshop & Seminar Mendatang</h2>
-            <a href="<?= site_url('workshops') ?>" class="text-blue-500 hover:underline">Lihat Semua</a>
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12" data-aos="fade-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Workshop & Seminar</h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Tingkatkan keahlianmu melalui sesi interaktif bersama para ahli di bidangnya.
+            </p>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <?php foreach ($upcoming_workshops as $workshop): ?>
-            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                <div class="h-48 bg-gray-200 overflow-hidden">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden group hover:shadow-2xl transition-all duration-300 border border-transparent hover:border-indigo-500" data-aos="fade-up" data-aos-delay="100">
+                <div class="relative h-48 overflow-hidden">
                     <?php if ($workshop->thumbnail): ?>
-                    <img src="<?= base_url($workshop->thumbnail) ?>" alt="<?= $workshop->title ?>" class="w-full h-full object-cover">
+                        <img src="<?= base_url($workshop->thumbnail) ?>" alt="<?= html_escape($workshop->title) ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                     <?php else: ?>
-                    <div class="w-full h-full bg-gray-200 flex items-center justify-center">
-                        <i class="fas fa-chalkboard-teacher text-gray-400 text-3xl"></i>
-                    </div>
+                        <div class="w-full h-full bg-indigo-100 flex items-center justify-center">
+                            <i class="fas fa-chalkboard-teacher text-indigo-400 text-5xl"></i>
+                        </div>
                     <?php endif; ?>
+                    <div class="absolute top-4 right-4 bg-indigo-600 text-white px-3 py-1 rounded-full text-sm font-bold shadow-md">
+                        <?= ucfirst($workshop->type) ?>
+                    </div>
                 </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-bold text-lg"><?= $workshop->title ?></h3>
-                        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
-                            <?= $workshop->type == 'workshop' ? 'Workshop' : 'Seminar' ?>
-                        </span>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-3 truncate" title="<?= html_escape($workshop->title) ?>"><?= html_escape($workshop->title) ?></h3>
+                    
+                    <?php 
+                    $descHtml = html_entity_decode(htmlspecialchars_decode($workshop->description, ENT_QUOTES | ENT_HTML5), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                    $descText = strip_tags($descHtml);
+                    $shortDesc = mb_strlen($descText) > 100 ? mb_substr($descText, 0, 100) . '...' : $descText;
+                    ?>
+                    <p class="text-gray-600 mb-4 h-12"><?= $shortDesc ?></p>
+
+                    <div class="space-y-3 text-gray-600">
+                        <div class="flex items-center">
+                            <i class="fas fa-calendar-alt w-5 mr-2 text-indigo-500"></i>
+                            <span><?= date('d F Y, H:i', strtotime($workshop->start_datetime)) ?> WIB</span>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <i class="fas fa-map-marker-alt w-5 mr-2 text-indigo-500"></i>
+                            <span><?= html_escape($workshop->location) ?></span>
+                        </div>
                     </div>
                     
-                    <div class="flex items-center text-sm text-gray-600 mb-2">
-                        <i class="fas fa-calendar-alt mr-2"></i>
-                        <span><?= date('d M Y', strtotime($workshop->start_datetime)) ?></span>
-                    </div>
-                    
-                    <div class="flex items-center text-sm text-gray-600 mb-3">
-                        <i class="fas fa-map-marker-alt mr-2"></i>
-                        <span><?= $workshop->location ?></span>
-                    </div>
-                    
-                    <div class="flex justify-between items-center">
-                        <span class="font-bold text-lg"><?= $workshop->price > 0 ? 'Rp' . number_format($workshop->price) : 'Gratis' ?></span>
-                        <a href="<?= workshop_detail_url($workshop->id) ?>" class="text-blue-500 hover:underline">Detail</a>
+                    <div class="mt-6 pt-4 border-t border-gray-200">
+                        <?php if ($workshop->status == 'coming soon'): ?>
+                            <button class="w-full text-center bg-gradient-to-r from-gray-400 to-gray-500 text-white px-5 py-2 rounded-lg cursor-not-allowed font-semibold text-sm" disabled>
+                                Coming Soon
+                            </button>
+                        <?php else: ?>
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl font-bold text-indigo-600"><?= $workshop->price > 0 ? 'Rp ' . number_format($workshop->price, 0, ',', '.') : 'Gratis' ?></span>
+                                <a href="<?= workshop_detail_url($workshop->id) ?>" class="bg-indigo-500 text-white px-5 py-2 rounded-lg hover:bg-indigo-600 transition-colors font-semibold text-sm">
+                                    Lihat Detail
+                                </a>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
             <?php endforeach; ?>
+        </div>
+
+        <div class="text-center mt-12">
+            <a href="<?= site_url('workshops') ?>" class="text-indigo-600 font-semibold hover:underline">
+                Lihat Semua Workshop & Seminar <i class="fas fa-arrow-right ml-1"></i>
+            </a>
         </div>
     </div>
 </section>

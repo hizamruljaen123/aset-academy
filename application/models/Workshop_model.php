@@ -29,34 +29,36 @@ class Workshop_model extends CI_Model {
         return $this->db->delete('workshops');
     }
 
-    // Get all workshops
+    // Get all workshops for admin view
     public function get_all_workshops($limit = null, $offset = null)
     {
         if ($limit !== null) {
             $this->db->limit($limit, $offset);
         }
-        $this->db->where_in('status', ['published', 'coming_soon']);
-        $this->db->order_by('start_datetime', 'ASC');
+        $this->db->order_by('start_datetime', 'DESC');
         return $this->db->get('workshops')->result();
     }
 
-    // Get workshop by ID
+    // Get workshop by ID for admin (any status)
     public function get_workshop($id)
     {
-        return $this->db->get_where('workshops', ['id' => $id])->where_in('status', ['published', 'coming_soon'])->row();
+        $this->db->where('id', $id);
+        return $this->db->get('workshops')->row();
     }
 
-    // Get workshop by slug
+    // Get workshop by slug for public view
     public function get_workshop_by_slug($slug)
     {
-        return $this->db->get_where('workshops', ['slug' => $slug])->where_in('status', ['published', 'coming_soon'])->row();
+        $this->db->where('slug', $slug);
+        $this->db->where_in('status', ['published', 'coming soon']);
+        return $this->db->get('workshops')->row();
     }
 
     // Get upcoming workshops
     public function get_upcoming_workshops($limit = 3)
     {
         $this->db->where('start_datetime >', date('Y-m-d H:i:s'));
-        $this->db->where_in('status', ['published', 'coming_soon']);
+        $this->db->where_in('status', ['published', 'coming soon']);
         $this->db->order_by('start_datetime', 'ASC');
         $this->db->limit($limit);
         return $this->db->get('workshops')->result();
