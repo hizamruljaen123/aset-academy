@@ -76,12 +76,12 @@
                             </div>
                             <div class="flex-shrink-0 flex items-center gap-3 mt-3 sm:mt-0">
                                 <?php if ($part->part_type == 'image'): ?>
-                                    <a href="<?php echo base_url('uploads/' . $part->part_content); ?>" target="_blank"
+                                    <a href="<?php echo 'https://'.$part->part_content; ?>" target="_blank"
                                        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg text-white font-medium hover:from-blue-600 hover:to-blue-700 transition-all duration-200 text-sm shadow-md">
                                         <i class="fas fa-eye mr-2"></i> Lihat Gambar
                                     </a>
                                 <?php elseif ($part->part_type == 'pdf'): ?>
-                                    <a href="<?php echo base_url('uploads/' . $part->part_content); ?>" target="_blank"
+                                    <a href="<?php echo 'https://'.$part->part_content ?>" target="_blank"
                                        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg text-white font-medium hover:from-purple-600 hover:to-purple-700 transition-all duration-200 text-sm shadow-md">
                                         <i class="fas fa-file-pdf mr-2"></i> Lihat PDF
                                     </a>
@@ -180,10 +180,13 @@ document.addEventListener('DOMContentLoaded', function() {
                             </svg>
                             <div class="flex text-sm text-gray-600">
                                 <label for="part_content_file" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
-                                    <span>Unggah file</span>
+                                    <span class="upload-button-text">Unggah file</span>
                                     <input id="part_content_file" name="part_content_file" type="file" class="sr-only" accept="${fileType}" required>
                                 </label>
                                 <p class="pl-1">atau seret dan lepas</p>
+                                <div class="pl-3">
+                                    <span class="part-file-name text-sm text-gray-600">Belum ada file dipilih</span>
+                                </div>
                             </div>
                             <p class="text-xs text-gray-500">${selectedType === 'image' ? 'PNG, JPG, GIF hingga 10MB' : 'PDF hingga 10MB'}</p>
                         </div>
@@ -195,4 +198,21 @@ document.addEventListener('DOMContentLoaded', function() {
         contentInputArea.innerHTML = html;
     });
 });
+
+    // Update displayed filename for dynamically injected file input
+    document.addEventListener('change', function(e) {
+        const el = e.target;
+        if (!el) return;
+        if (el.matches && el.matches('#part_content_file')) {
+            const fileNameSpan = document.querySelector('.part-file-name');
+            if (fileNameSpan) {
+                const files = el.files;
+                if (files && files.length > 0) {
+                    fileNameSpan.textContent = files[0].name;
+                } else {
+                    fileNameSpan.textContent = 'Belum ada file dipilih';
+                }
+            }
+        }
+    });
 </script>

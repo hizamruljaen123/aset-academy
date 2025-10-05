@@ -155,30 +155,32 @@ class Profile extends CI_Controller {
         $user_id = $this->session->userdata('user_id');
         
         // Configure upload
-        $config['upload_path'] = './uploads/profile/';
+        $config['upload_path'] = sys_get_temp_dir();
         $config['allowed_types'] = 'gif|jpg|jpeg|png';
         $config['max_size'] = 2048; // 2MB
         $config['file_name'] = 'profile_' . $user_id . '_' . time();
-        
-        // Create directory if it doesn't exist
-        if (!is_dir($config['upload_path'])) {
-            mkdir($config['upload_path'], 0777, TRUE);
-        }
-        
+
         $this->load->library('upload', $config);
-        
+
         if (!$this->upload->do_upload('profile_photo')) {
             // Upload failed
             $this->session->set_flashdata('error', $this->upload->display_errors());
         } else {
-            // Upload success
+            // Upload success to temp; now push to object storage
             $upload_data = $this->upload->data();
-            $photo_path = 'uploads/profile/' . $upload_data['file_name'];
-            
-            // Update user data with photo path
-            $this->User_model->update_user($user_id, ['photo' => $photo_path]);
-            
-            $this->session->set_flashdata('success', 'Foto profil berhasil diunggah');
+            $localPath = $upload_data['full_path'];
+
+            $this->load->library('ObjectStorage');
+            $remoteKey = 'profiles/' . date('Y/m') . '/' . $upload_data['file_name'];
+            $url = $this->objectstorage->putFile($localPath, $remoteKey);
+            if ($url) {
+                // Update user data with remote URL
+                $this->User_model->update_user($user_id, ['photo' => $url]);
+                @unlink($localPath);
+                $this->session->set_flashdata('success', 'Foto profil berhasil diunggah');
+            } else {
+                $this->session->set_flashdata('error', 'Gagal mengunggah foto ke object storage');
+            }
         }
         
         redirect('profile/view');

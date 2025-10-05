@@ -12,7 +12,7 @@
         
         <!-- Card Body -->
         <div class="p-8">
-            <?php echo form_open('materi/create/' . $kelas_id, 'class="space-y-6"'); ?>
+            <?php echo form_open_multipart('materi/create/' . $kelas_id, array('class' => 'space-y-6')); ?>
 
                 <!-- Judul Materi -->
                 <div class="space-y-2">
@@ -103,10 +103,13 @@ document.addEventListener('DOMContentLoaded', function() {
                             </svg>
                             <div class="flex text-sm text-gray-600">
                                 <label for="part_content_file" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
-                                    <span>Upload file</span>
+                                    <span class="upload-button-text">Upload file</span>
                                     <input id="part_content_file" name="part_content_file" type="file" class="sr-only" accept="${fileType}">
                                 </label>
                                 <p class="pl-1">or drag and drop</p>
+                                <div class="pl-3">
+                                    <span class="part-file-name text-sm text-gray-600">Belum ada file dipilih</span>
+                                </div>
                             </div>
                             <p class="text-xs text-gray-500">${selectedType === 'image' ? 'PNG, JPG, GIF up to 10MB' : 'PDF up to 10MB'}</p>
                         </div>
@@ -117,6 +120,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
         contentInputArea.innerHTML = html;
     });
+});
+
+// Show selected filename for file inputs (works for dynamically injected inputs)
+document.addEventListener('change', function(e) {
+    const el = e.target;
+    if (!el) return;
+    if (el.matches && el.matches('#part_content_file')) {
+        const fileNameSpan = document.querySelector('.part-file-name');
+        if (fileNameSpan) {
+            const files = el.files;
+            if (files && files.length > 0) {
+                fileNameSpan.textContent = files[0].name;
+            } else {
+                fileNameSpan.textContent = 'Belum ada file dipilih';
+            }
+        }
+    }
 });
 </script>
 

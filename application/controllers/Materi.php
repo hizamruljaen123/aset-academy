@@ -104,15 +104,25 @@ class Materi extends CI_Controller {
                 if ($part_type == 'link' || $part_type == 'video') {
                     $part_content = $this->input->post('part_content_link');
                 } elseif ($part_type == 'image' || $part_type == 'pdf') {
-                    $config['upload_path'] = './uploads/';
+                    $config['upload_path'] = sys_get_temp_dir();
                     $config['allowed_types'] = ($part_type == 'image') ? 'gif|jpg|png|jpeg' : 'pdf';
                     $config['max_size'] = 2048;
                     $config['encrypt_name'] = TRUE;
                     $this->upload->initialize($config);
-
                     if ($this->upload->do_upload('part_content_file')) {
                         $upload_data = $this->upload->data();
-                        $part_content = $upload_data['file_name'];
+                        $localPath = $upload_data['full_path'];
+                        $this->load->library('ObjectStorage');
+                        $remoteKey = 'materi/parts/' . date('Y/m') . '/' . $upload_data['file_name'];
+                        $url = $this->objectstorage->putFile($localPath, $remoteKey);
+                        if ($url) {
+                            $part_content = $url;
+                            @unlink($localPath);
+                        } else {
+                            $this->session->set_flashdata('error', 'Gagal mengunggah file materi ke object storage');
+                            redirect('materi/create/' . $kelas_id);
+                            return;
+                        }
                     } else {
                         $this->session->set_flashdata('error', $this->upload->display_errors());
                         redirect('materi/create/' . $kelas_id);
@@ -221,9 +231,10 @@ class Materi extends CI_Controller {
                 }
                 $part_content = $this->input->post('part_content_link');
             } elseif ($part_type == 'image' || $part_type == 'pdf') {
-                $config['upload_path'] = './uploads/';
+                // Upload to temp then push to object storage (S3)
+                $config['upload_path'] = sys_get_temp_dir();
                 $config['allowed_types'] = ($part_type == 'image') ? 'gif|jpg|png|jpeg' : 'pdf';
-                $config['max_size'] = 2048; // 2MB
+                $config['max_size'] = 204800; // 200MB
                 $config['encrypt_name'] = TRUE;
 
                 $this->upload->initialize($config);
@@ -234,7 +245,19 @@ class Materi extends CI_Controller {
                     return;
                 } else {
                     $upload_data = $this->upload->data();
-                    $part_content = $upload_data['file_name'];
+                    $localPath = $upload_data['full_path'];
+                    // Upload to object storage
+                    $this->load->library('ObjectStorage');
+                    $remoteKey = 'materi/parts/' . date('Y/m') . '/' . $upload_data['file_name'];
+                    $url = $this->objectstorage->putFile($localPath, $remoteKey);
+                    if ($url) {
+                        $part_content = $url;
+                        @unlink($localPath);
+                    } else {
+                        $this->session->set_flashdata('error', 'Gagal mengunggah file ke object storage');
+                        redirect('materi/detail/' . $materi_id);
+                        return;
+                    }
                 }
             }
 
@@ -259,9 +282,20 @@ class Materi extends CI_Controller {
         $part = $this->Materi_part_model->get_part_by_id($part_id);
         if ($part) {
             if ($part->part_type == 'image' || $part->part_type == 'pdf') {
-                $file_path = './uploads/' . $part->part_content;
-                if (file_exists($file_path)) {
-                    unlink($file_path);
+                // If part_content is a remote URL (uploaded to object storage), delete remote object
+                if (preg_match('#^https?://#i', $part->part_content)) {
+                    // Extract remote key by stripping protocol+host+bucket/ from the URL
+                    $remoteKey = preg_replace('#^https?://[^/]+/[^/]+/#i', '', $part->part_content);
+                    $this->load->library('ObjectStorage');
+                    if ($remoteKey) {
+                        $this->objectstorage->delete($remoteKey);
+                    }
+                } else {
+                    // fallback: local file storage
+                    $file_path = './uploads/' . $part->part_content;
+                    if (file_exists($file_path)) {
+                        unlink($file_path);
+                    }
                 }
             }
             $this->Materi_part_model->delete_part($part_id);

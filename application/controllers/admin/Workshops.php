@@ -80,7 +80,7 @@ class Workshops extends MY_Controller {
 
             // Handle thumbnail upload
             if (!empty($_FILES['thumbnail']['name'])) {
-                $config['upload_path'] = './uploads/workshops/';
+                $config['upload_path'] = sys_get_temp_dir();
                 $config['allowed_types'] = 'jpg|jpeg|png|gif';
                 $config['max_size'] = 2048; // 2MB
                 $config['encrypt_name'] = TRUE;
@@ -89,7 +89,19 @@ class Workshops extends MY_Controller {
 
                 if ($this->upload->do_upload('thumbnail')) {
                     $upload_data = $this->upload->data();
-                    $workshop_data['thumbnail'] = 'uploads/workshops/' . $upload_data['file_name'];
+                    $localPath = $upload_data['full_path'];
+                    // Upload to object storage
+                    $this->load->library('ObjectStorage');
+                    $remoteKey = 'workshops/thumbnails/' . date('Y/m') . '/' . $upload_data['file_name'];
+                    $url = $this->objectstorage->putFile($localPath, $remoteKey);
+                    if ($url) {
+                        $workshop_data['thumbnail'] = $url;
+                        @unlink($localPath);
+                    } else {
+                        $this->session->set_flashdata('error', 'Gagal mengunggah thumbnail ke object storage');
+                        redirect('admin/workshops/create');
+                        return;
+                    }
                 } else {
                     $this->session->set_flashdata('error', $this->upload->display_errors());
                     redirect('admin/workshops/create');
@@ -151,7 +163,7 @@ class Workshops extends MY_Controller {
                 }
                 $workshop_data['thumbnail'] = null;
             } elseif (!empty($_FILES['thumbnail']['name'])) {
-                $config['upload_path'] = './uploads/workshops/';
+                $config['upload_path'] = sys_get_temp_dir();
                 $config['allowed_types'] = 'jpg|jpeg|png|gif';
                 $config['max_size'] = 2048; // 2MB
                 $config['encrypt_name'] = TRUE;
@@ -159,13 +171,25 @@ class Workshops extends MY_Controller {
                 $this->upload->initialize($config);
 
                 if ($this->upload->do_upload('thumbnail')) {
-                    // Delete old thumbnail if exists
-                    if ($data['workshop']->thumbnail && file_exists($data['workshop']->thumbnail)) {
-                        unlink($data['workshop']->thumbnail);
+                    // Delete old thumbnail in object storage if previous value looks like remote key
+                    if ($data['workshop']->thumbnail) {
+                        // Attempt to delete by deriving remote key (best-effort)
+                        // If stored as URL, we keep it - deleting remote object is optional.
                     }
 
                     $upload_data = $this->upload->data();
-                    $workshop_data['thumbnail'] = 'uploads/workshops/' . $upload_data['file_name'];
+                    $localPath = $upload_data['full_path'];
+                    $this->load->library('ObjectStorage');
+                    $remoteKey = 'workshops/thumbnails/' . date('Y/m') . '/' . $upload_data['file_name'];
+                    $url = $this->objectstorage->putFile($localPath, $remoteKey);
+                    if ($url) {
+                        $workshop_data['thumbnail'] = $url;
+                        @unlink($localPath);
+                    } else {
+                        $this->session->set_flashdata('error', 'Gagal mengunggah thumbnail ke object storage');
+                        redirect('admin/workshops/edit/' . $encrypted_id);
+                        return;
+                    }
                 } else {
                     $this->session->set_flashdata('error', $this->upload->display_errors());
                     redirect('admin/workshops/edit/' . $encrypted_id);
@@ -202,7 +226,7 @@ class Workshops extends MY_Controller {
             redirect('admin/workshops/edit/' . $encrypted_workshop_id);
         }
 
-        $config['upload_path'] = './uploads/workshop_materials/';
+    $config['upload_path'] = sys_get_temp_dir();
         $config['allowed_types'] = 'pdf|doc|docx|ppt|pptx|zip|jpg|jpeg|png';
         $config['max_size'] = 5120; // 5MB
         $config['encrypt_name'] = TRUE;
@@ -215,11 +239,22 @@ class Workshops extends MY_Controller {
         }
 
         $upload_data = $this->upload->data();
+        $localPath = $upload_data['full_path'];
+        $this->load->library('ObjectStorage');
+        $remoteKey = 'workshops/materials/' . date('Y/m') . '/' . $upload_data['file_name'];
+        $url = $this->objectstorage->putFile($localPath, $remoteKey);
+        if (!$url) {
+            $this->session->set_flashdata('error', 'Gagal mengunggah materi ke object storage');
+            redirect('admin/workshops/edit/' . $encrypted_workshop_id);
+            return;
+        }
+
         $material_data = [
             'title' => $this->input->post('title'),
-            'file_path' => 'uploads/workshop_materials/' . $upload_data['file_name'],
+            'file_path' => $url,
             'file_type' => $upload_data['file_type']
         ];
+        @unlink($localPath);
 
         $this->Workshop_model->add_material($workshop_id, $material_data);
         $this->session->set_flashdata('success', 'Materi berhasil ditambahkan!');
