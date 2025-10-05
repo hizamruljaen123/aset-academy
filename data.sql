@@ -235,7 +235,7 @@ CREATE TABLE IF NOT EXISTS `free_classes` (
   `max_students` int DEFAULT NULL COMMENT 'Maximum number of students allowed',
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
-  `status` enum('Draft','Published','Archived') NOT NULL DEFAULT 'Draft',
+  `status` enum('Draft','Coming Soon','Published','Archived') NOT NULL DEFAULT 'Draft' COMMENT 'Status kelas: Draft (belum siap), Coming Soon (sudah dibuat tapi menunggu persiapan), Published (sudah siap), Archived (diarsipkan)',
   `online_meet_link` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -362,7 +362,7 @@ CREATE TABLE IF NOT EXISTS `jadwal_kelas` (
   KEY `fk_jadwal_guru` (`guru_id`),
   CONSTRAINT `fk_jadwal_guru` FOREIGN KEY (`guru_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
   CONSTRAINT `jadwal_kelas_ibfk_1` FOREIGN KEY (`kelas_id`) REFERENCES `kelas_programming` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -378,7 +378,6 @@ CREATE TABLE `jadwal_kelas_view` (
 	`tanggal_pertemuan` DATE NOT NULL,
 	`waktu_mulai` TIME NOT NULL,
 	`waktu_selesai` TIME NOT NULL,
-	`status` ENUM('Selesai','Proses','Ditunda','Dibatalkan','Belum Mulai') NULL COLLATE 'utf8mb4_0900_ai_ci',
 	`created_at` TIMESTAMP NULL,
 	`updated_at` TIMESTAMP NULL,
 	`nama_kelas` VARCHAR(1) NULL COLLATE 'utf8mb4_0900_ai_ci',
@@ -404,7 +403,7 @@ CREATE TABLE IF NOT EXISTS `kelas_programming` (
   `harga` decimal(10,2) NOT NULL,
   `diskon` decimal(5,2) DEFAULT '0.00',
   `gambar` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `status` enum('Aktif','Tidak Aktif') NOT NULL DEFAULT 'Aktif',
+  `status` enum('Tidak Aktif','Coming Soon','Aktif') NOT NULL DEFAULT 'Tidak Aktif' COMMENT 'Status kelas: Tidak Aktif (belum siap), Coming Soon (sudah dibuat tapi menunggu persiapan), Aktif (sudah siap)',
   `online_meet_link` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -425,7 +424,7 @@ CREATE TABLE IF NOT EXISTS `materi` (
   PRIMARY KEY (`id`),
   KEY `kelas_id` (`kelas_id`),
   CONSTRAINT `materi_ibfk_1` FOREIGN KEY (`kelas_id`) REFERENCES `kelas_programming` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -442,7 +441,7 @@ CREATE TABLE IF NOT EXISTS `materi_parts` (
   PRIMARY KEY (`id`),
   KEY `materi_id` (`materi_id`),
   CONSTRAINT `materi_parts_ibfk_1` FOREIGN KEY (`materi_id`) REFERENCES `materi` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -671,7 +670,7 @@ CREATE TABLE IF NOT EXISTS `testimonials` (
   `rating` tinyint unsigned DEFAULT '5',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Data exporting was unselected.
 
@@ -728,7 +727,7 @@ CREATE TABLE IF NOT EXISTS `workshops` (
   `location` varchar(255) NOT NULL,
   `max_participants` int NOT NULL DEFAULT '0',
   `thumbnail` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci,
-  `status` enum('draft','published','completed') NOT NULL DEFAULT 'draft',
+  `status` enum('draft','published','completed','coming soon') CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT 'draft',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   `online_meet` text,
@@ -755,7 +754,7 @@ CREATE TABLE IF NOT EXISTS `workshop_guests` (
   PRIMARY KEY (`id`),
   KEY `workshop_id` (`workshop_id`),
   CONSTRAINT `workshop_guests_ibfk_1` FOREIGN KEY (`workshop_id`) REFERENCES `workshops` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
 
 -- Data exporting was unselected.
 
@@ -795,7 +794,7 @@ CREATE TABLE IF NOT EXISTS `workshop_participants` (
 
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `jadwal_kelas_view`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `jadwal_kelas_view` AS select `jk`.`id` AS `id`,`jk`.`kelas_id` AS `kelas_id`,`jk`.`class_type` AS `class_type`,`jk`.`guru_id` AS `guru_id`,`jk`.`pertemuan_ke` AS `pertemuan_ke`,`jk`.`judul_pertemuan` AS `judul_pertemuan`,`jk`.`tanggal_pertemuan` AS `tanggal_pertemuan`,`jk`.`waktu_mulai` AS `waktu_mulai`,`jk`.`waktu_selesai` AS `waktu_selesai`,`jk`.`status` AS `status`,`jk`.`created_at` AS `created_at`,`jk`.`updated_at` AS `updated_at`,(case when (`jk`.`class_type` = 'premium') then `kp`.`nama_kelas` when (`jk`.`class_type` = 'gratis') then `fc`.`title` else 'Unknown Class' end) AS `nama_kelas`,(case when (`jk`.`class_type` = 'premium') then `kp`.`deskripsi` when (`jk`.`class_type` = 'gratis') then `fc`.`description` else NULL end) AS `deskripsi_kelas`,(case when (`jk`.`class_type` = 'premium') then `kp`.`level` when (`jk`.`class_type` = 'gratis') then `fc`.`level` else NULL end) AS `level_kelas`,(case when (`jk`.`class_type` = 'premium') then `kp`.`bahasa_program` when (`jk`.`class_type` = 'gratis') then `fc`.`category` else NULL end) AS `kategori_kelas`,(case when (`jk`.`class_type` = 'premium') then `kp`.`status` when (`jk`.`class_type` = 'gratis') then `fc`.`status` else 'Unknown' end) AS `status_kelas`,`u`.`nama_lengkap` AS `nama_guru`,`u`.`username` AS `username_guru`,`u`.`role` AS `role_guru`,(case when (`jk`.`class_type` = 'premium') then `kp`.`durasi` else NULL end) AS `durasi_kelas`,(case when (`jk`.`class_type` = 'premium') then `kp`.`harga` else 0 end) AS `harga_kelas` from (((`jadwal_kelas` `jk` left join `kelas_programming` `kp` on(((`jk`.`kelas_id` = `kp`.`id`) and (`jk`.`class_type` = 'premium')))) left join `free_classes` `fc` on(((`jk`.`kelas_id` = `fc`.`id`) and (`jk`.`class_type` = 'gratis')))) left join `users` `u` on((`jk`.`guru_id` = `u`.`id`))) where ((`jk`.`class_type` is not null) and (`jk`.`guru_id` is not null) and (((`jk`.`class_type` = 'premium') and (`kp`.`status` = 'Aktif')) or ((`jk`.`class_type` = 'gratis') and (`fc`.`status` = 'Published'))))
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `jadwal_kelas_view` AS select `jk`.`id` AS `id`,`jk`.`kelas_id` AS `kelas_id`,`jk`.`class_type` AS `class_type`,`jk`.`guru_id` AS `guru_id`,`jk`.`pertemuan_ke` AS `pertemuan_ke`,`jk`.`judul_pertemuan` AS `judul_pertemuan`,`jk`.`tanggal_pertemuan` AS `tanggal_pertemuan`,`jk`.`waktu_mulai` AS `waktu_mulai`,`jk`.`waktu_selesai` AS `waktu_selesai`,`jk`.`created_at` AS `created_at`,`jk`.`updated_at` AS `updated_at`,(case when (`jk`.`class_type` = 'premium') then `kp`.`nama_kelas` when (`jk`.`class_type` = 'gratis') then `fc`.`title` else 'Unknown Class' end) AS `nama_kelas`,(case when (`jk`.`class_type` = 'premium') then `kp`.`deskripsi` when (`jk`.`class_type` = 'gratis') then `fc`.`description` else NULL end) AS `deskripsi_kelas`,(case when (`jk`.`class_type` = 'premium') then `kp`.`level` when (`jk`.`class_type` = 'gratis') then `fc`.`level` else NULL end) AS `level_kelas`,(case when (`jk`.`class_type` = 'premium') then `kp`.`bahasa_program` when (`jk`.`class_type` = 'gratis') then `fc`.`category` else NULL end) AS `kategori_kelas`,(case when (`jk`.`class_type` = 'premium') then `kp`.`status` when (`jk`.`class_type` = 'gratis') then `fc`.`status` else 'Unknown' end) AS `status_kelas`,`u`.`nama_lengkap` AS `nama_guru`,`u`.`username` AS `username_guru`,`u`.`role` AS `role_guru`,(case when (`jk`.`class_type` = 'premium') then `kp`.`durasi` else NULL end) AS `durasi_kelas`,(case when (`jk`.`class_type` = 'premium') then `kp`.`harga` else 0 end) AS `harga_kelas` from (((`jadwal_kelas` `jk` left join `kelas_programming` `kp` on(((`jk`.`kelas_id` = `kp`.`id`) and (`jk`.`class_type` = 'premium')))) left join `free_classes` `fc` on(((`jk`.`kelas_id` = `fc`.`id`) and (`jk`.`class_type` = 'gratis')))) left join `users` `u` on((`jk`.`guru_id` = `u`.`id`))) where ((`jk`.`class_type` is not null) and (`jk`.`guru_id` is not null) and (((`jk`.`class_type` = 'premium') and (`kp`.`status` in ('Aktif','Coming Soon'))) or ((`jk`.`class_type` = 'gratis') and (`fc`.`status` in ('Published','Coming Soon')))))
 ;
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
