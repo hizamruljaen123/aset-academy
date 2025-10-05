@@ -19,7 +19,7 @@ class Jadwal extends CI_Controller {
     public function index()
     {
         $data['title'] = 'Kelola Jadwal Kelas';
-        $data['jadwal'] = $this->Jadwal_model->get_all_jadwal();
+        $data['jadwal'] = $this->Jadwal_model->get_all_jadwal_with_workshops();
 
         $this->load->view('templates/header', $data);
         $this->load->view('admin/jadwal/index', $data);
@@ -47,20 +47,102 @@ class Jadwal extends CI_Controller {
 
     public function get_events()
     {
-        $events = $this->Jadwal_model->get_all_jadwal();
+        $events = $this->Jadwal_model->get_all_jadwal_with_workshops();
         $data = [];
         foreach ($events as $event) {
             // Get class name based on class_type
             $class_name = isset($event->nama_kelas) ? $event->nama_kelas : 'Unknown Class';
 
-            $data[] = [
-                'title' => $event->judul_pertemuan . ' (' . $class_name . ')',
-                'start' => $event->tanggal_pertemuan . 'T' . $event->waktu_mulai,
-                'end' => $event->tanggal_pertemuan . 'T' . $event->waktu_selesai,
-                'allDay' => false
-            ];
+            if ($event->class_type == 'workshop') {
+                // Handle workshop events
+                $data[] = [
+                    'id' => 'workshop_' . $event->id,
+                    'title' => $event->judul_pertemuan . ' (' . $event->pertemuan_ke . ' - ' . $class_name . ')',
+                    'start' => $event->tanggal_pertemuan . 'T' . $event->waktu_mulai,
+                    'end' => $event->tanggal_pertemuan . 'T' . $event->waktu_selesai,
+                    'allDay' => false,
+                    'backgroundColor' => '#10B981', // Green for workshops
+                    'borderColor' => '#059669',
+                    'extendedProps' => [
+                        'classId' => $event->id,
+                        'className' => $class_name,
+                        'classType' => $event->class_type,
+                        'type' => $event->pertemuan_ke,
+                        'location' => isset($event->location) ? $event->location : '',
+                        'onlineMeet' => isset($event->online_meet) ? $event->online_meet : ''
+                    ]
+                ];
+            } else {
+                // Handle class schedule events
+                $data[] = [
+                    'id' => $event->id,
+                    'title' => $event->judul_pertemuan . ' (' . $class_name . ')',
+                    'start' => $event->tanggal_pertemuan . 'T' . $event->waktu_mulai,
+                    'end' => $event->tanggal_pertemuan . 'T' . $event->waktu_selesai,
+                    'allDay' => false,
+                    'extendedProps' => [
+                        'classId' => $event->kelas_id,
+                        'className' => $class_name,
+                        'classType' => $event->class_type,
+                        'guruId' => isset($event->guru_id) ? $event->guru_id : null,
+                        'pertemuanKe' => isset($event->pertemuan_ke) ? $event->pertemuan_ke : null
+                    ]
+                ];
+            }
         }
         echo json_encode($data);
+    }
+
+    public function update_event_timing()
+    {
+        if ($this->input->method() !== 'post') {
+            show_error('Invalid request method', 405);
+            return;
+        }
+
+        $id = $this->input->post('id');
+        $start = $this->input->post('start');
+        $end = $this->input->post('end');
+
+        if (empty($id) || empty($start)) {
+            $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(400)
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Data tidak lengkap.']));
+            return;
+        }
+
+        try {
+            $startDate = new DateTime($start);
+            $endDate = $end ? new DateTime($end) : clone $startDate;
+
+            // Jika end tidak diset, gunakan start + 1 jam sebagai default
+            if (!$end) {
+                $endDate->modify('+1 hour');
+            }
+
+            $tanggal = $startDate->format('Y-m-d');
+            $waktuMulai = $startDate->format('H:i:s');
+            $waktuSelesai = $endDate->format('H:i:s');
+
+            $updated = $this->Jadwal_model->update_jadwal_timing($id, $tanggal, $waktuMulai, $waktuSelesai);
+
+            if ($updated) {
+                $this->output
+                    ->set_content_type('application/json')
+                    ->set_output(json_encode(['status' => 'success']));
+            } else {
+                throw new Exception('Gagal memperbarui jadwal.');
+            }
+        } catch (Exception $e) {
+            $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(500)
+                ->set_output(json_encode([
+                    'status' => 'error',
+                    'message' => $e->getMessage()
+                ]));
+        }
     }
 
     public function get_classes_by_teacher()

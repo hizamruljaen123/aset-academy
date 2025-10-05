@@ -53,18 +53,70 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         <?php foreach ($jadwal as $j): ?>
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?= $j->nama_kelas; ?></td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $j->pertemuan_ke; ?></td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $j->judul_pertemuan; ?></td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= date('d M Y', strtotime($j->tanggal_pertemuan)); ?></td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= date('H:i', strtotime($j->waktu_mulai)); ?> - <?= date('H:i', strtotime($j->waktu_selesai)); ?></td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $j->nama_guru; ?></td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <a href="<?= site_url('admin/jadwal/edit/' . $j->id); ?>" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                                    <a href="<?= site_url('admin/jadwal/delete/' . $j->id); ?>" class="text-red-600 hover:text-red-900 ml-4" onclick="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?');">Hapus</a>
-                                </td>
-                            </tr>
+                            <?php if (isset($j->class_type) && $j->class_type == 'workshop'): ?>
+                                <!-- Workshop Row -->
+                                <tr class="bg-green-50 hover:bg-green-100">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            <i class="fas fa-users mr-1"></i>
+                                            Workshop
+                                        </span><br>
+                                        <span class="text-sm text-gray-600 mt-1 block"><?= $j->nama_kelas; ?></span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                            <?= ucfirst($j->pertemuan_ke); ?>
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <?= $j->judul_pertemuan; ?>
+                                        <?php if (!empty($j->location)): ?>
+                                            <br><small class="text-gray-400"><i class="fas fa-map-marker-alt"></i> <?= $j->location; ?></small>
+                                        <?php endif; ?>
+                                        <?php if (!empty($j->online_meet)): ?>
+                                            <br><small class="text-blue-600"><i class="fas fa-video"></i> Online Meeting</small>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= date('d M Y', strtotime($j->tanggal_pertemuan)); ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= date('H:i', strtotime($j->waktu_mulai)); ?> - <?= date('H:i', strtotime($j->waktu_selesai)); ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                            <i class="fas fa-user-tie mr-1"></i>
+                                            Event
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="<?= site_url('admin/workshops/edit/' . $j->id); ?>" class="text-green-600 hover:text-green-900">
+                                            <i class="fas fa-edit mr-1"></i>Edit
+                                        </a>
+                                        <span class="text-gray-400 mx-2">|</span>
+                                        <a href="<?= site_url('admin/workshops/delete/' . $j->id); ?>" class="text-red-600 hover:text-red-900" onclick="return confirm('Apakah Anda yakin ingin menghapus workshop ini?');">
+                                            <i class="fas fa-trash mr-1"></i>Hapus
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php else: ?>
+                                <!-- Class Schedule Row -->
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                            <?php if($j->class_type == 'premium'): ?>bg-yellow-100 text-yellow-800<?php else: ?>bg-blue-100 text-blue-800<?php endif; ?>">
+                                            <?php if($j->class_type == 'premium'): ?><i class="fas fa-star mr-1"></i><?php else: ?><i class="fas fa-gift mr-1"></i><?php endif; ?>
+                                            <?= ucfirst($j->class_type); ?>
+                                        </span><br>
+                                        <span class="text-sm text-gray-600 mt-1 block"><?= $j->nama_kelas; ?></span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Pertemuan <?= $j->pertemuan_ke; ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $j->judul_pertemuan; ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= date('d M Y', strtotime($j->tanggal_pertemuan)); ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= date('H:i', strtotime($j->waktu_mulai)); ?> - <?= date('H:i', strtotime($j->waktu_selesai)); ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $j->nama_guru; ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="<?= site_url('admin/jadwal/edit/' . $j->id); ?>" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                        <a href="<?= site_url('admin/jadwal/delete/' . $j->id); ?>" class="text-red-600 hover:text-red-900 ml-4" onclick="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?');">Hapus</a>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
@@ -73,66 +125,12 @@
         <!-- Calendar View -->
         <div class="hidden p-4 rounded-lg bg-white shadow-md" id="calendar-view" role="tabpanel" aria-labelledby="calendar-tab">
             <div id="calendar"></div>
+            <div id="calendarLegend" class="mt-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-3">Legend Kelas</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="calendarLegendItems"></div>
+            </div>
         </div>
     </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Search functionality
-    const searchInput = document.getElementById('searchInput');
-    const table = document.getElementById('jadwalTable');
-    const rows = table.getElementsByTagName('tr');
-
-    searchInput.addEventListener('keyup', function() {
-        const filter = searchInput.value.toLowerCase();
-        for (let i = 1; i < rows.length; i++) {
-            const cells = rows[i].getElementsByTagName('td');
-            let found = false;
-            for (let j = 0; j < cells.length; j++) {
-                if (cells[j].innerText.toLowerCase().indexOf(filter) > -1) {
-                    found = true;
-                    break;
-                }
-            }
-            if (found) {
-                rows[i].style.display = '';
-            } else {
-                rows[i].style.display = 'none';
-            }
-        }
-    });
-
-    // FullCalendar initialization
-    const calendarEl = document.getElementById('calendar');
-    const calendarView = document.getElementById('calendar-view');
-    let calendar;
-
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            // Check if the 'hidden' class is removed
-            if (mutation.attributeName === 'class' && !calendarView.classList.contains('hidden')) {
-                if (!calendar) {
-                    // Initialize and render the calendar for the first time
-                    calendar = new FullCalendar.Calendar(calendarEl, {
-                        initialView: 'dayGridMonth',
-                        headerToolbar: {
-                            left: 'prev,next today',
-                            center: 'title',
-                            right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                        },
-                        events: '<?= site_url('admin/jadwal/get_events') ?>'
-                    });
-                    calendar.render();
-                } else {
-                    // If already initialized, just update its size
-                    calendar.updateSize();
-                }
-            }
-        });
-    });
-
-    // Configure and start the observer
-    observer.observe(calendarView, { attributes: true });
-});
-</script>
+<script src="<?= base_url('assets/js/admin_jadwal_calendar.js'); ?>" defer></script>

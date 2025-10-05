@@ -1,0 +1,513 @@
+// DBML Schema for Academy Lite Database
+// Converted from data.sql
+
+Table users {
+  id int [pk, increment]
+  username varchar(50) [not null, unique]
+  password varchar(255) [not null]
+  nama_lengkap varchar(100) [not null]
+  foto_profil varchar(255)
+  email varchar(100) [not null]
+  role enum('super_admin','admin','guru','siswa','user') [not null, default: 'user']
+  level enum('1','2','3','4','5') [not null, default: '5', note: '1=Super Admin, 2=Admin, 3=Guru, 4=Siswa, 5=User']
+  department varchar(50) [note: 'Department or division']
+  timezone varchar(50) [default: 'Asia/Jakarta', note: 'User timezone for attendance calculations']
+  status enum('Aktif','Tidak Aktif') [not null, default: 'Aktif']
+  last_login timestamp
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`]
+  user_id int
+}
+
+Table siswa {
+  id int [pk, increment]
+  nis varchar(20) [unique]
+  nama_lengkap varchar(100)
+  email varchar(100)
+  no_telepon varchar(100)
+  kelas varchar(100)
+  jurusan varchar(50)
+  alamat text
+  foto_profil text
+  tanggal_lahir date
+  jenis_kelamin enum('L','P')
+  status enum('Aktif','Tidak Aktif','Lulus') [not null, default: 'Aktif']
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`]
+}
+
+Table kelas_programming {
+  id int [pk, increment]
+  nama_kelas varchar(100) [not null, unique]
+  deskripsi text
+  level enum('Dasar','Menengah','Lanjutan') [not null]
+  bahasa_program varchar(50)
+  durasi int [not null, default: 1, note: 'Durasi dalam jam']
+  harga decimal(10,2) [not null]
+  diskon decimal(5,2) [default: 0.00]
+  gambar text
+  status enum('Aktif','Tidak Aktif') [not null, default: 'Aktif']
+  online_meet_link text
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`]
+}
+
+Table free_classes {
+  id int [pk, increment]
+  title varchar(255) [not null]
+  description text
+  thumbnail varchar(255)
+  level enum('Dasar','Menengah','Lanjutan') [not null, default: 'Dasar']
+  category varchar(100) [not null]
+  category_id int
+  duration int [not null, default: 1, note: 'Duration in hours']
+  mentor_id int
+  max_students int [note: 'Maximum number of students allowed']
+  start_date date
+  end_date date
+  status enum('Draft','Published','Archived') [not null, default: 'Draft']
+  online_meet_link text
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`]
+}
+
+Table jadwal_kelas {
+  id int [pk, increment]
+  kelas_id int [not null]
+  pertemuan_ke int [not null, note: 'Meeting number (e.g., 1, 2, 3)']
+  class_type varchar(50)
+  guru_id int
+  judul_pertemuan varchar(255) [not null]
+  tanggal_pertemuan date [not null]
+  waktu_mulai time [not null]
+  waktu_selesai time [not null]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`]
+  status enum('Selesai','Proses','Ditunda','Dibatalkan','Belum Mulai') [default: 'Proses']
+}
+
+Table absensi {
+  id int [pk, increment]
+  jadwal_id int [not null]
+  siswa_id int [not null]
+  status enum('Hadir','Izin','Sakit','Alpa') [not null]
+  catatan text
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`]
+}
+
+Table absensi_guru {
+  id int [pk, increment]
+  jadwal_id int [not null]
+  guru_id int [not null]
+  status enum('Hadir','Tidak Hadir') [not null]
+  catatan text
+  waktu_absensi timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table assignments {
+  id int [pk, increment]
+  class_id int [not null]
+  class_type enum('premium','gratis') [not null, note: 'To distinguish between kelas_premium and kelas_gratis']
+  teacher_id int [not null]
+  title varchar(255) [not null]
+  description text
+  due_date datetime
+  grades_published tinyint(1) [not null, default: 0]
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+}
+
+Table class_access_logs {
+  id int [pk, increment]
+  enrollment_id int [not null]
+  admin_id int [not null]
+  action enum('Grant Access','Revoke Access','Suspend Access','Restore Access','Update Status') [not null]
+  previous_status varchar(50)
+  new_status varchar(50) [not null]
+  reason text
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table class_categories {
+  id int unsigned [pk]
+  name varchar(120) [not null]
+  slug varchar(150) [not null, unique]
+  class_type enum('premium','free') [not null]
+  description text
+  is_active tinyint(1) [not null, default: 1]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`]
+}
+
+Table company_bank_accounts {
+  id int [pk, increment]
+  bank_name varchar(100) [not null]
+  bank_code varchar(20)
+  account_number varchar(50) [not null]
+  account_holder varchar(100) [not null, default: 'CV ASET MEDIA CEMERLANG']
+  is_active tinyint(1) [not null, default: 1]
+  display_order int [not null, default: 0]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`]
+}
+
+Table daftar_bank {
+  id_bank int [pk, increment]
+  kode_bank char(3) [not null, unique]
+  nama_bank varchar(100) [not null]
+}
+
+Table forum_categories {
+  id int [pk, increment]
+  name varchar(100) [not null]
+  description varchar(255)
+  slug varchar(120) [not null, unique]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table forum_threads {
+  id int [pk, increment]
+  user_id int [not null]
+  category_id int [not null]
+  title varchar(255) [not null]
+  content text [not null]
+  views int [default: 0]
+  is_pinned tinyint(1) [default: 0]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`]
+  slug varchar(50) [unique]
+}
+
+Table forum_posts {
+  id int [pk, increment]
+  thread_id int [not null]
+  user_id int [not null]
+  parent_id int
+  content text [not null]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`]
+}
+
+Table forum_likes {
+  id int [pk, increment]
+  user_id int [not null]
+  thread_id int
+  post_id int
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table forum_thread_views {
+  id int [pk, increment]
+  thread_id int [not null]
+  user_id int [not null]
+  viewed_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table free_class_discussions {
+  id int [pk, increment]
+  class_id int [not null]
+  user_id int [not null]
+  parent_id int
+  message text [not null]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`]
+}
+
+Table free_class_enrollments {
+  id int [pk, increment]
+  class_id int [not null]
+  student_id int [not null]
+  enrollment_date timestamp [default: `CURRENT_TIMESTAMP`]
+  status enum('Enrolled','Completed','Dropped') [not null, default: 'Enrolled']
+  progress int [not null, default: 0, note: 'Progress percentage']
+  completion_date timestamp
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`]
+}
+
+Table free_class_materials {
+  id int [pk, increment]
+  class_id int [not null]
+  title varchar(255) [not null]
+  description text
+  content_type enum('text','video','pdf','link') [not null, default: 'text']
+  content text [not null]
+  order int [not null, default: 0]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`]
+}
+
+Table free_class_progress {
+  id int [pk, increment]
+  enrollment_id int [not null]
+  material_id int [not null]
+  status enum('Not Started','In Progress','Completed') [not null, default: 'Not Started']
+  last_accessed timestamp
+  completion_date timestamp
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`]
+}
+
+Table guru_kelas {
+  id int [pk, increment]
+  guru_id int [not null]
+  kelas_id int [not null]
+  assigned_at timestamp [default: `CURRENT_TIMESTAMP`]
+  status enum('Aktif','Tidak Aktif') [not null, default: 'Aktif']
+}
+
+Table materi {
+  id int [pk, increment]
+  kelas_id int [not null]
+  judul varchar(255) [not null]
+  deskripsi text
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [not null, default: `CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`]
+}
+
+Table materi_parts {
+  id int [pk, increment]
+  materi_id int [not null]
+  part_order int [not null]
+  part_type enum('image','video','pdf','link') [not null]
+  part_title varchar(255) [not null]
+  part_content text [not null]
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [not null, default: `CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`]
+}
+
+Table materi_progress {
+  id int [pk, increment]
+  materi_id int [not null]
+  siswa_id int [not null]
+  status enum('Not Started','In Progress','Completed') [not null, default: 'Not Started']
+  last_accessed timestamp
+  completion_date timestamp
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [not null, default: `CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`]
+}
+
+Table payments {
+  id int [pk, increment]
+  user_id int [not null]
+  class_id int [not null]
+  amount decimal(10,2) [not null]
+  payment_method enum('Transfer','Cash','Other') [not null]
+  bank_name varchar(100)
+  account_number varchar(50)
+  bank_account_id int
+  payment_description text
+  user_bank_name varchar(100)
+  user_account_holder varchar(100)
+  invoice_number varchar(50)
+  invoice_generated_at timestamp
+  payment_proof varchar(255) [note: 'Path to proof image']
+  status enum('Pending','Verified','Rejected') [not null, default: 'Pending']
+  enrollment_status enum('Not Enrolled','Enrolled','Access Revoked') [not null, default: 'Not Enrolled']
+  verified_by int
+  verified_at timestamp
+  notes text
+  enrollment_notes text
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`]
+}
+
+Table premium_class_discussions {
+  id int [pk, increment]
+  class_id int [not null]
+  user_id int [not null]
+  parent_id int
+  message text [not null]
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [not null, default: `CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`]
+}
+
+Table premium_class_enrollments {
+  id int [pk, increment]
+  class_id int [not null]
+  student_id int [not null]
+  payment_id int [not null]
+  enrollment_date timestamp [default: `CURRENT_TIMESTAMP`]
+  status enum('Pending','Active','Suspended','Completed','Cancelled') [not null, default: 'Pending']
+  access_granted_by int [note: 'Admin who granted access']
+  access_granted_at timestamp
+  access_expires_at timestamp [note: 'Optional expiration date']
+  progress int [not null, default: 0, note: 'Progress percentage']
+  completion_date timestamp
+  notes text [note: 'Admin notes about enrollment']
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`]
+}
+
+Table premium_class_progress {
+  id int [pk, increment]
+  enrollment_id int [not null]
+  material_id int [not null]
+  status enum('Not Started','In Progress','Completed') [not null, default: 'Not Started']
+  last_accessed datetime
+  completion_date datetime
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [not null, default: `CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`]
+}
+
+Table reg_provinces {
+  id char(2) [pk]
+  name varchar(255) [not null]
+}
+
+Table reg_regencies {
+  id char(4) [pk]
+  province_id char(2) [not null]
+  name varchar(255) [not null]
+}
+
+Table reg_districts {
+  id char(6) [pk]
+  regency_id char(4) [not null]
+  name varchar(255) [not null]
+}
+
+Table reg_villages {
+  id char(10) [pk]
+  district_id char(6) [not null]
+  name varchar(255) [not null]
+}
+
+Table student_submissions {
+  id int [pk, increment]
+  assignment_id int [not null]
+  student_id int [not null]
+  submission_content text
+  submission_file varchar(255)
+  submitted_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  grade float
+  feedback text
+  status enum('submitted','graded','late') [not null, default: 'submitted']
+}
+
+Table testimonials {
+  id int unsigned [pk]
+  name varchar(100) [not null]
+  position varchar(100) [not null]
+  photo varchar(255)
+  content text [not null]
+  rating tinyint unsigned [default: 5]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table user_permissions {
+  id int [pk, increment]
+  role enum('super_admin','admin','guru','siswa','user') [not null]
+  level enum('1','2','3','4','5') [not null]
+  module varchar(50) [not null, note: 'Module name (dashboard, siswa, kelas, etc)']
+  action varchar(50) [not null, note: 'Action (create, read, update, delete, view)']
+  allowed tinyint(1) [not null, default: 0]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table workshops {
+  id int unsigned [pk, increment]
+  title varchar(255) [not null]
+  slug varchar(255) [not null, unique]
+  description text [not null]
+  type enum('workshop','seminar') [not null, default: 'workshop']
+  price decimal(10,2) [not null, default: 0.00]
+  start_datetime datetime [not null]
+  end_datetime datetime [not null]
+  location varchar(255) [not null]
+  max_participants int [not null, default: 0]
+  thumbnail text
+  status enum('draft','published','completed') [not null, default: 'draft']
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp
+  online_meet text
+}
+
+Table workshop_guests {
+  id int unsigned [pk, increment]
+  workshop_id int unsigned [not null]
+  nama_lengkap varchar(255) [not null]
+  asal_kampus_sekolah varchar(255) [not null]
+  usia int [not null]
+  pekerjaan enum('Pelajar','Mahasiswa','Karyawan','Wirausaha','PNS','Guru/Dosen','Lainnya') [not null, default: 'Pelajar']
+  no_wa_telegram varchar(20) [not null]
+  registered_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+}
+
+Table workshop_materials {
+  id int unsigned [pk, increment]
+  workshop_id int unsigned [not null]
+  title varchar(255) [not null]
+  file_path varchar(255) [not null]
+  file_type varchar(50) [not null]
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+}
+
+Table workshop_participants {
+  id int unsigned [pk, increment]
+  workshop_id int unsigned [not null]
+  user_id int
+  external_name varchar(255)
+  external_email varchar(255)
+  role enum('student','teacher','external') [not null, default: 'external']
+  status enum('registered','attended','cancelled') [not null, default: 'registered']
+  registered_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+}
+
+// Relationships
+Ref: users.user_id > siswa.id
+Ref: absensi.jadwal_id > jadwal_kelas.id
+Ref: absensi.siswa_id > siswa.id
+Ref: absensi_guru.jadwal_id > jadwal_kelas.id
+Ref: absensi_guru.guru_id > users.id
+Ref: assignments.teacher_id > users.id
+Ref: class_access_logs.enrollment_id > premium_class_enrollments.id
+Ref: class_access_logs.admin_id > users.id
+Ref: forum_threads.user_id > users.id
+Ref: forum_threads.category_id > forum_categories.id
+Ref: forum_posts.thread_id > forum_threads.id
+Ref: forum_posts.user_id > users.id
+Ref: forum_posts.parent_id > forum_posts.id
+Ref: forum_likes.user_id > users.id
+Ref: forum_likes.thread_id > forum_threads.id
+Ref: forum_likes.post_id > forum_posts.id
+Ref: forum_thread_views.thread_id > forum_threads.id
+Ref: forum_thread_views.user_id > users.id
+Ref: free_classes.mentor_id > users.id
+Ref: free_classes.category_id > class_categories.id
+Ref: free_class_discussions.class_id > free_classes.id
+Ref: free_class_discussions.user_id > users.id
+Ref: free_class_discussions.parent_id > free_class_discussions.id
+Ref: free_class_enrollments.class_id > free_classes.id
+Ref: free_class_enrollments.student_id > users.id
+Ref: free_class_materials.class_id > free_classes.id
+Ref: free_class_progress.enrollment_id > free_class_enrollments.id
+Ref: free_class_progress.material_id > free_class_materials.id
+Ref: guru_kelas.guru_id > users.id
+Ref: guru_kelas.kelas_id > kelas_programming.id
+Ref: jadwal_kelas.guru_id > users.id
+Ref: materi.kelas_id > kelas_programming.id
+Ref: materi_parts.materi_id > materi.id
+Ref: materi_progress.materi_id > materi.id
+Ref: payments.user_id > users.id
+Ref: payments.class_id > kelas_programming.id
+Ref: payments.verified_by > users.id
+Ref: payments.bank_account_id > company_bank_accounts.id
+Ref: premium_class_discussions.class_id > kelas_programming.id
+Ref: premium_class_discussions.user_id > users.id
+Ref: premium_class_discussions.parent_id > premium_class_discussions.id
+Ref: premium_class_enrollments.class_id > kelas_programming.id
+Ref: premium_class_enrollments.student_id > users.id
+Ref: premium_class_enrollments.payment_id > payments.id
+Ref: premium_class_enrollments.access_granted_by > users.id
+Ref: premium_class_progress.enrollment_id > premium_class_enrollments.id
+Ref: premium_class_progress.material_id > materi.id
+Ref: reg_regencies.province_id > reg_provinces.id
+Ref: reg_districts.regency_id > reg_regencies.id
+Ref: reg_villages.district_id > reg_districts.id
+Ref: student_submissions.assignment_id > assignments.id
+Ref: student_submissions.student_id > users.id
+Ref: workshop_guests.workshop_id > workshops.id
+Ref: workshop_materials.workshop_id > workshops.id
+Ref: workshop_participants.workshop_id > workshops.id
+Ref: workshop_participants.user_id > users.id

@@ -71,9 +71,44 @@ class Jadwal_model extends CI_Model {
         return $this->db->update('jadwal_kelas', $data);
     }
 
+    public function update_jadwal_timing($id, $tanggal, $waktu_mulai, $waktu_selesai)
+    {
+        $this->db->where('id', $id);
+        return $this->db->update('jadwal_kelas', [
+            'tanggal_pertemuan' => $tanggal,
+            'waktu_mulai' => $waktu_mulai,
+            'waktu_selesai' => $waktu_selesai,
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+    }
+
     public function get_all_jadwal()
     {
         return $this->db->get('jadwal_kelas_view')->result();
+    }
+
+    public function get_all_jadwal_with_workshops()
+    {
+        $jadwal_kelas = $this->db->get('jadwal_kelas_view')->result();
+
+        // Get workshops
+        $this->db->select('w.id, w.title as nama_kelas, w.type as pertemuan_ke, w.title as judul_pertemuan, DATE(w.start_datetime) as tanggal_pertemuan, TIME(w.start_datetime) as waktu_mulai, TIME(w.end_datetime) as waktu_selesai, "Workshop" as nama_guru, w.status, w.created_at, w.updated_at, "workshop" as class_type, w.location, w.online_meet');
+        $this->db->from('workshops w');
+        $this->db->where('w.status', 'published');
+        $this->db->order_by('w.start_datetime', 'ASC');
+        $workshops = $this->db->get()->result();
+
+        // Combine both arrays
+        $combined = array_merge($jadwal_kelas, $workshops);
+
+        // Sort by date and time
+        usort($combined, function($a, $b) {
+            $dateA = strtotime($a->tanggal_pertemuan . ' ' . $a->waktu_mulai);
+            $dateB = strtotime($b->tanggal_pertemuan . ' ' . $b->waktu_mulai);
+            return $dateA - $dateB;
+        });
+
+        return $combined;
     }
 
     public function get_classes_by_teacher($teacher_id)
