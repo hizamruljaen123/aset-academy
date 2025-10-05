@@ -15,7 +15,7 @@ class Kelas_model extends CI_Model {
     {
         $this->db->select('*');
         $this->db->from('kelas_programming');
-        $this->db->where('status', 'Aktif');
+        $this->db->where_in('status', ['Aktif', 'Coming Soon']);
         $this->db->order_by('level', 'ASC');
         $this->db->order_by('nama_kelas', 'ASC');
         $query = $this->db->get();
@@ -48,7 +48,7 @@ class Kelas_model extends CI_Model {
         $this->db->select('*');
         $this->db->from('kelas_programming');
         $this->db->where('level', $level);
-        $this->db->where('status', 'Aktif');
+        $this->db->where_in('status', ['Aktif', 'Coming Soon']);
         $this->db->order_by('nama_kelas', 'ASC');
         $query = $this->db->get();
         return $query->result();
@@ -60,7 +60,7 @@ class Kelas_model extends CI_Model {
         $this->db->select('*');
         $this->db->from('kelas_programming');
         $this->db->where('bahasa_program', $bahasa);
-        $this->db->where('status', 'Aktif');
+        $this->db->where_in('status', ['Aktif', 'Coming Soon']);
         $this->db->order_by('nama_kelas', 'ASC');
         $query = $this->db->get();
         return $query->result();
@@ -129,7 +129,7 @@ class Kelas_model extends CI_Model {
         $this->db->select('k.*, COUNT(s.id) as jumlah_siswa');
         $this->db->from('kelas_programming k');
         $this->db->join('siswa s', 'k.nama_kelas = s.kelas', 'left');
-        $this->db->where('k.status', 'Aktif');
+        $this->db->where_in('k.status', ['Aktif', 'Coming Soon']);
         $this->db->group_by('k.id');
         $this->db->order_by('jumlah_siswa', 'DESC');
         $this->db->limit($limit);
@@ -142,7 +142,7 @@ class Kelas_model extends CI_Model {
     {
         $this->db->select('level, COUNT(*) as jumlah');
         $this->db->from('kelas_programming');
-        $this->db->where('status', 'Aktif');
+        $this->db->where_in('status', ['Aktif', 'Coming Soon']);
         $this->db->group_by('level');
         $query = $this->db->get();
         return $query->result();
@@ -178,7 +178,7 @@ class Kelas_model extends CI_Model {
         $this->db->join('guru_kelas gk', 'gk.kelas_id = kp.id');
         $this->db->where('gk.guru_id', $teacher_id);
         $this->db->where('gk.status', 'Aktif');
-        $this->db->where('kp.status', 'Aktif');
+        $this->db->where_in('kp.status', ['Aktif', 'Coming Soon']);
         return $this->db->get()->result();
     }
 
@@ -195,7 +195,7 @@ class Kelas_model extends CI_Model {
     {
         $this->db->select('id, title as nama_kelas, description as deskripsi, category as bahasa_program, level');
         $this->db->from('free_classes');
-        $this->db->where('status', 'Published');
+        $this->db->where_in('status', ['Published', 'Coming Soon']);
         $this->db->order_by('title', 'ASC');
         $query = $this->db->get();
         return $query->result();
@@ -221,10 +221,10 @@ class Kelas_model extends CI_Model {
      */
     public function get_available_for_enrollment($student_id)
     {
-        // Get all active classes
+        // Get all active and coming soon classes
         $this->db->select('*');
         $this->db->from('kelas_programming');
-        $this->db->where('status', 'Aktif');
+        $this->db->where_in('status', ['Aktif', 'Coming Soon']);
         $all_classes = $this->db->get()->result();
         
         // Get classes the student is already enrolled in
@@ -260,7 +260,7 @@ class Kelas_model extends CI_Model {
         $this->db->select('kp.id, kp.nama_kelas, kp.deskripsi, kp.level, kp.harga, kp.gambar, COUNT(pce.id) as total_students');
         $this->db->from('kelas_programming kp');
         $this->db->join('premium_class_enrollments pce', 'pce.class_id = kp.id AND pce.status = "active"', 'left');
-        $this->db->where('kp.status', 'Aktif');
+        $this->db->where_in('kp.status', ['Aktif', 'Coming Soon']);
         $this->db->group_by('kp.id, kp.nama_kelas, kp.deskripsi, kp.level, kp.harga, kp.gambar');
         $this->db->order_by('kp.nama_kelas', 'ASC');
         

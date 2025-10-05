@@ -76,9 +76,11 @@
                     <label for="status" class="block text-sm font-medium text-gray-700">Status <span class="text-red-500">*</span></label>
                     <select id="status" name="status" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
                         <option value="Draft" <?php echo set_select('status', 'Draft', ($free_class->status == 'Draft')); ?>>Draft</option>
+                        <option value="Coming Soon" <?php echo set_select('status', 'Coming Soon', ($free_class->status == 'Coming Soon')); ?>>Coming Soon</option>
                         <option value="Published" <?php echo set_select('status', 'Published', ($free_class->status == 'Published')); ?>>Dipublikasikan</option>
                         <option value="Archived" <?php echo set_select('status', 'Archived', ($free_class->status == 'Archived')); ?>>Diarsipkan</option>
                     </select>
+                    <p class="text-xs text-gray-500">Coming Soon: Kelas sudah dibuat dan muncul di website namun masih menunggu persiapan</p>
                     <?php echo form_error('status', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
                 </div>
                 <div class="space-y-2">

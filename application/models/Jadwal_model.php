@@ -94,7 +94,7 @@ class Jadwal_model extends CI_Model {
         // Get workshops
         $this->db->select('w.id, w.title as nama_kelas, w.type as pertemuan_ke, w.title as judul_pertemuan, DATE(w.start_datetime) as tanggal_pertemuan, TIME(w.start_datetime) as waktu_mulai, TIME(w.end_datetime) as waktu_selesai, "Workshop" as nama_guru, w.status, w.created_at, w.updated_at, "workshop" as class_type, w.location, w.online_meet');
         $this->db->from('workshops w');
-        $this->db->where('w.status', 'published');
+        $this->db->where_in('w.status', ['published', 'coming_soon']);
         $this->db->order_by('w.start_datetime', 'ASC');
         $workshops = $this->db->get()->result();
 

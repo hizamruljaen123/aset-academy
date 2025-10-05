@@ -35,7 +35,7 @@ class Workshop_model extends CI_Model {
         if ($limit !== null) {
             $this->db->limit($limit, $offset);
         }
-        $this->db->where('status', 'published');
+        $this->db->where_in('status', ['published', 'coming_soon']);
         $this->db->order_by('start_datetime', 'ASC');
         return $this->db->get('workshops')->result();
     }
@@ -43,20 +43,20 @@ class Workshop_model extends CI_Model {
     // Get workshop by ID
     public function get_workshop($id)
     {
-        return $this->db->get_where('workshops', ['id' => $id, 'status' => 'published'])->row();
+        return $this->db->get_where('workshops', ['id' => $id])->where_in('status', ['published', 'coming_soon'])->row();
     }
 
     // Get workshop by slug
     public function get_workshop_by_slug($slug)
     {
-        return $this->db->get_where('workshops', ['slug' => $slug, 'status' => 'published'])->row();
+        return $this->db->get_where('workshops', ['slug' => $slug])->where_in('status', ['published', 'coming_soon'])->row();
     }
 
     // Get upcoming workshops
     public function get_upcoming_workshops($limit = 3)
     {
         $this->db->where('start_datetime >', date('Y-m-d H:i:s'));
-        $this->db->where('status', 'published');
+        $this->db->where_in('status', ['published', 'coming_soon']);
         $this->db->order_by('start_datetime', 'ASC');
         $this->db->limit($limit);
         return $this->db->get('workshops')->result();

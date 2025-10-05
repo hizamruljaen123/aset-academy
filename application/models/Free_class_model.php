@@ -226,7 +226,7 @@ class Free_class_model extends CI_Model
         $this->db->from('free_classes fc');
         $this->db->join('users u', 'fc.mentor_id = u.id', 'left');
         $this->db->join('free_class_enrollments fce', 'fc.id = fce.class_id', 'left');
-        $this->db->where('fc.status', 'Published');
+        $this->db->where_in('fc.status', ['Published', 'Coming Soon']);
         $this->db->group_by('fc.id');
         $this->db->order_by('enrollment_count', 'DESC');
         $this->db->limit($limit);
@@ -244,7 +244,7 @@ class Free_class_model extends CI_Model
         $this->db->select('fc.*, u.nama_lengkap as mentor_name');
         $this->db->from('free_classes fc');
         $this->db->join('users u', 'fc.mentor_id = u.id', 'left');
-        $this->db->where('fc.status', 'Published');
+        $this->db->where_in('fc.status', ['Published', 'Coming Soon']);
         $this->db->order_by('fc.created_at', 'DESC');
         $this->db->limit($limit);
         return $this->db->get()->result();
@@ -263,7 +263,7 @@ class Free_class_model extends CI_Model
         $this->db->select('fc.*, u.nama_lengkap as mentor_name');
         $this->db->from('free_classes fc');
         $this->db->join('users u', 'fc.mentor_id = u.id', 'left');
-        $this->db->where('fc.status', 'Published');
+        $this->db->where_in('fc.status', ['Published', 'Coming Soon']);
         
         if ($keyword) {
             $this->db->group_start();
@@ -294,7 +294,7 @@ class Free_class_model extends CI_Model
         $this->db->distinct();
         $this->db->select('category');
         $this->db->from('free_classes');
-        $this->db->where('status', 'Published');
+        $this->db->where_in('status', ['Published', 'Coming Soon']);
         $this->db->order_by('category', 'ASC');
         
         $result = $this->db->get()->result();

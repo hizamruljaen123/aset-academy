@@ -158,8 +158,10 @@
                                 required>
                             <option value="" disabled selected>-- Pilih Status --</option>
                             <option value="Aktif" <?php echo set_select('status', 'Aktif'); ?>>Aktif</option>
+                            <option value="Coming Soon" <?php echo set_select('status', 'Coming Soon'); ?>>Coming Soon</option>
                             <option value="Tidak Aktif" <?php echo set_select('status', 'Tidak Aktif'); ?>>Tidak Aktif</option>
                         </select>
+                        <p class="text-xs text-gray-500 mt-1">Coming Soon: Kelas sudah dibuat dan muncul di website namun masih menunggu persiapan</p>
                         <?php echo form_error('status', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
                     </div>
 
