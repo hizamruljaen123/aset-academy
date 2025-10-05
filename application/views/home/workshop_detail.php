@@ -68,11 +68,19 @@
                                 </div>
                             <?php endif; ?>
                         <?php else: ?>
-                            <a href="<?= site_url('auth/login?redirect=' . urlencode(workshop_detail_url($workshop->id))) ?>"
-                               class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-colors font-semibold">
-                                <i class="fas fa-sign-in-alt mr-2"></i>
-                                Login untuk Daftar
-                            </a>
+                            <div class="flex items-center gap-3">
+                                <a href="<?= site_url('auth/login?redirect=' . urlencode(workshop_detail_url($workshop->id))) ?>"
+                                   class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-colors font-semibold inline-flex items-center">
+                                    <i class="fas fa-sign-in-alt mr-2"></i>
+                                    Login & Daftar sebagai Member
+                                </a>
+
+                                <button type="button" onclick="openGuestModal()"
+                                        class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold inline-flex items-center">
+                                    <i class="fas fa-user-plus mr-2"></i>
+                                    Daftar sebagai Tamu
+                                </button>
+                            </div>
                         <?php endif; ?>
 
                         <div class="flex items-center text-white/90">

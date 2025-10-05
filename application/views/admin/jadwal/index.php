@@ -86,11 +86,11 @@
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <a href="<?= site_url('admin/workshops/edit/' . $j->id); ?>" class="text-green-600 hover:text-green-900">
+                                        <a href="<?= admin_workshop_url($j->id); ?>" class="text-green-600 hover:text-green-900">
                                             <i class="fas fa-edit mr-1"></i>Edit
                                         </a>
                                         <span class="text-gray-400 mx-2">|</span>
-                                        <a href="<?= site_url('admin/workshops/delete/' . $j->id); ?>" class="text-red-600 hover:text-red-900" onclick="return confirm('Apakah Anda yakin ingin menghapus workshop ini?');">
+                                        <a href="<?= site_url('admin/workshops/delete/' . encrypt_url($j->id)); ?>" class="text-red-600 hover:text-red-900" onclick="return confirm('Apakah Anda yakin ingin menghapus workshop ini?');">
                                             <i class="fas fa-trash mr-1"></i>Hapus
                                         </a>
                                     </td>

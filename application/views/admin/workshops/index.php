@@ -161,17 +161,17 @@
                                            title="Detail">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="<?= site_url('admin/workshops/edit/'.$workshop->id) ?>"
+                                        <a href="<?= admin_workshop_url($workshop->id) ?>"
                                            class="p-2 bg-white rounded-full text-gray-700 hover:text-blue-600 transition-colors"
                                            title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="<?= site_url('admin/workshops/participants/'.$workshop->id) ?>"
+                                        <a href="<?= admin_workshop_participants_url($workshop->id) ?>"
                                            class="p-2 bg-white rounded-full text-gray-700 hover:text-green-600 transition-colors"
                                            title="Peserta">
                                             <i class="fas fa-users"></i>
                                         </a>
-                                        <a href="<?= site_url('admin/workshops/delete/'.$workshop->id) ?>"
+                                        <a href="<?= site_url('admin/workshops/delete/' . encrypt_url($workshop->id)) ?>"
                                            class="p-2 bg-white rounded-full text-gray-700 hover:text-red-600 transition-colors"
                                            title="Hapus"
                                            onclick="return confirm('Apakah Anda yakin ingin menghapus workshop ini?')">

@@ -44,15 +44,15 @@
                         </div>
                         <div>
                             <p class="text-white/80 text-sm">Provinsi</p>
-                            <p class="text-white font-medium"><?= $guest->province_name ?: 'Tidak diisi' ?></p>
+                            <p class="text-white font-medium"><?php echo (isset($guest->province_name) && $guest->province_name) ? html_escape($guest->province_name) : 'Tidak diisi'; ?></p>
                         </div>
                         <div>
                             <p class="text-white/80 text-sm">Kabupaten/Kota</p>
-                            <p class="text-white font-medium"><?= $guest->regency_name ?: 'Tidak diisi' ?></p>
+                            <p class="text-white font-medium"><?php echo (isset($guest->regency_name) && $guest->regency_name) ? html_escape($guest->regency_name) : 'Tidak diisi'; ?></p>
                         </div>
                         <div>
                             <p class="text-white/80 text-sm">Kecamatan</p>
-                            <p class="text-white font-medium"><?= $guest->district_name ?: 'Tidak diisi' ?></p>
+                            <p class="text-white font-medium"><?php echo (isset($guest->district_name) && $guest->district_name) ? html_escape($guest->district_name) : 'Tidak diisi'; ?></p>
                         </div>
                         <div>
                             <p class="text-white/80 text-sm">No. WhatsApp/Telegram</p>
@@ -94,9 +94,9 @@
                         </div>
                         <h3 class="text-xl font-bold text-gray-800 mb-4">Grup WhatsApp</h3>
                         <p class="text-gray-600 mb-6">
-                            Bergabung dengan grup WhatsApp untuk diskusi, pertanyaan, dan update workshop
+                            Bergabung dengan grup WhatsApp untuk diskusi, pertanyaan, dan update Asset Academy
                         </p>
-                        <a href="https://wa.me/6281234567890?text=Halo%20saya%20<?= urlencode($guest->nama_lengkap) ?>%20yang%20sudah%20mendaftar%20workshop%20<?= urlencode($workshop->title) ?>"
+                        <a href="https://chat.whatsapp.com/HdrSw3afOkk9D7dg3dQHQe?mode=ems_copy_t"<?= urlencode($guest->nama_lengkap) ?>%20yang%20sudah%20mendaftar%20workshop%20<?= urlencode($workshop->title) ?>"
                            target="_blank"
                            class="w-full bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-semibold inline-flex items-center justify-center">
                             <i class="fab fa-whatsapp mr-2"></i>
@@ -111,9 +111,9 @@
                         </div>
                         <h3 class="text-xl font-bold text-gray-800 mb-4">Grup Telegram</h3>
                         <p class="text-gray-600 mb-6">
-                            Alternatif komunikasi via Telegram untuk update dan diskusi workshop
+                            Alternatif komunikasi via Telegram untuk update dan diskusi juga
                         </p>
-                        <a href="https://t.me/joinchat/AAAAAE1234567890"
+                        <a href="https://t.me/asetacademyonlineclass"
                            target="_blank"
                            class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold inline-flex items-center justify-center">
                             <i class="fab fa-telegram mr-2"></i>
