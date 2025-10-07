@@ -49,18 +49,36 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <?php foreach ($free_classes as $class): ?>
                 <div class="course-card bg-white rounded-xl shadow-lg overflow-hidden" data-aos="fade-up" data-aos-delay="100" data-category="<?= strtolower(str_replace(' ', '-', $class->category)) ?> <?= strtolower($class->level) ?>">
-                    <div class="relative overflow-hidden">
-                        <img src="<?= $class->thumbnail ?>" alt="<?= html_escape($class->title) ?>" class="w-full h-48 object-cover">
+                <div class="relative overflow-hidden">
+                    <div class="w-full h-48">
+                            <?php if (!empty($class->thumbnail)): ?>
+                                <img 
+                                    src="<?= $class->thumbnail ?>" 
+                                    alt="<?= html_escape($class->title) ?>" 
+                                    class="w-full h-full object-cover"
+                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                                >
+                                <div class="w-full h-full bg-green-100 items-center justify-center" style="display:none;">
+                                    <i class="fas fa-book-open text-6xl text-green-500"></i>
+                                </div>
+                            <?php else: ?>
+                                <div class="w-full h-full bg-green-100 flex items-center justify-center">
+                                    <i class="fas fa-book-open text-6xl text-green-500"></i>
+                                </div>
+                            <?php endif; ?>
+                        </div>
                         <div class="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">
                             Gratis
                         </div>
-                        <div class="absolute top-4 right-4 bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
-                            <?= html_escape($class->level) ?>
-                        </div>
-                    </div>
+                    </div>   
                     <div class="p-6">
                         <h3 class="text-xl font-bold text-gray-800 mb-3"><?= html_escape($class->title) ?></h3>
-                        <p class="text-gray-600 mb-4"><?= html_escape($class->description) ?></p>
+                        <?php 
+                        $descHtml = html_entity_decode(htmlspecialchars_decode($class->description, ENT_QUOTES | ENT_HTML5), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                        $descText = strip_tags($descHtml);
+                        $shortDesc = mb_strlen($descText) > 250 ? mb_substr($descText, 0, 250) . '...' : $descText;
+                        ?>
+                        <p class="text-gray-600 mb-4 prose max-w-none"><?= $shortDesc ?></p>
                         <div class="flex justify-between items-center mb-4">
                             <span class="text-sm text-gray-500"><?= html_escape($class->material_count) ?> Modul • <?= html_escape($class->duration) ?> Jam</span>
                             <div class="flex items-center">
@@ -68,9 +86,17 @@
                                 <span class="text-sm text-gray-600">4.8</span>
                             </div>
                         </div>
-                        <a href="<?= free_class_url($class->id) ?>" class="w-full block bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 transition-colors text-center font-medium">
-                            Mulai Belajar Sekarang
-                        </a>
+                        <div class="mt-4">
+                            <?php if ($class->status == 'Coming Soon'): ?>
+                                <button class="w-full text-center bg-gradient-to-r from-gray-400 to-gray-500 text-white px-4 py-2 rounded-lg cursor-not-allowed" disabled>
+                                    Coming Soon
+                                </button>
+                            <?php else: ?>
+                                <a href="<?= free_class_url($class->id) ?>" class="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-center">
+                                    Mulai Belajar
+                                </a>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
                 <?php endforeach; ?>

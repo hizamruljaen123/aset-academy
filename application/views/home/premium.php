@@ -45,32 +45,71 @@
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <?php foreach ($premium_classes as $class): ?>
-                <div class="course-card bg-white rounded-xl shadow-lg overflow-hidden" data-aos="fade-up" data-aos-delay="100" data-category="<?= strtolower(str_replace(' ', '-', $class->bahasa_program)) ?>">
                     <div class="relative overflow-hidden">
-                        <img src="<?= $class->gambar ?>" alt="<?= html_escape($class->nama_kelas) ?>" class="w-full h-48 object-cover hover:scale-105 transition-transform duration-300">
-                        <div class="absolute top-4 left-4 premium-badge text-white px-3 py-1 rounded-full text-sm font-bold">
-                            Premium
+                    <div class="w-full h-48">
+                            <?php if (!empty($class->thumbnail)): ?>
+                                <img 
+                                    src="<?= $class->thumbnail ?>" 
+                                    alt="<?= html_escape($class->title) ?>" 
+                                    class="w-full h-full object-cover"
+                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                                >
+                                <div class="w-full h-full bg-green-100 items-center justify-center" style="display:none;">
+                                    <i class="fas fa-book-open text-6xl text-green-500"></i>
+                                </div>
+                            <?php else: ?>
+                                <div class="w-full h-full bg-green-100 flex items-center justify-center">
+                                    <i class="fas fa-book-open text-6xl text-green-500"></i>
+                                </div>
+                            <?php endif; ?>
                         </div>
-                        <div class="absolute top-4 right-4 bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
-                            <?= html_escape($class->bahasa_program) ?>
-                        </div>
-                    </div>
                     <div class="p-6">
                         <h3 class="text-xl font-bold text-gray-800 mb-3"><?= html_escape($class->nama_kelas) ?></h3>
-                        <p class="text-gray-600 mb-4"><?= html_escape($class->deskripsi) ?></p>
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="text-sm text-gray-500"><?= html_escape($class->durasi) ?> Jam</span>
-                            <div class="flex items-center">
-                                <span class="text-yellow-400 mr-1">★</span>
-                                <span class="text-sm text-gray-600">4.9</span>
-                            </div>
+                        <?php 
+                        $descHtml = html_entity_decode(htmlspecialchars_decode($class->deskripsi, ENT_QUOTES | ENT_HTML5), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                        $descText = strip_tags($descHtml);
+                        $shortDesc = mb_strlen($descText) > 250 ? mb_substr($descText, 0, 250) . '...' : $descText;
+                        ?>
+                        <p class="text-gray-600 mb-4 prose max-w-none"><?= $shortDesc ?></p>
+                        <div class="mt-4">
+                            <?php if ($class->status == 'Coming Soon'): ?>
+                                <button class="w-full text-center bg-gradient-to-r from-gray-400 to-gray-500 text-white px-4 py-2 rounded-lg cursor-not-allowed font-semibold" disabled>
+                                    Coming Soon
+                                </button>
+                             <?php else: ?>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-2xl font-bold text-blue-600">Rp <?= number_format($class->harga, 0, ',', '.') ?></span>
+                                    <div class="flex flex-col space-y-2">
+                                        <a href="<?= premium_class_url($class->id) ?>" class="w-full text-center bg-indigo-100 text-indigo-700 px-4 py-2 rounded-lg hover:bg-indigo-200 transition-colors text-sm font-semibold">
+                                            Lihat Detail
+                                        </a>
+                                        <?php if(isset($user_id)): ?>
+                                            <?php if($is_enrolled): ?>
+                                                <a href="<?= site_url('kelas/detail/' . encrypt_url($class->id)) ?>" class="w-full text-center bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm font-semibold">
+                                                    Lanjut Belajar
+                                                </a>
+                                            <?php elseif($payment_status && $payment_status->status == 'Verified'): ?>
+                                                <a href="<?= site_url('kelas/enroll/' . encrypt_url($class->id)) ?>" class="w-full text-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold">
+                                                    Akses Kelas
+                                                </a>
+                                            <?php elseif($payment_status && $payment_status->status == 'Pending'): ?>
+                                                <button class="w-full text-center bg-yellow-500 text-white px-4 py-2 rounded-lg cursor-not-allowed text-sm font-semibold">
+                                                    Menunggu Verifikasi
+                                                </button>
+                                            <?php else: ?>
+                                                <a href="<?= site_url('payment/initiate/' . encrypt_url($class->id)) ?>" class="w-full text-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold">
+                                                    Daftar Sekarang
+                                                </a>
+                                            <?php endif; ?>
+                                        <?php else: ?>
+                                            <a href="<?= site_url('auth/login?redirect=payment/initiate/' . encrypt_url($class->id)) ?>" class="w-full text-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold">
+                                                Daftar Sekarang
+                                            </a>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                         </div>
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="text-2xl font-bold text-blue-600">Rp <?= number_format($class->harga, 0, ',', '.') ?></span>
-                        </div>
-                        <a href="<?= premium_class_url($class->id) ?>" class="w-full text-center bg-indigo-100 text-indigo-700 px-4 py-2 rounded-lg hover:bg-indigo-200 transition-colors text-sm font-semibold">
-                            Lihat Detail
-                        </a>
                     </div>
                 </div>
                 <?php endforeach; ?>
