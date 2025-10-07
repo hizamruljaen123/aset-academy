@@ -220,7 +220,7 @@
                                         </div>
                                         <div class="flex-1 min-w-0">
                                             <p class="text-sm font-medium text-gray-900 truncate">
-                                                <?= $participant->user_id ? $participant->nama_lengkap : $participant->external_name ?>
+                                                <?= $participant->nama_lengkap ?? '-' ?>
                                             </p>
                                             <p class="text-xs text-gray-500">
                                                 <?= date('d M Y', strtotime($participant->registered_at)) ?>

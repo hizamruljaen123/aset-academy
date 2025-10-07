@@ -1,10 +1,9 @@
-<div class="max-w-screen-xl mx-auto p-4">
+<div class="w-full mx-auto px-4 sm:px-6 lg:px-8 py-4">
     <div class="mb-6">
         <a href="<?= admin_workshop_url($workshop->id) ?>" class="text-blue-600 hover:text-blue-800 flex items-center">
             <i class="fas fa-arrow-left mr-2"></i> Kembali ke Workshop
         </a>
     </div>
-
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <div>
@@ -25,16 +24,18 @@
                     <tr>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis Peserta</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Peran</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Registrasi</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Domisili</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     <?php if (empty($participants)): ?>
                         <tr>
-                            <td colspan="6" class="px-6 py-12 text-center">
+                            <td colspan="8" class="px-6 py-12 text-center">
                                 <div class="flex flex-col items-center">
                                     <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                                         <i class="fas fa-users text-gray-400 text-xl"></i>
@@ -49,18 +50,30 @@
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">
-                                        <?= $participant->user_id ? $participant->nama_lengkap : $participant->external_name ?>
+                                        <?= $participant->nama_lengkap ?? '-' ?>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <?= $participant->user_id ? $participant->email : $participant->external_email ?>
+                                    <?= $participant->email ? $participant->email : '-' ?>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                        <?php if ($participant->role == 'student'): ?>
+                                        <?php if ($participant->participant_type === 'guest'): ?>
+                                            bg-yellow-100 text-yellow-800
+                                        <?php else: ?>
                                             bg-blue-100 text-blue-800
-                                        <?php elseif ($participant->role == 'teacher'): ?>
+                                        <?php endif; ?>">
+                                        <?= $participant->participant_type === 'guest' ? 'Tamu' : 'Member' ?>
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                        <?php if ($participant->role === 'student'): ?>
+                                            bg-blue-100 text-blue-800
+                                        <?php elseif ($participant->role === 'teacher'): ?>
                                             bg-purple-100 text-purple-800
+                                        <?php elseif ($participant->role === 'guest'): ?>
+                                            bg-yellow-100 text-yellow-800
                                         <?php else: ?>
                                             bg-gray-100 text-gray-800
                                         <?php endif; ?>">
@@ -68,25 +81,44 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <select class="status-select border border-gray-300 rounded-md text-sm" data-id="<?= $participant->id ?>">
-                                        <option value="registered" <?= $participant->status == 'registered' ? 'selected' : '' ?>>Registered</option>
-                                        <option value="attended" <?= $participant->status == 'attended' ? 'selected' : '' ?>>Attended</option>
-                                        <option value="cancelled" <?= $participant->status == 'cancelled' ? 'selected' : '' ?>>Cancelled</option>
-                                    </select>
+                                    <?php if ($participant->participant_type === 'guest'): ?>
+                                        <span class="text-xs text-gray-500">Tidak dapat diubah</span>
+                                    <?php else: ?>
+                                        <select class="status-select border border-gray-300 rounded-md text-sm" data-id="<?= $participant->id ?>">
+                                            <option value="registered" <?= $participant->status == 'registered' ? 'selected' : '' ?>>Registered</option>
+                                            <option value="attended" <?= $participant->status == 'attended' ? 'selected' : '' ?>>Attended</option>
+                                            <option value="cancelled" <?= $participant->status == 'cancelled' ? 'selected' : '' ?>>Cancelled</option>
+                                        </select>
+                                    <?php endif; ?>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     <?= date('d M Y H:i', strtotime($participant->registered_at)) ?>
                                 </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <?php if ($participant->province_name): ?>
+                                        <?= $participant->province_name ?>
+                                        <?= $participant->regency_name ? ', ' . $participant->regency_name : '' ?>
+                                        <?= $participant->district_name ? ', ' . $participant->district_name : '' ?>
+                                        <?= $participant->village_name ? ', ' . $participant->village_name : '' ?>
+                                    <?php else: ?>
+                                        <span class="text-gray-400">-</span>
+                                    <?php endif; ?>
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <button class="text-red-600 hover:text-red-900 delete-btn" data-id="<?= $participant->id ?>">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+                                    <?php if ($participant->participant_type === 'guest'): ?>
+                                        <button class="text-red-600 hover:text-red-900 delete-guest-btn" data-id="<?= $participant->id ?>">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    <?php else: ?>
+                                        <button class="text-red-600 hover:text-red-900 delete-btn" data-id="<?= $participant->id ?>">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </tbody>
-            </table>
         </div>
     </div>
 </div>
@@ -133,6 +165,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Redirect to delete URL
                 window.location.href = `<?= site_url('admin/workshops/delete_participant/') ?>${participantId}`;
+            }
+        });
+    });
+
+    const deleteGuestButtons = document.querySelectorAll('.delete-guest-btn');
+    deleteGuestButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            if (confirm('Hapus peserta tamu ini?')) {
+                const participantId = this.dataset.id;
+                window.location.href = `<?= site_url('admin/workshops/delete_guest/') ?>${participantId}`;
             }
         });
     });

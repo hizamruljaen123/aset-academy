@@ -181,7 +181,14 @@
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <a href="https://wa.me/<?php echo preg_replace('/[^0-9]/', '', $guest->no_wa_telegram); ?>"
+                                        <?php
+                                        $raw_phone_number = preg_replace('/[^0-9]/', '', $guest->no_wa_telegram);
+                                        $formatted_phone_number = $raw_phone_number;
+                                        if (substr($raw_phone_number, 0, 2) === '08') {
+                                            $formatted_phone_number = '62' . substr($raw_phone_number, 1);
+                                        }
+                                        ?>
+                                        <a href="https://wa.me/<?php echo $formatted_phone_number; ?>"
                                            target="_blank" class="text-green-600 hover:text-green-900">
                                             <i class="fab fa-whatsapp mr-1"></i>
                                             <?php echo html_escape($guest->no_wa_telegram); ?>

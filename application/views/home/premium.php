@@ -45,23 +45,23 @@
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <?php foreach ($premium_classes as $class): ?>
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden" data-aos="fade-up" data-aos-delay="100">
                     <div class="relative overflow-hidden">
                     <div class="w-full h-48">
                             <?php if (!empty($class->thumbnail)): ?>
-                                <img 
                                     src="<?= $class->thumbnail ?>" 
                                     alt="<?= html_escape($class->title) ?>" 
                                     class="w-full h-full object-cover"
                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                                 >
-                                <div class="w-full h-full bg-green-100 items-center justify-center" style="display:none;">
-                                    <i class="fas fa-book-open text-6xl text-green-500"></i>
+                                <div class="w-full h-full bg-blue-100 items-center justify-center" style="display:none;">
+                                    <i class="fas fa-book-open text-6xl text-blue-600"></i>
                                 </div>
                             <?php else: ?>
-                                <div class="w-full h-full bg-green-100 flex items-center justify-center">
-                                    <i class="fas fa-book-open text-6xl text-green-500"></i>
+                                <div class="w-full h-full bg-blue-100 flex items-center justify-center">
+                                    <i class="fas fa-book-open text-6xl text-blue-600"></i>
                                 </div>
-                            <?php endif; ?>
+                        <?php endif; ?>
                         </div>
                     <div class="p-6">
                         <h3 class="text-xl font-bold text-gray-800 mb-3"><?= html_escape($class->nama_kelas) ?></h3>
@@ -85,7 +85,7 @@
                                         </a>
                                         <?php if(isset($user_id)): ?>
                                             <?php if($is_enrolled): ?>
-                                                <a href="<?= site_url('kelas/detail/' . encrypt_url($class->id)) ?>" class="w-full text-center bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm font-semibold">
+                                                <a href="<?= site_url('kelas/detail/' . encrypt_url($class->id)) ?>" class="w-full text-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold">
                                                     Lanjut Belajar
                                                 </a>
                                             <?php elseif($payment_status && $payment_status->status == 'Verified'): ?>
@@ -137,8 +137,8 @@
                 </div>
                 
                 <div class="text-center" data-aos="fade-up" data-aos-delay="200">
-                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i data-feather="users" class="w-8 h-8 text-green-600"></i>
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i data-feather="users" class="w-8 h-8 text-blue-600"></i>
                     </div>
                     <h3 class="text-xl font-bold text-gray-800 mb-4">Dukungan Mentor</h3>
                     <p class="text-gray-600">Akses langsung ke mentor profesional untuk konsultasi dan bimbingan</p>

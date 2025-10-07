@@ -120,15 +120,6 @@
                 <div class="lg:col-span-2">
                     <div class="bg-gray-50 rounded-xl p-8">
                         <h2 class="text-2xl font-bold text-gray-800 mb-6">Deskripsi</h2>
-
-                        <!-- Thumbnail Image -->
-                        <?php if ($workshop->thumbnail): ?>
-                        <div class="mb-6">
-                            <img src="<?= base_url($workshop->thumbnail) ?>" alt="<?= html_escape($workshop->title) ?>"
-                                 class="w-full max-w-md mx-auto rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-                        </div>
-                        <?php endif; ?>
-
                         <div class="prose max-w-none text-gray-700">
                             <?= nl2br(html_escape($workshop->description)) ?>
                         </div>
@@ -271,6 +262,7 @@
                             </div>
                         <?php endif; ?>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -378,6 +370,18 @@
                                 </select>
                             </div>
 
+                            <!-- Kelurahan/Desa -->
+                            <div>
+                                <label for="village_id" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Kelurahan/Desa
+                                </label>
+                                <select id="village_id" name="village_id"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" disabled>
+                                    <option value="">Pilih Kelurahan/Desa</option>
+                                    <!-- Will be populated by JavaScript -->
+                                </select>
+                            </div>
+
                             <!-- Usia -->
                             <div>
                                 <label for="usia" class="block text-sm font-medium text-gray-700 mb-2">
@@ -464,6 +468,10 @@
             const usia = document.getElementById('usia').value;
             const pekerjaan = document.getElementById('pekerjaan').value;
             const noWa = document.getElementById('no_wa_telegram').value.trim();
+            const provinceId = document.getElementById('province_id').value;
+            const regencyId = document.getElementById('regency_id').value;
+            const districtId = document.getElementById('district_id').value;
+            const villageId = document.getElementById('village_id').value;
 
             if (!namaLengkap || !asalKampus || !usia || !pekerjaan || !noWa) {
                 e.preventDefault();
@@ -476,6 +484,13 @@
                 alert('Usia harus antara 10-99 tahun.');
                 return false;
             }
+
+            // Optional: Add validation for location fields if they become mandatory
+            // if (provinceId && (!regencyId || !districtId || !villageId)) {
+            //     e.preventDefault();
+            //     alert('Mohon lengkapi semua pilihan lokasi.');
+            //     return false;
+            // }
         });
 
         // Load provinces on modal open
@@ -497,6 +512,7 @@
             const provinceId = this.value;
             const regencySelect = document.getElementById('regency_id');
             const districtSelect = document.getElementById('district_id');
+            const villageSelect = document.getElementById('village_id');
 
             if (provinceId) {
                 fetch('<?= site_url('workshops/get_regencies') ?>/' + provinceId)
@@ -508,14 +524,18 @@
                         });
                         regencySelect.disabled = false;
                         districtSelect.disabled = true;
+                        villageSelect.disabled = true;
                         districtSelect.innerHTML = '<option value="">Pilih Kecamatan</option>';
+                        villageSelect.innerHTML = '<option value="">Pilih Kelurahan/Desa</option>';
                     })
                     .catch(error => console.error('Error loading regencies:', error));
             } else {
                 regencySelect.disabled = true;
                 districtSelect.disabled = true;
+                villageSelect.disabled = true;
                 regencySelect.innerHTML = '<option value="">Pilih Kabupaten/Kota</option>';
                 districtSelect.innerHTML = '<option value="">Pilih Kecamatan</option>';
+                villageSelect.innerHTML = '<option value="">Pilih Kelurahan/Desa</option>';
             }
         });
 
@@ -523,6 +543,7 @@
         document.getElementById('regency_id').addEventListener('change', function() {
             const regencyId = this.value;
             const districtSelect = document.getElementById('district_id');
+            const villageSelect = document.getElementById('village_id');
 
             if (regencyId) {
                 fetch('<?= site_url('workshops/get_districts') ?>/' + regencyId)
@@ -533,16 +554,39 @@
                             districtSelect.innerHTML += `<option value="${district.id}">${district.name}</option>`;
                         });
                         districtSelect.disabled = false;
+                        villageSelect.disabled = true;
+                        villageSelect.innerHTML = '<option value="">Pilih Kelurahan/Desa</option>';
                     })
                     .catch(error => console.error('Error loading districts:', error));
             } else {
                 districtSelect.disabled = true;
+                villageSelect.disabled = true;
                 districtSelect.innerHTML = '<option value="">Pilih Kecamatan</option>';
+                villageSelect.innerHTML = '<option value="">Pilih Kelurahan/Desa</option>';
             }
         });
 
-        // Load provinces when modal opens
-        document.getElementById('guestModal').addEventListener('show', loadProvinces);
+        // Load villages based on selected district
+        document.getElementById('district_id').addEventListener('change', function() {
+            const districtId = this.value;
+            const villageSelect = document.getElementById('village_id');
+
+            if (districtId) {
+                fetch('<?= site_url('workshops/get_villages') ?>/' + districtId)
+                    .then(response => response.json())
+                    .then(data => {
+                        villageSelect.innerHTML = '<option value="">Pilih Kelurahan/Desa</option>';
+                        data.forEach(village => {
+                            villageSelect.innerHTML += `<option value="${village.id}">${village.name}</option>`;
+                        });
+                        villageSelect.disabled = false;
+                    })
+                    .catch(error => console.error('Error loading villages:', error));
+            } else {
+                villageSelect.disabled = true;
+                villageSelect.innerHTML = '<option value="">Pilih Kelurahan/Desa</option>';
+            }
+        });
 
         // Auto-scroll to form if there's an error
         <?php if ($this->session->flashdata('error')): ?>
@@ -553,6 +597,107 @@
                 }
             });
         <?php endif; ?>
+
+        // Handle member registration form regional dropdowns
+        document.addEventListener('DOMContentLoaded', function() {
+            const provinceSelect = document.getElementById('province_id');
+            const regencySelect = document.getElementById('regency_id');
+            const districtSelect = document.getElementById('district_id');
+            const villageSelect = document.getElementById('village_id');
+
+            // Load regencies when province changes
+            provinceSelect.addEventListener('change', function() {
+                const provinceId = this.value;
+                regencySelect.innerHTML = '<option value="">Pilih Kabupaten/Kota</option>';
+                districtSelect.innerHTML = '<option value="">Pilih Kecamatan</option>';
+                villageSelect.innerHTML = '<option value="">Pilih Desa/Kelurahan</option>';
+                districtSelect.disabled = true;
+                villageSelect.disabled = true;
+
+                if (provinceId) {
+                    regencySelect.disabled = false;
+                    // Load regencies via AJAX
+                    fetch('<?= site_url('workshops/get_regencies/') ?>' + provinceId)
+                        .then(response => response.json())
+                        .then(data => {
+                            data.forEach(regency => {
+                                const option = document.createElement('option');
+                                option.value = regency.id;
+                                option.textContent = regency.name;
+                                regencySelect.appendChild(option);
+                            });
+                        });
+                } else {
+                    regencySelect.disabled = true;
+                }
+            });
+
+            // Load districts when regency changes
+            regencySelect.addEventListener('change', function() {
+                const regencyId = this.value;
+                districtSelect.innerHTML = '<option value="">Pilih Kecamatan</option>';
+                villageSelect.innerHTML = '<option value="">Pilih Desa/Kelurahan</option>';
+                villageSelect.disabled = true;
+
+                if (regencyId) {
+                    districtSelect.disabled = false;
+                    // Load districts via AJAX
+                    fetch('<?= site_url('workshops/get_districts/') ?>' + regencyId)
+                        .then(response => response.json())
+                        .then(data => {
+                            data.forEach(district => {
+                                const option = document.createElement('option');
+                                option.value = district.id;
+                                option.textContent = district.name;
+                                districtSelect.appendChild(option);
+                            });
+                        });
+                } else {
+                    districtSelect.disabled = true;
+                }
+            });
+
+            // Load villages when district changes
+            districtSelect.addEventListener('change', function() {
+                const districtId = this.value;
+                villageSelect.innerHTML = '<option value="">Pilih Desa/Kelurahan</option>';
+
+                if (districtId) {
+                    villageSelect.disabled = false;
+                    // Load villages via AJAX
+                    fetch('<?= site_url('workshops/get_villages/') ?>' + districtId)
+                        .then(response => response.json())
+                        .then(data => {
+                            data.forEach(village => {
+                                const option = document.createElement('option');
+                                option.value = village.id;
+                                option.textContent = village.name;
+                                villageSelect.appendChild(option);
+                            });
+                        });
+                } else {
+                    villageSelect.disabled = true;
+                }
+            });
+
+            // Handle form submission
+            document.getElementById('member-register-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validate required fields
+                const provinceId = document.getElementById('province_id').value;
+                const regencyId = document.getElementById('regency_id').value;
+                const districtId = document.getElementById('district_id').value;
+                const villageId = document.getElementById('village_id').value;
+
+                if (!provinceId || !regencyId || !districtId || !villageId) {
+                    alert('Silakan lengkapkan semua informasi regional (Provinsi, Kabupaten/Kota, Kecamatan, Desa/Kelurahan)');
+                    return;
+                }
+
+                this.submit();
+            });
+        });
     </script>
 
 <?php $this->load->view('home/templates/_footer'); ?>

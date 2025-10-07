@@ -103,10 +103,50 @@ class Workshop_model extends CI_Model {
     // Get workshop participants
     public function get_participants($workshop_id)
     {
-        $this->db->select('wp.*, u.nama_lengkap, u.email, u.role as user_role');
+        $this->db->select('wp.*, u.nama_lengkap, u.email, u.role as user_role, 
+                          rp.name as province_name, rr.name as regency_name, rd.name as district_name');
         $this->db->from('workshop_participants wp');
         $this->db->join('users u', 'u.id = wp.user_id', 'left');
+        $this->db->join('reg_provinces rp', 'rp.id = wp.province_id', 'left');
+        $this->db->join('reg_regencies rr', 'rr.id = wp.regency_id', 'left');
+        $this->db->join('reg_districts rd', 'rd.id = wp.district_id', 'left');
         $this->db->where('wp.workshop_id', $workshop_id);
+        return $this->db->get()->result();
+    }
+
+    // Get all participants (members & guests) via view
+    public function get_all_participants($workshop_id)
+    {
+        $this->db->select('
+            vw.participant_id,
+            vw.participant_id as id,
+            vw.workshop_id,
+            vw.user_id,
+            vw.nama_lengkap,
+            vw.email,
+            vw.user_role,
+            CASE WHEN vw.participant_type = \'guest\' THEN \'guest\' ELSE vw.participant_role END AS role,
+            vw.participant_role,
+            vw.status,
+            vw.registered_at,
+            vw.participant_type,
+            vw.province_id,
+            vw.regency_id,
+            vw.district_id,
+            vw.village_id,
+            rp.name AS province_name,
+            rr.name AS regency_name,
+            rd.name AS district_name,
+            rv.name AS village_name
+        ');
+        $this->db->from('view_workshop_all_participants vw');
+        $this->db->join('reg_provinces rp', 'rp.id = vw.province_id', 'left');
+        $this->db->join('reg_regencies rr', 'rr.id = vw.regency_id', 'left');
+        $this->db->join('reg_districts rd', 'rd.id = vw.district_id', 'left');
+        $this->db->join('reg_villages rv', 'rv.id = vw.village_id', 'left');
+        $this->db->where('vw.workshop_id', $workshop_id);
+        $this->db->order_by('vw.registered_at', 'ASC');
+
         return $this->db->get()->result();
     }
 
@@ -129,6 +169,30 @@ class Workshop_model extends CI_Model {
         ])->row();
     }
 
+    // Get single participant by ID
+    public function get_participant_by_id($participant_id)
+    {
+        return $this->db->get_where('workshop_participants', ['id' => $participant_id])->row();
+    }
+
+    // Delete participant by ID
+    public function delete_participant_by_id($participant_id)
+    {
+        return $this->db->delete('workshop_participants', ['id' => $participant_id]);
+    }
+
+    // Get guest by ID
+    public function get_guest_by_id($guest_id)
+    {
+        return $this->db->get_where('workshop_guests', ['id' => $guest_id])->row();
+    }
+
+    // Delete guest by ID
+    public function delete_guest_by_id($guest_id)
+    {
+        return $this->db->delete('workshop_guests', ['id' => $guest_id]);
+    }
+
     // Register guest for workshop
     public function register_guest($workshop_id, $guest_data)
     {
@@ -139,6 +203,10 @@ class Workshop_model extends CI_Model {
             'usia' => $guest_data['usia'],
             'pekerjaan' => $guest_data['pekerjaan'],
             'no_wa_telegram' => $guest_data['no_wa_telegram'],
+            'province_id' => !empty($guest_data['province_id']) ? $guest_data['province_id'] : null,
+            'regency_id' => !empty($guest_data['regency_id']) ? $guest_data['regency_id'] : null,
+            'district_id' => !empty($guest_data['district_id']) ? $guest_data['district_id'] : null,
+            'village_id' => !empty($guest_data['village_id']) ? $guest_data['village_id'] : null,
             'registered_at' => date('Y-m-d H:i:s')
         ];
 
@@ -158,7 +226,12 @@ class Workshop_model extends CI_Model {
     // Get guest registration details
     public function get_guest_registration($guest_id)
     {
-        return $this->db->get_where('workshop_guests', ['id' => $guest_id])->row();
+        $this->db->select('wg.*, vr.province_name, vr.regency_name, vr.district_name, vr.village_name');
+        $this->db->from('workshop_guests wg');
+        $this->db->join('view_region_complete vr', 'vr.village_id = wg.village_id', 'left');
+        $this->db->where('wg.id', $guest_id);
+
+        return $this->db->get()->row();
     }
 
     // Get all guests for a workshop
@@ -225,6 +298,21 @@ class Workshop_model extends CI_Model {
         return $this->db->get('reg_districts')->result();
     }
 
+    public function get_villages($district_id = null)
+    {
+        if ($district_id) {
+            $this->db->where('district_id', $district_id);
+        }
+        return $this->db->get('reg_villages')->result();
+    }
+
+    // Get district name by ID
+    public function get_district_name($district_id)
+    {
+        $district = $this->db->get_where('reg_districts', ['id' => $district_id])->row();
+        return $district ? $district->name : '';
+    }
+
     // Get province name by ID
     public function get_province_name($province_id)
     {
@@ -239,10 +327,18 @@ class Workshop_model extends CI_Model {
         return $regency ? $regency->name : '';
     }
 
-    // Get district name by ID
-    public function get_district_name($district_id)
+    // Get participant details with regional information
+    public function get_participant_details($workshop_id, $user_id)
     {
-        $district = $this->db->get_where('reg_districts', ['id' => $district_id])->row();
-        return $district ? $district->name : '';
+        $this->db->select('wp.*, u.nama_lengkap, u.email, u.role as user_role, 
+                          rp.name as province_name, rr.name as regency_name, rd.name as district_name');
+        $this->db->from('workshop_participants wp');
+        $this->db->join('users u', 'u.id = wp.user_id', 'left');
+        $this->db->join('reg_provinces rp', 'rp.id = wp.province_id', 'left');
+        $this->db->join('reg_regencies rr', 'rr.id = wp.regency_id', 'left');
+        $this->db->join('reg_districts rd', 'rd.id = wp.district_id', 'left');
+        $this->db->where('wp.workshop_id', $workshop_id);
+        $this->db->where('wp.user_id', $user_id);
+        return $this->db->get()->row();
     }
 }

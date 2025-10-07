@@ -42,6 +42,9 @@ class Workshops extends MY_Controller {
         $participants = $this->workshop_model->get_participants($workshop->id);
         $participant_count = count($participants);
 
+        // Get provinces for dropdown
+        $provinces = $this->workshop_model->get_provinces();
+
         // Check if user is logged in and registered
         $is_registered = false;
         $user_id = $this->session->userdata('user_id');
@@ -52,9 +55,11 @@ class Workshops extends MY_Controller {
 
         $data['workshop'] = $workshop;
         $data['materials'] = $materials;
+        $data['participants'] = $participants;
         $data['participant_count'] = $participant_count;
         $data['is_registered'] = $is_registered;
         $data['max_participants'] = $workshop->max_participants;
+        $data['provinces'] = $provinces;
         $data['title'] = $workshop->title . ' - Aset Academy';
         $data['description'] = 'Detail lengkap ' . strtolower($workshop->type) . ': ' . $workshop->title . '. ' . $workshop->description;
 
@@ -98,10 +103,16 @@ class Workshops extends MY_Controller {
         }
 
         // Register participant
-        $registration_id = $this->workshop_model->register_participant($workshop->id, $user_id);
+        $registration_id = $this->workshop_model->register_participant($workshop->id, $user_id, [
+            'province_id' => $this->input->post('province_id'),
+            'regency_id' => $this->input->post('regency_id'),
+            'district_id' => $this->input->post('district_id'),
+            'village_id' => $this->input->post('village_id')
+        ]);
 
         if ($registration_id) {
             $this->session->set_flashdata('success', 'Berhasil mendaftar untuk workshop/seminar ini!');
+            redirect('workshops/workshop_success/' . $this->encrypt_id($id));
         } else {
             $this->session->set_flashdata('error', 'Terjadi kesalahan saat mendaftar. Silakan coba lagi.');
         }
@@ -134,6 +145,7 @@ class Workshops extends MY_Controller {
         $this->form_validation->set_rules('province_id', 'Provinsi', 'trim|max_length[2]');
         $this->form_validation->set_rules('regency_id', 'Kabupaten/Kota', 'trim|max_length[4]');
         $this->form_validation->set_rules('district_id', 'Kecamatan', 'trim|max_length[6]');
+        $this->form_validation->set_rules('village_id', 'Desa/Kelurahan', 'trim|max_length[10]');
         $this->form_validation->set_rules('no_wa_telegram', 'No. WhatsApp/Telegram', 'required|trim|max_length[20]');
 
         if ($this->form_validation->run() == FALSE) {
@@ -149,6 +161,7 @@ class Workshops extends MY_Controller {
             'province_id' => $this->input->post('province_id'),
             'regency_id' => $this->input->post('regency_id'),
             'district_id' => $this->input->post('district_id'),
+            'village_id' => $this->input->post('village_id'),
             'no_wa_telegram' => $this->input->post('no_wa_telegram')
         ];
 
@@ -192,6 +205,35 @@ class Workshops extends MY_Controller {
         $this->load->view('home/workshop_guest_success', $data);
     }
 
+    public function workshop_success($encrypted_id = null)
+    {
+        $id = $this->decrypt_id($encrypted_id, 'Workshop ID');
+
+        // Get workshop by ID
+        $workshop = $this->workshop_model->get_workshop($id);
+
+        if (!$workshop) {
+            show_404();
+        }
+
+        // Get user registration details
+        $user_id = $this->session->userdata('user_id');
+        $participant = $this->workshop_model->get_participant_details($workshop->id, $user_id);
+
+        if (!$participant) {
+            show_404();
+        }
+
+        $data['workshop'] = $workshop;
+        $data['participant'] = $participant;
+        $data['title'] = 'Pendaftaran Berhasil - Aset Academy';
+        $data['description'] = 'Selamat! Anda telah berhasil mendaftar workshop ' . $workshop->title;
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('student/workshop_success', $data);
+        $this->load->view('templates/footer');
+    }
+
     // AJAX methods for regional data
     public function get_provinces()
     {
@@ -219,5 +261,16 @@ class Workshops extends MY_Controller {
 
         $districts = $this->workshop_model->get_districts($regency_id);
         echo json_encode($districts);
+    }
+
+    public function get_villages($district_id = null)
+    {
+        if (!$district_id) {
+            echo json_encode([]);
+            return;
+        }
+
+        $villages = $this->workshop_model->get_villages($district_id);
+        echo json_encode($villages);
     }
 }

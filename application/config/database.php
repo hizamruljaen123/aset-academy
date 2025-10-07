@@ -75,9 +75,9 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
+	'hostname' => '103.76.120.91:3306',
 	'username' => 'root',
-	'password' => '',
+	'password' => 'Komputer123@@',
 	'database' => 'academy_lite',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',

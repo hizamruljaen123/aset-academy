@@ -36,7 +36,7 @@ class Workshops extends MY_Controller {
         $data['title'] = 'Detail Workshop/Seminar';
         $data['workshop'] = $this->Workshop_model->get_workshop($id);
         $data['materials'] = $this->Workshop_model->get_materials($id);
-        $data['participants'] = $this->Workshop_model->get_participants($id);
+        $data['participants'] = $this->Workshop_model->get_all_participants($id);
 
         if (!$data['workshop']) {
             show_404();
@@ -287,7 +287,7 @@ class Workshops extends MY_Controller {
         
         $data['title'] = 'Kelola Peserta Workshop';
         $data['workshop'] = $this->Workshop_model->get_workshop($workshop_id);
-        $data['participants'] = $this->Workshop_model->get_participants($workshop_id);
+        $data['participants'] = $this->Workshop_model->get_all_participants($workshop_id);
         
         if (!$data['workshop']) {
             show_404();
@@ -321,7 +321,7 @@ class Workshops extends MY_Controller {
         $workshop_id = $this->decrypt_id($encrypted_workshop_id, 'Workshop ID');
         
         $workshop = $this->Workshop_model->get_workshop($workshop_id);
-        $participants = $this->Workshop_model->get_participants($workshop_id);
+        $participants = $this->Workshop_model->get_all_participants($workshop_id);
         
         if (!$workshop) {
             show_404();
@@ -348,5 +348,51 @@ class Workshops extends MY_Controller {
 
         fclose($output);
         exit;
+    }
+
+    public function delete_participant($participant_id = null)
+    {
+        if (!$participant_id) {
+            show_404();
+        }
+
+        $participant = $this->Workshop_model->get_participant_by_id($participant_id);
+
+        if (!$participant) {
+            $this->session->set_flashdata('error', 'Peserta tidak ditemukan.');
+            redirect('admin/workshops');
+            return;
+        }
+
+        if ($this->Workshop_model->delete_participant_by_id($participant_id)) {
+            $this->session->set_flashdata('success', 'Peserta berhasil dihapus.');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal menghapus peserta.');
+        }
+
+        redirect('admin/workshops/participants/' . $this->encrypt_id($participant->workshop_id));
+    }
+
+    public function delete_guest($guest_id = null)
+    {
+        if (!$guest_id) {
+            show_404();
+        }
+
+        $guest = $this->Workshop_model->get_guest_by_id($guest_id);
+
+        if (!$guest) {
+            $this->session->set_flashdata('error', 'Peserta tamu tidak ditemukan.');
+            redirect('admin/workshops');
+            return;
+        }
+
+        if ($this->Workshop_model->delete_guest_by_id($guest_id)) {
+            $this->session->set_flashdata('success', 'Peserta tamu berhasil dihapus.');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal menghapus peserta tamu.');
+        }
+
+        redirect('admin/workshops/participants/' . $this->encrypt_id($guest->workshop_id));
     }
 }

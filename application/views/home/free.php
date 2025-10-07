@@ -14,13 +14,12 @@
     </section>
 
     <!-- Filter Section -->
-    <section class="py-12 bg-gray-50">
         <div class="container mx-auto px-4">
             <div class="text-center mb-8" data-aos="fade-up">
                 <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Temukan Kelas yang Tepat untuk Anda</h2>
                 
                 <div class="flex flex-wrap justify-center gap-4 mb-8">
-                    <button class="filter-btn active px-6 py-2 bg-blue-600 text-white rounded-full font-medium" data-filter="all">
+                    <button class="filter-btn active px-6 py-2 bg-green-600 text-white rounded-full font-medium" data-filter="all">
                         Semua Kelas
                     </button>
                     <button class="filter-btn px-6 py-2 bg-white text-gray-700 border border-gray-300 rounded-full font-medium" data-filter="pemula">
