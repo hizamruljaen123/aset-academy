@@ -15,7 +15,8 @@ class Home extends MY_Controller {
         $this->load->model('Jadwal_model', 'jadwal_model');
         $this->load->model('Workshop_model', 'workshop_model');
         $this->load->model('Contact_model', 'contact_model');
-        $this->load->helper('url');
+        $this->load->model('Recruitment_model', 'recruitment_model');
+        $this->load->helper(['url', 'text']);
     }
 
     public function index()
@@ -220,6 +221,44 @@ class Home extends MY_Controller {
         $data['description'] = 'Pengembangan software khusus untuk kebutuhan bisnis UMKM. Sistem manajemen, aplikasi kasir, otomasi bisnis, dan solusi digital terintegrasi untuk meningkatkan efisiensi dan produktivitas.';
 
         $this->load->view('home/digital_solutions', $data);
+    }
+
+    public function career()
+    {
+        $filters = [
+            'search' => $this->input->get('q', true),
+            'department' => $this->input->get('department', true),
+            'employment_type' => $this->input->get('employment_type', true),
+            'location' => $this->input->get('location', true),
+            'status_in' => ['Published']
+        ];
+
+        $filters = array_filter($filters, static function ($value) {
+            if (is_array($value)) {
+                return !empty($value);
+            }
+            return $value !== null && $value !== '';
+        });
+
+        $data['title'] = 'Karier di ASET Academy';
+        $data['description'] = 'Bergabung dengan tim ASET Academy dan bantu kami membangun masa depan pendidikan teknologi.';
+        $data['filters'] = $filters;
+        $data['positions'] = $this->recruitment_model->get_job_positions_with_stats($filters);
+        $data['departments'] = $this->recruitment_model->get_departments();
+        $data['stats'] = $this->recruitment_model->get_recruitment_stats();
+
+        try {
+            $this->load->view('career/index', $data);
+        } catch (Throwable $th) {
+            log_message('error', 'Career page error: ' . $th->getMessage());
+            $errorData = [
+                'heading' => 'Terjadi Kesalahan',
+                'message' => 'Maaf, kami tidak dapat menampilkan halaman karier saat ini. Silakan coba lagi nanti.',
+                'error_id' => strtoupper(bin2hex(random_bytes(4)))
+            ];
+            $this->output->set_status_header(500);
+            $this->load->view('errors/html/error_500', $errorData);
+        }
     }
 
     public function contact()

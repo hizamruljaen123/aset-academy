@@ -539,6 +539,12 @@
                         <i class="fas fa-comments w-5 text-center mr-3"></i>
                         Forum
                     </a>
+                    <?php if ($level === '1'): ?>
+                    <a href="<?php echo site_url('admin/recruitment'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1" target="_blank" rel="noopener">
+                        <i class="fas fa-briefcase w-5 text-center mr-3"></i>
+                        Halaman Karier
+                    </a>
+                    <?php endif; ?>
                     <a href="<?php echo site_url('admin/workshop-guests'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'workshop-guests') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-users-cog w-5 text-center mr-3"></i>
                         Workshop Guests

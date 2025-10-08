@@ -171,8 +171,23 @@ class CI_Exceptions {
 		else
 		{
 			set_status_header($status_code);
-			$message = '<p>'.(is_array($message) ? implode('</p><p>', $message) : $message).'</p>';
-			$template = 'html'.DIRECTORY_SEPARATOR.$template;
+			if ($status_code >= 500 && !empty($message))
+			{
+				$error_heading = $heading ?: 'Terjadi Kesalahan';
+				if (is_array($message))
+				{
+					$message = implode(' ', $message);
+				}
+				$error_message = $message ?: 'Maaf, kami tidak dapat menampilkan halaman ini saat ini. Silakan coba lagi nanti.';
+				$heading = $error_heading;
+				$message = '<p>'.$error_message.'</p>';
+				$template = 'html'.DIRECTORY_SEPARATOR.'error_500';
+			}
+			else
+			{
+				$message = '<p>'.(is_array($message) ? implode('</p><p>', $message) : $message).'</p>';
+				$template = 'html'.DIRECTORY_SEPARATOR.$template;
+			}
 		}
 
 		if (ob_get_level() > $this->ob_level + 1)
