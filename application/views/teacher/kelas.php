@@ -64,7 +64,13 @@
                             <h3 class="text-xl font-bold"><?php echo $k->nama_kelas; ?></h3>
                         </div>
                         <div class="p-5">
-                            <p class="text-gray-600 text-sm mb-4 h-10 overflow-hidden"><?php echo $k->deskripsi; ?></p>
+                            
+                            <?php 
+                            $descHtml = html_entity_decode(htmlspecialchars_decode($class->deskripsi, ENT_QUOTES | ENT_HTML5), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                            $descText = strip_tags($descHtml);
+                            $shortDesc = mb_strlen($descText) > 250 ? mb_substr($descText, 0, 250) . '...' : $descText;
+                            ?>
+                            <p class="text-gray-600 text-sm mb-4 h-10 overflow-hidden"><?php echo $shortDesc; ?></p>
                             <div class="flex justify-between text-sm text-gray-600 mb-4">
                                 <span class="flex items-center"><i class="fas fa-signal mr-2 text-cyan-500"></i><?php echo $k->level; ?></span>
                                 <span class="flex items-center"><i class="fas fa-clock mr-2 text-teal-500"></i><?php echo $k->durasi; ?> Jam</span>
@@ -112,7 +118,12 @@
                             <h3 class="text-xl font-bold"><?php echo isset($k->title) ? $k->title : 'Kelas Gratis'; ?></h3>
                         </div>
                         <div class="p-5">
-                            <p class="text-gray-600 text-sm mb-4 h-10 overflow-hidden"><?php echo isset($k->description) ? $k->description : 'Deskripsi kelas belum tersedia.'; ?></p>
+                        <?php 
+                            $descHtml = html_entity_decode(htmlspecialchars_decode($k->description, ENT_QUOTES | ENT_HTML5), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                            $descText = strip_tags($descHtml);
+                            $shortDesc = mb_strlen($descText) > 250 ? mb_substr($descText, 0, 250) . '...' : $descText;
+                            ?>
+                            <p class="text-gray-600 text-sm mb-4 h-10 overflow-hidden"><?php echo $shortDesc; ?></p>
                             <div class="flex justify-between text-sm text-gray-600 mb-4">
                                 <span class="flex items-center"><i class="fas fa-signal mr-2 text-green-500"></i><?php echo isset($k->level) ? $k->level : 'Dasar'; ?></span>
                                 <span class="flex items-center"><i class="fas fa-clock mr-2 text-emerald-500"></i><?php echo isset($k->duration) && $k->duration ? $k->duration : '-'; ?> Jam</span>
