@@ -10,6 +10,7 @@ class ObjectStorage
     protected $s3;
     protected $bucket;
     protected $endpoint;
+    protected $baseUrl;
     protected $prefix = '';
 
     public function __construct($config = [])
@@ -42,12 +43,15 @@ class ObjectStorage
 
         $this->bucket = $cfg['NAME'];
         $this->endpoint = rtrim($cfg['SERVER'], '/');
+        $this->baseUrl = (strpos($cfg['SERVER'], 'http') === 0)
+            ? rtrim($cfg['SERVER'], '/')
+            : 'https://' . rtrim($cfg['SERVER'], '/');
         $this->prefix = isset($cfg['PATH']) ? ltrim($cfg['PATH'], '/') : '';
 
         $clientConfig = [
             'version' => 'latest',
             'region' => $cfg['REGION'] ?? 'us-east-1',
-            'endpoint' => (strpos($this->endpoint, 'http') === 0 ? $this->endpoint : 'https://' . $this->endpoint),
+            'endpoint' => $this->baseUrl,
             'use_path_style_endpoint' => true,
             'credentials' => [
                 'key' => $cfg['ACCESS_KEY'],
@@ -106,7 +110,7 @@ class ObjectStorage
 
             $this->s3->putObject($params);
             // Construct public URL
-            $url = $this->endpoint . '/' . $this->bucket . '/' . $key;
+            $url = $this->baseUrl . '/' . $this->bucket . '/' . $key;
             return $url;
         } catch (AwsException $e) {
             log_message('error', 'ObjectStorage putFile error: ' . $e->getMessage());
@@ -130,6 +134,6 @@ class ObjectStorage
     public function getUrl($remoteKey)
     {
         $key = $this->prefix ? rtrim($this->prefix, '/') . '/' . ltrim($remoteKey, '/') : ltrim($remoteKey, '/');
-        return $this->endpoint . '/' . $this->bucket . '/' . $key;
+        return $this->baseUrl . '/' . $this->bucket . '/' . $key;
     }
 }

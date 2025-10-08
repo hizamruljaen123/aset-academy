@@ -18,14 +18,14 @@ class Guru_model extends CI_Model {
         $this->db->join('kelas_programming kp', 'gk.kelas_id = kp.id');
         $this->db->where('gk.guru_id', $guru_id);
         $this->db->where('gk.status', 'Aktif');
-        $this->db->where('kp.status', 'Aktif');
+        $this->db->where_in('kp.status', ['Aktif', 'Coming Soon']);
         $premium_classes = $this->db->get()->result();
 
         // Get free classes
         $this->db->select('fc.id, fc.title as nama_kelas, fc.category as bahasa_program, fc.level, fc.description, fc.duration as durasi, 0 as harga, fc.status, NULL as assigned_at, "gratis" as class_type, fc.online_meet_link', false);
         $this->db->from('free_classes fc');
         $this->db->where('fc.mentor_id', $guru_id);
-        $this->db->where('fc.status', 'Published');
+        $this->db->where_in('fc.status', ['Published', 'Coming Soon']);
         $free_classes = $this->db->get()->result();
 
         // Combine results

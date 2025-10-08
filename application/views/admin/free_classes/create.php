@@ -105,8 +105,17 @@
             <!-- Thumbnail -->
             <div class="space-y-2">
                 <label for="thumbnail" class="block text-sm font-medium text-gray-700">Thumbnail</label>
-                <input type="file" id="thumbnail" name="thumbnail" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                <p class="text-xs text-gray-500">Format: JPG, JPEG, PNG. Maks: 2MB</p>
+                <div class="flex items-center space-x-4">
+                    <div class="w-32 h-20 border border-dashed border-gray-300 rounded-lg overflow-hidden flex items-center justify-center bg-gray-50">
+                        <img src="" alt="Thumbnail" class="hidden w-full h-full object-cover" id="thumbnail-preview">
+                        <span class="text-gray-400 text-xs text-center px-2" id="thumbnail-placeholder">Belum ada gambar</span>
+                    </div>
+                    <div class="flex-1">
+                        <input type="file" id="thumbnail" name="thumbnail" accept="image/*"
+                               class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md file:mr-4 file:py-2 file:px-4 file:border-0 file:rounded-md file:bg-blue-50 file:text-blue-600 hover:file:bg-blue-100">
+                        <p class="text-xs text-gray-500 mt-2">Format: JPG, JPEG, PNG. Maks: 2MB</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -174,6 +183,31 @@
         var description = document.querySelector('input[name=description]');
         description.value = quill.root.innerHTML;
     };
+
+    const thumbnailInput = document.getElementById('thumbnail');
+    const thumbnailPreview = document.getElementById('thumbnail-preview');
+    const thumbnailPlaceholder = document.getElementById('thumbnail-placeholder');
+
+    if (thumbnailInput) {
+        thumbnailInput.addEventListener('change', function(event) {
+            const file = event.target.files ? event.target.files[0] : null;
+            if (!file) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                if (thumbnailPreview) {
+                    thumbnailPreview.src = e.target.result;
+                    thumbnailPreview.classList.remove('hidden');
+                }
+                if (thumbnailPlaceholder) {
+                    thumbnailPlaceholder.classList.add('hidden');
+                }
+            };
+            reader.readAsDataURL(file);
+        });
+    }
 </script>
 
 <style>

@@ -44,6 +44,7 @@
                                         <div class="flex-1 min-w-0">
                                             <h4 class="text-base font-medium text-gray-900 truncate"><?php echo html_escape($kelas->nama_kelas); ?></h4>
                                             <p class="text-sm text-gray-500"><?php echo html_escape($kelas->bahasa_program); ?> • <?php echo html_escape($kelas->level); ?></p>
+                                            <span class="inline-flex items-center px-2 py-0.5 mt-1 text-xs font-semibold rounded-full <?php echo $kelas->status === 'Aktif' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'; ?>"><?php echo html_escape($kelas->status); ?></span>
                                         </div>
                                         <?php echo form_open('admin_guru/remove_class', ['class' => 'ml-4']); ?>
                                             <input type="hidden" name="teacher_id" value="<?php echo $teacher->id; ?>">
@@ -103,11 +104,11 @@
                 $assigned_free_ids = array_column($assigned_free_kelas, 'id');
 
                 $available_premium_classes = array_filter($all_premium_kelas, function($k) use ($assigned_premium_ids) {
-                    return !in_array($k->id, $assigned_premium_ids) && $k->status == 'Aktif';
+                    return !in_array($k->id, $assigned_premium_ids) && in_array($k->status, ['Aktif', 'Coming Soon']);
                 });
 
                 $available_free_classes = array_filter($all_free_kelas, function($k) use ($assigned_free_ids) {
-                    return !in_array($k->id, $assigned_free_ids) && $k->status == 'Published';
+                    return !in_array($k->id, $assigned_free_ids) && in_array($k->status, ['Published', 'Coming Soon']);
                 });
                 ?>
                 <div class="relative mb-6">

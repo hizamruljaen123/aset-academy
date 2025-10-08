@@ -18,7 +18,8 @@
       <div class="flex items-start gap-4">
         <div class="relative w-20 h-20 rounded-xl bg-gray-100 overflow-hidden flex-shrink-0">
           <?php if (!empty($free_class->thumbnail)): ?>
-            <img src="<?= base_url($free_class->thumbnail) ?>" alt="<?= $free_class->title ?>" class="w-full h-full object-cover">
+            <?php $thumbnailUrl = filter_var($free_class->thumbnail, FILTER_VALIDATE_URL) ? $free_class->thumbnail : base_url($free_class->thumbnail); ?>
+            <img src="<?= $thumbnailUrl ?>" alt="<?= $free_class->title ?>" class="w-full h-full object-cover">
           <?php else: ?>
             <div class="w-full h-full flex items-center justify-center text-gray-400">
               <i class="fas fa-image text-2xl"></i>

@@ -16,7 +16,7 @@
             <div class="flex justify-center mb-8" data-aos="zoom-in">
                 <div class="relative">
                     <div class="w-24 h-24 bg-white/10 backdrop-blur-lg rounded-2xl flex items-center justify-center shadow-2xl border border-white/20">
-                        <i data-feather="handshake" class="w-12 h-12 text-white"></i>
+                        <i data-feather="users" class="w-12 h-12 text-white"></i>
                     </div>
                     <!-- Glow effect -->
                     <div class="absolute inset-0 w-24 h-24 bg-white/20 rounded-2xl blur-lg -z-10"></div>
@@ -37,7 +37,7 @@
             </p>
 
             <div class="flex flex-col sm:flex-row justify-center gap-6" data-aos="fade-up" data-aos-delay="200">
-                <a href="https://wa.me/6281234567890?text=Halo,%20saya%20tertarik%20dengan%20program%20partnership%20Aset%20Academy"
+                <a href="https://wa.me/6289676018562?text=Halo,%20saya%20tertarik%20dengan%20program%20partnership%20Aset%20Academy"
                    class="group px-10 py-5 bg-green-600 text-white font-bold rounded-2xl hover:bg-green-700 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 shadow-2xl hover:shadow-green/25">
                     <i data-feather="message-circle" class="w-6 h-6 group-hover:scale-110 transition-transform"></i>
                     <div class="text-center">
@@ -45,23 +45,10 @@
                         <div class="text-sm opacity-90">Respon dalam 5 menit</div>
                     </div>
                 </a>
-                <a href="#packages" class="group px-10 py-5 bg-white/10 backdrop-blur-md border-2 border-white/30 text-white font-bold rounded-2xl hover:bg-white/20 hover:scale-105 transition-all duration-300 shadow-xl">
-                    Lihat Estimasi Harga
-                </a>
+                
             </div>
 
-            <!-- WhatsApp Priority Notice -->
-            <div class="mt-8 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="300">
-                <div class="flex items-center justify-center gap-3 text-white">
-                    <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                        <i data-feather="message-circle" class="w-5 h-5"></i>
-                    </div>
-                    <div class="text-center">
-                        <p class="font-semibold text-lg">WhatsApp adalah kanal komunikasi utama kami</p>
-                        <p class="text-sm opacity-90">Semua konsultasi, penawaran harga, dan koordinasi dilakukan via WhatsApp untuk kemudahan dan kecepatan</p>
-                    </div>
-                </div>
-            </div>
+           
 
             <!-- Scroll indicator -->
             <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
@@ -465,7 +452,7 @@
                         Kami juga menyediakan model hybrid yang menggabungkan keuntungan online dan offline.
                         Bagian teori dilakukan online, sedangkan praktik intensif dilakukan secara offline.
                     </p>
-                    <a href="https://wa.me/6281234567890?text=Halo,%20saya%20ingin%20tahu%20lebih%20lanjut%20tentang%20program%20hybrid%20training"
+                    <a href="https://wa.me/629676018562?text=Halo,%20saya%20ingin%20tahu%20lebih%20lanjut%20tentang%20program%20hybrid%20training"
                        class="inline-flex items-center gap-3 bg-white text-indigo-600 px-8 py-4 rounded-2xl font-bold hover:bg-gray-50 hover:scale-105 transition-all duration-300 shadow-xl">
                         <i data-feather="message-circle" class="w-6 h-6"></i>
                         Pelajari Hybrid Training
@@ -712,7 +699,7 @@
                                     </div>
                                 </div>
 
-                                <a href="https://wa.me/6281234567890?text=Halo,%20saya%20tertarik%20dengan%20program%20partnership%20Aset%20Academy"
+                                <a href="https://wa.me/6289676018562?text=Halo,%20saya%20tertarik%20dengan%20program%20partnership%20Aset%20Academy"
                                    class="group inline-flex items-center gap-3 bg-green-500 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-green-600 hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl">
                                     <i data-feather="message-circle" class="w-6 h-6 group-hover:scale-110 transition-transform"></i>
                                     Chat WhatsApp Sekarang
@@ -801,7 +788,7 @@
             </div>
 
             <div class="flex flex-col sm:flex-row justify-center gap-6" data-aos="fade-up" data-aos-delay="200">
-                <a href="https://wa.me/6281234567890?text=Halo,%20saya%20tertarik%20dengan%20program%20partnership%20Aset%20Academy"
+                <a href="https://wa.me/629676018562?text=Halo,%20saya%20tertarik%20dengan%20program%20partnership%20Aset%20Academy"
                    class="group px-10 py-5 bg-gradient-to-r from-yellow-400 to-orange-500 text-slate-900 font-bold rounded-2xl hover:from-yellow-300 hover:to-orange-400 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 shadow-2xl hover:shadow-yellow-400/25 text-lg">
                     <i data-feather="message-circle" class="w-6 h-6 group-hover:scale-110 transition-transform"></i>
                     Konsultasi Sekarang

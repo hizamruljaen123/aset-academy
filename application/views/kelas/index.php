@@ -101,7 +101,7 @@
             <?php foreach ($kelas as $k):
                 $levelKey = strtolower($k->level ?? 'Dasar');
                 $hasThumbnail = !empty($k->gambar);
-                $thumbnailPath = $hasThumbnail ? base_url($k->gambar) : '';
+                $thumbnailPath = $hasThumbnail ? $k->gambar : '';
                 $mentor = $this->Kelas_model->get_teachers_by_kelas($k->id);
                 $mentor_name = !empty($mentor) ? $mentor[0]->nama_lengkap : 'Belum ada mentor';
                 $mentor_photo = !empty($mentor) && !empty($mentor[0]->foto_profil) ? $mentor[0]->foto_profil : null;

@@ -21,7 +21,8 @@
             <div class="bg-white rounded-2xl shadow-xl ring-1 ring-gray-200/50 overflow-hidden mb-8 fade-in">
                 <div class="h-64 bg-gray-200 relative">
                     <?php if (!empty($free_class->thumbnail)): ?>
-                        <img src="<?php echo base_url($free_class->thumbnail); ?>" alt="<?php echo $free_class->title; ?>" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <?php $thumbnailUrl = filter_var($free_class->thumbnail, FILTER_VALIDATE_URL) ? $free_class->thumbnail : base_url($free_class->thumbnail); ?>
+                        <img src="<?php echo $thumbnailUrl; ?>" alt="<?php echo $free_class->title; ?>" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         <div class="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center hidden">
                             <i class="fas fa-graduation-cap text-white text-6xl"></i>
                         </div>

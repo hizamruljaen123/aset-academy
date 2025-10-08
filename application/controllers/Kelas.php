@@ -68,6 +68,42 @@ class Kelas extends CI_Controller {
             $this->load->view('kelas/create', $data);
             $this->load->view('templates/footer');
         } else {
+            $thumbnail = null;
+            if (!empty($_FILES['gambar']['name'])) {
+                $config = [
+                    'upload_path' => sys_get_temp_dir(),
+                    'allowed_types' => 'gif|jpg|jpeg|png',
+                    'max_size' => 2048,
+                    'encrypt_name' => TRUE,
+                ];
+
+                $this->load->library('upload');
+                $this->upload->initialize($config);
+
+                if ($this->upload->do_upload('gambar')) {
+                    $upload_data = $this->upload->data();
+                    $localPath = $upload_data['full_path'];
+
+                    $this->load->library('ObjectStorage');
+                    $remoteKey = 'premium_classes/thumbnails/' . date('Y/m') . '/' . $upload_data['file_name'];
+                    $url = $this->objectstorage->putFile($localPath, $remoteKey);
+
+                    if ($url) {
+                        $thumbnail = $url;
+                        @unlink($localPath);
+                    } else {
+                        @unlink($localPath);
+                        $this->session->set_flashdata('error', 'Gagal mengunggah thumbnail ke object storage');
+                        redirect('kelas/create');
+                        return;
+                    }
+                } else {
+                    $this->session->set_flashdata('error', $this->upload->display_errors());
+                    redirect('kelas/create');
+                    return;
+                }
+            }
+
             $data = [
                 'nama_kelas' => $this->input->post('nama_kelas'),
                 'deskripsi' => $this->input->post('deskripsi'),
@@ -76,7 +112,8 @@ class Kelas extends CI_Controller {
                 'durasi' => $this->input->post('durasi'),
                 'harga' => $this->input->post('harga'),
                 'status' => $this->input->post('status'),
-                'online_meet_link' => $this->input->post('online_meet_link')
+                'online_meet_link' => $this->input->post('online_meet_link'),
+                'gambar' => $thumbnail,
             ];
 
             // Temporarily disable foreign key checks
@@ -122,7 +159,43 @@ class Kelas extends CI_Controller {
             $this->load->view('kelas/edit', $data);
             $this->load->view('templates/footer');
         } else {
-            $data = [
+            $thumbnail = $data['kelas']->gambar ?? null;
+            if (!empty($_FILES['gambar']['name'])) {
+                $config = [
+                    'upload_path' => sys_get_temp_dir(),
+                    'allowed_types' => 'gif|jpg|jpeg|png',
+                    'max_size' => 2048,
+                    'encrypt_name' => TRUE,
+                ];
+
+                $this->load->library('upload');
+                $this->upload->initialize($config);
+
+                if ($this->upload->do_upload('gambar')) {
+                    $upload_data = $this->upload->data();
+                    $localPath = $upload_data['full_path'];
+
+                    $this->load->library('ObjectStorage');
+                    $remoteKey = 'premium_classes/thumbnails/' . date('Y/m') . '/' . $upload_data['file_name'];
+                    $url = $this->objectstorage->putFile($localPath, $remoteKey);
+
+                    if ($url) {
+                        $thumbnail = $url;
+                        @unlink($localPath);
+                    } else {
+                        @unlink($localPath);
+                        $this->session->set_flashdata('error', 'Gagal mengunggah thumbnail ke object storage');
+                        redirect('kelas/edit/' . $id);
+                        return;
+                    }
+                } else {
+                    $this->session->set_flashdata('error', $this->upload->display_errors());
+                    redirect('kelas/edit/' . $id);
+                    return;
+                }
+            }
+
+            $payload = [
                 'nama_kelas' => $this->input->post('nama_kelas'),
                 'deskripsi' => $this->input->post('deskripsi'),
                 'level' => $this->input->post('level'),
@@ -130,13 +203,14 @@ class Kelas extends CI_Controller {
                 'durasi' => $this->input->post('durasi'),
                 'harga' => $this->input->post('harga'),
                 'status' => $this->input->post('status'),
-                'online_meet_link' => $this->input->post('online_meet_link')
+                'online_meet_link' => $this->input->post('online_meet_link'),
+                'gambar' => $thumbnail,
             ];
 
             // Temporarily disable foreign key checks
             $this->db->query('SET FOREIGN_KEY_CHECKS = 0');
 
-            $this->Kelas_model->update_kelas($id, $data);
+            $this->Kelas_model->update_kelas($id, $payload);
             $this->session->set_flashdata('success', 'Data kelas berhasil diupdate');
 
             // Re-enable foreign key checks

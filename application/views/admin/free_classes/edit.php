@@ -86,8 +86,9 @@
                 <div class="space-y-2">
                     <label for="thumbnail" class="block text-sm font-medium text-gray-700">Thumbnail</label>
                     <?php if (!empty($free_class->thumbnail)): ?>
+                        <?php $thumbnailUrl = filter_var($free_class->thumbnail, FILTER_VALIDATE_URL) ? $free_class->thumbnail : base_url($free_class->thumbnail); ?>
                         <div class="mb-2">
-                            <img src="<?php echo base_url($free_class->thumbnail); ?>" alt="Thumbnail" class="h-24 w-auto rounded-md">
+                            <img src="<?php echo $thumbnailUrl; ?>" alt="Thumbnail" class="h-24 w-auto rounded-md">
                         </div>
                     <?php endif; ?>
                     <input type="file" id="thumbnail" name="thumbnail" class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
@@ -108,83 +109,7 @@
         <?php echo form_close(); ?>
     </div>
 
-    <!-- Materials Section -->
-    <div class="mt-12 pt-6 border-t border-gray-200">
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="text-xl font-bold text-gray-800">Materi Pembelajaran</h3>
-            <a href="<?php echo site_url('admin/free_classes/add_material/' . $free_class->id); ?>" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 hover:scale-105">
-                <i class="fas fa-plus mr-2"></i>
-                Tambah Materi
-            </a>
-        </div>
-
-        <?php if (empty($materials)): ?>
-            <div class="bg-gray-50 p-6 rounded-lg text-center">
-                <i class="fas fa-book-open text-gray-400 text-4xl mb-3"></i>
-                <p class="text-gray-500">Belum ada materi untuk kelas ini. Klik tombol "Tambah Materi" untuk menambahkan materi baru.</p>
-            </div>
-        <?php else: ?>
-            <div class="space-y-4">
-                <?php foreach ($materials as $material): ?>
-                    <div class="bg-white p-4 rounded-lg shadow-sm border flex justify-between items-center">
-                        <div>
-                            <h4 class="font-semibold text-gray-800"><?php echo $material->title; ?></h4>
-                            <p class="text-sm text-gray-500"><?php echo $material->description; ?></p>
-                        </div>
-                        <div class="flex space-x-2">
-                            <a href="<?php echo site_url('admin/free_classes/edit_material/' . $material->id); ?>" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                            <a href="<?php echo site_url('admin/free_classes/delete_material/' . $material->id); ?>" class="text-red-600 hover:text-red-900" onclick="return confirm('Yakin ingin menghapus materi ini?');">Hapus</a>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Urutan</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Judul</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipe</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <?php foreach ($materials as $material): ?>
-                            <tr class="hover:bg-gray-50 transition-colors">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <?php echo $material->order; ?>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900"><?php echo $material->title; ?></div>
-                                    <div class="text-xs text-gray-500"><?php echo substr(strip_tags($material->description), 0, 50) . '...'; ?></div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                        <?php 
-                                        if ($material->content_type == 'text') echo 'bg-blue-100 text-blue-800';
-                                        elseif ($material->content_type == 'video') echo 'bg-red-100 text-red-800';
-                                        elseif ($material->content_type == 'pdf') echo 'bg-orange-100 text-orange-800';
-                                        else echo 'bg-green-100 text-green-800';
-                                        ?>">
-                                        <?php echo ucfirst($material->content_type); ?>
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <div class="flex space-x-2">
-                                        <a href="<?php echo site_url('admin/free_classes/edit_material/' . $material->id); ?>" class="text-indigo-600 hover:text-indigo-900" title="Edit">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a href="<?php echo site_url('admin/free_classes/delete_material/' . $material->id); ?>" class="text-red-600 hover:text-red-900" title="Hapus" onclick="return confirm('Apakah Anda yakin ingin menghapus materi ini?');">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        <?php endif; ?>
     </div>
-</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

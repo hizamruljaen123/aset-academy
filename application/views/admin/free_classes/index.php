@@ -115,7 +115,7 @@
                             <?php foreach ($groupedClasses[$level] as $class): ?>
                                 <?php
                                     $hasThumbnail = !empty($class->thumbnail);
-                                    $thumbnailPath = $hasThumbnail ? base_url($class->thumbnail) : '';
+                                    $thumbnailPath = $hasThumbnail ? $class->thumbnail : '';
                                 ?>
                                 <div class="group rounded-3xl border border-gray-100 bg-white/80 shadow-sm hover:shadow-xl transition-all overflow-hidden">
                                     <div class="relative">

@@ -18,7 +18,7 @@
     <!-- Form Card -->
     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
         <div class="px-8 py-6">
-            <?php echo form_open('kelas/edit/'.$kelas->id, ['class' => 'space-y-8']); ?>
+            <?php echo form_open_multipart('kelas/edit/'.$kelas->id, ['class' => 'space-y-8']); ?>
 
             <!-- Basic Information Section -->
             <div class="space-y-6">
@@ -29,7 +29,16 @@
                     <h2 class="text-xl font-semibold text-gray-800">Informasi Dasar</h2>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <?php
+                    $thumbnailUrl = '';
+                    if (!empty($kelas->gambar)) {
+                        $thumbnailUrl = filter_var($kelas->gambar, FILTER_VALIDATE_URL)
+                            ? $kelas->gambar
+                            : base_url($kelas->gambar);
+                    }
+                ?>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Nama Kelas -->
                     <div class="space-y-2">
                         <label for="nama_kelas" class="block text-sm font-medium text-gray-700 flex items-center">
@@ -65,6 +74,32 @@
                             <?php endif; ?>
                         </select>
                         <?php echo form_error('category_id', '<p class="mt-1 text-sm text-red-600">', '</p>'); ?>
+                    </div>
+
+                    <!-- Thumbnail -->
+                    <div class="space-y-2">
+                        <label for="gambar" class="block text-sm font-medium text-gray-700 flex items-center">
+                            <i class="fas fa-image text-purple-500 mr-2"></i>
+                            Thumbnail Kelas
+                        </label>
+                        <div class="flex items-center space-x-4">
+                            <div class="w-32 h-20 border border-dashed border-gray-300 rounded-lg overflow-hidden flex items-center justify-center bg-gray-50">
+                                <?php if (!empty($thumbnailUrl)): ?>
+                                    <img src="<?php echo $thumbnailUrl; ?>" alt="Thumbnail" class="w-full h-full object-cover" id="thumbnail-preview">
+                                <?php else: ?>
+                                    <img src="" alt="Thumbnail" class="hidden w-full h-full object-cover" id="thumbnail-preview">
+                                    <span class="text-gray-400 text-xs text-center px-2" id="thumbnail-placeholder">Belum ada gambar</span>
+                                <?php endif; ?>
+                            </div>
+                            <div class="flex-1">
+                                <input type="file" id="gambar" name="gambar" accept="image/*"
+                                       class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-600 hover:file:bg-blue-100" />
+                                <p class="mt-2 text-xs text-gray-500">Format: JPG, JPEG, PNG. Maks 2MB.</p>
+                                <?php if (!empty($kelas->gambar)): ?>
+                                    <input type="hidden" name="existing_gambar" value="<?php echo htmlspecialchars($kelas->gambar, ENT_QUOTES, 'UTF-8'); ?>">
+                                <?php endif; ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -231,6 +266,31 @@
 <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 
 <script>
+const thumbnailInput = document.getElementById('gambar');
+const thumbnailPreview = document.getElementById('thumbnail-preview');
+const thumbnailPlaceholder = document.getElementById('thumbnail-placeholder');
+
+if (thumbnailInput) {
+    thumbnailInput.addEventListener('change', function(event) {
+        const file = event.target.files ? event.target.files[0] : null;
+        if (!file) {
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            if (thumbnailPreview) {
+                thumbnailPreview.src = e.target.result;
+                thumbnailPreview.classList.remove('hidden');
+            }
+            if (thumbnailPlaceholder) {
+                thumbnailPlaceholder.classList.add('hidden');
+            }
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
 // Initialize Quill editor
 var quill = new Quill('#editor', {
     theme: 'snow',
@@ -258,10 +318,7 @@ quill.on('text-change', function() {
     document.getElementById('deskripsi').value = quill.root.innerHTML;
 });
 
-// Update textarea on form submit
-document.querySelector('form').addEventListener('submit', function() {
-    document.getElementById('deskripsi').value = quill.root.innerHTML;
-});
+// Remove extra form call
 </script>
 
 <?php $this->load->view('templates/footer'); ?>

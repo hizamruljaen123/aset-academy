@@ -80,27 +80,40 @@ class Free_classes extends CI_Controller {
             $this->load->view('admin/free_classes/create', $data);
             $this->load->view('templates/footer');
         } else {
-            // Handle thumbnail upload
+            // Handle thumbnail upload via object storage
             $thumbnail = '';
             if (!empty($_FILES['thumbnail']['name'])) {
-                $config['upload_path'] = './uploads/free_classes/';
-                $config['allowed_types'] = 'gif|jpg|jpeg|png';
-                $config['max_size'] = 2048; // 2MB
-                $config['file_name'] = 'class_' . time();
-                
-                // Create directory if it doesn't exist
-                if (!is_dir($config['upload_path'])) {
-                    mkdir($config['upload_path'], 0777, TRUE);
-                }
-                
-                $this->load->library('upload', $config);
-                
+                $config = [
+                    'upload_path' => sys_get_temp_dir(),
+                    'allowed_types' => 'gif|jpg|jpeg|png',
+                    'max_size' => 2048,
+                    'encrypt_name' => TRUE,
+                ];
+
+                $this->load->library('upload');
+                $this->upload->initialize($config);
+
                 if ($this->upload->do_upload('thumbnail')) {
                     $upload_data = $this->upload->data();
-                    $thumbnail = 'uploads/free_classes/' . $upload_data['file_name'];
+                    $localPath = $upload_data['full_path'];
+
+                    $this->load->library('ObjectStorage');
+                    $remoteKey = 'free_classes/thumbnails/' . date('Y/m') . '/' . $upload_data['file_name'];
+                    $url = $this->objectstorage->putFile($localPath, $remoteKey);
+
+                    if ($url) {
+                        $thumbnail = $url;
+                        @unlink($localPath);
+                    } else {
+                        @unlink($localPath);
+                        $this->session->set_flashdata('error', 'Gagal mengunggah thumbnail ke object storage');
+                        redirect('admin/free_classes/create');
+                        return;
+                    }
                 } else {
                     $this->session->set_flashdata('error', $this->upload->display_errors());
                     redirect('admin/free_classes/create');
+                    return;
                 }
             }
             
@@ -169,32 +182,47 @@ class Free_classes extends CI_Controller {
             $this->load->view('admin/free_classes/edit', $data);
             $this->load->view('templates/footer');
         } else {
-            // Handle thumbnail upload
+            // Handle thumbnail upload via object storage
             $thumbnail = $data['free_class']->thumbnail;
             if (!empty($_FILES['thumbnail']['name'])) {
-                $config['upload_path'] = './uploads/free_classes/';
-                $config['allowed_types'] = 'gif|jpg|jpeg|png';
-                $config['max_size'] = 2048; // 2MB
-                $config['file_name'] = 'class_' . time();
-                
-                // Create directory if it doesn't exist
-                if (!is_dir($config['upload_path'])) {
-                    mkdir($config['upload_path'], 0777, TRUE);
-                }
-                
-                $this->load->library('upload', $config);
-                
+                $config = [
+                    'upload_path' => sys_get_temp_dir(),
+                    'allowed_types' => 'gif|jpg|jpeg|png',
+                    'max_size' => 2048,
+                    'encrypt_name' => TRUE,
+                ];
+
+                $this->load->library('upload');
+                $this->upload->initialize($config);
+
                 if ($this->upload->do_upload('thumbnail')) {
                     $upload_data = $this->upload->data();
-                    $thumbnail = 'uploads/free_classes/' . $upload_data['file_name'];
-                    
-                    // Delete old thumbnail if exists
-                    if (!empty($data['free_class']->thumbnail) && file_exists('./' . $data['free_class']->thumbnail)) {
-                        unlink('./' . $data['free_class']->thumbnail);
+                    $localPath = $upload_data['full_path'];
+
+                    $this->load->library('ObjectStorage');
+                    $remoteKey = 'free_classes/thumbnails/' . date('Y/m') . '/' . $upload_data['file_name'];
+                    $url = $this->objectstorage->putFile($localPath, $remoteKey);
+
+                    if ($url) {
+                        $thumbnail = $url;
+                        @unlink($localPath);
+
+                        // Delete old thumbnail if it was stored locally
+                        if (!empty($data['free_class']->thumbnail)
+                            && !filter_var($data['free_class']->thumbnail, FILTER_VALIDATE_URL)
+                            && file_exists('./' . $data['free_class']->thumbnail)) {
+                            unlink('./' . $data['free_class']->thumbnail);
+                        }
+                    } else {
+                        @unlink($localPath);
+                        $this->session->set_flashdata('error', 'Gagal mengunggah thumbnail ke object storage');
+                        redirect('admin/free_classes/edit/' . $id);
+                        return;
                     }
                 } else {
                     $this->session->set_flashdata('error', $this->upload->display_errors());
                     redirect('admin/free_classes/edit/' . $id);
+                    return;
                 }
             }
             
@@ -232,7 +260,9 @@ class Free_classes extends CI_Controller {
         }
         
         // Delete thumbnail if exists
-        if (!empty($free_class->thumbnail) && file_exists('./' . $free_class->thumbnail)) {
+        if (!empty($free_class->thumbnail)
+            && !filter_var($free_class->thumbnail, FILTER_VALIDATE_URL)
+            && file_exists('./' . $free_class->thumbnail)) {
             unlink('./' . $free_class->thumbnail);
         }
         
