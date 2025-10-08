@@ -82,6 +82,16 @@ class Jadwal_model extends CI_Model {
         ]);
     }
 
+    public function update_workshop_timing($workshop_id, $start_datetime, $end_datetime)
+    {
+        $this->db->where('id', $workshop_id);
+        return $this->db->update('workshops', [
+            'start_datetime' => $start_datetime,
+            'end_datetime' => $end_datetime,
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+    }
+
     public function get_all_jadwal()
     {
         return $this->db->get('jadwal_kelas_view')->result();

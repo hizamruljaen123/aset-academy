@@ -13,7 +13,19 @@ class Workshops extends MY_Controller {
     public function index()
     {
         // Get all published workshops and seminars
-        $data['workshops'] = $this->workshop_model->get_all_workshops();
+        $workshops = $this->workshop_model->get_all_workshops();
+
+        // Map participant counts from view to each workshop
+        $participantCounts = $this->workshop_model->get_participant_counts_for_workshops(array_column($workshops, 'id'));
+
+        foreach ($workshops as &$workshop) {
+            $workshopId = $workshop->id;
+            $workshop->participant_count = $participantCounts[$workshopId]['total'] ?? 0;
+            $workshop->registered_count = $participantCounts[$workshopId]['registered'] ?? 0;
+        }
+        unset($workshop);
+
+        $data['workshops'] = $workshops;
         $data['title'] = 'Workshop & Seminar - Aset Academy';
         $data['description'] = 'Jelajahi berbagai workshop dan seminar programming berkualitas untuk meningkatkan kemampuan Anda.';
 
@@ -38,9 +50,9 @@ class Workshops extends MY_Controller {
         // Get workshop materials
         $materials = $this->workshop_model->get_materials($workshop->id);
 
-        // Get workshop participants count
-        $participants = $this->workshop_model->get_participants($workshop->id);
-        $participant_count = count($participants);
+        // Get participant counts (combined members + guests)
+        $participant_count = $this->workshop_model->count_all_participants($workshop->id);
+        $participants = $this->workshop_model->get_all_participants($workshop->id);
 
         // Get provinces for dropdown
         $provinces = $this->workshop_model->get_provinces();
@@ -96,8 +108,8 @@ class Workshops extends MY_Controller {
         }
 
         // Check participant limit
-        $participants = $this->workshop_model->get_participants($workshop->id);
-        if ($workshop->max_participants > 0 && count($participants) >= $workshop->max_participants) {
+        $participant_total = $this->workshop_model->count_all_participants($workshop->id);
+        if ($workshop->max_participants > 0 && $participant_total >= $workshop->max_participants) {
             $this->session->set_flashdata('error', 'Maaf, workshop/seminar ini sudah penuh.');
             redirect('workshops/detail/' . $id);
         }

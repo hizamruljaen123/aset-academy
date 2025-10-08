@@ -106,6 +106,10 @@
                                 <i class="fas fa-question-circle mr-3 text-purple-500"></i>
                                 <span>FAQ</span>
                             </a>
+                            <a href="<?= site_url('contact') ?>" class="flex items-center px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 rounded-lg transition-colors">
+                                <i class="fas fa-headset mr-3 text-green-500"></i>
+                                <span>Hubungi Kami</span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -173,6 +177,9 @@
                     </a>
                     <a href="<?= site_url('home/faq') ?>" class="flex items-center px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
                         <i class="fas fa-question-circle mr-3 text-purple-500"></i>FAQ
+                    </a>
+                    <a href="<?= site_url('contact') ?>" class="flex items-center px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600 rounded-lg transition-colors">
+                        <i class="fas fa-headset mr-3 text-green-500"></i>Hubungi Kami
                     </a>
                 </div>
 

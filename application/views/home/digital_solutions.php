@@ -36,7 +36,7 @@
             </p>
 
             <div class="flex flex-col sm:flex-row justify-center gap-6" data-aos="fade-up" data-aos-delay="200">
-                <a href="https://wa.me/6281234567890?text=Halo,%20saya%20ingin%20konsultasi%20pengembangan%20software%20untuk%20bisnis%20UMKM%20saya"
+                <a href="https://wa.me/6289676018562?text=Halo,%20saya%20ingin%20konsultasi%20pengembangan%20software%20untuk%20bisnis%20UMKM%20saya"
                    class="group px-10 py-5 bg-white text-emerald-600 font-bold rounded-2xl hover:bg-gray-50 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 shadow-2xl hover:shadow-white/25">
                     <i data-feather="message-circle" class="w-6 h-6 group-hover:scale-110 transition-transform"></i>
                     Konsultasi Gratis
@@ -133,7 +133,7 @@
                         </li>
                     </ul>
                     <div class="text-center">
-                        <a href="https://wa.me/6281234567890?text=Halo,%20saya%20ingin%20konsultasi%20pengembangan%20website"
+                        <a href="https://wa.me/6289676018562?text=Halo,%20saya%20ingin%20konsultasi%20pengembangan%20website"
                            class="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-2xl hover:from-blue-600 hover:to-blue-700 transition-all duration-300 text-center font-medium">
                             Konsultasi Website
                         </a>
@@ -179,7 +179,7 @@
                         </li>
                     </ul>
                     <div class="text-center">
-                        <a href="https://wa.me/6281234567890?text=Halo,%20saya%20ingin%20konsultasi%20solusi%20e-commerce"
+                        <a href="https://wa.me/6289676018562?text=Halo,%20saya%20ingin%20konsultasi%20solusi%20e-commerce"
                            class="w-full bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-2xl hover:from-green-600 hover:to-green-700 transition-all duration-300 text-center font-medium">
                             Konsultasi E-commerce
                         </a>
@@ -225,7 +225,7 @@
                         </li>
                     </ul>
                     <div class="text-center">
-                        <a href="https://wa.me/6281234567890?text=Halo,%20saya%20ingin%20konsultasi%20digital%20marketing"
+                        <a href="https://wa.me/6289676018562?text=Halo,%20saya%20ingin%20konsultasi%20digital%20marketing"
                            class="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-3 rounded-2xl hover:from-purple-600 hover:to-purple-700 transition-all duration-300 text-center font-medium">
                             Konsultasi Marketing
                         </a>
@@ -271,7 +271,7 @@
                         </li>
                     </ul>
                     <div class="text-center">
-                        <a href="https://wa.me/6281234567890?text=Halo,%20saya%20ingin%20konsultasi%20otomasi%20bisnis"
+                        <a href="https://wa.me/6289676018562?text=Halo,%20saya%20ingin%20konsultasi%20otomasi%20bisnis"
                            class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-2xl hover:from-orange-600 hover:to-orange-700 transition-all duration-300 text-center font-medium">
                             Konsultasi Otomasi
                         </a>
@@ -317,7 +317,7 @@
                         </li>
                     </ul>
                     <div class="text-center">
-                        <a href="https://wa.me/6281234567890?text=Halo,%20saya%20ingin%20konsultasi%20pengembangan%20mobile%20app"
+                        <a href="https://wa.me/6289676018562?text=Halo,%20saya%20ingin%20konsultasi%20pengembangan%20mobile%20app"
                            class="w-full bg-gradient-to-r from-pink-500 to-pink-600 text-white px-6 py-3 rounded-2xl hover:from-pink-600 hover:to-pink-700 transition-all duration-300 text-center font-medium">
                             Konsultasi Mobile App
                         </a>
@@ -363,7 +363,7 @@
                         </li>
                     </ul>
                     <div class="text-center">
-                        <a href="https://wa.me/6281234567890?text=Halo,%20saya%20ingin%20konsultasi%20system%20integration"
+                        <a href="https://wa.me/6289676018562?text=Halo,%20saya%20ingin%20konsultasi%20system%20integration"
                            class="w-full bg-gradient-to-r from-teal-500 to-teal-600 text-white px-6 py-3 rounded-2xl hover:from-teal-600 hover:to-teal-700 transition-all duration-300 text-center font-medium">
                             Konsultasi Integration
                         </a>
@@ -443,7 +443,7 @@
             </p>
 
             <div class="flex flex-col sm:flex-row justify-center gap-6" data-aos="fade-up" data-aos-delay="200">
-                <a href="https://wa.me/6281234567890?text=Halo,%20saya%20siap%20mulai%20transformasi%20digital%20untuk%20bisnis%20saya"
+                <a href="https://wa.me/6289676018562?text=Halo,%20saya%20siap%20mulai%20transformasi%20digital%20untuk%20bisnis%20saya"
                    class="group px-10 py-5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold rounded-2xl hover:from-emerald-600 hover:to-teal-600 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 shadow-2xl hover:shadow-emerald/25 text-lg">
                     <i data-feather="zap" class="w-6 h-6 group-hover:scale-110 transition-transform"></i>
                     Mulai Transformasi

@@ -25,16 +25,16 @@
                         <li><a href="<?= site_url('home/about') ?>" class="text-gray-400 hover:text-white transition-colors">Tentang Kami</a></li>
                         <li><a href="<?= site_url('home/partnership') ?>" class="text-gray-400 hover:text-white transition-colors">Kemitraan</a></li>
                         <li><a href="<?= site_url('documentation') ?>" class="text-gray-400 hover:text-white transition-colors">Dokumentasi</a></li>
-                        <li><a href="<?= site_url('sitemap.xml') ?>" class="text-gray-400 hover:text-white transition-colors">Sitemap</a></li>
+                        <li><a href="<?= site_url('contact') ?>" class="text-gray-400 hover:text-white transition-colors">Hubungi Kami</a></li>
                     </ul>
                 </div>
                 
                 <div>
                     <h3 class="text-lg font-bold mb-6">Kontak</h3>
                     <div class="space-y-3 text-gray-400">
-                        <p class="flex items-center"><i data-feather="mail" class="w-5 h-5 mr-3"></i> hello@asetacademy.com</p>
-                        <p class="flex items-center"><i data-feather="phone" class="w-5 h-5 mr-3"></i> +62 812 3456 7890</p>
-                        <p class="flex items-center"><i data-feather="map-pin" class="w-5 h-5 mr-3"></i> Jakarta, Indonesia</p>
+                        <p class="flex items-center"><i data-feather="mail" class="w-5 h-5 mr-3"></i> support@asetacademy.id</p>
+                        <p class="flex items-center"><i data-feather="phone" class="w-5 h-5 mr-3"></i> +62 896-7601-8562</p>
+                        <p class="flex items-center"><i data-feather="map-pin" class="w-5 h-5 mr-3"></i> Jl. Teknologi No. 123, Jakarta Selatan</p>
                     </div>
                 </div>
             </div>

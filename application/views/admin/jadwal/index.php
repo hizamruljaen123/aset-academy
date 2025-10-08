@@ -55,7 +55,7 @@
                         <?php foreach ($jadwal as $j): ?>
                             <?php if (isset($j->class_type) && $j->class_type == 'workshop'): ?>
                                 <!-- Workshop Row -->
-                                <tr class="bg-green-50 hover:bg-green-100">
+                                <tr class="bg-green-50 hover:bg-green-100" data-event-id="workshop_<?= $j->id; ?>">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                             <i class="fas fa-users mr-1"></i>
@@ -71,45 +71,40 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         <?= $j->judul_pertemuan; ?>
                                         <?php if (!empty($j->location)): ?>
-                                            <br><small class="text-gray-400"><i class="fas fa-map-marker-alt"></i> <?= $j->location; ?></small>
+                                            <br><small class="text-gray-400" data-field="location"><i class="fas fa-map-marker-alt"></i> <?= $j->location; ?></small>
                                         <?php endif; ?>
                                         <?php if (!empty($j->online_meet)): ?>
-                                            <br><small class="text-blue-600"><i class="fas fa-video"></i> Online Meeting</small>
+                                            <br><small class="text-blue-600" data-field="online_meet"><i class="fas fa-video"></i> Online Meeting</small>
                                         <?php endif; ?>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= date('d M Y', strtotime($j->tanggal_pertemuan)); ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= date('H:i', strtotime($j->waktu_mulai)); ?> - <?= date('H:i', strtotime($j->waktu_selesai)); ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" data-field="date"><?= date('d M Y', strtotime($j->tanggal_pertemuan)); ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" data-field="time"><?= date('H:i', strtotime($j->waktu_mulai)); ?> - <?= date('H:i', strtotime($j->waktu_selesai)); ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800" data-field="event_type">
                                             <i class="fas fa-user-tie mr-1"></i>
                                             Event
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <a href="<?= admin_workshop_url($j->id); ?>" class="text-green-600 hover:text-green-900">
-                                            <i class="fas fa-edit mr-1"></i>Edit
-                                        </a>
-                                        <span class="text-gray-400 mx-2">|</span>
-                                        <a href="<?= site_url('admin/workshops/delete/' . encrypt_url($j->id)); ?>" class="text-red-600 hover:text-red-900" onclick="return confirm('Apakah Anda yakin ingin menghapus workshop ini?');">
-                                            <i class="fas fa-trash mr-1"></i>Hapus
+                                        <a href="<?= site_url('admin/workshops/detail/' . encrypt_url($j->id)); ?>" class="text-green-600 hover:text-green-900">
+                                            <i class="fas fa-eye mr-1"></i>Lihat
                                         </a>
                                     </td>
                                 </tr>
                             <?php else: ?>
                                 <!-- Class Schedule Row -->
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                <tr class="hover:bg-gray-50" data-event-id="<?= $j->id; ?>">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" data-field="class_type">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
                                             <?php if($j->class_type == 'premium'): ?>bg-yellow-100 text-yellow-800<?php else: ?>bg-blue-100 text-blue-800<?php endif; ?>">
                                             <?php if($j->class_type == 'premium'): ?><i class="fas fa-star mr-1"></i><?php else: ?><i class="fas fa-gift mr-1"></i><?php endif; ?>
                                             <?= ucfirst($j->class_type); ?>
-                                        </span><br>
                                         <span class="text-sm text-gray-600 mt-1 block"><?= $j->nama_kelas; ?></span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Pertemuan <?= $j->pertemuan_ke; ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $j->judul_pertemuan; ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= date('d M Y', strtotime($j->tanggal_pertemuan)); ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= date('H:i', strtotime($j->waktu_mulai)); ?> - <?= date('H:i', strtotime($j->waktu_selesai)); ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" data-field="date"><?= date('d M Y', strtotime($j->tanggal_pertemuan)); ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" data-field="time"><?= date('H:i', strtotime($j->waktu_mulai)); ?> - <?= date('H:i', strtotime($j->waktu_selesai)); ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $j->nama_guru; ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <a href="<?= site_url('admin/jadwal/edit/' . $j->id); ?>" class="text-indigo-600 hover:text-indigo-900">Edit</a>

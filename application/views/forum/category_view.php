@@ -19,7 +19,12 @@
         <div class="space-y-4">
             <?php if (!empty($threads)): ?>
                 <?php foreach ($threads as $thread): ?>
-                    <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
+                    <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden relative">
+                        <?php if (!empty($is_super_admin) && $is_super_admin): ?>
+                            <?php echo form_open('forum/delete_thread/' . $thread->id, ['class' => 'absolute top-3 right-4', 'onsubmit' => "return confirm('Hapus diskusi ini beserta semua komentar?');"]); ?>
+                                <button type="submit" class="text-sm font-semibold text-gray-400 " title="Hapus">x</button>
+                            <?php echo form_close(); ?>
+                        <?php endif; ?>
                         <div class="p-6">
                             <div class="flex items-start">
                                 <!-- Author Avatar -->
@@ -32,7 +37,7 @@
                                 <!-- Thread Content -->
                                 <div class="ml-4 flex-1">
                                     <div class="flex items-center justify-between">
-                                        <h3 class="text-lg font-medium text-gray-900 hover:text-blue-600 transition-colors duration-150">
+                                        <h3 class="text-lg font-medium text-gray-900 hover:text-blue-600 transition-colors duration-150 pr-8">
                                             <a href="<?php echo site_url('forum/thread/' . $thread->id); ?>">
                                                 <?php if ($thread->is_pinned): ?>
                                                     <span class="text-yellow-500 mr-2"><i class="fas fa-thumbtack"></i></span>
@@ -40,9 +45,6 @@
                                                 <?php echo $thread->title; ?>
                                             </a>
                                         </h3>
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                            Menunggu
-                                        </span>
                                     </div>
                                     
                                     <div class="mt-1 text-sm text-gray-500">
@@ -95,7 +97,10 @@
                                     <?php endif; ?>
                                     
                                     <div class="mt-3 flex items-center justify-between text-sm text-gray-500">
-                                        <div class="flex space-x-4">
+                                        <div class="flex items-center space-x-4">
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                Menunggu
+                                            </span>
                                             <span class="inline-flex items-center">
                                                 <i class="far fa-comment-alt mr-1"></i>
                                                 <?php echo $thread->post_count . ' ' . ($thread->post_count == 1 ? 'Jawaban' : 'Jawaban'); ?>

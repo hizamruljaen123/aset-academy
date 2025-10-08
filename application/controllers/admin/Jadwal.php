@@ -125,7 +125,16 @@ class Jadwal extends CI_Controller {
             $waktuMulai = $startDate->format('H:i:s');
             $waktuSelesai = $endDate->format('H:i:s');
 
-            $updated = $this->Jadwal_model->update_jadwal_timing($id, $tanggal, $waktuMulai, $waktuSelesai);
+            if (strpos($id, 'workshop_') === 0) {
+                $workshopId = (int)str_replace('workshop_', '', $id);
+                $updated = $this->Jadwal_model->update_workshop_timing(
+                    $workshopId,
+                    $startDate->format('Y-m-d H:i:s'),
+                    $endDate->format('Y-m-d H:i:s')
+                );
+            } else {
+                $updated = $this->Jadwal_model->update_jadwal_timing($id, $tanggal, $waktuMulai, $waktuSelesai);
+            }
 
             if ($updated) {
                 $this->output

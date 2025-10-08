@@ -46,6 +46,33 @@ class Forum extends CI_Controller {
         $this->load->view('templates/footer');
     }
 
+    public function delete_thread($thread_id)
+    {
+        if ($this->session->userdata('role') !== 'super_admin') {
+            show_error('Access denied. Only super admin can delete threads.', 403);
+        }
+
+        $thread = $this->forum->get_thread($thread_id);
+        if (!$thread) {
+            show_404();
+        }
+
+        if ($this->forum->delete_thread($thread_id)) {
+            $this->session->set_flashdata('success', 'Diskusi berhasil dihapus.');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal menghapus diskusi.');
+        }
+
+        $category = $this->forum->get_category($thread->category_id);
+        $category_slug = $category ? $category->slug : null;
+
+        if ($category_slug) {
+            redirect('forum/category/' . $category_slug);
+        }
+
+        redirect('forum');
+    }
+
     public function category($slug, $offset = 0)
     {
         $data['category'] = $this->forum->get_category_by_slug($slug);
@@ -60,6 +87,7 @@ class Forum extends CI_Controller {
         }
         $data['threads'] = $threads;
         $data['title'] = $data['category']->name;
+        $data['is_super_admin'] = $this->session->userdata('role') === 'super_admin';
 
         $config['base_url'] = site_url('forum/category/' . $slug);
         $config['total_rows'] = $this->forum->count_threads_by_category($data['category']->id);

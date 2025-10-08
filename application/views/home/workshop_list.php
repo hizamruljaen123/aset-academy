@@ -84,14 +84,11 @@
 
                             <div class="flex items-center justify-between">
                                 <div class="text-sm text-gray-600">
-                                    <?php
-                                    $participant_count = $this->db->where('workshop_id', $workshop->id)->count_all_results('workshop_participants');
-                                    if ($workshop->max_participants > 0) {
-                                        echo $participant_count . '/' . $workshop->max_participants . ' Peserta';
-                                    } else {
-                                        echo $participant_count . ' Peserta';
-                                    }
-                                    ?>
+                                    <?php if ($workshop->max_participants > 0): ?>
+                                        <?= $workshop->participant_count; ?>/<?= $workshop->max_participants; ?> Peserta
+                                    <?php else: ?>
+                                        <?= $workshop->participant_count; ?> Peserta
+                                    <?php endif; ?>
                                 </div>
 
                                 <a href="<?= site_url('workshops/detail/' . encrypt_url($workshop->id)) ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold">

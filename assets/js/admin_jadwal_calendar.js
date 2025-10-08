@@ -113,6 +113,42 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function updateTableRow(event) {
+        const row = document.querySelector(`[data-event-id="${event.id}"]`);
+        if (!row) {
+            return;
+        }
+
+        const dateCell = row.querySelector('[data-field="date"]');
+        const timeCell = row.querySelector('[data-field="time"]');
+
+        if (dateCell && event.start) {
+            const eventDate = event.start;
+            const formattedDate = eventDate.toLocaleDateString('id-ID', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            });
+            dateCell.textContent = formattedDate;
+        }
+
+        if (timeCell && event.start) {
+            const startTime = event.start.toLocaleTimeString('id-ID', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            const endTime = event.end
+                ? event.end.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+                : '';
+            timeCell.textContent = endTime ? `${startTime} - ${endTime}` : startTime;
+        }
+
+        // Optional: keep table ordering by date/time if needed
+        if (event.start) {
+            row.setAttribute('data-start-timestamp', event.start.getTime());
+        }
+    }
+
     function postTimingUpdate(event) {
         const payload = new URLSearchParams({
             id: event.id,
@@ -138,6 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!json || json.status !== 'success') {
                     throw new Error((json && json.message) || 'Gagal memperbarui jadwal.');
                 }
+                updateTableRow(event);
             });
     }
 

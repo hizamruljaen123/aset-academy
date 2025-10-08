@@ -555,6 +555,10 @@
                         <i class="fas fa-user-graduate w-5 text-center mr-3"></i>
                         Kelola Akses Kelas
                     </a>
+                    <a href="<?php echo site_url('admin/contact'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'enrollment') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-phone w-5 text-center mr-3"></i>
+                        Kotak Masuk
+                    </a>
                     <a href="<?php echo site_url('admin/users'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'users') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-user-shield w-5 text-center mr-3"></i>
                         Kelola User

@@ -114,6 +114,54 @@ class Workshop_model extends CI_Model {
         return $this->db->get()->result();
     }
 
+    public function count_all_participants($workshop_id)
+    {
+        $this->db->from('view_workshop_all_participants');
+        $this->db->where('workshop_id', $workshop_id);
+        return (int) $this->db->count_all_results();
+    }
+
+    public function count_registered_participants($workshop_id)
+    {
+        $this->db->from('view_workshop_all_participants');
+        $this->db->where('workshop_id', $workshop_id);
+        $this->db->where_in('participant_role', ['registered', 'attended']);
+        return (int) $this->db->count_all_results();
+    }
+
+    public function get_participant_counts_for_workshops(array $workshopIds)
+    {
+        if (empty($workshopIds)) {
+            return [];
+        }
+
+        $this->db->select('workshop_id, participant_role, COUNT(*) AS count');
+        $this->db->from('view_workshop_all_participants');
+        $this->db->where_in('workshop_id', $workshopIds);
+        $this->db->group_by(['workshop_id', 'participant_role']);
+
+        $results = $this->db->get()->result();
+
+        $counts = [];
+        foreach ($results as $row) {
+            $workshopId = $row->workshop_id;
+            if (!isset($counts[$workshopId])) {
+                $counts[$workshopId] = [
+                    'total' => 0,
+                    'registered' => 0,
+                ];
+            }
+
+            $counts[$workshopId]['total'] += (int) $row->count;
+
+            if (in_array($row->participant_role, ['registered', 'attended'], true)) {
+                $counts[$workshopId]['registered'] += (int) $row->count;
+            }
+        }
+
+        return $counts;
+    }
+
     // Get all participants (members & guests) via view
     public function get_all_participants($workshop_id)
     {

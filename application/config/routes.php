@@ -161,6 +161,9 @@ $route['home/download_app'] = 'home/download_app';
 $route['free_class/(:any)'] = 'home/view_free_class/$1';
 $route['free_classes/view/(:any)'] = 'home/view_free_class/$1';
 $route['home/partnership'] = 'home/partnership';
+$route['contact'] = 'home/contact';
+$route['home/contact'] = 'home/contact';
+$route['home/contact-submit'] = 'home/contact_submit';
 
 // Routes untuk Workshop & Seminar
 $route['workshops'] = 'workshops';
@@ -195,6 +198,11 @@ $route['admin/workshops/manage_materials/(:any)'] = 'admin/workshops/manage_mate
 $route['admin/workshops/add_material/(:any)'] = 'admin/workshops/add_material/$1';
 $route['admin/workshops/edit_material/(:any)'] = 'admin/workshops/edit_material/$1';
 $route['admin/workshops/delete_material/(:any)'] = 'admin/workshops/delete_material/$1';
+$route['admin/contact'] = 'admin/contact';
+$route['admin/contact/index'] = 'admin/contact/index';
+$route['admin/contact/view/(:num)'] = 'admin/contact/view/$1';
+$route['admin/contact/update_status/(:num)'] = 'admin/contact/update_status/$1';
+$route['admin/contact/delete/(:num)'] = 'admin/contact/delete/$1';
 
 // Admin Forum Management Routes
 $route['admin_forum'] = 'admin_forum';

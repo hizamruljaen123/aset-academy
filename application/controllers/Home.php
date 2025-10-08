@@ -14,6 +14,7 @@ class Home extends MY_Controller {
         $this->load->model('User_model', 'user_model');
         $this->load->model('Jadwal_model', 'jadwal_model');
         $this->load->model('Workshop_model', 'workshop_model');
+        $this->load->model('Contact_model', 'contact_model');
         $this->load->helper('url');
     }
 
@@ -219,5 +220,65 @@ class Home extends MY_Controller {
         $data['description'] = 'Pengembangan software khusus untuk kebutuhan bisnis UMKM. Sistem manajemen, aplikasi kasir, otomasi bisnis, dan solusi digital terintegrasi untuk meningkatkan efisiensi dan produktivitas.';
 
         $this->load->view('home/digital_solutions', $data);
+    }
+
+    public function contact()
+    {
+        $data['title'] = 'Hubungi Kami - Aset Academy';
+        $data['description'] = 'Hubungi tim Aset Academy untuk pertanyaan, kerjasama, dan dukungan lainnya. Kami siap membantu melalui WhatsApp atau email.';
+
+        $data['contact_channels'] = [
+            'whatsapp' => [
+                'number' => '6289676018562',
+                'display' => '+62 896-7601-8562',
+                'message' => 'Halo%20Aset%20Academy,%20saya%20ingin%20bertanya%20lebih%20lanjut%20tentang%20program%20anda.'
+            ],
+            'email' => 'support@asetacademy.id',
+            'office' => 'Jl. Teknologi No. 123, Jakarta Selatan, Indonesia'
+        ];
+
+        $this->load->view('home/contact', $data);
+    }
+
+    public function contact_submit()
+    {
+        if (!$this->input->post()) {
+            redirect('home/contact');
+        }
+
+        $this->load->library('form_validation');
+
+        $this->form_validation->set_rules('name', 'Nama Lengkap', 'required|trim|max_length[150]');
+        $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|max_length[150]');
+        $this->form_validation->set_rules('subject', 'Subjek', 'required|trim|max_length[200]');
+        $this->form_validation->set_rules('message_type', 'Jenis Pesan', 'required|in_list[pertanyaan,kerjasama,dukungan,lainnya]');
+        $this->form_validation->set_rules('message', 'Pesan', 'required|trim|min_length[10]');
+        $this->form_validation->set_rules('preferred_contact', 'Metode Kontak', 'required|in_list[whatsapp,email,telepon]');
+        $this->form_validation->set_rules('whatsapp_number', 'Nomor WhatsApp', 'trim|max_length[50]');
+        $this->form_validation->set_rules('phone', 'Nomor Telepon', 'trim|max_length[50]');
+        $this->form_validation->set_rules('company', 'Institusi/Perusahaan', 'trim|max_length[150]');
+
+        if ($this->form_validation->run() === false) {
+            $this->session->set_flashdata('error', validation_errors('<div>', '</div>'));
+            redirect('home/contact#contact-form');
+        }
+
+        $payload = [
+            'name' => $this->input->post('name', true),
+            'email' => $this->input->post('email', true),
+            'company' => $this->input->post('company', true),
+            'phone' => $this->input->post('phone', true),
+            'whatsapp_number' => $this->input->post('whatsapp_number', true),
+            'message_type' => $this->input->post('message_type', true),
+            'subject' => $this->input->post('subject', true),
+            'message' => $this->input->post('message', false),
+            'preferred_contact' => $this->input->post('preferred_contact', true),
+            'status' => 'baru'
+        ];
+
+        $this->contact_model->create($payload);
+
+        $this->session->set_flashdata('success', 'Terima kasih! Pesan Anda sudah kami terima dan akan segera diproses.');
+        redirect('home/contact#contact-form');
     }
 }
