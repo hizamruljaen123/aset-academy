@@ -1,118 +1,117 @@
-# Asset Academy - Learning Management System
+# Asset Academy - Comprehensive Learning Management System
 
-Aplikasi web modern untuk manajemen kursus online, dibangun dengan CodeIgniter 3, PHP 8, dan Tailwind CSS. Aplikasi ini menyediakan halaman landing yang dinamis dan sistem otentikasi.
+Aplikasi web modern untuk manajemen kursus online, dibangun dengan CodeIgniter 3, PHP 8, dan Tailwind CSS. Platform lengkap yang menyediakan pengalaman belajar programming dari tingkat pemula hingga mahir.
 
 ## Fitur Utama
 
 ### Halaman Publik
-- **Homepage Dinamis**: Menampilkan kelas premium, kelas gratis, dan testimoni siswa yang diambil dari database.
-- **Halaman Kelas**: Halaman terpisah untuk menelusuri kelas premium dan kelas gratis.
-- **Halaman Statis**: Halaman 'Tentang Kami' dan 'FAQ' dengan desain modern.
-- **Desain Responsif**: Tampilan yang dioptimalkan untuk semua perangkat menggunakan Tailwind CSS.
-- **Arsitektur Modular**: Menggunakan sistem template (header, navbar, footer) untuk kemudahan maintenance.
+- **Homepage Dinamis**: Kelas premium, gratis, testimoni, dan workshop terdekat
+- **Kelas Programming**: Katalog premium & gratis dengan detail instruktur dan materi
+- **Workshop & Seminar**: Event pembelajaran dengan sistem pendaftaran online
+- **Corporate Solutions**: Partnership, corporate training, dan digital solutions untuk UMKM
+- **Contact & Support**: Sistem kontak terintegrasi dengan WhatsApp
+- **Mobile App**: Dukungan aplikasi Android dengan pengalaman optimal
 
 ### Sistem Otentikasi
-- **Login & Registrasi**: Halaman untuk pengguna masuk dan mendaftar.
-- **Branding Konsisten**: Halaman otentikasi yang sesuai dengan branding "Asset Academy".
+- **Multi-Role System**: Admin, Teacher, Student dengan role-based access
+- **Secure Authentication**: Session management dan password security
+- **Profile Management**: Sistem pengelolaan profil lengkap
 
-### Backend (Fitur yang Sudah Ada)
-- **Manajemen Siswa**: Operasi CRUD untuk data siswa.
-- **Manajemen Kelas**: Operasi CRUD untuk kelas programming.
-- **Dashboard Admin**: (Asumsi) Terdapat dashboard untuk admin mengelola konten.
+### Dashboard Admin
+- **User Management**: CRUD semua pengguna (siswa, guru, admin)
+- **Content Management**: Kelas, workshop, forum, dan materi
+- **Payment Verification**: Verifikasi transaksi dan manajemen pembayaran
+- **Analytics Dashboard**: Statistik platform dan performa
+- **System Administration**: Moderasi forum, assignment oversight, attendance monitoring
+
+### Dashboard Siswa
+- **Learning Portal**: Enrollment kelas premium & gratis
+- **Progress Tracking**: Monitoring kemajuan belajar dan sertifikat
+- **Assignment System**: Pengumpulan dan penilaian tugas
+- **Forum Participation**: Diskusi interaktif dengan komunitas
+- **Payment Integration**: Sistem pembayaran untuk kelas premium
+
+### Dashboard Guru
+- **Class Management**: Pengelolaan kelas dengan siswa dan materi
+- **Material Upload**: Sistem upload dan organisasi konten pembelajaran
+- **Assignment Creation**: Pembuatan dan grading tugas
+- **Attendance Tracking**: Pencatatan kehadiran dengan QR code
+- **Student Analytics**: Monitoring performa dan progress siswa
+
+### Payment & Transaction
+- **Premium Enrollment**: Pembayaran kelas dengan multiple bank support
+- **Transaction Management**: History, verification, dan refund system
+- **Invoice Generation**: Sistem invoice otomatis
+
+### Forum Diskusi
+- **Category-based Forum**: Organisasi diskusi berdasarkan topik
+- **Thread Management**: Reply system dengan nested discussion
+- **Moderation Tools**: Admin controls untuk content management
+
+### Learning Management
+- **Material Organization**: Sistem modul dengan progress tracking
+- **Assignment System**: Creation, submission, dan grading workflow
+- **Certificate Generation**: Sertifikat otomatis setelah completion
+
+### Workshop Management
+- **Event Creation**: CRUD workshop dengan detail lengkap
+- **Participant Registration**: Sistem pendaftaran dengan tracking
+- **Material Distribution**: Upload dan distribusi materi event
+
+### Analytics & Monitoring
+- **User Statistics**: Analytics berdasarkan role dan aktivitas
+- **Course Performance**: Tracking completion dan engagement
+- **Revenue Reports**: Financial analytics untuk admin
 
 ## Struktur Database
 
-Database utama adalah `academy_lite`. Tabel-tabel penting yang digunakan:
-
-- `kelas_programming`: Menyimpan detail kelas premium.
-- `free_classes`: Menyimpan detail kelas gratis.
-- `testimonials`: Menyimpan testimoni dari siswa.
-- `users`: (Asumsi) Untuk otentikasi dan data pengguna.
-- `siswa`: Untuk data siswa yang terdaftar di kelas.
+Database utama `academy_lite` dengan tabel core:
+- `users`, `siswa` - User management
+- `kelas_programming`, `free_classes` - Course content
+- `workshops`, `workshop_participants` - Event management
+- `forum_*` tables - Discussion system
+- `payments`, `assignments` - Transaction & learning tools
+- `absensi`, `enrollments` - Attendance & enrollment tracking
 
 ## Instalasi & Setup
 
 ### Prasyarat
-- PHP 8.0+
-- MySQL 5.7+ atau MariaDB 10.2+
-- Web Server (Contoh: Apache, Nginx, atau Laragon)
-- Composer
+- PHP 8.0+, MySQL 5.7+, Web Server, Composer
 
-### Langkah-langkah Instalasi
+### Langkah Instalasi
+1. **Clone & Setup**: `git clone <repo> && cd aset-academy`
+2. **Database Config**: Setup `academy_lite` di `application/config/database.php`
+3. **Base URL**: Configure di `application/config/config.php`
+4. **Dependencies**: `composer install && npm install`
+5. **Migration**: Akses `/index.php/migrate` atau import SQL files
+6. **Assets**: `npm run build`
+7. **Launch**: Akses homepage dan login admin
 
-1.  **Clone Repository**
-    ```bash
-    git clone <url-repository-anda> aset-academy
-    cd aset-academy
-    ```
-
-2.  **Konfigurasi Database**
-    - Buat database baru di MySQL (misalnya, `academy_lite`).
-    - Buka file `application/config/database.php` dan sesuaikan dengan konfigurasi database Anda:
-      ```php
-      'hostname' => 'localhost',
-      'username' => 'root',
-      'password' => '', // Sesuaikan dengan password Anda
-      'database' => 'academy_lite',
-      ```
-
-3.  **Konfigurasi Base URL**
-    - Buka file `application/config/config.php`.
-    - Atur `base_url` sesuai dengan environment lokal Anda. Jika menggunakan Laragon, URL-nya mungkin seperti ini:
-      ```php
-      $config['base_url'] = 'http://aset-academy.test/';
-      ```
-
-4.  **Jalankan Migrasi Database**
-    - CodeIgniter 3 menggunakan sistem migrasi untuk mengelola skema database. Untuk menjalankan migrasi terbaru:
-    - Buka browser dan akses URL: `http://aset-academy.test/index.php/migrate`
-    - Ini akan membuat tabel yang diperlukan seperti `testimonials`.
-
-5.  **Impor Data Awal (Jika Ada)**
-    - Impor file SQL yang berisi data awal (seperti `database.sql` atau file dummy data lainnya) ke database `academy_lite` Anda melalui phpMyAdmin atau command line.
-
-6.  **Jalankan Aplikasi**
-    - Buka `http://aset-academy.test/` di browser Anda untuk melihat halaman utama.
-
-## Struktur Direktori Penting
+## Arsitektur Aplikasi
 
 ```
-aset-academy/
-├── application/
-│   ├── controllers/
-│   │   ├── Home.php         # Controller untuk halaman publik
-│   │   ├── Auth.php         # Controller untuk otentikasi
-│   │   └── Migrate.php      # Controller untuk migrasi DB
-│   ├── models/
-│   │   ├── Kelas_model.php
-│   │   ├── Free_class_model.php
-│   │   └── Testimonial_model.php
-│   ├── views/
-│   │   ├── home/
-│   │   │   ├── index.php      # Halaman utama
-│   │   │   ├── premium.php
-│   │   │   ├── free.php
-│   │   │   ├── about.php
-│   │   │   ├── faq.php
-│   │   │   └── templates/     # Template modular
-│   │   │       ├── _header.php
-│   │   │       ├── _navbar.php
-│   │   │       └── _footer.php
-│   │   └── auth/
-│   │       ├── login.php
-│   │       └── register.php
-│   ├── config/
-│   │   ├── routes.php
-│   │   └── database.php
-│   └── migrations/
-│       └── ..._create_testimonials_table.php
-├── db/
-│   └── database.sql         # Skema & data awal
-└── assets/
-    ├── css/
-    └── js/
+application/
+├── controllers/          # Business logic
+│   ├── Home.php         # Public pages
+│   ├── Auth.php         # Authentication
+│   ├── admin/           # Admin features
+│   ├── student/         # Student features
+│   └── teacher/         # Teacher features
+├── models/              # Data access layer
+├── views/               # Presentation layer
+└── config/              # Configuration files
 ```
+
+## Teknologi Stack
+- **Backend**: CodeIgniter 3.1.13, PHP 8+
+- **Frontend**: Tailwind CSS, Alpine.js
+- **Database**: MySQL/MariaDB
+- **Mobile**: Android App (APK included)
+
+## Support & Contact
+- **Email**: support@asetacademy.id
+- **WhatsApp**: +62 896-7601-8562
+- **Website**: [asetacademy.id](https://asetacademy.id)
 
 ## Lisensi
-
-Proyek ini dilisensikan di bawah [MIT License](LICENSE).
+[MIT License](LICENSE) - Asset Academy  2024
