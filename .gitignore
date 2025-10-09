@@ -30,3 +30,10 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 *.sublime-project
 /tests/tests/
 /tests/results/
+
+# Explicitly track these important files
+!application/config/config.php
+!application/config/database.php
+!index.php
+!.htaccess
+.htaccess
