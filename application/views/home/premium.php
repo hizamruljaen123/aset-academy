@@ -45,12 +45,13 @@
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <?php foreach ($premium_classes as $class): ?>
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                <div class="course-card bg-white rounded-xl shadow-lg overflow-hidden" data-aos="fade-up" data-aos-delay="100">
                     <div class="relative overflow-hidden">
-                    <div class="w-full h-48">
-                            <?php if (!empty($class->thumbnail)): ?>
-                                    src="<?= $class->thumbnail ?>" 
-                                    alt="<?= html_escape($class->title) ?>" 
+                        <div class="w-full h-48">
+                            <?php if (!empty($class->gambar)): ?>
+                                <img
+                                    src="<?= $class->gambar ?>"
+                                    alt="<?= html_escape($class->title) ?>"
                                     class="w-full h-full object-cover"
                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                                 >
@@ -61,11 +62,15 @@
                                 <div class="w-full h-full bg-blue-100 flex items-center justify-center">
                                     <i class="fas fa-book-open text-6xl text-blue-600"></i>
                                 </div>
-                        <?php endif; ?>
+                            <?php endif; ?>
                         </div>
+                        <div class="absolute top-4 left-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-3 py-1 rounded-full text-sm font-bold">
+                            Premium
+                        </div>
+                    </div>
                     <div class="p-6">
                         <h3 class="text-xl font-bold text-gray-800 mb-3"><?= html_escape($class->nama_kelas) ?></h3>
-                        <?php 
+                        <?php
                         $descHtml = html_entity_decode(htmlspecialchars_decode($class->deskripsi, ENT_QUOTES | ENT_HTML5), ENT_QUOTES | ENT_HTML5, 'UTF-8');
                         $descText = strip_tags($descHtml);
                         $shortDesc = mb_strlen($descText) > 250 ? mb_substr($descText, 0, 250) . '...' : $descText;
