@@ -12,7 +12,21 @@
         <priority>1.0</priority>
     </url>
 
-    <!-- Main Pages -->
+    <!-- Main Public Pages -->
+    <url>
+        <loc>https://asetacademy.id/home/about</loc>
+        <lastmod>2024-09-18</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://asetacademy.id/home/faq</loc>
+        <lastmod>2024-09-18</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
     <url>
         <loc>https://asetacademy.id/home/premium</loc>
         <lastmod>2024-09-18</lastmod>
@@ -35,6 +49,13 @@
     </url>
 
     <url>
+        <loc>https://asetacademy.id/home/download_app</loc>
+        <lastmod>2024-09-18</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
         <loc>https://asetacademy.id/home/partnership</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>monthly</changefreq>
@@ -42,23 +63,24 @@
     </url>
 
     <url>
-        <loc>https://asetacademy.id/home/about</loc>
+        <loc>https://asetacademy.id/contact</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
 
     <url>
-        <loc>https://asetacademy.id/home/faq</loc>
+        <loc>https://asetacademy.id/career</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <priority>0.6</priority>
     </url>
 
+    <!-- Workshop & Seminar Pages -->
     <url>
-        <loc>https://asetacademy.id/home/download_app</loc>
+        <loc>https://asetacademy.id/workshops</loc>
         <lastmod>2024-09-18</lastmod>
-        <changefreq>monthly</changefreq>
+        <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
 
@@ -160,6 +182,14 @@
         <lastmod>2024-09-18</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
+    </url>
+
+    <!-- Forum Pages -->
+    <url>
+        <loc>https://asetacademy.id/forum</loc>
+        <lastmod>2024-09-18</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.7</priority>
     </url>
 
 </urlset>
