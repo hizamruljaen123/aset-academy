@@ -37,7 +37,7 @@
             </p>
 
             <div class="flex flex-col sm:flex-row justify-center gap-6" data-aos="fade-up" data-aos-delay="200">
-                <a href="https://wa.me/6289676018562?text=Halo,%20saya%20tertarik%20dengan%20program%20partnership%20Aset%20Academy"
+                <a href="<?php echo base_url('contact'); ?>"
                    class="group px-10 py-5 bg-green-600 text-white font-bold rounded-2xl hover:bg-green-700 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 shadow-2xl hover:shadow-green/25">
                     <i data-feather="message-circle" class="w-6 h-6 group-hover:scale-110 transition-transform"></i>
                     <div class="text-center">
@@ -452,7 +452,7 @@
                         Kami juga menyediakan model hybrid yang menggabungkan keuntungan online dan offline.
                         Bagian teori dilakukan online, sedangkan praktik intensif dilakukan secara offline.
                     </p>
-                    <a href="https://wa.me/629676018562?text=Halo,%20saya%20ingin%20tahu%20lebih%20lanjut%20tentang%20program%20hybrid%20training"
+                    <a href="<?php echo base_url('contact'); ?>"
                        class="inline-flex items-center gap-3 bg-white text-indigo-600 px-8 py-4 rounded-2xl font-bold hover:bg-gray-50 hover:scale-105 transition-all duration-300 shadow-xl">
                         <i data-feather="message-circle" class="w-6 h-6"></i>
                         Pelajari Hybrid Training
