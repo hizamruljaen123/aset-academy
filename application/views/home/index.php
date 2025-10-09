@@ -262,6 +262,7 @@
             
             <div class="relative">
                 <div class="carousel flex overflow-x-auto space-x-6 pb-8 scrollbar-hide">
+                    <?php foreach ($testimonials as $testimonial): ?>
                     <div class="carousel-item w-80 flex-shrink-0 bg-gray-50 p-6 rounded-xl" data-aos="fade-up" data-aos-delay="100">
                         <div class="flex items-center mb-4">
                             <?php if ($testimonial->photo && file_exists(FCPATH . 'uploads/testimonials/' . $testimonial->photo)): ?>
