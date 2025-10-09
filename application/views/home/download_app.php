@@ -64,7 +64,7 @@
                 </p>
 
                 <!-- Download Button -->
-                <a href="<?= base_url('assets/release/Asset Academy.apk') ?>"
+                <a href="https://is3.cloudhost.id/pantaoumedia/asset_academy/apps/asset_academy_v1.1.apk"
                    download="Asset Academy.apk"
                    class="inline-flex items-center px-8 py-4 bg-gradient-primary text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200">
                     <i class="fas fa-download mr-3"></i>
