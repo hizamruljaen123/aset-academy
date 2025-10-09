@@ -4,16 +4,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= isset($title) ? html_escape($title) : 'Aset Academy' ?></title>
-    <meta name="description" content="<?= isset($description) ? html_escape($description) : 'Belajar Programming Jadi Mudah & Menyenangkan' ?>">
-    <meta name="keywords" content="<?= isset($keywords) ? html_escape($keywords) : 'programming course, coding bootcamp, learn programming, web development, mobile development, data science' ?>">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-    <script src="https://unpkg.com/feather-icons"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Primary Meta Tags -->
+    <title><?php echo isset($title) ? html_escape($title) : 'Kelas Coding Murah | Pelatihan Coding Terbaik | Belajar Coding Online - Aset Academy'; ?></title>
+    <meta name="title" content="<?php echo isset($title) ? html_escape($title) : 'Kelas Coding Murah | Pelatihan Coding Terbaik | Belajar Coding Online - Aset Academy'; ?>">
+    <meta name="description" content="<?php echo isset($description) ? html_escape($description) : 'Kelas coding murah dan pelatihan coding terbaik untuk belajar coding online. Kursus programming lengkap dengan sertifikat, project nyata dan dukungan mentor profesional. Daftar kelas coding sekarang!'; ?>">
+    <meta name="keywords" content="<?php echo isset($keywords) ? html_escape($keywords) : 'kelas coding, pelatihan coding, belajar coding, kursus programming, coding bootcamp, kelas coding murah, belajar coding online, kursus web development, mobile development, data science, javascript, php, python, java'; ?>">
+    <meta name="author" content="Aset Academy">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="<?php echo current_url(); ?>">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<?php echo current_url(); ?>">
+    <meta property="og:title" content="<?php echo isset($title) ? html_escape($title) : 'Kelas Coding Murah | Pelatihan Coding Terbaik | Belajar Coding Online - Aset Academy'; ?>">
+    <meta property="og:description" content="<?php echo isset($description) ? html_escape($description) : 'Kelas coding murah dan pelatihan coding terbaik untuk belajar coding online. Kursus programming lengkap dengan sertifikat, project nyata dan dukungan mentor profesional.'; ?>">
+    <meta property="og:image" content="<?php echo base_url('assets/images/aset-academy-og-image.jpg'); ?>">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Aset Academy">
+    <meta property="og:locale" content="id_ID">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="<?php echo current_url(); ?>">
+    <meta property="twitter:title" content="<?php echo isset($title) ? html_escape($title) : 'Kelas Coding Murah | Pelatihan Coding Terbaik | Belajar Coding Online - Aset Academy'; ?>">
+    <meta property="twitter:description" content="<?php echo isset($description) ? html_escape($description) : 'Kelas coding murah dan pelatihan coding terbaik untuk belajar coding online. Kursus programming lengkap dengan sertifikat, project nyata dan dukungan mentor profesional.'; ?>">
+    <meta property="twitter:image" content="<?php echo base_url('assets/images/aset-academy-twitter-image.jpg'); ?>">
+
+    <!-- Additional SEO Meta Tags -->
+    <meta name="theme-color" content="#3B82F6">
+    <meta name="msapplication-TileColor" content="#3B82F6">
+    <meta name="application-name" content="Aset Academy">
+
+    <!-- Structured Data - JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "EducationalOrganization",
+        "name": "Aset Academy",
+        "description": "Platform kelas coding murah dan pelatihan coding terbaik untuk belajar coding online dengan kurikulum lengkap dan sertifikat resmi",
+        "url": "<?php echo base_url(); ?>",
+        "logo": "<?php echo base_url('assets/images/logo.png'); ?>",
+        "sameAs": [
+            "https://facebook.com/asetacademy",
+            "https://instagram.com/asetacademy",
+            "https://linkedin.com/company/asetacademy"
+        ],
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+62-xxx-xxxx-xxxx",
+            "contactType": "customer service",
+            "availableLanguage": "Indonesian"
+        },
+        "offers": {
+            "@type": "OfferCatalog",
+            "name": "Kelas Coding & Pelatihan Programming",
+            "itemListElement": [
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Course",
+                        "name": "Kelas Coding Web Development",
+                        "description": "Pelatihan coding lengkap untuk menjadi web developer profesional",
+                        "provider": {
+                            "@type": "EducationalOrganization",
+                            "name": "Aset Academy"
+                        }
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Course",
+                        "name": "Kelas Coding Mobile Development",
+                        "description": "Belajar coding untuk membuat aplikasi mobile Android dan iOS",
+                        "provider": {
+                            "@type": "EducationalOrganization",
+                            "name": "Aset Academy"
+                        }
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Course",
+                        "name": "Kelas Coding Data Science",
+                        "description": "Pelatihan coding untuk analisis data dan machine learning",
+                        "provider": {
+                            "@type": "EducationalOrganization",
+                            "name": "Aset Academy"
+                        }
+                    }
+                }
+            ]
+        },
+        "areaServed": "Indonesia",
+        "serviceType": "Online Learning Platform"
+    }
+    </script>
     <style>
         @keyframes float {
             0% { transform: translateY(0px); }

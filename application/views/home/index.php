@@ -6,17 +6,17 @@
         <div class="absolute inset-0 overflow-hidden">
             <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-400/20 rounded-full pulse-blob"></div>
             <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-blue-400/20 rounded-full pulse-blob" style="animation-delay: 2s;"></div>
-            <div class="absolute top-1/3 right-1/3 w-64 h-64 bg-indigo-400/20 rounded-full pulse-blob" style="animation-delay: 4s;"></div>
         </div>
         
         <div class="container mx-auto px-4 relative z-10">
             <div class="flex flex-col md:flex-row items-center justify-between">
                 <div class="md:w-1/2 mb-10 md:mb-0" data-aos="fade-right" data-aos-duration="1000">
                     <h1 class="text-4xl md:text-5xl font-bold text-white leading-tight mb-6">
-                        Belajar Programming Jadi Mudah & Menyenangkan
+                        Kelas Coding Murah & Terbaik untuk <span class="text-yellow-300">Belajar Coding Online</span>
                     </h1>
                     <p class="text-xl text-white/90 mb-8">
-                        Tingkatkan skill programmingmu dengan metode belajar interaktif dan kurikulum terkini dari instruktur profesional.
+                        Pelatihan coding profesional dengan kurikulum lengkap, project nyata, dan sertifikat Resmi.
+                        Tingkatkan skill programming Anda dengan metode belajar interaktif dari mentor berpengalaman.
                     </p>
                     <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                         <a href="<?= site_url('home/download_app') ?>" class="px-8 py-4 bg-green-500 text-white font-bold rounded-lg hover:bg-green-600 transition-colors text-center flex items-center justify-center">
@@ -148,9 +148,9 @@
     <section class="py-16 bg-white">
         <div class="container mx-auto px-4">
             <div class="text-center mb-12" data-aos="fade-up">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Kelas Gratis</h2>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Kelas Coding Gratis</h2>
                 <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                    Mulai perjalanan programmingmu dengan materi dasar yang berkualitas
+                    Mulai perjalanan belajar coding Anda dengan materi dasar berkualitas tanpa biaya. Persiapan terbaik untuk kelas coding premium.
                 </p>
             </div>
             
@@ -250,20 +250,18 @@
             </div>
         </div>
     </section>
-
     <!-- Testimonials Carousel -->
     <section class="py-16 bg-white">
         <div class="container mx-auto px-4">
             <div class="text-center mb-12" data-aos="fade-up">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Testimonial Siswa</h2>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Testimonial Peserta Kelas Coding</h2>
                 <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                    Apa kata mereka tentang pengalaman belajar di Aset Academy
+                    Apa kata mereka tentang pengalaman belajar coding di Aset Academy
                 </p>
             </div>
             
             <div class="relative">
                 <div class="carousel flex overflow-x-auto space-x-6 pb-8 scrollbar-hide">
-                    <?php foreach ($testimonials as $testimonial): ?>
                     <div class="carousel-item w-80 flex-shrink-0 bg-gray-50 p-6 rounded-xl" data-aos="fade-up" data-aos-delay="100">
                         <div class="flex items-center mb-4">
                             <?php if ($testimonial->photo && file_exists(FCPATH . 'uploads/testimonials/' . $testimonial->photo)): ?>
@@ -295,17 +293,17 @@
     <section class="py-16 bg-gradient-to-r from-blue-600 to-indigo-700">
         <div class="container mx-auto px-4 text-center">
             <h2 class="text-3xl md:text-4xl font-bold text-white mb-6" data-aos="fade-up">
-                Siap Mulai Perjalanan Programmingmu?
+                Siap Mulai Belajar Coding Sekarang?
             </h2>
             <p class="text-xl text-white/90 mb-8 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
-                Bergabung dengan ribuan siswa lainnya dan raih karir impian di dunia teknologi
+                Bergabung dengan ribuan peserta kelas coding lainnya dan raih karir impian di dunia teknologi
             </p>
             <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6" data-aos="fade-up" data-aos-delay="200">
                 <a href="#" class="px-8 py-4 bg-white text-blue-600 font-bold rounded-lg hover:bg-gray-100 transition-colors">
-                    Daftar Sekarang
+                    Daftar Kelas Coding
                 </a>
                 <a href="#" class="px-8 py-4 bg-transparent border-2 border-white text-white font-bold rounded-lg hover:bg-white/10 transition-colors">
-                    Lanjutkan Belajar
+                    Mulai Belajar Coding
                 </a>
             </div>
         </div>
