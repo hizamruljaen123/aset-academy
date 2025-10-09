@@ -602,13 +602,13 @@
                                 <p class="text-xs text-gray-500 truncate max-w-[150px]">
                                     <?php 
                                     $role = $this->session->userdata('role');
-                                    echo match($role) {
+                                    $role_labels = [
                                         'super_admin' => 'Super Admin',
                                         'admin' => 'Administrator',
                                         'guru' => 'Guru',
-                                        'siswa' => 'Siswa',
-                                        default => 'Pengguna'
-                                    }; 
+                                        'siswa' => 'Siswa'
+                                    ];
+                                    echo isset($role_labels[$role]) ? $role_labels[$role] : 'Pengguna';
                                     ?>
                                 </p>
                             </div>
