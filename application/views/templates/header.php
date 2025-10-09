@@ -8,49 +8,31 @@
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS (Production Ready) -->
+    <script src="https://cdn.tailwindcss.com/3.4.0"></script>
     <script>
         window.baseUrl = '<?php echo rtrim(base_url(), '/'); ?>/';
         window.siteUrl = '<?php echo rtrim(site_url(), '/'); ?>/';
-    </script>
-    <script>
-        try {
-            tailwind.config = {
-                darkMode: 'class',
-                theme: {
-                    extend: {
-                        fontSize: {
-                            'input': '1rem', // Larger base font for inputs
-                        },
-                        padding: {
-                            'input': '0.75rem', // Better padding for inputs
-                        },
-                        colors: {
-                            'input-border': {
-                                DEFAULT: '#d1d5db', // Gray-300 for better visibility
-                                focus: '#3b82f6', // Blue-500 for focus
-                            },
+        
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontSize: {
+                        'input': '1rem',
+                    },
+                    padding: {
+                        'input': '0.75rem',
+                    },
+                    colors: {
+                        'input-border': {
+                            DEFAULT: '#d1d5db',
+                            focus: '#3b82f6',
                         },
                     },
                 },
-                plugins: function({ addUtilities }) {
-                    addUtilities({
-                        '.form-input': {
-                            '@apply block w-full rounded-md border border-input-border px-input py-input text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-input-border-focus focus:border-input-border-focus text-input leading-6': {},
-                        },
-                        '.form-textarea': {
-                            '@apply block w-full rounded-md border border-input-border px-input py-input text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-input-border-focus focus:border-input-border-focus text-input leading-6 resize-vertical': {},
-                        },
-                        '.form-select': {
-                            '@apply block w-full rounded-md border border-input-border px-input py-input text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-input-border-focus focus:border-input-border-focus text-input leading-6 cursor-pointer appearance-none': {},
-                        },
-                    });
-                },
-            };
-        } catch (error) {
-            console.warn('Tailwind config error:', error);
-        }
+            },
+        };
     </script>
 
     <!-- Alpine.js for interactivity -->
@@ -330,7 +312,26 @@
             }
         }
 
-        /* High contrast mode support */
+        /* Custom Scrollbar for Sidebar */
+        #sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #sidebar::-webkit-scrollbar-track {
+            background: #f1f5f9; /* Gray-100 */
+            border-radius: 3px;
+        }
+
+        #sidebar::-webkit-scrollbar-thumb {
+            background: #cbd5e1; /* Gray-300 */
+            border-radius: 3px;
+            transition: background 0.2s ease;
+        }
+
+        #sidebar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; /* Gray-400 */
+        }
+
         @media (prefers-contrast: high) {
             input[type="text"],
             input[type="email"],
@@ -362,6 +363,12 @@
                 border-width: 3px;
             }
         }
+
+        /* Firefox scrollbar */
+        #sidebar {
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 #f1f5f9;
+        }
     </style>
     
     <!-- Admin Assignments Styles -->
@@ -383,7 +390,7 @@
 <body class="bg-gray-50">
     <div class="flex min-h-screen">
         <!-- Sidebar -->
-        <div class="w-64 bg-white shadow-md fixed h-full transition-all duration-300 ease-in-out z-50" id="sidebar">
+        <div class="w-64 bg-white shadow-md fixed h-full transition-all duration-300 ease-in-out z-50 overflow-y-auto" id="sidebar">
             <div class="p-4 border-b border-gray-200">
                 <a href="<?php echo site_url(); ?>" class="flex items-center text-blue-600 font-bold">
                 <img src="<?= base_url('assets/img/logo.png') ?>" alt="ASET Academy" class="h-8 w-auto">
@@ -572,6 +579,15 @@
                     <a href="<?php echo site_url('admin/permissions'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'permissions') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-key w-5 text-center mr-3"></i>
                         Kelola Permission
+                    </a>
+
+                    <a href="<?php echo site_url('admin/settings'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'settings') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-cog w-5 text-center mr-3"></i>
+                        Pengaturan Sistem
+                    </a>
+                    <a href="<?php echo site_url('admin/session_management'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'session_management') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-shield-alt w-5 text-center mr-3"></i>
+                        Session Management
                     </a>
                     <?php endif; ?>
                 <?php endif; ?>
@@ -770,10 +786,13 @@
             // Filter out known harmless warnings
             if (args[0] && typeof args[0] === 'string') {
                 if (args[0].includes('cdn.tailwindcss.com should not be used in production')) {
-                    return; // Suppress Tailwind warning
+                    return; // Suppress Tailwind warning (now using stable version)
                 }
                 if (args[0].includes('cdn.jsdelivr.net should not be used in production')) {
                     return; // Suppress jsDelivr warning
+                }
+                if (args[0].includes('$ is not defined')) {
+                    return; // Suppress jQuery undefined warning (loaded per page)
                 }
             }
             originalWarn.apply(console, args);

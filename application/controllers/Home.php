@@ -14,13 +14,22 @@ class Home extends MY_Controller {
         $this->load->model('User_model', 'user_model');
         $this->load->model('Jadwal_model', 'jadwal_model');
         $this->load->model('Workshop_model', 'workshop_model');
-        $this->load->model('Contact_model', 'contact_model');
         $this->load->model('Recruitment_model', 'recruitment_model');
+        $this->load->model('Settings_model', 'settings_model');
         $this->load->helper(['url', 'text']);
     }
 
     public function index()
     {
+        // Check if maintenance mode is enabled
+        if ($this->settings_model->is_maintenance_mode()) {
+            $data['maintenance_message'] = $this->settings_model->get_maintenance_message();
+            $data['title'] = 'Website Sedang Dalam Pemeliharaan';
+            $data['description'] = 'Website Aset Academy sedang dalam pemeliharaan. Kami akan segera kembali melayani Anda.';
+            $this->load->view('home/maintenance', $data);
+            return;
+        }
+
         // Get featured premium classes
         $data['featured_premium'] = $this->kelas_model->get_popular_kelas(3);
 
@@ -274,43 +283,11 @@ class Home extends MY_Controller {
         $this->load->view('home/contact', $data);
     }
 
-    public function contact_submit()
+    public function maintenance()
     {
-        if (!$this->input->post()) {
-            redirect('home/contact');
-        }
-
-        $this->load->library('form_validation');
-
-        $this->form_validation->set_rules('name', 'Nama Lengkap', 'required|trim|max_length[150]');
-        $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|max_length[150]');
-        $this->form_validation->set_rules('subject', 'Subjek', 'required|trim|max_length[200]');
-        $this->form_validation->set_rules('message_type', 'Jenis Pesan', 'required|in_list[pertanyaan,kerjasama,dukungan,lainnya]');
-        $this->form_validation->set_rules('message', 'Pesan', 'required|trim|min_length[10]');
-        $this->form_validation->set_rules('preferred_contact', 'Metode Kontak', 'required|in_list[email,telepon]');
-        $this->form_validation->set_rules('phone', 'Nomor Telepon', 'trim|max_length[50]');
-        $this->form_validation->set_rules('company', 'Institusi/Perusahaan', 'trim|max_length[150]');
-
-        if ($this->form_validation->run() === false) {
-            $this->session->set_flashdata('error', validation_errors('<div>', '</div>'));
-            redirect('home/contact#contact-form');
-        }
-
-        $payload = [
-            'name' => $this->input->post('name', true),
-            'email' => $this->input->post('email', true),
-            'company' => $this->input->post('company', true),
-            'phone' => $this->input->post('phone', true),
-            'message_type' => $this->input->post('message_type', true),
-            'subject' => $this->input->post('subject', true),
-            'message' => $this->input->post('message', false),
-            'preferred_contact' => $this->input->post('preferred_contact', true),
-            'status' => 'baru'
-        ];
-
-        $this->contact_model->create($payload);
-
-        $this->session->set_flashdata('success', 'Terima kasih! Pesan Anda sudah kami terima dan akan segera diproses.');
-        redirect('home/contact#contact-form');
+        $data['maintenance_message'] = $this->settings_model->get_maintenance_message();
+        $data['title'] = 'Website Sedang Dalam Pemeliharaan';
+        $data['description'] = 'Website Aset Academy sedang dalam pemeliharaan. Kami akan segera kembali melayani Anda.';
+        $this->load->view('home/maintenance', $data);
     }
 }

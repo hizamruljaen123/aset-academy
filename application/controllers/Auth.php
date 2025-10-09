@@ -8,6 +8,7 @@ class Auth extends CI_Controller {
         parent::__construct();
         $this->load->model('Users_model');
         $this->load->model('Auth_model');
+        $this->load->model('Settings_model', 'settings_model');
         
         // Jika method logout dipanggil, skip pengecekan login
         if ($this->router->method === 'logout') {
@@ -30,9 +31,9 @@ class Auth extends CI_Controller {
         if (!$this->input->post() && $this->session->userdata('logged_in')) {
             $this->session->sess_destroy();
         }
-        
+
         $data['title'] = 'Login - Academy Lite';
-        
+
         $this->form_validation->set_rules('username', 'Username', 'required|trim');
         $this->form_validation->set_rules('password', 'Password', 'required|trim');
 
@@ -41,10 +42,19 @@ class Auth extends CI_Controller {
         } else {
             $username = $this->input->post('username');
             $password = $this->input->post('password');
-            
+
             $user = $this->Auth_model->authenticate($username, $password);
-            
+
             if ($user) {
+                // Check if maintenance mode is enabled and user is not super admin
+                if ($this->settings_model->is_maintenance_mode() &&
+                    !($user->role === 'super_admin' && $user->level == '1')) {
+                    // If maintenance mode is active and user is not super admin, deny login
+                    $this->session->set_flashdata('error', 'Website sedang dalam pemeliharaan.');
+                    redirect('auth');
+                    return;
+                }
+
                 // Set enhanced session data with level and permissions
                 $session_data = array(
                     'user_id' => $user->id,
@@ -54,9 +64,9 @@ class Auth extends CI_Controller {
                     'level' => $user->level,
                     'logged_in' => TRUE
                 );
-                
+
                 $this->session->set_userdata($session_data);
-                
+
                 // Redirect based on role and level
                 $redirect_url = $this->Auth_model->get_redirect_url($user->role, $user->level);
                 redirect($redirect_url);

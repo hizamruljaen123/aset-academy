@@ -93,9 +93,49 @@
     </div>
 
     <!-- Charts Row -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        <!-- User Growth Chart -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+        <!-- Maintenance Mode Toggle -->
         <div class="bg-white rounded-2xl shadow-xl ring-1 ring-gray-200/50 overflow-hidden">
+            <div class="p-6 border-b border-gray-200/50 bg-gradient-to-r from-gray-50 to-white">
+                <h2 class="text-xl font-bold text-gray-800">Mode Maintenance</h2>
+                <p class="text-sm text-gray-500 mt-1">Kontrol akses website</p>
+            </div>
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="font-medium text-gray-800">Status Maintenance</h3>
+                        <p class="text-sm text-gray-500">Aktifkan untuk menutup akses website</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox"
+                               id="maintenance-toggle"
+                               class="sr-only peer"
+                               onchange="toggleMaintenance()"
+                               <?php echo (isset($maintenance_mode) && $maintenance_mode) ? 'checked' : ''; ?>>
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
+                    </label>
+                </div>
+                <div id="maintenance-status" class="text-center">
+                    <?php if (isset($maintenance_mode) && $maintenance_mode): ?>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                            Maintenance Mode
+                        </span>
+                    <?php else: ?>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                            <i class="fas fa-check-circle mr-2"></i>
+                            Website Normal
+                        </span>
+                    <?php endif; ?>
+                </div>
+                <div class="mt-4 text-xs text-gray-500 text-center">
+                    <p>Hanya Super Admin yang dapat mengakses saat maintenance aktif</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Growth Chart -->
+        <div class="bg-white rounded-2xl shadow-xl ring-1 ring-gray-200/50 overflow-hidden lg:col-span-2">
             <div class="p-6 border-b border-gray-200/50 bg-gradient-to-r from-gray-50 to-white">
                 <h2 class="text-xl font-bold text-gray-800">Pertumbuhan Pengguna (30 Hari)</h2>
             </div>
@@ -742,4 +782,86 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Maintenance mode toggle function
+function toggleMaintenance() {
+    const toggle = document.getElementById('maintenance-toggle');
+    const statusDiv = document.getElementById('maintenance-status');
+    const isChecked = toggle.checked;
+
+    // Show loading state
+    statusDiv.innerHTML = '<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800"><i class="fas fa-spinner fa-spin mr-2"></i>Mengupdate...</span>';
+
+    // Make AJAX request
+    fetch('<?php echo site_url("admin/settings/toggle_maintenance"); ?>', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({
+            maintenance_mode: isChecked ? 'true' : 'false'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update status display
+            if (isChecked) {
+                statusDiv.innerHTML = '<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800"><i class="fas fa-exclamation-triangle mr-2"></i>Maintenance Mode</span>';
+            } else {
+                statusDiv.innerHTML = '<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800"><i class="fas fa-check-circle mr-2"></i>Website Normal</span>';
+            }
+
+            // Show success message
+            showNotification(data.message, 'success');
+        } else {
+            // Revert toggle on error
+            toggle.checked = !isChecked;
+            statusDiv.innerHTML = isChecked ?
+                '<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800"><i class="fas fa-check-circle mr-2"></i>Website Normal</span>' :
+                '<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800"><i class="fas fa-exclamation-triangle mr-2"></i>Maintenance Mode</span>';
+            showNotification('Gagal mengupdate status maintenance', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Revert toggle on error
+        toggle.checked = !isChecked;
+        statusDiv.innerHTML = isChecked ?
+            '<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800"><i class="fas fa-check-circle mr-2"></i>Website Normal</span>' :
+            '<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800"><i class="fas fa-exclamation-triangle mr-2"></i>Maintenance Mode</span>';
+        showNotification('Terjadi kesalahan saat mengupdate', 'error');
+    });
+}
+
+// Simple notification function
+function showNotification(message, type) {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full`;
+
+    if (type === 'success') {
+        notification.classList.add('bg-green-500', 'text-white');
+        notification.innerHTML = `<i class="fas fa-check-circle mr-2"></i>${message}`;
+    } else {
+        notification.classList.add('bg-red-500', 'text-white');
+        notification.innerHTML = `<i class="fas fa-exclamation-circle mr-2"></i>${message}`;
+    }
+
+    document.body.appendChild(notification);
+
+    // Animate in
+    setTimeout(() => {
+        notification.classList.remove('translate-x-full');
+    }, 100);
+
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.classList.add('translate-x-full');
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 300);
+    }, 3000);
+}
 </script>

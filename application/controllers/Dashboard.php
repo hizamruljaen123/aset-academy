@@ -8,6 +8,7 @@ class Dashboard extends CI_Controller
         parent::__construct();
         $this->load->model('Siswa_model');
         $this->load->model('User_model');
+        $this->load->model('Settings_model', 'settings_model');
         $this->load->library('Permission');
         
         // Check if user is logged in and has admin access
@@ -136,6 +137,7 @@ class Dashboard extends CI_Controller
         $data['active_teachers'] = $this->db->count_all_results('users');
 
         $data['title'] = 'Dashboard';
+        $data['maintenance_mode'] = $this->settings_model->is_maintenance_mode();
         $this->load->view('templates/header', $data);
         $this->load->view('dashboard/index', $data);
         $this->load->view('templates/footer');

@@ -284,6 +284,14 @@ $route['forum/toggle_pin/(:num)'] = 'forum/toggle_pin/$1';
 $route['forum/get_comments_ajax/(:num)'] = 'forum/get_comments_ajax/$1';
 $route['forum/get_viewers/(:num)'] = 'forum/get_viewers/$1';
 
+// Maintenance Mode Routes
+$route['maintenance'] = 'home/maintenance';
+$route['home/maintenance'] = 'home/maintenance';
+
+// Session Management Routes
+$route['admin/session-management'] = 'admin/session_management';
+$route['admin/session_management'] = 'admin/session_management';
+
 // Test Routes (only for development)
 $route['test/encryption'] = 'test_encryption';
 $route['test/workshop-urls'] = 'test_encryption/workshop_test';
