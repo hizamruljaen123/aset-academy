@@ -6,7 +6,7 @@
 
     <!-- Homepage -->
     <url>
-        <loc>https://asetacademy.id/</loc>
+        <loc>https://assetacademy.id/</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
@@ -14,63 +14,63 @@
 
     <!-- Main Public Pages -->
     <url>
-        <loc>https://asetacademy.id/home/about</loc>
+        <loc>https://assetacademy.id/home/about</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
 
     <url>
-        <loc>https://asetacademy.id/home/faq</loc>
+        <loc>https://assetacademy.id/home/faq</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
 
     <url>
-        <loc>https://asetacademy.id/home/premium</loc>
+        <loc>https://assetacademy.id/home/premium</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
 
     <url>
-        <loc>https://asetacademy.id/home/free</loc>
+        <loc>https://assetacademy.id/home/free</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
 
     <url>
-        <loc>https://asetacademy.id/home/digital_solutions</loc>
+        <loc>https://assetacademy.id/home/digital_solutions</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
 
     <url>
-        <loc>https://asetacademy.id/home/download_app</loc>
+        <loc>https://assetacademy.id/home/download_app</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
 
     <url>
-        <loc>https://asetacademy.id/home/partnership</loc>
+        <loc>https://assetacademy.id/home/partnership</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
 
     <url>
-        <loc>https://asetacademy.id/contact</loc>
+        <loc>https://assetacademy.id/contact</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
 
     <url>
-        <loc>https://asetacademy.id/career</loc>
+        <loc>https://assetacademy.id/career</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
@@ -78,7 +78,7 @@
 
     <!-- Workshop & Seminar Pages -->
     <url>
-        <loc>https://asetacademy.id/workshops</loc>
+        <loc>https://assetacademy.id/workshops</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
@@ -86,21 +86,21 @@
 
     <!-- Authentication Pages -->
     <url>
-        <loc>https://asetacademy.id/auth/login</loc>
+        <loc>https://assetacademy.id/auth/login</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.5</priority>
     </url>
 
     <url>
-        <loc>https://asetacademy.id/auth/register</loc>
+        <loc>https://assetacademy.id/auth/register</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.5</priority>
     </url>
 
     <url>
-        <loc>https://asetacademy.id/auth/forgot_password</loc>
+        <loc>https://assetacademy.id/auth/forgot_password</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.3</priority>
@@ -108,77 +108,77 @@
 
     <!-- Documentation -->
     <url>
-        <loc>https://asetacademy.id/documentation</loc>
+        <loc>https://assetacademy.id/documentation</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
 
     <url>
-        <loc>https://asetacademy.id/documentation/chapter1</loc>
+        <loc>https://assetacademy.id/documentation/chapter1</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
 
     <url>
-        <loc>https://asetacademy.id/documentation/chapter2</loc>
+        <loc>https://assetacademy.id/documentation/chapter2</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
 
     <url>
-        <loc>https://asetacademy.id/documentation/chapter3</loc>
+        <loc>https://assetacademy.id/documentation/chapter3</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
 
     <url>
-        <loc>https://asetacademy.id/documentation/chapter4</loc>
+        <loc>https://assetacademy.id/documentation/chapter4</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
 
     <url>
-        <loc>https://asetacademy.id/documentation/chapter5</loc>
+        <loc>https://assetacademy.id/documentation/chapter5</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
 
     <url>
-        <loc>https://asetacademy.id/documentation/chapter6</loc>
+        <loc>https://assetacademy.id/documentation/chapter6</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
 
     <url>
-        <loc>https://asetacademy.id/documentation/chapter7</loc>
+        <loc>https://assetacademy.id/documentation/chapter7</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
 
     <url>
-        <loc>https://asetacademy.id/documentation/chapter8</loc>
+        <loc>https://assetacademy.id/documentation/chapter8</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
 
     <url>
-        <loc>https://asetacademy.id/documentation/chapter9</loc>
+        <loc>https://assetacademy.id/documentation/chapter9</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
 
     <url>
-        <loc>https://asetacademy.id/documentation/chapter10</loc>
+        <loc>https://assetacademy.id/documentation/chapter10</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
@@ -186,7 +186,7 @@
 
     <!-- Forum Pages -->
     <url>
-        <loc>https://asetacademy.id/forum</loc>
+        <loc>https://assetacademy.id/forum</loc>
         <lastmod>2024-09-18</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.7</priority>
