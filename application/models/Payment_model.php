@@ -16,6 +16,38 @@ class Payment_model extends CI_Model {
                        ->result();
     }
 
+    // Create payment with validation
+    public function create_payment($data) {
+        // Ensure payment_method is valid
+        $valid_methods = ['Transfer', 'Cash', 'Other', 'Midtrans'];
+        if (!in_array($data['payment_method'], $valid_methods)) {
+            log_message('error', 'Invalid payment method: ' . $data['payment_method']);
+            return false;
+        }
+
+        // Set default values
+        $data['status'] = $data['status'] ?? 'Pending';
+        $data['created_at'] = $data['created_at'] ?? date('Y-m-d H:i:s');
+        $data['updated_at'] = $data['updated_at'] ?? date('Y-m-d H:i:s');
+
+        $this->db->insert('payments', $data);
+        $insert_id = $this->db->insert_id();
+
+        // Verify insertion and payment_method
+        if ($insert_id) {
+            $inserted = $this->get_payment($insert_id);
+            if ($inserted && $inserted->payment_method !== $data['payment_method']) {
+                // Fix if payment_method wasn't set correctly due to enum constraint
+                $this->db->where('id', $insert_id)->update('payments', [
+                    'payment_method' => $data['payment_method'],
+                    'updated_at' => date('Y-m-d H:i:s')
+                ]);
+            }
+        }
+
+        return $insert_id;
+    }
+
     // Get payment by ID
     public function get_payment($payment_id) {
         return $this->db->where('id', $payment_id)->get('payments')->row();

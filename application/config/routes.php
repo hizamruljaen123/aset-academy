@@ -56,11 +56,11 @@ $route['student/materi_detail/(:any)'] = 'student_dashboard/materi_detail/$1';
 $route['student/set_timezone'] = 'student_dashboard/set_timezone';
 $route['student/all_classes'] = 'student_dashboard/all_classes';
 $route['student/premium'] = 'student_premium';
-$route['student/premium/learn/(:num)'] = 'student_premium/learn/$1';
+$route['student/premium/learn/(:any)'] = 'student_premium/learn/$1';
 $route['student/premium/detail/(:any)'] = 'student_premium/detail/$1';
-$route['student/premium/buy/(:any)'] = 'student_premium/buy/$1';
-$route['student/premium/material/(:num)/(:num)'] = 'student_premium/material/$1/$2';
-$route['student/premium/complete_material/(:num)/(:num)'] = 'student_premium/complete_material/$1/$2';
+$route['student/premium/buy/(.+)'] = 'student_premium/buy/$1';
+$route['student/premium/material/(:any)/(:any)'] = 'student_premium/material/$1/$2';
+$route['student/premium/complete_material/(:any)/(:any)'] = 'student_premium/complete_material/$1/$2';
 $route['student/orders'] = 'payment/orders';
 $route['student/premium/orders'] = 'payment/orders';
 $route['student/premium/payment/(:any)'] = 'payment/purchase/$1';
@@ -131,7 +131,8 @@ $route['payment/initiate/(:any)'] = 'payment/initiate/$1';
 $route['payment/confirm/(:any)'] = 'payment/confirm/$1';
 $route['payment/process/(:any)'] = 'payment/process_payment/$1';
 $route['payment/process_payment/(:any)'] = 'payment/process_payment/$1';
-$route['payment/status/(:any)'] = 'payment/status/$1';
+$route['payment/status/(.+)'] = 'payment/status/$1';
+$route['student/payment/status/(.+)'] = 'payment/status/$1';
 $route['payment/orders'] = 'payment/orders';
 $route['payment/admin_verify'] = 'payment/admin_verify';
 $route['payment/admin_process_verify/(:any)'] = 'payment/admin_process_verify/$1';
@@ -205,6 +206,15 @@ $route['admin/contact/index'] = 'admin/contact/index';
 $route['admin/contact/view/(:num)'] = 'admin/contact/view/$1';
 $route['admin/contact/update_status/(:num)'] = 'admin/contact/update_status/$1';
 $route['admin/contact/delete/(:num)'] = 'admin/contact/delete/$1';
+
+// Admin Midtrans Management Routes
+$route['admin/midtrans'] = 'admin/midtrans';
+$route['admin/midtrans/index'] = 'admin/midtrans';
+$route['admin/midtrans/settings'] = 'admin/midtrans/settings';
+$route['admin/midtrans/test'] = 'admin/midtrans/test';
+$route['admin/midtrans/create_transaction'] = 'admin/midtrans/create_transaction';
+$route['admin/midtrans/update_transaction_status'] = 'admin/midtrans/update_transaction_status';
+$route['admin/midtrans/delete_transaction/(:any)'] = 'admin/midtrans/delete_transaction/$1';
 
 // Admin Forum Management Routes
 $route['admin_forum'] = 'admin_forum';
@@ -295,3 +305,4 @@ $route['admin/session_management'] = 'admin/session_management';
 // Test Routes (only for development)
 $route['test/encryption'] = 'test_encryption';
 $route['test/workshop-urls'] = 'test_encryption/workshop_test';
+

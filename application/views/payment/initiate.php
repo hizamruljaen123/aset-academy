@@ -1,4 +1,19 @@
+<?php 
+$maintenance_mode = get_setting('midtrans_maintenance_mode', 0);
+$maintenance_message = get_setting('midtrans_maintenance_message', 'Pembayaran sedang dalam perbaikan. Silakan coba lagi nanti.');
+?>
+
 <div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+    <?php if ($maintenance_mode == 1): ?>
+    <!-- Maintenance Banner -->
+    <div class="bg-yellow-500 text-white py-3 px-4 text-center">
+        <div class="container mx-auto flex items-center justify-center">
+            <i class="fas fa-tools text-xl mr-2"></i>
+            <span class="font-medium"><?php echo $maintenance_message; ?></span>
+        </div>
+    </div>
+    <?php endif; ?>
+    
     <!-- Hero Section -->
     <div class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-12">
         <div class="container mx-auto px-4 text-center">
@@ -44,10 +59,24 @@
         <div class="max-w-6xl mx-auto grid lg:grid-cols-3 gap-8">
 
             <!-- Main Payment Form -->
-            <div class="lg:col-span-2 space-y-6">
+            <div class="lg:col-span-2 space-y-6 relative">
+                    <?php if ($maintenance_mode): ?>
+                    <div class="absolute inset-0 bg-white bg-opacity-70 z-10 flex items-center justify-center rounded-xl">
+                        <div class="text-center p-6 max-w-md">
+                            <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-tools text-yellow-600 text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Pembayaran Sementara Tidak Tersedia</h3>
+                            <p class="text-gray-600 mb-4"><?php echo $maintenance_message; ?></p>
+                            <a href="<?php echo site_url('kelas'); ?>" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                                <i class="fas fa-arrow-left mr-2"></i> Kembali ke Kelas
+                            </a>
+                        </div>
+                    </div>
+                    <?php endif; ?>
 
                 <!-- Payment Method Selection -->
-                <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="bg-white rounded-xl shadow-lg p-6 <?php echo $maintenance_mode ? 'opacity-75 pointer-events-none' : ''; ?>">
                     <div class="flex items-center mb-6">
                         <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
                             <i class="fas fa-wallet text-blue-600 text-xl"></i>
@@ -71,6 +100,27 @@
                                 </div>
                             </div>
                             <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                        </label>
+
+                        <label class="flex items-center p-4 border-2 <?php echo $maintenance_mode ? 'border-gray-300 bg-gray-50' : 'border-green-500 bg-green-50'; ?> rounded-xl <?php echo $maintenance_mode ? 'cursor-not-allowed' : 'cursor-pointer'; ?>">
+                            <input type="radio" name="payment_method_display" value="Midtrans" class="<?php echo $maintenance_mode ? 'text-gray-400' : 'text-green-600'; ?> mr-4" <?php echo $maintenance_mode ? 'disabled' : ''; ?>>
+                            <div class="flex items-center flex-1">
+                                <div class="w-12 h-12 <?php echo $maintenance_mode ? 'bg-gray-400' : 'bg-green-600'; ?> rounded-lg flex items-center justify-center mr-4">
+                                    <i class="fas fa-credit-card text-white text-lg"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold <?php echo $maintenance_mode ? 'text-gray-500' : 'text-gray-900'; ?>">
+                                        Midtrans Payment Gateway
+                                        <?php if ($maintenance_mode): ?>
+                                            <span class="ml-2 text-sm font-normal text-yellow-600">(Sementara Tidak Tersedia)</span>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="text-sm <?php echo $maintenance_mode ? 'text-gray-400' : 'text-gray-600'; ?>">
+                                        Bayar dengan kartu kredit, GoPay, ShopeePay, dan lainnya
+                                    </div>
+                                </div>
+                            </div>
+                            <i class="fas fa-check-circle text-green-600 text-xl hidden"></i>
                         </label>
                     </div>
                 </div>
@@ -143,8 +193,57 @@
                     </div>
                 </div>
 
-                <!-- User Information -->
-                <div class="bg-white rounded-xl shadow-lg p-6">
+                <!-- Midtrans Payment Section -->
+                <div class="bg-white rounded-xl shadow-lg p-6 hidden" id="midtrans-section">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
+                            <i class="fas fa-credit-card text-green-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900">Pembayaran Midtrans</h3>
+                            <p class="text-gray-600">Pilih metode pembayaran digital yang tersedia</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                        <div class="flex items-center">
+                            <i class="fas fa-info-circle text-green-600 mr-3"></i>
+                            <div>
+                                <p class="text-green-800 font-medium">Metode Pembayaran Tersedia</p>
+                                <p class="text-green-700 text-sm">Kartu Kredit, GoPay, ShopeePay, BCA VA, BNI VA, BRI VA, dan lainnya</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        <div class="flex items-center justify-center p-4 bg-white border border-gray-200 rounded-lg">
+                            <i class="fas fa-credit-card text-2xl text-blue-600"></i>
+                        </div>
+                        <div class="flex items-center justify-center p-4 bg-white border border-gray-200 rounded-lg">
+                            <img src="https://static-src.vocagame.com/gopay/GoPay-Logogram_Blue-1056d-original.png" alt="GoPay" class="h-8">
+                        </div>
+                        <div class="flex items-center justify-center p-4 bg-white border border-gray-200 rounded-lg">
+                            <img src="https://tokpee.co/blog/wp-content/uploads/2025/03/Begini-Cara-Membagikan-Kode-QR-ShopeePay-Biar-Uang-Langsung-Masuk-512x269.webp" alt="ShopeePay" class="h-8">
+                        </div>
+                        <div class="flex items-center justify-center p-4 bg-white border border-gray-200 rounded-lg">
+                            <span class="text-sm font-medium text-gray-600">VA Bank</span>
+                        </div>
+                    </div>
+
+                    <!-- Midtrans Submit Button -->
+                    <button type="button"
+                            id="midtrans-submit-btn"
+                            class="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-4 px-6 rounded-xl text-lg shadow-lg transition-all duration-300 flex items-center justify-center">
+                        <i class="fas fa-credit-card mr-3"></i>
+                        <span>Bayar dengan Midtrans</span>
+                    </button>
+
+                    <p class="text-sm text-gray-500 text-center mt-4">
+                        <i class="fas fa-shield-alt mr-1"></i>
+                        Pembayaran dijamin aman dengan teknologi enkripsi Midtrans
+                    </p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6" id="user-info-section">
                     <div class="flex items-center mb-6">
                         <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
                             <i class="fas fa-user-edit text-purple-600 text-xl"></i>
@@ -324,7 +423,7 @@
 </div>
 
 <!-- Hidden Form for Submission -->
-<form id="payment-form" action="<?= site_url('payment/process_payment/' . $class->id) ?>" method="POST" class="hidden">
+<form id="payment-form" action="<?php echo site_url('payment/process_payment/' . $class->id); ?>" method="POST" class="hidden">
     <!-- CSRF Token -->
     <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
 
@@ -340,6 +439,9 @@
     <input type="hidden" name="user_account_holder" id="hidden_user_account_holder">
     <input type="hidden" name="payment_description" id="hidden_payment_description">
 </form>
+
+<!-- Midtrans Snap JS -->
+<script src="<?php echo $midtrans_config['is_production'] ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js'; ?>" data-client-key="<?php echo $midtrans_config['client_key']; ?>"></script>
 
 <style>
 .bank-card {
@@ -399,11 +501,29 @@
 // Modern Payment Form JavaScript
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🎯 Modern Payment Form Initialized');
+    
+    // Disable all form elements if in maintenance mode
+    const maintenanceMode = <?php echo $maintenance_mode ? 'true' : 'false'; ?>;
+    if (maintenanceMode) {
+        const formElements = document.querySelectorAll('input, select, button, .bank-card, .payment-method');
+        formElements.forEach(el => {
+            if (!el.classList.contains('back-button')) { // Don't disable back button
+                el.disabled = true;
+            }
+        });
+    }
 
     // DOM Elements
     const bankCards = document.querySelectorAll('.bank-card');
     const submitBtn = document.getElementById('submit-btn');
+    const midtransSubmitBtn = document.getElementById('midtrans-submit-btn');
     const accountDetails = document.querySelector('.account-details');
+    const bankSelectionSection = document.getElementById('bank-selection-section');
+    const midtransSection = document.getElementById('midtrans-section');
+    const userInfoSection = document.getElementById('user-info-section');
+
+    // Payment method radios
+    const paymentMethodRadios = document.querySelectorAll('input[name="payment_method_display"]');
 
     // Bank accounts data
     const bankAccounts = {};
@@ -420,6 +540,42 @@ document.addEventListener('DOMContentLoaded', function() {
     if (firstBankCard) {
         selectBankCard(firstBankCard);
     }
+
+    // Payment method switching
+    paymentMethodRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            const method = this.value;
+
+            // Update visual indicators
+            document.querySelectorAll('input[name="payment_method_display"]').forEach(r => {
+                const label = r.closest('label');
+                const checkIcon = label.querySelector('.fas.fa-check-circle');
+                if (r === this) {
+                    checkIcon.classList.remove('hidden');
+                    label.classList.add('border-green-500', 'bg-green-50');
+                    label.classList.remove('border-blue-500', 'bg-blue-50');
+                } else {
+                    checkIcon.classList.add('hidden');
+                    label.classList.remove('border-green-500', 'bg-green-50');
+                    label.classList.add('border-gray-200', 'bg-white');
+                }
+            });
+
+            if (method === 'Transfer') {
+                bankSelectionSection.classList.remove('hidden');
+                userInfoSection.classList.remove('hidden');
+                midtransSection.classList.add('hidden');
+                submitBtn.style.display = 'flex';
+                midtransSubmitBtn.style.display = 'none';
+            } else if (method === 'Midtrans') {
+                bankSelectionSection.classList.add('hidden');
+                userInfoSection.classList.add('hidden');
+                midtransSection.classList.remove('hidden');
+                submitBtn.style.display = 'none';
+                midtransSubmitBtn.style.display = 'flex';
+            }
+        });
+    });
 
     // Bank Card Selection
     function selectBankCard(cardElement) {
@@ -459,6 +615,91 @@ document.addEventListener('DOMContentLoaded', function() {
         card.addEventListener('click', function() {
             selectBankCard(this);
         });
+    });
+
+    // Midtrans payment handler
+    midtransSubmitBtn.addEventListener('click', async function(e) {
+        e.preventDefault();
+
+        midtransSubmitBtn.disabled = true;
+        midtransSubmitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-3"></i><span>Mempersiapkan pembayaran...</span>';
+
+        try {
+            const formData = new FormData();
+            formData.append('payment_method', 'Midtrans');
+            formData.append('amount', '<?= $class->harga ?>');
+            formData.append('<?php echo $this->security->get_csrf_token_name(); ?>', '<?php echo $this->security->get_csrf_hash(); ?>');
+
+            const response = await fetch('<?php echo site_url('payment/process_payment/' . $class->id); ?>', {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.success && data.token) {
+                // Store order_id for use in callbacks
+                const orderId = data.order_id;
+
+                // Open Midtrans Snap
+                if (window.snap) {
+                    window.snap.pay(data.token, {
+                        onSuccess: function(result) {
+                            console.log('Success:', result);
+                            window.location.href = '<?php echo site_url('midtrans_public/success'); ?>?order_id=' + result.order_id;
+                        },
+                        onPending: function(result) {
+                            console.log('Pending:', result);
+                            window.location.href = '<?php echo site_url('midtrans_public/success'); ?>?order_id=' + result.order_id;
+                        },
+                        onError: function(result) {
+                            console.error('Error:', result);
+                            showErrorToast('Pembayaran gagal. Silakan coba lagi.');
+                            midtransSubmitBtn.disabled = false;
+                            midtransSubmitBtn.innerHTML = '<i class="fas fa-credit-card mr-3"></i><span>Bayar dengan Midtrans</span>';
+                        },
+                        onClose: function() {
+                            console.log('Snap modal closed');
+                            midtransSubmitBtn.disabled = false;
+                            midtransSubmitBtn.innerHTML = '<i class="fas fa-credit-card mr-3"></i><span>Bayar dengan Midtrans</span>';
+
+                            // Extract payment_id from order_id (format: PAY-{payment_id}-{timestamp})
+                            let paymentId = null;
+                            if (orderId) {
+                                const orderParts = orderId.split('-');
+                                if (orderParts.length >= 2 && orderParts[0] === 'PAY') {
+                                    paymentId = orderParts[1];
+                                }
+                            }
+
+                            // Redirect to payment status page if we have payment_id, otherwise to orders
+                            if (paymentId) {
+                                // Redirect to payment status page with the extracted payment_id
+                                window.location.href = '<?php echo site_url('payment/status'); ?>/' + paymentId;
+                            } else {
+                                window.location.href = '<?php echo site_url('student/orders'); ?>';
+                            }
+                        }
+                    });
+                } else {
+                    showErrorToast('Midtrans tidak dapat dimuat. Silakan refresh halaman.');
+                    midtransSubmitBtn.disabled = false;
+                    midtransSubmitBtn.innerHTML = '<i class="fas fa-credit-card mr-3"></i><span>Bayar dengan Midtrans</span>';
+                }
+            } else {
+                showErrorToast(data.error || 'Gagal memproses pembayaran.');
+                midtransSubmitBtn.disabled = false;
+                midtransSubmitBtn.innerHTML = '<i class="fas fa-credit-card mr-3"></i><span>Bayar dengan Midtrans</span>';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showErrorToast('Terjadi kesalahan atau sedang dalam perbaikan sistem. Silakan coba lagi.');
+            midtransSubmitBtn.disabled = false;
+            midtransSubmitBtn.innerHTML = '<i class="fas fa-credit-card mr-3"></i><span>Bayar dengan Midtrans</span>';
+        }
     });
 
     // Copy account number functionality

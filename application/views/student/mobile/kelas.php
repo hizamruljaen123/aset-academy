@@ -176,7 +176,7 @@
                             <i data-feather="eye" class="w-4 h-4 inline mr-1"></i>
                             Detail
                         </button>
-                        <button onclick="location.href='<?= site_url("payment/initiate/".$kelas->id) ?>'" class="mobile-btn flex-1 border border-yellow-600 text-yellow-600">
+                        <button onclick="location.href='<?= site_url('payment/initiate/'.encrypt_url($kelas->id)) ?>'" class="mobile-btn flex-1 border border-yellow-600 text-yellow-600">
                             <i data-feather="shopping-cart" class="w-4 h-4 inline mr-1"></i>
                             Beli
                         </button>

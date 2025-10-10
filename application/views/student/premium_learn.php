@@ -10,7 +10,7 @@
         </div>
         <div class="flex flex-col md:flex-row md:space-x-3 space-y-3 md:space-y-0">
             
-            <a href="<?php echo site_url('student/premium/detail/' . $enrollment->class_id); ?>" class="inline-flex items-center px-4 py-2 border border-white/30 rounded-lg text-sm font-medium text-white bg-white/10 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+            <a href="<?php echo site_url('student/premium/detail/'.encrypt_url($enrollment->class_id)); ?>" class="inline-flex items-center px-4 py-2 border border-white/30 rounded-lg text-sm font-medium text-white bg-white/10 hover:bg-white/20 transition-all duration-300 hover:scale-105">
                 <i class="fas fa-arrow-left mr-2"></i>
                 Kembali ke Detail Kelas
             </a>
@@ -44,7 +44,7 @@
                         <h3 class="text-sm font-medium text-gray-700 mb-3">Materi</h3>
                         <div class="space-y-2">
                             <?php foreach ($progress as $index => $item): ?>
-                                <a href="<?php echo site_url('student/premium/material/' . $enrollment->id . '/' . $item->material_id); ?>" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition-colors <?php echo ($item->status == 'Completed') ? 'bg-green-50' : ''; ?>">
+                                <a href="<?php echo site_url('student/premium/material/' . encrypt_url($enrollment->id) . '/' . encrypt_url($item->material_id)); ?>" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition-colors <?php echo ($item->status == 'Completed') ? 'bg-green-50' : ''; ?>">
                                     <div class="h-6 w-6 rounded-full <?php echo ($item->status == 'Completed') ? 'bg-green-600' : (($item->status == 'In Progress') ? 'bg-blue-600' : 'bg-gray-300'); ?> flex items-center justify-center text-white text-xs font-medium mr-3">
                                         <?php echo ($item->status == 'Completed') ? '<i class="fas fa-check"></i>' : ($index + 1); ?>
                                     </div>
@@ -193,7 +193,7 @@
                                 }
                                 ?>
                                 <?php if ($next_material): ?>
-                                    <a href="<?php echo site_url('student/premium/material/' . $enrollment->id . '/' . $next_material->material_id); ?>" class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 hover:scale-105">
+                                    <a href="<?php echo site_url('student/premium/material/' . encrypt_url($enrollment->id) . '/' . encrypt_url($next_material->material_id)); ?>" class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 hover:scale-105">
                                         <i class="fas fa-play-circle mr-2"></i>
                                         <?php echo ($next_material->status == 'In Progress') ? 'Lanjutkan Belajar' : 'Mulai Belajar'; ?>
                                     </a>
@@ -333,7 +333,7 @@
                                                 else echo 'Belum Dimulai';
                                                 ?>
                                             </span>
-                                            <a href="<?php echo site_url('student/premium/material/' . $enrollment->id . '/' . $material->id); ?>" class="inline-flex items-center px-3 py-1 border border-transparent rounded-lg shadow-sm text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300">
+                                            <a href="<?php echo site_url('student/premium/material/' . encrypt_url($enrollment->id) . '/' . encrypt_url($material->id)); ?>" class="inline-flex items-center px-3 py-1 border border-transparent rounded-lg shadow-sm text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300">
                                                 <?php echo ($material_progress && $material_progress->status != 'Not Started') ? 'Lanjutkan' : 'Mulai'; ?>
                                             </a>
                                         </div>

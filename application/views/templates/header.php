@@ -589,6 +589,10 @@
                         <i class="fas fa-shield-alt w-5 text-center mr-3"></i>
                         Session Management
                     </a>
+                    <a href="<?php echo site_url('admin/midtrans'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'midtrans') ? 'bg-blue-50 text-blue-600' : ''; ?>">
+                        <i class="fas fa-credit-card w-5 text-center mr-3"></i>
+                        Midtrans Payment
+                    </a>
                     <?php endif; ?>
                 <?php endif; ?>
             </nav>

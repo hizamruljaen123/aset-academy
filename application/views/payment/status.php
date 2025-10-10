@@ -95,9 +95,86 @@
                         <?php endif; ?>
                     </div>
                 </div>
+            <?php elseif ($payment->payment_method == 'Midtrans'): ?>
+                <?php
+                // Load Midtrans model to get transaction details
+                $this->load->model('Midtrans_model');
+                
+                // Extract order_id from payment_description (format: "Midtrans Order ID: PAY-30-1760112785")
+                $order_id = null;
+                if (preg_match('/Midtrans Order ID:\s*([^\s]+)/', $payment->payment_description, $matches)) {
+                    $order_id = $matches[1];
+                } else {
+                    // Fallback: use payment_description directly if it contains order_id
+                    $order_id = trim($payment->payment_description);
+                }
+                
+                $midtrans_transaction = $this->Midtrans_model->get_transaction_by_order_id($order_id);
+                ?>
+                <div class="mb-6 p-4 bg-green-50 rounded-lg">
+                    <h3 class="text-lg font-semibold text-green-800 mb-2">Detail Pembayaran Midtrans</h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <?php if ($midtrans_transaction): ?>
+                        <div>
+                            <p class="text-gray-600">Order ID:</p>
+                            <p class="font-bold font-mono text-sm bg-white px-2 py-1 rounded border"><?= htmlspecialchars($midtrans_transaction->order_id) ?></p>
+                        </div>
+
+                        <div>
+                            <p class="text-gray-600">Transaction ID:</p>
+                            <p class="font-bold font-mono text-sm bg-white px-2 py-1 rounded border"><?= htmlspecialchars($midtrans_transaction->transaction_id ?? 'Belum tersedia') ?></p>
+                        </div>
+
+                        <div>
+                            <p class="text-gray-600">Metode Pembayaran:</p>
+                            <p class="font-bold"><?= htmlspecialchars($midtrans_transaction->payment_type ?? 'Belum dipilih') ?></p>
+                        </div>
+
+                        <div>
+                            <p class="text-gray-600">Status Transaksi:</p>
+                            <span class="px-2 py-1 rounded-full text-sm font-medium
+                                <?php
+                                switch($midtrans_transaction->transaction_status) {
+                                    case 'settlement':
+                                    case 'capture':
+                                        echo 'bg-green-100 text-green-800';
+                                        break;
+                                    case 'pending':
+                                        echo 'bg-yellow-100 text-yellow-800';
+                                        break;
+                                    case 'deny':
+                                    case 'cancel':
+                                    case 'expire':
+                                    case 'failure':
+                                        echo 'bg-red-100 text-red-800';
+                                        break;
+                                    default:
+                                        echo 'bg-gray-100 text-gray-800';
+                                }
+                                ?>">
+                                <?php echo ucfirst($midtrans_transaction->transaction_status ?? 'unknown'); ?>
+                            </span>
+                        </div>
+
+                        <div>
+                            <p class="text-gray-600">Tanggal Transaksi:</p>
+                            <p class="font-bold"><?= date('d M Y H:i', strtotime($midtrans_transaction->created_at)) ?></p>
+                        </div>
+
+                       
+                        <?php else: ?>
+                        <div class="md:col-span-2">
+                            <p class="text-gray-600">Status:</p>
+                            <p class="font-bold text-orange-600">Transaksi Midtrans sedang diproses...</p>
+                            <p class="text-sm text-gray-500 mt-1">Detail pembayaran akan muncul setelah transaksi selesai diproses.</p>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
             <?php endif; ?>
             
-            <?php if ($payment->status == 'Pending' && empty($payment->payment_proof)): ?>
+            <?php if ($payment->status == 'Pending' && empty($payment->payment_proof) && $payment->payment_method == 'Transfer'): ?>
                 <div class="mb-6 p-4 bg-orange-50 border-l-4 border-orange-400 rounded-lg">
                     <div class="flex">
                         <div class="flex-shrink-0">
@@ -115,6 +192,56 @@
                                     <i class="fas fa-upload mr-2"></i>
                                     Upload Bukti Pembayaran
                                 </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($payment->status == 'Pending' && $payment->payment_method == 'Midtrans'): ?>
+                <?php
+                // Load Midtrans model to get transaction details
+                $this->load->model('Midtrans_model');
+                
+                // Extract order_id from payment_description (format: "Midtrans Order ID: PAY-30-1760112785")
+                $order_id = null;
+                if (preg_match('/Midtrans Order ID:\s*([^\s]+)/', $payment->payment_description, $matches)) {
+                    $order_id = $matches[1];
+                } else {
+                    // Fallback: use payment_description directly if it contains order_id
+                    $order_id = trim($payment->payment_description);
+                }
+                
+                $midtrans_transaction = $this->Midtrans_model->get_transaction_by_order_id($order_id);
+                ?>
+                <div class="mb-6 p-4 bg-blue-50 border-l-4 border-blue-400 rounded-lg">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-clock text-blue-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-blue-800">
+                                Pembayaran Belum Selesai
+                            </h3>
+                            <div class="mt-2 text-sm text-blue-700">
+                                <p>Silakan lanjutkan pembayaran menggunakan link di bawah ini:</p>
+                                <?php if ($midtrans_transaction && !empty($midtrans_transaction->redirect_url)): ?>
+                                <div class="mt-3">
+                                    <a href="<?= $midtrans_transaction->redirect_url ?>" target="_blank" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        <i class="fas fa-external-link-alt mr-2"></i>
+                                        Lanjutkan Pembayaran Midtrans
+                                        <i class="fas fa-arrow-right ml-2"></i>
+                                    </a>
+                                </div>
+                                <p class="mt-2 text-xs text-blue-600">
+                                    Link ini akan mengarahkan Anda ke halaman pembayaran Midtrans
+                                </p>
+                                <?php else: ?>
+                                <p class="mt-2 text-orange-600">
+                                    <i class="fas fa-exclamation-triangle mr-1"></i>
+                                    Link pembayaran sedang dipersiapkan. Silakan refresh halaman ini dalam beberapa saat.
+                                </p>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>

@@ -5,6 +5,7 @@ class Student_premium extends CI_Controller {
         $this->load->model('Kelas_programming_model');
         $this->load->model('Payment_model');
         $this->load->model('Premium_enrollment_model');
+        $this->load->library('encryption_url');
         
         if (!$this->session->userdata('logged_in')) {
             redirect('auth');
@@ -41,6 +42,7 @@ class Student_premium extends CI_Controller {
     }
     
     public function detail($class_id) {
+        $class_id = $this->encryption_url->decode($class_id);
         // Validate class exists
         $class = $this->Kelas_programming_model->get_kelas_by_id($class_id);
         if (!$class) {
@@ -56,6 +58,9 @@ class Student_premium extends CI_Controller {
     }
     
     public function buy($class_id) {
+        // Decode the URL-safe string back to the original format
+        $class_id = str_replace(array('-', '_'), array('+', '/'), $class_id);
+        $class_id = $this->encryption_url->decode($class_id);
         // Check if user is logged in and is a student
         if (!$this->session->userdata('logged_in')) {
             redirect('auth');
@@ -103,7 +108,7 @@ class Student_premium extends CI_Controller {
         }
 
         // Redirect to payment initiate page
-        redirect('payment/initiate/' . $class_id);
+        redirect('payment/initiate/' . $this->encryption_url->encode($class_id));
     }
     
     public function learn($enrollment_id)

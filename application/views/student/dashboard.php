@@ -352,7 +352,7 @@
                                                 <p class="text-sm text-gray-600 mb-3"><?php echo substr($class->deskripsi, 0, 120) . (strlen($class->deskripsi) > 120 ? '...' : ''); ?></p>
                                                 <div class="flex justify-between items-center">
                                                     <span class="text-lg font-bold text-gray-900">Rp <?php echo number_format($class->harga, 0, ',', '.'); ?></span>
-                                                    <a href="<?php echo site_url('payment/initiate/'.$class->id); ?>" class="inline-flex items-center px-3 py-1.5 border border-transparent rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                                                    <a href="<?php echo site_url('payment/initiate/'.encrypt_url($class->id)); ?>" class="inline-flex items-center px-3 py-1.5 border border-transparent rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                                                         <i class="fas fa-shopping-cart mr-1"></i>
                                                         Beli Sekarang
                                                     </a>

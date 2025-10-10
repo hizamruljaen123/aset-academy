@@ -95,13 +95,17 @@
                         
                         <div class="border-t border-gray-100 p-3">
                             <div class="flex space-x-2">
+                                <?php 
+                                $encrypted_id = $this->encryption_url->encode($payment->id);
+                                $url_safe_id = str_replace(['+', '/'], ['-', '_'], $encrypted_id);
+                                ?>
                                 <?php if($payment->status === 'Pending'): ?>
-                                    <button onclick="location.href='<?= site_url('payment/status/' . $payment->id) ?>'" class="flex-1 mobile-btn bg-blue-600 text-white text-sm">
+                                    <button onclick="location.href='<?= site_url('payment/status/' . $url_safe_id) ?>'" class="flex-1 mobile-btn bg-blue-600 text-white text-sm">
                                         <i data-feather="credit-card" class="w-3 h-3 inline mr-1"></i>
                                         Bayar Sekarang
                                     </button>
                                 <?php else: ?>
-                                    <button onclick="location.href='<?= site_url('payment/status/' . $payment->id) ?>'" class="flex-1 mobile-btn bg-gray-100 text-gray-700 text-sm">
+                                    <button onclick="location.href='<?= site_url('payment/status/' . $url_safe_id) ?>'" class="flex-1 mobile-btn bg-gray-100 text-gray-700 text-sm">
                                         <i data-feather="eye" class="w-3 h-3 inline mr-1"></i>
                                         Lihat Detail
                                     </button>
@@ -152,7 +156,11 @@
                         </div>
                         
                         <div class="border-t border-gray-100 p-3">
-                            <button onclick="location.href='<?= site_url('payment/status/' . $payment->id) ?>'" class="w-full mobile-btn bg-yellow-600 text-white text-sm">
+                            <?php 
+                            $encrypted_id = $this->encryption_url->encode($payment->id);
+                            $url_safe_id = str_replace(['+', '/'], ['-', '_'], $encrypted_id);
+                            ?>
+                            <button onclick="location.href='<?= site_url('payment/status/' . $url_safe_id) ?>'" class="w-full mobile-btn bg-yellow-600 text-white text-sm">
                                 <i data-feather="credit-card" class="w-3 h-3 inline mr-1"></i>
                                 Lanjutkan Pembayaran
                             </button>
@@ -196,13 +204,17 @@
                             </div>
                         </div>
                         
+                        <?php 
+                        $encrypted_id = $this->encryption_url->encode($payment->id);
+                        $url_safe_id = str_replace(['+', '/'], ['-', '_'], $encrypted_id);
+                        ?>
                         <div class="border-t border-gray-100 p-3">
                             <div class="flex space-x-2">
-                                <button onclick="location.href='<?= site_url('payment/status/' . $payment->id) ?>'" class="flex-1 mobile-btn bg-gray-100 text-gray-700 text-sm">
+                                <button onclick="location.href='<?= site_url('payment/status/' . $url_safe_id) ?>'" class="flex-1 mobile-btn bg-gray-100 text-gray-700 text-sm">
                                     <i data-feather="eye" class="w-3 h-3 inline mr-1"></i>
                                     Detail
                                 </button>
-                                <button onclick="location.href='<?= site_url('payment/invoice/' . $payment->id) ?>'" class="flex-1 mobile-btn bg-blue-50 text-blue-600 text-sm">
+                                <button onclick="location.href='<?= site_url('payment/invoice/' . $url_safe_id) ?>'" class="flex-1 mobile-btn bg-blue-50 text-blue-600 text-sm">
                                     <i data-feather="download" class="w-3 h-3 inline mr-1"></i>
                                     Invoice
                                 </button>

@@ -33,10 +33,10 @@
                                     <div class="flex justify-between items-center">
                                         <span class="text-lg font-bold text-blue-600">Rp <?= number_format($class->harga, 0, ',', '.') ?></span>
                                         <div class="flex space-x-2">
-                                            <a href="<?= site_url('kelas/detail/'.$class->id) ?>" class="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all text-sm font-medium">
+                                            <a href="<?= site_url('kelas/detail/'.encrypt_url($class->id)) ?>" class="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all text-sm font-medium">
                                                 Lihat Detail
                                             </a>
-                                            <a href="<?= site_url('student/premium/buy/'.$class->id) ?>" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 text-sm font-medium">
+                                            <a href="<?= site_url('student/premium/buy/'.encrypt_url($class->id)) ?>" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 text-sm font-medium">
                                                 Beli Sekarang
                                             </a>
                                         </div>
@@ -80,7 +80,7 @@
                             <td class="px-4 py-3 whitespace-nowrap">Rp <?= number_format($o->amount,0,',','.') ?></td>
                             <td class="px-4 py-3 whitespace-nowrap">
                                 <?php if(!empty($o->invoice_number)): ?>
-                                    <a href="<?= site_url('payment/invoice/'.$o->id) ?>" target="_blank" class="text-blue-600 hover:underline text-xs">
+                                    <a href="<?= site_url('payment/invoice/'.encrypt_url($o->id)) ?>" target="_blank" class="text-blue-600 hover:underline text-xs">
                                         <?= $o->invoice_number ?>
                                     </a>
                                 <?php else: ?>
@@ -97,7 +97,11 @@
                                 <?php endif; ?>
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap">
-                                <a href="<?= site_url('payment/status/'.$o->id) ?>" class="text-blue-600 hover:underline">Lihat</a>
+                                <?php 
+                                $encrypted_id = $this->encryption_url->encode($o->id);
+                                $url_safe_id = str_replace(['+', '/'], ['-', '_'], $encrypted_id);
+                                ?>
+                                <a href="<?= site_url('payment/status/'.$url_safe_id) ?>" class="text-blue-600 hover:underline">Lihat</a>
                             </td>
                         </tr>
                         <?php endforeach; ?>
@@ -120,7 +124,7 @@
                             <h4 class="font-medium text-gray-800"><?= $c->class_name ?></h4>
                             <p class="text-sm text-gray-500">Rp <?= number_format($c->amount,0,',','.') ?></p>
                         </div>
-                        <a href="<?= site_url('kelas/detail/'.$c->class_id) ?>" class="text-sm text-blue-600 hover:underline">Akses</a>
+                        <a href="<?= site_url('kelas/detail/'.encrypt_url($c->class_id)) ?>" class="text-sm text-blue-600 hover:underline">Akses</a>
                     </div>
                 <?php endforeach; ?>
             </div>

@@ -222,37 +222,18 @@
     let selectedClassId = null;
     let selectedClassName = null;
     let selectedPrice = null;
+    let encryptedUrls = {};
+
+    // Generate encrypted URLs for premium classes
+    <?php foreach($premium_classes as $class): ?>
+    encryptedUrls[<?php echo $class->id; ?>] = '<?php echo encrypt_url($class->id); ?>';
+    <?php endforeach; ?>
 
     function enrollClass(classId, className) {
         selectedClassId = classId;
         selectedClassName = className;
         document.getElementById('className').textContent = className;
         document.getElementById('enrollmentModal').classList.remove('hidden');
-    }
-
-    function closeEnrollmentModal() {
-        document.getElementById('enrollmentModal').classList.add('hidden');
-        selectedClassId = null;
-        selectedClassName = null;
-    }
-
-    function confirmEnrollment() {
-        // Simulate enrollment process
-        showToast('Mendaftar ke ' + selectedClassName + '...');
-        
-        setTimeout(() => {
-            closeEnrollmentModal();
-            showToast('Pendaftaran berhasil! Silakan cek kelas Anda.');
-        }, 2000);
-    }
-
-    function purchaseClass(classId, className, price) {
-        selectedClassId = classId;
-        selectedClassName = className;
-        selectedPrice = price;
-        document.getElementById('purchaseClassName').textContent = className;
-        document.getElementById('purchasePrice').textContent = price;
-        document.getElementById('purchaseModal').classList.remove('hidden');
     }
 
     function closePurchaseModal() {
@@ -265,14 +246,13 @@
     function confirmPurchase() {
         // Redirect to payment page
         closePurchaseModal();
-        location.href = '<?= site_url("payment/initiate/") ?>' + selectedClassId;
+        location.href = '<?= site_url('payment/initiate/') ?>' + encryptedUrls[selectedClassId];
     }
 
     function showToast(message) {
         const toast = document.createElement('div');
         toast.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300';
-        toast.textContent = message;
-        document.body.appendChild(toast);
+{{ ... }}
         
         setTimeout(() => {
             toast.classList.remove('translate-x-full');

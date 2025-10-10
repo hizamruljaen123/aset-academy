@@ -31,12 +31,9 @@ class Kelas_programming_model extends CI_Model {
         return 4.5; // Nilai default atau bisa diambil dari cache/config
     }
 
-    public function is_user_enrolled($user_id, $kelas_id)
-    {
-        $this->db->where('user_id', $user_id);
-        $this->db->where('class_id', $kelas_id);
-        $this->db->where('status', 'Verified');
-        $query = $this->db->get('payments');
-        return $query->num_rows() > 0;
+    public function get_all_active_classes() {
+        $this->db->where('status', 'Aktif');
+        $this->db->order_by('nama_kelas', 'ASC');
+        return $this->db->get('kelas_programming')->result();
     }
 }
