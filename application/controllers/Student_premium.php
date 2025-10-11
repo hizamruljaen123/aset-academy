@@ -31,6 +31,10 @@ class Student_premium extends CI_Controller {
         // Get available premium classes
         $data['premium_classes'] = $this->Kelas_programming_model->get_premium_classes($student_id);
 
+        // Get total count of premium classes for conditional display
+        $all_premium_classes = $this->Kelas_programming_model->get_all_premium_classes();
+        $data['total_premium_classes_count'] = count($all_premium_classes);
+
         // Pesanan kelas (semua pembayaran)
         $this->load->model('Payment_model');
         $data['orders'] = $this->Payment_model->get_user_payments($student_id);
@@ -76,6 +80,11 @@ class Student_premium extends CI_Controller {
             show_404();
         }
 
+        // Allow viewing of both Active and Coming Soon classes
+        if (!in_array($class->status, ['Aktif', 'Coming Soon'])) {
+            show_error('Kelas ini belum tersedia', 403);
+        }
+
         // Check if already enrolled in premium class (avoid duplicate payment for premium classes)
         $premium_enrollment = $this->db->where([
             'class_id' => $class_id,
@@ -105,6 +114,11 @@ class Student_premium extends CI_Controller {
         if ($pending_payment) {
             $this->session->set_flashdata('message', 'Anda sudah memiliki pembayaran yang sedang diverifikasi');
             redirect('payment/status/' . $pending_payment->id);
+        }
+
+        // Only allow purchase for Active classes
+        if ($class->status != 'Aktif') {
+            show_error('Kelas ini belum tersedia untuk pembelian', 403);
         }
 
         // Redirect to payment initiate page

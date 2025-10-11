@@ -33,12 +33,20 @@
                                     <div class="flex justify-between items-center">
                                         <span class="text-lg font-bold text-blue-600">Rp <?= number_format($class->harga, 0, ',', '.') ?></span>
                                         <div class="flex space-x-2">
-                                            <a href="<?= site_url('kelas/detail/'.encrypt_url($class->id)) ?>" class="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all text-sm font-medium">
-                                                Lihat Detail
-                                            </a>
-                                            <a href="<?= site_url('student/premium/buy/'.encrypt_url($class->id)) ?>" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 text-sm font-medium">
-                                                Beli Sekarang
-                                            </a>
+                                            <?php if ($class->status == 'Aktif'): ?>
+                                                <a href="<?= site_url('kelas/detail/'.encrypt_url($class->id)) ?>" class="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all text-sm font-medium">
+                                                    Lihat Detail
+                                                </a>
+                                            <?php endif; ?>
+                                            <?php if ($class->status == 'Coming Soon'): ?>
+                                                <button class="px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed text-sm font-medium" disabled>
+                                                    Coming Soon
+                                                </button>
+                                            <?php else: ?>
+                                                <a href="<?= site_url('student/premium/buy/'.encrypt_url($class->id)) ?>" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 text-sm font-medium">
+                                                    Beli Sekarang
+                                                </a>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </div>

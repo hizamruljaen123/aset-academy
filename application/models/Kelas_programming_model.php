@@ -7,13 +7,13 @@ class Kelas_programming_model extends CI_Model {
     public function get_premium_classes($student_id) {
         $this->db->select('kp.*');
         $this->db->from('kelas_programming kp');
-        $this->db->where('kp.status', 'Aktif');
         $this->db->where('kp.harga >', 0);
-        
+        $this->db->where_in('kp.status', ['Aktif', 'Coming Soon']);
+
         // Exclude already purchased classes
         $this->db->join('payments p', "kp.id = p.class_id AND p.user_id = $student_id AND p.status = 'Verified'", 'left');
         $this->db->where('p.id IS NULL');
-        
+
         return $this->db->get()->result();
     }
 
@@ -31,9 +31,12 @@ class Kelas_programming_model extends CI_Model {
         return 4.5; // Nilai default atau bisa diambil dari cache/config
     }
 
-    public function get_all_active_classes() {
-        $this->db->where('status', 'Aktif');
-        $this->db->order_by('nama_kelas', 'ASC');
-        return $this->db->get('kelas_programming')->result();
+    public function get_all_premium_classes() {
+        $this->db->select('kp.*');
+        $this->db->from('kelas_programming kp');
+        $this->db->where('kp.harga >', 0);
+        $this->db->where_in('kp.status', ['Aktif', 'Coming Soon']);
+        $this->db->order_by('kp.created_at', 'DESC');
+        return $this->db->get()->result();
     }
 }
