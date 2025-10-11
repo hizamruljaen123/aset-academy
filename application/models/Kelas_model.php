@@ -22,14 +22,26 @@ class Kelas_model extends CI_Model {
         return $query->result();
     }
 
-    // Fungsi untuk mendapatkan data kelas berdasarkan ID
+    // Fungsi untuk mendapatkan data kelas berdasarkan ID (premium atau gratis)
     public function get_kelas_by_id($id)
     {
+        // First try to find in premium classes
         $this->db->select('*');
         $this->db->from('kelas_programming');
         $this->db->where('id', $id);
-        $query = $this->db->get();
-        return $query->row();
+        $premium_class = $this->db->get()->row();
+
+        if ($premium_class) {
+            return $premium_class;
+        }
+
+        // If not found in premium, try free classes
+        $this->db->select('*');
+        $this->db->from('free_classes');
+        $this->db->where('id', $id);
+        $free_class = $this->db->get()->row();
+
+        return $free_class;
     }
 
     // Fungsi untuk mendapatkan data kelas berdasarkan nama kelas

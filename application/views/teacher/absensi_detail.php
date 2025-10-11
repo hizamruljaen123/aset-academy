@@ -31,7 +31,12 @@
                 </div>
             </div>
             <div class="flex space-x-3">
-                <?php if ($jadwal->status !== 'Selesai'): ?>
+                <?php
+                $today = date('Y-m-d');
+                $meeting_date = date('Y-m-d', strtotime($jadwal->tanggal_pertemuan));
+                $can_end_meeting = ($jadwal->status !== 'Selesai') && ($today >= $meeting_date);
+                ?>
+                <?php if ($can_end_meeting): ?>
                 <button onclick="akhiriPertemuan(<?= $jadwal->id; ?>, <?= $jadwal->kelas_id; ?>, '<?= $jadwal->class_type; ?>')"
                         class="inline-flex items-center px-6 py-3 bg-red-600 text-white font-bold rounded-lg shadow-md hover:bg-red-700 transition-colors">
                     <i class="fas fa-stop-circle mr-2"></i>
@@ -40,7 +45,11 @@
                 <?php else: ?>
                 <div class="inline-flex items-center px-6 py-3 bg-green-100 text-green-800 font-bold rounded-lg">
                     <i class="fas fa-check-circle mr-2"></i>
-                    Pertemuan Selesai
+                    <?php if ($jadwal->status === 'Selesai'): ?>
+                        Pertemuan Selesai
+                    <?php else: ?>
+                        Belum Waktunya Mengakhiri Pertemuan
+                    <?php endif; ?>
                 </div>
                 <?php endif; ?>
                 <a href="<?= site_url('teacher/manage_kelas/' . $jadwal->kelas_id); ?>" class="inline-flex items-center px-4 py-2 bg-white text-teal-600 font-bold rounded-lg shadow-md hover:bg-gray-100 transition-colors">

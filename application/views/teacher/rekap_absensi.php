@@ -4,7 +4,20 @@
         <div class="flex justify-between items-center">
             <div>
                 <h1 class="text-3xl font-bold">Rekap Absensi</h1>
-                <p class="text-sm opacity-90 mt-1"><?php echo $kelas->nama_kelas; ?></p>
+                <p class="text-sm opacity-90 mt-1">
+                    <?php
+                    // Handle both premium and free classes
+                    $class_name = '';
+                    if (isset($kelas->nama_kelas)) {
+                        $class_name = $kelas->nama_kelas;
+                    } elseif (isset($kelas->title)) {
+                        $class_name = $kelas->title;
+                    } else {
+                        $class_name = 'Kelas';
+                    }
+                    echo $class_name;
+                    ?>
+                </p>
             </div>
             <a href="<?php echo site_url('teacher/manage_kelas/' . $kelas->id); ?>" class="hidden sm:inline-flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 text-white font-semibold rounded-lg transition-colors">
                 <i class="fas fa-arrow-left mr-2"></i> Kembali ke Kelas

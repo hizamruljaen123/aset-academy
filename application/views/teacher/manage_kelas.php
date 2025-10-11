@@ -77,7 +77,13 @@
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 <div class="flex-shrink-0 h-10 w-10">
-                                                    <img class="h-10 w-10 rounded-full object-cover" src="<?php echo base_url('uploads/siswa/' . ($s->foto_profil ?: 'default_avatar.png')); ?>" alt="">
+                                                    <?php if (!empty($s->foto_profil) && file_exists('./uploads/siswa/' . $s->foto_profil)): ?>
+                                                        <img class="h-10 w-10 rounded-full object-cover" src="<?php echo base_url('uploads/siswa/' . $s->foto_profil); ?>" alt="">
+                                                    <?php else: ?>
+                                                        <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                                            <i class="fas fa-user text-gray-500 text-lg"></i>
+                                                        </div>
+                                                    <?php endif; ?>
                                                 </div>
                                                 <div class="ml-4">
                                                     <div class="text-sm font-medium text-gray-900"><?php echo $s->nama_lengkap; ?></div>

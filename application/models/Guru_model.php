@@ -98,13 +98,25 @@ class Guru_model extends CI_Model {
         return $this->db->count_all_results() > 0;
     }
 
-    // Check if teacher has access to specific free class
+    // Check if teacher has access to specific free class (mentor_id OR jadwal_kelas based)
     public function has_free_class_access($guru_id, $kelas_id)
     {
+        // First check if teacher is the mentor_id
         $this->db->from('free_classes');
         $this->db->where('id', $kelas_id);
         $this->db->where('mentor_id', $guru_id);
         $this->db->where('status', 'Published');
+        $is_mentor = $this->db->count_all_results() > 0;
+
+        if ($is_mentor) {
+            return true;
+        }
+
+        // Also check if teacher is assigned to this class in jadwal_kelas
+        $this->db->from('jadwal_kelas');
+        $this->db->where('kelas_id', $kelas_id);
+        $this->db->where('guru_id', $guru_id);
+        $this->db->where('class_type', 'gratis');
         return $this->db->count_all_results() > 0;
     }
 

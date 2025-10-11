@@ -177,7 +177,7 @@ class Teacher extends CI_Controller {
     public function absensi($jadwal_id)
     {
         $this->load->model('Jadwal_model');
-        $jadwal = $this->Jadwal_model->get_jadwal_by_id($jadwal_id);
+        $jadwal = $this->Jadwal_model->get_jadwal_by_id_with_status($jadwal_id);
 
         if (!$jadwal) {
             show_404();
@@ -258,7 +258,16 @@ class Teacher extends CI_Controller {
         $data['kelas'] = $this->Kelas_model->get_kelas_by_id($kelas_id);
         $data['rekap'] = $this->Absensi_model->get_rekap_kelas($kelas_id);
 
-        $data['title'] = 'Rekap Absensi - ' . $data['kelas']->nama_kelas;
+        // Handle class name for title (both premium and free classes)
+        $class_name = '';
+        if ($data['kelas']) {
+            if (isset($data['kelas']->nama_kelas)) {
+                $class_name = $data['kelas']->nama_kelas;
+            } elseif (isset($data['kelas']->title)) {
+                $class_name = $data['kelas']->title;
+            }
+        }
+        $data['title'] = 'Rekap Absensi - ' . $class_name;
         $this->load->view('templates/header', $data);
         $this->load->view('teacher/rekap_absensi', $data);
         $this->load->view('templates/footer');

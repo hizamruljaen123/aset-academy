@@ -46,6 +46,12 @@ class Jadwal_model extends CI_Model {
         return $this->db->get_where('jadwal_kelas_view', ['id' => $id])->row();
     }
 
+    // Get jadwal by id with status field (for absensi detail)
+    public function get_jadwal_by_id_with_status($id)
+    {
+        return $this->db->get_where('jadwal_kelas', ['id' => $id])->row();
+    }
+
     public function insert_jadwal($data)
     {
         // Validasi data sebelum insert
