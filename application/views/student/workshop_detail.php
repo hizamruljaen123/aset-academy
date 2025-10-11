@@ -54,7 +54,10 @@
 
                         <div class="prose max-w-none mb-6">
                             <img src="<?= base_url($workshop->thumbnail) ?>" alt="<?= $workshop->title ?>" class="h-full w-full object-cover">
-                            <div class="text-gray-700 leading-relaxed">
+
+                            <hr>
+                            <br>
+                            <div class="text-gray-700 leading-relaxed text-justify">
                                 <?= nl2br(htmlspecialchars($workshop->description)) ?>
                             </div>
                         </div>
@@ -66,6 +69,12 @@
                     <!-- Registration Card -->
                     <div class="lg:col-span-6">
                         
+                        <?php
+                        // Calculate participant count and remaining spots - moved outside conditional for global access
+                        $participants = $this->Workshop_model->get_all_participants($workshop->id);
+                        $remaining_spots = ($workshop->max_participants > 0) ? ($workshop->max_participants - count($participants)) : PHP_INT_MAX;
+                        ?>
+
                         <div class="bg-gray-50 rounded-lg p-6 sticky top-6">
                             <h3 class="text-xl font-bold text-gray-800 mb-4">
                                 <?php if ($is_registered): ?>
@@ -92,11 +101,6 @@
                                     </div>
                                 </div>
                             <?php else: ?>
-                                <?php
-                                // Calculate participant count and remaining spots
-                                $participants = $this->Workshop_model->get_all_participants($workshop->id);
-                                $remaining_spots = ($workshop->max_participants > 0) ? ($workshop->max_participants - count($participants)) : PHP_INT_MAX;
-                                ?>
                                 <?php if ($workshop->max_participants == 0 || $remaining_spots > 0): ?>
                                     <p class="text-gray-600 mb-4">
                                         Daftarkan diri Anda untuk mengikuti workshop ini.
