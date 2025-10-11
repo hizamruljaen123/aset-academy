@@ -18,7 +18,7 @@
     <div class="max-w-md w-full mx-8 p-8 bg-white rounded-lg shadow-lg transition-opacity duration-500 opacity-0">
         <div class="text-center mb-8">
             <center>
-            <img src="<?= base_url('assets/img/logo.png') ?>" alt="ASET Academy" class="h-8">
+            <img src="<?= base_url('assets/img/logo.png') ?>" alt="ASET Academy" class="h-9">
 </center>
         
         </div>
