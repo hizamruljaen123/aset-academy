@@ -69,11 +69,14 @@
                                 <span class="flex items-center"><i class="fas fa-signal mr-2 text-cyan-500"></i><?php echo $k->level; ?></span>
                                 <span class="flex items-center"><i class="fas fa-clock mr-2 text-teal-500"></i><?php echo $k->durasi; ?> Jam</span>
                             </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4">
-                                <div class="bg-gradient-to-r from-cyan-400 to-teal-500 h-2.5 rounded-full" style="width: 45%"></div>
-                            </div>
                             <div class="flex justify-between items-center">
-                                <div class="text-xs text-gray-500">Ditugaskan: <?php echo date('d M Y', strtotime($k->assigned_at)); ?></div>
+                                <div class="text-xs text-gray-500">
+                                    <?php if (isset($k->has_schedules) && !$k->has_schedules): ?>
+                                        <span class="text-orange-600 font-medium">Belum ada jadwal</span>
+                                    <?php else: ?>
+                                        Ditugaskan: <?php echo isset($k->assigned_at) ? date('d M Y', strtotime($k->assigned_at)) : 'Tanggal tidak tersedia'; ?>
+                                    <?php endif; ?>
+                                </div>
                                 <div class="flex items-center space-x-2">
                                     <?php if (!empty($k->online_meet_link)): ?>
                                         <a href="<?php echo $k->online_meet_link; ?>" target="_blank" class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-white bg-green-500 hover:bg-green-600 rounded-lg transition-colors" title="Join Meeting">
@@ -81,10 +84,12 @@
                                             Join
                                         </a>
                                     <?php endif; ?>
+                                    <?php if (isset($k->has_schedules) && $k->has_schedules): ?>
                                     <a href="<?php echo site_url('teacher/manage_kelas/' . $k->id); ?>" class="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-white bg-cyan-500 hover:bg-cyan-600 rounded-lg transition-all" title="Kelola Kelas">
                                         <i class="fas fa-cog mr-1"></i>
                                         Kelola
                                     </a>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -117,11 +122,14 @@
                                 <span class="flex items-center"><i class="fas fa-signal mr-2 text-green-500"></i><?php echo isset($k->level) ? $k->level : 'Dasar'; ?></span>
                                 <span class="flex items-center"><i class="fas fa-clock mr-2 text-emerald-500"></i><?php echo isset($k->duration) && $k->duration ? $k->duration : '-'; ?> Jam</span>
                             </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4">
-                                <div class="bg-gradient-to-r from-green-400 to-emerald-500 h-2.5 rounded-full" style="width: 45%"></div>
-                            </div>
                             <div class="flex justify-between items-center">
-                                <div class="text-xs text-gray-500">Ditugaskan sebagai mentor</div>
+                                <div class="text-xs text-gray-500">
+                                    <?php if (isset($k->has_schedules) && !$k->has_schedules): ?>
+                                        <span class="text-orange-600 font-medium">Belum ada jadwal</span>
+                                    <?php else: ?>
+                                        Ditugaskan: <?php echo isset($k->assigned_at) ? date('d M Y', strtotime($k->assigned_at)) : 'Tanggal tidak tersedia'; ?>
+                                    <?php endif; ?>
+                                </div>
                                 <div class="flex items-center space-x-2">
                                     <?php if (!empty($k->online_meet_link)): ?>
                                         <a href="<?php echo $k->online_meet_link; ?>" target="_blank" class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-white bg-green-500 hover:bg-green-600 rounded-lg transition-colors" title="Join Meeting">
@@ -129,10 +137,12 @@
                                             Join
                                         </a>
                                     <?php endif; ?>
+                                    <?php if (isset($k->has_schedules) && $k->has_schedules): ?>
                                     <a href="<?php echo site_url('teacher/manage_kelas/' . $k->id); ?>" class="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-white bg-emerald-500 hover:bg-emerald-600 rounded-lg transition-all" title="Kelola Kelas">
                                         <i class="fas fa-cog mr-1"></i>
                                         Kelola
                                     </a>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>

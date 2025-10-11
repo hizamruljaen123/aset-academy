@@ -22,7 +22,7 @@ class Guru_model extends CI_Model {
         $premium_classes = $this->db->get()->result();
 
         // Get free classes
-        $this->db->select('fc.id, fc.title as nama_kelas, fc.category as bahasa_program, fc.level, fc.description, fc.duration as durasi, 0 as harga, fc.status, NULL as assigned_at, "gratis" as class_type, fc.online_meet_link', false);
+        $this->db->select('fc.id, fc.title as nama_kelas, fc.category as bahasa_program, fc.level, fc.description, fc.duration as durasi, 0 as harga, fc.status, fc.created_at as assigned_at, "gratis" as class_type, fc.online_meet_link', false);
         $this->db->from('free_classes fc');
         $this->db->where('fc.mentor_id', $guru_id);
         $this->db->where_in('fc.status', ['Published', 'Coming Soon']);
@@ -95,7 +95,7 @@ class Guru_model extends CI_Model {
         $this->db->where('guru_id', $guru_id);
         $this->db->where('kelas_id', $kelas_id);
         $this->db->where('status', 'Aktif');
-        return $this->db->count_all_results() > 0;
+        return $this->db->count_all_results();
     }
 
     // Check if teacher has access to specific free class (mentor_id OR jadwal_kelas based)
@@ -106,7 +106,7 @@ class Guru_model extends CI_Model {
         $this->db->where('id', $kelas_id);
         $this->db->where('mentor_id', $guru_id);
         $this->db->where('status', 'Published');
-        $is_mentor = $this->db->count_all_results() > 0;
+        $is_mentor = $this->db->count_all_results();
 
         if ($is_mentor) {
             return true;
@@ -117,7 +117,7 @@ class Guru_model extends CI_Model {
         $this->db->where('kelas_id', $kelas_id);
         $this->db->where('guru_id', $guru_id);
         $this->db->where('class_type', 'gratis');
-        return $this->db->count_all_results() > 0;
+        return $this->db->count_all_results();
     }
 
     // Assign teacher to class

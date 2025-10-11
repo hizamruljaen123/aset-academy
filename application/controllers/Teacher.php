@@ -44,14 +44,25 @@ class Teacher extends CI_Controller {
         $guru_id = $this->session->userdata('user_id');
         $all_kelas = $this->Guru_model->get_guru_kelas($guru_id);
 
-        // Separate classes by type
-        $data['premium_kelas'] = array_filter($all_kelas, function($k) {
-            return $k->class_type === 'premium';
-        });
+        // Separate classes by type and check for schedules
+        $premium_kelas = [];
+        $gratis_kelas = [];
 
-        $data['gratis_kelas'] = array_filter($all_kelas, function($k) {
-            return $k->class_type === 'gratis';
-        });
+        foreach ($all_kelas as $k) {
+            // Check if this class has any schedules
+            $this->load->model('Jadwal_model');
+            $jadwal = $this->Jadwal_model->get_jadwal_by_kelas($k->id, $k->class_type);
+            $k->has_schedules = !empty($jadwal);
+
+            if ($k->class_type === 'premium') {
+                $premium_kelas[] = $k;
+            } else {
+                $gratis_kelas[] = $k;
+            }
+        }
+
+        $data['premium_kelas'] = $premium_kelas;
+        $data['gratis_kelas'] = $gratis_kelas;
 
         $data['title'] = 'Kelas Saya';
         $this->load->view('templates/header', $data);
@@ -90,6 +101,8 @@ class Teacher extends CI_Controller {
         $has_premium_access = $this->Guru_model->has_class_access($guru_id, $kelas_id);
         $has_free_access = $this->Guru_model->has_free_class_access($guru_id, $kelas_id);
 
+        
+
         if (!$has_premium_access && !$has_free_access) {
             show_error('Anda tidak memiliki akses ke kelas ini.', 403);
         }
@@ -107,16 +120,17 @@ class Teacher extends CI_Controller {
             }
         }
 
-        if ($data['class_type'] === null && $has_free_access) {
-            $this->load->model('Free_class_model');
-            $free_class = $this->Free_class_model->get_free_class_by_id($kelas_id);
-            if (!$free_class) {
-                show_404();
+        if ($data['class_type'] === null) {
+            if ($has_free_access) {
+                $this->load->model('Free_class_model');
+                $free_class = $this->Free_class_model->get_free_class_by_id($kelas_id);
+                if ($free_class) {
+                    $data['kelas'] = $free_class;
+                    $data['siswa'] = $this->Free_class_model->get_enrolled_students($kelas_id);
+                    $data['materi'] = $this->Free_class_model->get_free_class_materials($kelas_id);
+                    $data['class_type'] = 'gratis';
+                }
             }
-            $data['kelas'] = $free_class;
-            $data['siswa'] = $this->Free_class_model->get_enrolled_students($kelas_id);
-            $data['materi'] = $this->Free_class_model->get_free_class_materials($kelas_id);
-            $data['class_type'] = 'gratis';
         }
 
         if ($data['class_type'] === null) {
@@ -126,7 +140,12 @@ class Teacher extends CI_Controller {
         $this->load->model('Jadwal_model');
         $data['jadwal'] = $this->Jadwal_model->get_jadwal_by_kelas($kelas_id, $data['class_type']);
 
+        // Check if there are any schedules for this class
+        $has_schedules = !empty($data['jadwal']);
+
         $data['title'] = 'Kelola Kelas - ' . ($data['kelas']->nama_kelas ?? $data['kelas']->title);
+        $data['has_schedules'] = $has_schedules;
+
         $this->load->view('templates/header', $data);
         $this->load->view('teacher/manage_kelas', $data);
         $this->load->view('templates/footer');

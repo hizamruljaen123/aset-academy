@@ -26,6 +26,25 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Notice for no schedules -->
+        <?php if (!$has_schedules): ?>
+        <div class="lg:col-span-3 mb-6">
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-yellow-700">
+                            <strong>Perhatian:</strong> Anda memiliki akses ke kelas ini, namun belum ada jadwal pertemuan yang dibuat.
+                            Silakan hubungi admin untuk menambahkan jadwal pertemuan.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+
         <!-- Left Column: Student List -->
         <div class="lg:col-span-2">
             <div class="bg-white rounded-2xl shadow-md p-6">
