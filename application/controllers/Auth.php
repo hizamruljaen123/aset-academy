@@ -59,6 +59,7 @@ class Auth extends CI_Controller {
                 $session_data = array(
                     'user_id' => $user->id,
                     'username' => $user->username,
+                    'nama_lengkap' => $user->nama_lengkap,
                     'email' => $user->email,
                     'role' => $user->role,
                     'level' => $user->level,
