@@ -59,24 +59,7 @@
                 </div>
                 <h3 class="text-xl font-bold text-gray-800 mb-2">Belum Ada Materi</h3>
                 <p class="text-gray-500 max-w-md">Materi pembelajaran belum tersedia untuk kelas Anda. Silakan periksa kembali nanti atau hubungi pengajar Anda.</p>
-                <?php if (isset($no_class_assigned) && $no_class_assigned && isset($featured_materials) && !empty($featured_materials)): ?>
-                <div class="mt-8 w-full max-w-md">
-                    <h4 class="text-lg font-medium text-gray-700 mb-4">Materi Unggulan</h4>
-                    <div class="space-y-2">
-                        <?php foreach($featured_materials as $featured): ?>
-                        <a href="<?php echo site_url('student/materi_detail/'.$featured->id); ?>" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-all duration-300">
-                            <div class="rounded-full bg-indigo-100 p-2 mr-3">
-                                <i class="fas fa-star text-indigo-600"></i>
-                            </div>
-                            <div>
-                                <p class="font-medium text-gray-800"><?php echo $featured->judul; ?></p>
-                                <p class="text-xs text-gray-500"><?php echo $featured->nama_kelas; ?></p>
-                            </div>
-                        </a>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-                <?php endif; ?>
+                
             </div>
         </div>
     <?php else: ?>
