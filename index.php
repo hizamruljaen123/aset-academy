@@ -55,6 +55,13 @@
  */
 	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'production');
 
+// Ensure errors are hidden in production
+if (ENVIRONMENT === 'production') {
+    ini_set('display_errors', 0);
+    ini_set('display_startup_errors', 0);
+    error_reporting(0);
+}
+
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING
@@ -72,6 +79,8 @@ switch (ENVIRONMENT)
 
 	case 'testing':
 	case 'production':
+		// Error settings already configured above for production
+		// Keep the existing configuration for testing and production
 		ini_set('display_errors', 0);
 		if (version_compare(PHP_VERSION, '5.3', '>='))
 		{
