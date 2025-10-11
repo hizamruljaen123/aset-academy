@@ -26,12 +26,7 @@
                 <div class="p-6">
                     <h3 class="text-xl font-bold text-gray-800 mb-3 truncate" title="<?= html_escape($workshop->title) ?>"><?= html_escape($workshop->title) ?></h3>
                     
-                    <?php 
-                    $descHtml = html_entity_decode(htmlspecialchars_decode($workshop->description, ENT_QUOTES | ENT_HTML5), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-                    $descText = strip_tags($descHtml);
-                    $shortDesc = mb_strlen($descText) > 100 ? mb_substr($descText, 0, 100) . '...' : $descText;
-                    ?>
-                    <p class="text-gray-600 mb-4 h-12"><?= $shortDesc ?></p>
+                    
 
                     <div class="space-y-3 text-gray-600">
                         <div class="flex items-center">

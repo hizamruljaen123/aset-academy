@@ -11,3 +11,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |	https://codeigniter.com/userguide3/general/hooks.html
 |
 */
+
+/*
+| -------------------------------------------------------------------------
+| Session Tracking Hook
+| -------------------------------------------------------------------------
+| Automatically tracks user sessions and updates activity on every page load
+| This hook runs after the controller is instantiated but before any method is called
+*/
+$hook['post_controller_constructor'] = array(
+    'class'    => 'Session_tracker',
+    'function' => 'track_session',
+    'filename' => 'Session_tracker.php',
+    'filepath' => 'hooks'
+);

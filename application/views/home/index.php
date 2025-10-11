@@ -121,12 +121,7 @@
                             <h3 class="text-xl font-bold text-white group-hover:text-blue-300 transition-colors duration-300"> <?= html_escape($class->nama_kelas) ?> </h3>
                             <span class="bg-white/20 text-white px-3 py-1 rounded-xl text-xs font-semibold"> <?= html_escape($class->bahasa_program) ?> </span>
                         </div>
-                        <?php 
-                        $descHtml = html_entity_decode(htmlspecialchars_decode($class->deskripsi, ENT_QUOTES | ENT_HTML5), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-                        $descText = strip_tags($descHtml);
-                        $shortDesc = mb_strlen($descText) > 120 ? mb_substr($descText, 0, 120) . '...' : $descText;
-                        ?>
-                        <p class="text-white/80 mb-5 leading-relaxed"> <?= $shortDesc ?> </p>
+                        
                         
                         <div class="mt-auto">
                             <?php if ($class->status == 'Coming Soon'): ?>
@@ -212,12 +207,7 @@
                             <h3 class="text-xl font-bold text-gray-800 group-hover:text-emerald-700 transition-colors duration-300"> <?= html_escape($class->title) ?> </h3>
                             <span class="bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-800 px-3 py-1 rounded-xl text-xs font-semibold"> <?= html_escape($class->level) ?> </span>
                         </div>
-                        <?php 
-                        $descHtml = html_entity_decode(htmlspecialchars_decode($class->description, ENT_QUOTES | ENT_HTML5), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-                        $descText = strip_tags($descHtml);
-                        $shortDesc = mb_strlen($descText) > 100 ? mb_substr($descText, 0, 100) . '...' : $descText;
-                        ?>
-                        <p class="text-gray-600 mb-5 leading-relaxed"> <?= $shortDesc ?> </p>
+                        
                         <div class="flex items-center gap-2 flex-wrap mb-6">
                             <span class="inline-flex items-center gap-1 bg-gradient-to-r from-yellow-50 to-orange-50 text-yellow-700 px-3 py-1 rounded-lg text-xs font-medium border border-yellow-200">
                                 <i class="fas fa-star"></i> Materi Berkualitas
