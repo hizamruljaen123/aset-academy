@@ -66,11 +66,7 @@
                                 <div>
                                     <div class="font-semibold text-gray-800">Lokasi</div>
                                     <div class="text-gray-600">
-                                        <?php if ($participant->district_id): ?>
-                                            <?= $participant->district_name ?>, <?= $participant->regency_name ?>, <?= $participant->province_name ?>
-                                        <?php else: ?>
-                                            <?= $workshop->location ?>
-                                        <?php endif; ?>
+                                        <?= $workshop->location ?>
                                     </div>
                                 </div>
                             </div>
