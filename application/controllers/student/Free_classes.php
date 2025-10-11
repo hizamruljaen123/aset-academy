@@ -175,6 +175,9 @@ class Free_classes extends CI_Controller {
             show_error('Data pendaftaran tidak ditemukan', 404);
         }
 
+        // Load text helper for HTML decoding
+        $this->load->helper('text');
+
         // Get class materials
         $data['materials'] = $this->Free_class_model->get_free_class_materials($enrollment->class_id);
 
@@ -333,6 +336,9 @@ class Free_classes extends CI_Controller {
         if (!$material || $material->class_id != $enrollment->class_id) {
             show_error('Materi tidak ditemukan', 404);
         }
+
+        // Load text helper for HTML decoding
+        $this->load->helper('text');
 
         // Get material progress
         $progress = $this->Enrollment_model->get_material_progress($enrollment_id, $material_id);

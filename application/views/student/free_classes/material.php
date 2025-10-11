@@ -115,13 +115,13 @@
                     <div class="mb-6">
                         <h3 class="text-lg font-bold text-gray-800 mb-4"><?php echo $material->title; ?></h3>
                         <div class="prose max-w-none text-gray-600 mb-6">
-                            <?php echo $material->description; ?>
+                            <?php echo render_html_content($material->description); ?>
                         </div>
                     </div>
                     
                     <?php if ($material->content_type == 'text'): ?>
                         <div class="prose max-w-none text-gray-600 bg-gray-50 p-6 rounded-lg">
-                            <?php echo $material->content; ?>
+                            <?php echo render_html_content($material->content); ?>
                         </div>
                     <?php elseif ($material->content_type == 'video'): ?>
                         <div class="relative pt-[56.25%] rounded-xl overflow-hidden shadow-lg mb-4">

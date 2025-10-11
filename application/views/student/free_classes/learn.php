@@ -157,7 +157,7 @@
                 <div class="p-6">
                     <h2 class="text-2xl font-bold text-gray-800 mb-4">Selamat Datang di Kelas</h2>
                     <div class="prose max-w-none text-gray-600">
-                        <?php echo $enrollment->description; ?>
+                        <?php echo html_entity_decode(render_html_content($enrollment->description)); ?>
                     </div>
                     
                     <div class="mt-6 pt-6 border-t border-gray-200">
@@ -337,7 +337,7 @@
                                         </div>
                                     </div>
                                     <div class="p-4 bg-white">
-                                        <p class="text-sm text-gray-600 mb-2"><?php echo substr(strip_tags($material->description), 0, 100) . '...'; ?></p>
+                                        <p class="text-sm text-gray-600 mb-2"></p>
                                         <div class="flex items-center text-xs text-gray-500">
                                             <span class="mr-3">
                                                 <i class="fas fa-<?php 
