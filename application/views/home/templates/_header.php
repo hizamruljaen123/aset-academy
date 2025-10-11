@@ -107,13 +107,16 @@
     }
     </script>
 
-    <!-- SEO & Social Metadata --><!-- Sudah very good. Tambah favicon dan manifest -->
-    <link rel="icon" href="<?= base_url('assets/img/logo.png') ?>" type="image/png">
-    <link rel="icon" href="<?= base_url('assets/img/logo.svg') ?>" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="<?= base_url('assets/img/logo.png') ?>">
-    <link rel="manifest" href="/manifest.json">
-    <meta name="msapplication-TileImage" content="<?= base_url('assets/img/logo.png') ?>" />
-    <meta name="theme-color" content="#0e1127" />
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="<?= base_url('assets/img/favicon.ico') ?>">
+    <link rel="shortcut icon" type="image/x-icon" href="<?= base_url('assets/img/favicon.ico') ?>">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?= base_url('assets/img/logo.png') ?>">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url('assets/img/logo.png') ?>">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= base_url('assets/img/logo.png') ?>">
+    <link rel="manifest" href="<?= base_url('manifest.json') ?>">
+    <meta name="msapplication-TileImage" content="<?= base_url('assets/img/logo.png') ?>">
+    <meta name="msapplication-TileColor" content="#0e1127">
+    <meta name="theme-color" content="#0e1127">
     <!-- Preload Font Modern (Inter dan Feather Icon) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
