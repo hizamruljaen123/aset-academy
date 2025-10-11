@@ -3,7 +3,7 @@
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 bg-white p-6 rounded-lg shadow">
         <div class="mb-4 md:mb-0">
             <h1 class="text-2xl font-bold text-gray-800">Dashboard</h1>
-            <p class="text-gray-600 mt-1">Welcome back, Admin! Here's your academy overview.</p>
+            <p class="text-gray-600 mt-1">Welcome back, <?php echo $this->session->userdata('nama_lengkap') ?: 'User'; ?>! Here's your academy overview.</p>
         </div>
         <div class="flex items-center text-gray-500">
             <i class="fas fa-calendar-alt mr-2"></i>

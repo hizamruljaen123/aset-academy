@@ -47,67 +47,69 @@
                             </button>
                         </div>
                     </div>
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto overflow-y-auto max-h-96">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12">
                                     <input type="checkbox" id="select-all" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIS</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Lengkap</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kelas</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jurusan</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-16">No</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">NIS</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-48">Nama Lengkap</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-48 hidden md:table-cell">Email</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">Kelas</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32 hidden lg:table-cell">Jurusan</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Status</th>
+                                <th scope="col" class="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-32">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             <?php $no = 1; foreach ($siswa as $s): ?>
                                 <tr class="hover:bg-gray-50">
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-3 py-4 whitespace-nowrap">
                                         <input type="checkbox" name="selected_siswa[]" value="<?php echo $s->id; ?>" class="row-checkbox rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo $no++; ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600"><?php echo $s->nis; ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo $no++; ?></td>
+                                    <td class="px-3 py-4 whitespace-nowrap text-sm font-medium text-blue-600"><?php echo $s->nis; ?></td>
+                                    <td class="px-3 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
                                             <div class="flex-shrink-0 h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold mr-3">
                                                 <?php echo strtoupper(substr($s->nama_lengkap, 0, 1)); ?>
                                             </div>
-                                            <div class="text-sm font-medium text-gray-900"><?php echo $s->nama_lengkap; ?></div>
+                                            <div class="text-sm font-medium text-gray-900 min-w-0">
+                                                <div class="truncate max-w-40"><?php echo $s->nama_lengkap; ?></div>
+                                            </div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo $s->email; ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell"><?php echo $s->email; ?></td>
+                                    <td class="px-3 py-4 whitespace-nowrap">
                                         <span class="px-2 py-1 text-xs font-medium rounded bg-blue-100 text-blue-800"><?php echo $s->kelas; ?></span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo $s->jurusan; ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500 hidden lg:table-cell"><?php echo $s->jurusan; ?></td>
+                                    <td class="px-3 py-4 whitespace-nowrap">
                                         <span class="px-2 py-1 text-xs font-medium rounded <?php echo ($s->status == 'Aktif') ? 'bg-green-100 text-green-800' : (($s->status == 'Tidak Aktif') ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800'); ?>">
                                             <?php echo $s->status; ?>
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
-                                        <div class="flex justify-center space-x-2">
+                                    <td class="px-3 py-4 whitespace-nowrap text-sm font-medium text-center">
+                                        <div class="flex justify-center space-x-1">
                                             <?php 
                                                 $kelas_detail = $this->db->get_where('kelas_programming', ['nama_kelas' => $s->kelas])->row();
                                                 if ($kelas_detail && !empty($kelas_detail->online_meet_link)): 
                                             ?>
                                                 <a href="<?php echo $kelas_detail->online_meet_link; ?>" target="_blank" class="text-green-600 hover:text-green-900 p-1 rounded-full hover:bg-green-50" title="Join Meeting">
-                                                    <i class="fas fa-video"></i>
+                                                    <i class="fas fa-video text-xs"></i>
                                                 </a>
                                             <?php endif; ?>
                                             <a href="<?php echo site_url('siswa/detail/'.$s->id); ?>" class="text-blue-600 hover:text-blue-900 p-1 rounded-full hover:bg-blue-50" title="Detail">
-                                                <i class="fas fa-eye"></i>
+                                                <i class="fas fa-eye text-xs"></i>
                                             </a>
                                             <a href="<?php echo site_url('siswa/edit/'.$s->id); ?>" class="text-indigo-600 hover:text-indigo-900 p-1 rounded-full hover:bg-indigo-50" title="Edit">
-                                                <i class="fas fa-edit"></i>
+                                                <i class="fas fa-edit text-xs"></i>
                                             </a>
                                             <a href="<?php echo site_url('siswa/delete/'.$s->id); ?>" class="text-red-600 hover:text-red-900 p-1 rounded-full hover:bg-red-50" title="Hapus" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
-                                                <i class="fas fa-trash"></i>
+                                                <i class="fas fa-trash text-xs"></i>
                                             </a>
                                         </div>
                                     </td>
