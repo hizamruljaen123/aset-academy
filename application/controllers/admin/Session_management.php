@@ -23,20 +23,43 @@ class Session_management extends CI_Controller {
         $data['title'] = 'Session Management - Aset Academy';
         $data['page_title'] = 'Active Sessions Management';
         
-        // Get active sessions with user info
-        $data['active_sessions'] = $this->Session_model->get_active_sessions();
-        $data['sessions_by_user'] = $this->Session_model->get_sessions_by_user();
-        $data['unique_ips'] = $this->Session_model->get_unique_ips();
-        
-        // Get statistics
-        $data['statistics'] = $this->Session_model->get_session_statistics();
-        $data['total_unique_ips'] = $this->Session_model->get_unique_ip_count();
-        $data['total_sessions'] = $this->Session_model->get_total_sessions();
-        $data['logged_in_users'] = $this->Session_model->get_logged_in_users_count();
-        $data['guest_sessions'] = $this->Session_model->get_guest_sessions_count();
-        
-        // Get or generate location cache
-        $data['location_cache'] = $this->get_location_cache();
+        try {
+            // Get active sessions with user info
+            $data['active_sessions'] = $this->Session_model->get_active_sessions();
+            $data['sessions_by_user'] = $this->Session_model->get_sessions_by_user();
+            $data['unique_ips'] = $this->Session_model->get_unique_ips();
+            
+            // Get statistics
+            $data['statistics'] = $this->Session_model->get_session_statistics();
+            $data['total_unique_ips'] = $this->Session_model->get_unique_ip_count();
+            $data['total_sessions'] = $this->Session_model->get_total_sessions();
+            $data['logged_in_users'] = $this->Session_model->get_logged_in_users_count();
+            $data['guest_sessions'] = $this->Session_model->get_guest_sessions_count();
+            
+            // Get or generate location cache
+            $data['location_cache'] = $this->get_location_cache();
+        } catch (Exception $e) {
+            // Log error
+            log_message('error', 'Session Management Error: ' . $e->getMessage());
+            
+            // Set default values if error occurs
+            $data['active_sessions'] = [];
+            $data['sessions_by_user'] = [];
+            $data['unique_ips'] = [];
+            $data['statistics'] = (object)[
+                'today_logins' => 0,
+                'avg_session_duration' => 0,
+                'most_active_users' => []
+            ];
+            $data['total_unique_ips'] = 0;
+            $data['total_sessions'] = 0;
+            $data['logged_in_users'] = 0;
+            $data['guest_sessions'] = 0;
+            $data['location_cache'] = [];
+            
+            // Show error message
+            $this->session->set_flashdata('error', 'Terjadi kesalahan saat memuat data session. Silakan refresh halaman.');
+        }
 
         $this->load->view('templates/header', $data);
         $this->load->view('admin/sessions/session_management', $data);
@@ -356,6 +379,34 @@ class Session_management extends CI_Controller {
     }
 
     /**
+     * AJAX endpoint to get session details for history view
+     */
+    public function get_session_details($session_id) {
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        }
+
+        $this->db->select('sl.*, u.username, u.nama_lengkap, u.email, u.role');
+        $this->db->from('session_logs sl');
+        $this->db->join('users u', 'sl.user_id = u.id', 'left');
+        $this->db->where('sl.session_id', $session_id);
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            $session = $query->row();
+            echo json_encode([
+                'success' => true,
+                'session' => $session
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Session not found'
+            ]);
+        }
+    }
+
+    /**
      * AJAX endpoint to cleanup expired sessions
      */
     public function cleanup_expired() {
@@ -363,12 +414,24 @@ class Session_management extends CI_Controller {
             show_404();
         }
 
-        $hours = $this->input->post('hours') ?: 24;
-        $deleted_count = $this->Session_model->cleanup_expired_sessions($hours);
+        $hours = $this->input->post('hours');
+        if (empty($hours) || !is_numeric($hours)) {
+            echo json_encode(['success' => false, 'message' => 'Jumlah jam tidak valid']);
+            return;
+        }
+
+        // Calculate timestamp
+        $expiry_time = time() - ($hours * 3600);
+
+        // Delete sessions older than specified hours
+        $this->db->where('timestamp <', $expiry_time);
+        $this->db->delete('ci_sessions');
+        
+        $deleted_count = $this->db->affected_rows();
 
         echo json_encode([
             'success' => true,
-            'message' => "Berhasil membersihkan {$deleted_count} session yang expired (>{$hours} jam)"
+            'message' => "Berhasil membersihkan {$deleted_count} session yang kadaluarsa (lebih dari {$hours} jam)"
         ]);
     }
 }

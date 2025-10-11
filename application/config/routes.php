@@ -303,6 +303,9 @@ $route['home/maintenance'] = 'home/maintenance';
 // Session Management Routes
 $route['admin/session-management'] = 'admin/session_management';
 $route['admin/session_management'] = 'admin/session_management';
+$route['admin/session_management/history'] = 'admin/session_management/history';
+$route['admin/session_management/user_sessions/(:num)'] = 'admin/session_management/user_sessions/$1';
+$route['admin/session_management/get_session_details/(:any)'] = 'admin/session_management/get_session_details/$1';
 
 // Test Routes (only for development)
 $route['test/encryption'] = 'test_encryption';

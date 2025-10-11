@@ -88,7 +88,54 @@ class Session_model extends CI_Model {
      * @return array
      */
     public function get_active_sessions() {
-        $query = $this->db->query("SELECT * FROM view_active_sessions");
+        $this->db->select('
+            s.id as session_id,
+            s.ip_address,
+            s.timestamp as last_activity,
+            s.user_id,
+            s.user_agent,
+            s.login_time,
+            s.last_activity_time,
+            s.is_active,
+            u.username,
+            u.nama_lengkap,
+            u.email,
+            u.role,
+            u.foto_profil,
+            CASE 
+                WHEN TIMESTAMPDIFF(MINUTE, FROM_UNIXTIME(s.timestamp), NOW()) < 5 THEN "Active"
+                WHEN TIMESTAMPDIFF(MINUTE, FROM_UNIXTIME(s.timestamp), NOW()) < 30 THEN "Idle"
+                ELSE "Inactive"
+            END as session_status,
+            COALESCE(TIMESTAMPDIFF(MINUTE, s.login_time, NOW()), TIMESTAMPDIFF(MINUTE, FROM_UNIXTIME(s.timestamp), NOW())) as session_duration_minutes,
+            FROM_UNIXTIME(s.timestamp) as last_activity_formatted,
+            CASE
+                WHEN COALESCE(s.user_agent, "") LIKE "%Mobile%" OR COALESCE(s.user_agent, "") LIKE "%Android%" OR COALESCE(s.user_agent, "") LIKE "%iPhone%" THEN "Mobile"
+                ELSE "Desktop"
+            END as platform,
+            CASE
+                WHEN COALESCE(s.user_agent, "") LIKE "%Windows%" THEN "Windows"
+                WHEN COALESCE(s.user_agent, "") LIKE "%Mac%" THEN "Mac OS"
+                WHEN COALESCE(s.user_agent, "") LIKE "%Linux%" THEN "Linux"
+                WHEN COALESCE(s.user_agent, "") LIKE "%Android%" THEN "Android"
+                WHEN COALESCE(s.user_agent, "") LIKE "%iPhone%" OR COALESCE(s.user_agent, "") LIKE "%iPad%" THEN "iOS"
+                ELSE "Unknown"
+            END as os,
+            CASE
+                WHEN COALESCE(s.user_agent, "") LIKE "%Chrome%" AND COALESCE(s.user_agent, "") NOT LIKE "%Edg%" THEN "Chrome"
+                WHEN COALESCE(s.user_agent, "") LIKE "%Firefox%" THEN "Firefox"
+                WHEN COALESCE(s.user_agent, "") LIKE "%Safari%" AND COALESCE(s.user_agent, "") NOT LIKE "%Chrome%" THEN "Safari"
+                WHEN COALESCE(s.user_agent, "") LIKE "%Edg%" THEN "Edge"
+                WHEN COALESCE(s.user_agent, "") LIKE "%Opera%" OR COALESCE(s.user_agent, "") LIKE "%OPR%" THEN "Opera"
+                ELSE "Unknown"
+            END as browser
+        ');
+        $this->db->from('ci_sessions s');
+        $this->db->join('users u', 's.user_id = u.id', 'left');
+        $this->db->where('s.is_active', 1);
+        $this->db->order_by('s.timestamp', 'DESC');
+        
+        $query = $this->db->get();
         return $query->result();
     }
 
