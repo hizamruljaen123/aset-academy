@@ -94,7 +94,7 @@
             </div>
         </div>
 
-y        <div id="firebaseui-auth-container"></div>
+        <div id="firebaseui-auth-container"></div>
         <div id="loader" class="text-center hidden">
             <div class="inline-block animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-blue-500"></div>
             <p class="text-sm text-gray-600 mt-2">Mengautentikasi...</p>
@@ -106,22 +106,96 @@ y        <div id="firebaseui-auth-container"></div>
         </div> -->
     </div>
 
-    <!-- Firebase Configuration Variables for JavaScript -->
     <script>
-        window.firebaseConfig = {
-            apiKey: "<?php echo $firebase['api_key']; ?>",
-            authDomain: "<?php echo $firebase['auth_domain']; ?>",
-            projectId: "<?php echo $firebase['project_id']; ?>",
-            storageBucket: "<?php echo $firebase['storage_bucket']; ?>",
-            messagingSenderId: "<?php echo $firebase['messaging_sender_id']; ?>",
-            appId: "<?php echo $firebase['app_id']; ?>"
-        };
-        window.firebaseAuthUrl = '<?= site_url('auth/firebase_auth') ?>';
-        window.termsUrl = '<?= site_url('terms') ?>';
-        window.privacyUrl = '<?= site_url('privacy') ?>';
-    </script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginCard = document.querySelector('.transition-opacity');
+            if (loginCard) {
+                loginCard.classList.add('opacity-100');
+            }
 
-    <!-- External JavaScript for Firebase Authentication -->
-    <script src="<?= base_url('assets/js/firebase-auth.js') ?>"></script>
+            // Firebase configuration from config file
+            const firebaseConfig = {
+                apiKey: "<?php echo $firebase['api_key']; ?>",
+                authDomain: "<?php echo $firebase['auth_domain']; ?>",
+                projectId: "<?php echo $firebase['project_id']; ?>",
+                storageBucket: "<?php echo $firebase['storage_bucket']; ?>",
+                messagingSenderId: "<?php echo $firebase['messaging_sender_id']; ?>",
+                appId: "<?php echo $firebase['app_id']; ?>"
+            };
+
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+
+            // Initialize the FirebaseUI Widget using Firebase
+            const ui = new firebaseui.auth.AuthUI(firebase.auth());
+            
+            // FirebaseUI config
+            const uiConfig = {
+                callbacks: {
+                    signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+                        // User successfully signed in.
+                        // Return type determines whether we continue the redirect automatically
+                        // or whether we leave that to developer to handle.
+                        const user = authResult.user;
+                        const credential = authResult.credential;
+                        const isNewUser = authResult.additionalUserInfo.isNewUser;
+                        
+                        // Show loader
+                        document.getElementById('firebaseui-auth-container').classList.add('hidden');
+                        document.getElementById('loader').classList.remove('hidden');
+                        
+                        // Send the ID token to your backend for verification
+                        user.getIdToken().then(function(idToken) {
+                            return fetch('<?= site_url('auth/firebase_auth') ?>', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({ idToken: idToken })
+                            });
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                window.location.href = data.redirectUrl || '/';
+                            } else {
+                                document.getElementById('firebaseui-auth-errors').textContent = data.message || 'Terjadi kesalahan saat login';
+                                document.getElementById('firebaseui-auth-container').classList.remove('hidden');
+                                document.getElementById('loader').classList.add('hidden');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            document.getElementById('firebaseui-auth-errors').textContent = 'Terjadi kesalahan saat login';
+                            document.getElementById('firebaseui-auth-container').classList.remove('hidden');
+                            document.getElementById('loader').classList.add('hidden');
+                        });
+                        
+                        return false; // Don't redirect, we'll handle it after backend verification
+                    },
+                    uiShown: function() {
+                        // The widget is rendered.
+                        document.getElementById('loader').classList.add('hidden');
+                    }
+                },
+                // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
+                signInFlow: 'popup',
+                signInSuccessUrl: '/',
+                signInOptions: [
+                    // Leave the lines as is for the providers you want to offer your users.
+                    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+                ],
+                // Terms of service url.
+                tosUrl: '<?= site_url('terms') ?>',
+                // Privacy policy url.
+                privacyPolicyUrl: '<?= site_url('privacy') ?>',
+                // Optional: Customize the display of the provider buttons
+                credentialHelper: firebaseui.auth.CredentialHelper.GOOGLE_YOLO
+            };
+
+            // The start method will wait until the DOM is loaded.
+            ui.start('#firebaseui-auth-container', uiConfig);
+        });
+    </script>
 </body>
 </html>
