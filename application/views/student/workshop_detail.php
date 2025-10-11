@@ -53,6 +53,7 @@
                         </h1>
 
                         <div class="prose max-w-none mb-6">
+                            <img src="<?= base_url($workshop->thumbnail) ?>" alt="<?= $workshop->title ?>" class="h-full w-full object-cover">
                             <div class="text-gray-700 leading-relaxed">
                                 <?= nl2br(htmlspecialchars($workshop->description)) ?>
                             </div>
@@ -64,6 +65,7 @@
 
                     <!-- Registration Card -->
                     <div class="lg:col-span-6">
+                        
                         <div class="bg-gray-50 rounded-lg p-6 sticky top-6">
                             <h3 class="text-xl font-bold text-gray-800 mb-4">
                                 <?php if ($is_registered): ?>
