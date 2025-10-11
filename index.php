@@ -59,7 +59,20 @@
 if (ENVIRONMENT === 'production') {
     ini_set('display_errors', 0);
     ini_set('display_startup_errors', 0);
+    ini_set('log_errors', 1);
+    ini_set('error_log', dirname(__FILE__).DIRECTORY_SEPARATOR . 'application/logs/errors.log');
     error_reporting(0);
+
+    // Additional security - prevent any error output
+    if (function_exists('xdebug_disable')) {
+        xdebug_disable();
+    }
+
+    // Override any other error display settings that might be set
+    @ini_set('error_reporting', 0);
+    @ini_set('display_errors', 'Off');
+    @ini_set('html_errors', 0);
+    @ini_set('xmlrpc_errors', 0);
 }
 
 /*
@@ -79,17 +92,24 @@ switch (ENVIRONMENT)
 
 	case 'testing':
 	case 'production':
-		// Error settings already configured above for production
-		// Keep the existing configuration for testing and production
+		// Production error settings already configured above
+		// Ensure errors are completely suppressed in production
 		ini_set('display_errors', 0);
-		if (version_compare(PHP_VERSION, '5.3', '>='))
-		{
-			error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT & ~E_USER_NOTICE & ~E_USER_DEPRECATED);
+		ini_set('display_startup_errors', 0);
+		ini_set('log_errors', 1);
+		ini_set('error_log', dirname(__FILE__).DIRECTORY_SEPARATOR . 'application/logs/errors.log');
+		error_reporting(0);
+
+		// Additional suppression for production
+		if (function_exists('xdebug_disable')) {
+			xdebug_disable();
 		}
-		else
-		{
-			error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_USER_NOTICE);
-		}
+
+		// Override any other error display settings
+		@ini_set('error_reporting', 0);
+		@ini_set('display_errors', 'Off');
+		@ini_set('html_errors', 0);
+		@ini_set('xmlrpc_errors', 0);
 	break;
 
 	default:
@@ -321,4 +341,12 @@ switch (ENVIRONMENT)
  *
  * And away we go...
  */
+
+// Final production safeguard - ensure no errors are displayed
+if (ENVIRONMENT === 'production') {
+    error_reporting(0);
+    ini_set('display_errors', 0);
+    ini_set('display_startup_errors', 0);
+}
+
 require_once BASEPATH.'core/CodeIgniter.php';
