@@ -90,6 +90,11 @@
                                     </div>
                                 </div>
                             <?php else: ?>
+                                <?php
+                                // Calculate participant count and remaining spots
+                                $participants = $this->Workshop_model->get_all_participants($workshop->id);
+                                $remaining_spots = ($workshop->max_participants > 0) ? ($workshop->max_participants - count($participants)) : PHP_INT_MAX;
+                                ?>
                                 <?php if ($workshop->max_participants == 0 || $remaining_spots > 0): ?>
                                     <p class="text-gray-600 mb-4">
                                         Daftarkan diri Anda untuk mengikuti workshop ini.
@@ -208,10 +213,6 @@
                                     <i class="fas fa-users text-blue-500 mr-3 text-lg"></i>
                                     <div>
                                         <div class="font-semibold text-gray-800">Kapasitas</div>
-                                        <?php
-                                        $participants = $this->Workshop_model->get_participants($workshop->id);
-                                        $remaining_spots = $workshop->max_participants - count($participants);
-                                        ?>
                                         <div class="text-gray-600">
                                             <?= count($participants) ?>/<?= $workshop->max_participants ?> peserta terdaftar
                                             <?php if ($remaining_spots > 0): ?>
