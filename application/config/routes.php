@@ -167,6 +167,8 @@ $route['home/contact'] = 'home/contact';
 $route['home/contact-submit'] = 'home/contact_submit';
 $route['career'] = 'home/career';
 $route['career/index'] = 'home/career';
+$route['career/detail/(:any)'] = 'home/career_detail/$1';
+$route['career/apply/(:any)'] = 'home/career_apply/$1';
 
 // Routes untuk Workshop & Seminar
 $route['workshops'] = 'workshops';

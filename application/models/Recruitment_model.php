@@ -392,4 +392,9 @@ class Recruitment_model extends CI_Model
 
         return $this->db->order_by('name', 'ASC')->get_where('reg_villages', ['district_id' => $district_id])->result();
     }
+
+    public function get_job_position_by_id($id)
+    {
+        return $this->db->get_where('job_positions', ['id' => $id])->row();
+    }
 }

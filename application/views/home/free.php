@@ -2,72 +2,136 @@
 <?php $this->load->view('home/templates/_navbar'); ?>
 
     <!-- Hero Section -->
-    <section class="pt-32 pb-20 bg-gradient-to-br from-green-500 to-emerald-600">
-        <div class="container mx-auto px-4 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold text-white mb-6" data-aos="fade-up">
-                Kelas Gratis
-            </h1>
-            <p class="text-xl text-white/90 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
-                Mulai perjalanan programmingmu tanpa biaya dengan materi berkualitas dari instruktur profesional
-            </p>
+    <section class="relative pt-32 pb-24 overflow-hidden" style="background: linear-gradient(135deg, #0e1127 0%, #2e3c73 50%, #198aad 100%);">
+        <!-- Animated Background -->
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute top-1/4 left-1/5 w-96 h-96 rounded-full pulse-blob" style="background: rgba(30, 60, 115, 0.2);"></div>
+            <div class="absolute -bottom-20 right-[10%] w-[420px] h-[330px] rounded-full pulse-blob" style="background: rgba(25, 138, 173, 0.15); animation-delay: 2.5s;"></div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full pulse-blob" style="background: rgba(14, 17, 39, 0.1); animation-delay: 4s;"></div>
         </div>
-    </section>
 
-    <!-- Filter Section -->
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-8" data-aos="fade-up">
-                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Temukan Kelas yang Tepat untuk Anda</h2>
-                
-                <div class="flex flex-wrap justify-center gap-4 mb-8">
-                    <button class="filter-btn active px-6 py-2 bg-green-600 text-white rounded-full font-medium" data-filter="all">
-                        Semua Kelas
-                    </button>
-                    <button class="filter-btn px-6 py-2 bg-white text-gray-700 border border-gray-300 rounded-full font-medium" data-filter="pemula">
-                        Pemula
-                    </button>
-                    <button class="filter-btn px-6 py-2 bg-white text-gray-700 border border-gray-300 rounded-full font-medium" data-filter="menengah">
-                        Menengah
-                    </button>
-                    <button class="filter-btn px-6 py-2 bg-white text-gray-700 border border-gray-300 rounded-full font-medium" data-filter="web">
-                        Web Development
-                    </button>
-                    <button class="filter-btn px-6 py-2 bg-white text-gray-700 border border-gray-300 rounded-full font-medium" data-filter="mobile">
-                        Mobile Development
-                    </button>
-                    <button class="filter-btn px-6 py-2 bg-white text-gray-700 border border-gray-300 rounded-full font-medium" data-filter="data">
-                        Data Science
-                    </button>
+        <div class="relative container mx-auto px-4 text-center z-10">
+            <!-- Badge -->
+            <div class="flex items-center justify-center mb-6" data-aos="zoom-in">
+                <span class="bg-white/10 text-white px-4 py-2 rounded-full text-sm font-semibold backdrop-blur-sm border border-white/20">
+                    🎁 Program Gratis
+                </span>
+            </div>
+
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight" data-aos="fade-up">
+                Kelas 
+                <span class="block" style="background: linear-gradient(90deg, #198aad 0%, #2e3c73 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                    Gratis
+                </span>
+            </h1>
+            
+            <p class="text-xl text-white/80 max-w-3xl mx-auto mb-10 leading-relaxed" data-aos="fade-up" data-aos-delay="100">
+                Mulai perjalanan pembelajaran teknologi tanpa biaya dengan materi berkualitas 
+                dari instruktur profesional dan komunitas pembelajaran yang aktif.
+            </p>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto" data-aos="fade-up" data-aos-delay="200">
+                <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
+                    <div class="text-3xl md:text-4xl font-bold mb-2" style="color: #198aad;">15K+</div>
+                    <div class="text-white/80 text-sm">Siswa Aktif</div>
+                </div>
+                <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
+                    <div class="text-3xl md:text-4xl font-bold mb-2" style="color: #198aad;">50+</div>
+                    <div class="text-white/80 text-sm">Materi</div>
+                </div>
+                <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
+                    <div class="text-3xl md:text-4xl font-bold mb-2" style="color: #198aad;">100%</div>
+                    <div class="text-white/80 text-sm">Gratis</div>
+                </div>
+                <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
+                    <div class="text-3xl md:text-4xl font-bold mb-2" style="color: #198aad;">24/7</div>
+                    <div class="text-white/80 text-sm">Akses</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Courses Grid -->
-    <section class="py-16 bg-white">
+    <!-- Filter Section -->
+    <section class="py-20" style="background: linear-gradient(135deg, #0e1127 0%, #1a1f3a 50%, #2e3c73 100%);">
         <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <div class="flex items-center justify-center mb-6">
+                    <span class="text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg"
+                          style="background: linear-gradient(90deg, #198aad 0%, #2e3c73 100%);">
+                        🔍 Kategori Program
+                    </span>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Program Gratis yang Tersedia</h2>
+                <p class="text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
+                    Pilih program pembelajaran gratis yang sesuai dengan level dan minat teknologi Anda
+                </p>
+            </div>
+                
+            <div class="flex flex-wrap justify-center gap-4 mb-8" data-aos="fade-up" data-aos-delay="100">
+                <button class="filter-btn active group px-8 py-3 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                        style="background: linear-gradient(90deg, #198aad 0%, #2e3c73 100%);" data-filter="all">
+                    <i class="fas fa-th mr-2"></i>Semua Program
+                </button>
+                <button class="filter-btn group px-8 py-3 bg-white/10 backdrop-blur-sm text-white border-2 border-white/20 rounded-full font-semibold hover:bg-white/20 hover:shadow-lg transform hover:scale-105 transition-all duration-300" data-filter="pemula">
+                    <i class="fas fa-seedling mr-2"></i>Pemula
+                </button>
+                <button class="filter-btn group px-8 py-3 bg-white/10 backdrop-blur-sm text-white border-2 border-white/20 rounded-full font-semibold hover:bg-white/20 hover:shadow-lg transform hover:scale-105 transition-all duration-300" data-filter="menengah">
+                    <i class="fas fa-chart-line mr-2"></i>Menengah
+                </button>
+                <button class="filter-btn group px-8 py-3 bg-white/10 backdrop-blur-sm text-white border-2 border-white/20 rounded-full font-semibold hover:bg-white/20 hover:shadow-lg transform hover:scale-105 transition-all duration-300" data-filter="web">
+                    <i class="fas fa-code mr-2"></i>Web Development
+                </button>
+                <button class="filter-btn group px-8 py-3 bg-white/10 backdrop-blur-sm text-white border-2 border-white/20 rounded-full font-semibold hover:bg-white/20 hover:shadow-lg transform hover:scale-105 transition-all duration-300" data-filter="mobile">
+                    <i class="fas fa-mobile-alt mr-2"></i>Mobile Development
+                </button>
+                <button class="filter-btn group px-8 py-3 bg-white/10 backdrop-blur-sm text-white border-2 border-white/20 rounded-full font-semibold hover:bg-white/20 hover:shadow-lg transform hover:scale-105 transition-all duration-300" data-filter="data">
+                    <i class="fas fa-chart-bar mr-2"></i>Data Science
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Courses Grid -->
+    <section class="py-20 bg-gradient-to-br from-slate-50 via-white to-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-14" data-aos="fade-up">
+                <div class="flex items-center justify-center mb-6">
+                    <span class="text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg"
+                          style="background: linear-gradient(90deg, #198aad 0%, #2e3c73 100%);">
+                        📚 Program Unggulan
+                    </span>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6">Program Gratis Pilihan</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    Program pembelajaran teknologi gratis yang dirancang untuk mengembangkan kompetensi dasar Anda
+                </p>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <?php foreach ($free_classes as $class): ?>
-                <div class="course-card bg-white rounded-xl shadow-lg overflow-hidden" data-aos="fade-up" data-aos-delay="100" data-category="<?= strtolower(str_replace(' ', '-', $class->category)) ?> <?= strtolower($class->level) ?>">
+                <div class="course-card group bg-white rounded-2xl shadow-xl hover:shadow-2xl overflow-hidden border border-gray-100 hover:border-indigo-300 transition-all duration-500 hover:-translate-y-2 flex flex-col" data-aos="fade-up" data-aos-delay="100" data-category="<?= strtolower(str_replace(' ', '-', $class->category)) ?> <?= strtolower($class->level) ?>">
                 <div class="relative overflow-hidden">
                     <div class="w-full h-48">
                             <?php if (!empty($class->thumbnail)): ?>
                                 <img 
                                     src="<?= $class->thumbnail ?>" 
                                     alt="<?= html_escape($class->title) ?>" 
-                                    class="w-full h-full object-cover"
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                                 >
-                                <div class="w-full h-full bg-green-100 items-center justify-center" style="display:none;">
-                                    <i class="fas fa-book-open text-6xl text-green-500"></i>
+                                <div class="w-full h-full bg-gradient-to-br from-indigo-100 to-purple-100 items-center justify-center" style="display:none;">
+                                    <i class="fas fa-book-open text-6xl text-indigo-600"></i>
                                 </div>
                             <?php else: ?>
-                                <div class="w-full h-full bg-green-100 flex items-center justify-center">
-                                    <i class="fas fa-book-open text-6xl text-green-500"></i>
+                                <div class="w-full h-full bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center">
+                                    <i class="fas fa-book-open text-6xl text-indigo-600"></i>
                                 </div>
                             <?php endif; ?>
                         </div>
-                        <div class="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                            Gratis
+                        <div class="absolute top-4 left-4 text-white px-3 py-1 rounded-xl text-sm font-semibold shadow-lg"
+                             style="background: linear-gradient(90deg, #198aad 0%, #2e3c73 100%);">
+                            🎁 Gratis
                         </div>
                     </div>   
                     <div class="p-6">
@@ -87,11 +151,12 @@
                         </div>
                         <div class="mt-4">
                             <?php if ($class->status == 'Coming Soon'): ?>
-                                <button class="w-full text-center bg-gradient-to-r from-gray-400 to-gray-500 text-white px-4 py-2 rounded-lg cursor-not-allowed" disabled>
-                                    Coming Soon
+                                <button class="w-full text-center bg-gradient-to-r from-gray-400 to-gray-500 text-white px-4 py-3 rounded-xl cursor-not-allowed font-semibold shadow-lg" disabled>
+                                    Segera Hadir
                                 </button>
                             <?php else: ?>
-                                <a href="<?= free_class_url($class->id) ?>" class="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-center">
+                                <a href="<?= free_class_url($class->id) ?>" class="w-full text-white px-4 py-3 rounded-xl transition-colors text-center font-semibold shadow-lg"
+                                   style="background: linear-gradient(90deg, #198aad 0%, #2e3c73 100%);">
                                     Mulai Belajar
                                 </a>
                             <?php endif; ?>
@@ -104,20 +169,41 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="py-16 bg-gradient-to-r from-green-500 to-emerald-600">
-        <div class="container mx-auto px-4 text-center">
-            <h2 class="text-3xl md:text-4xl font-bold text-white mb-6" data-aos="fade-up">
-                Siap Memulai Perjalanan Programming?
+    <section class="py-20 relative overflow-hidden" style="background: linear-gradient(135deg, #0e1127 0%, #2e3c73 50%, #198aad 100%);">
+        <!-- Animated Background -->
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute top-1/4 left-1/4 w-96 h-96 rounded-full pulse-blob" style="background: rgba(30, 60, 115, 0.1);"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full pulse-blob" style="background: rgba(25, 138, 173, 0.1); animation-delay: 2s;"></div>
+        </div>
+
+        <div class="relative container mx-auto px-4 text-center z-10">
+            <!-- Badge -->
+            <div class="flex items-center justify-center mb-8" data-aos="fade-down">
+                <span class="bg-white/10 text-white px-4 py-2 rounded-full text-sm font-semibold backdrop-blur-sm border border-white/20">
+                    🎁 Mulai Pembelajaran Gratis
+                </span>
+            </div>
+
+            <h2 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight" data-aos="fade-up">
+                Siap Memulai
+                <span class="block" style="background: linear-gradient(90deg, #198aad 0%, #2e3c73 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                    Perjalanan Belajar?
+                </span>
             </h2>
-            <p class="text-xl text-white/90 mb-8 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
-                Akses semua kelas gratis ini tanpa biaya dan mulai bangun karir di dunia teknologi
+            
+            <p class="text-xl text-white/80 mb-12 max-w-3xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="100">
+                Akses semua program pembelajaran gratis tanpa biaya dan mulai kembangkan kompetensi teknologi Anda
             </p>
-            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6" data-aos="fade-up" data-aos-delay="200">
-                <a href="#" class="px-8 py-4 bg-white text-green-600 font-bold rounded-lg hover:bg-gray-100 transition-colors">
-                    Daftar Sekarang
+
+            <div class="flex flex-col sm:flex-row justify-center gap-6" data-aos="fade-up" data-aos-delay="200">
+                <a href="<?= site_url('auth/register') ?>" class="group px-10 py-5 text-white font-bold rounded-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 shadow-2xl text-lg"
+                   style="background: linear-gradient(90deg, #198aad 0%, #2e3c73 100%);">
+                    <i class="fas fa-user-plus group-hover:scale-110 transition-transform"></i>
+                    Daftar Gratis
+                    <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                 </a>
-                <a href="index.html#premium-classes" class="px-8 py-4 bg-transparent border-2 border-white text-white font-bold rounded-lg hover:bg-white/10 transition-colors">
-                    Lihat Kelas Premium
+                <a href="<?= site_url('home/premium') ?>" class="group px-10 py-5 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white font-bold rounded-2xl hover:bg-white/20 hover:scale-105 transition-all duration-300 shadow-xl text-lg">
+                    <i class="fas fa-crown mr-2"></i>Lihat Program Profesional
                 </a>
             </div>
         </div>

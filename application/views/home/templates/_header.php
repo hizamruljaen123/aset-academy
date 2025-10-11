@@ -36,8 +36,8 @@
     <meta property="twitter:image" content="<?php echo base_url('assets/images/aset-academy-twitter-image.jpg'); ?>">
 
     <!-- Additional SEO Meta Tags -->
-    <meta name="theme-color" content="#3B82F6">
-    <meta name="msapplication-TileColor" content="#3B82F6">
+    <meta name="theme-color" content="#0e1127">
+    <meta name="msapplication-TileColor" content="#0e1127">
     <meta name="application-name" content="Aset Academy">
 
     <!-- Structured Data - JSON-LD -->
@@ -107,6 +107,19 @@
     }
     </script>
 
+    <!-- SEO & Social Metadata --><!-- Sudah very good. Tambah favicon dan manifest -->
+    <link rel="icon" href="<?= base_url('assets/img/logo.png') ?>" type="image/png">
+    <link rel="icon" href="<?= base_url('assets/img/logo.svg') ?>" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="<?= base_url('assets/img/logo.png') ?>">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileImage" content="<?= base_url('assets/img/logo.png') ?>" />
+    <meta name="theme-color" content="#0e1127" />
+    <!-- Preload Font Modern (Inter dan Feather Icon) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
     <!-- Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -147,7 +160,36 @@
             overflow: hidden;
             transition: max-height 0.3s ease-out;
         }
+        
+        /* Dark Theme Variables */
+        :root {
+            --primary-dark: #0e1127;
+            --secondary-dark: #2e3c73;
+            --accent-dark: #198aad;
+            --text-light: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.8);
+            --bg-glass: rgba(255, 255, 255, 0.1);
+            --border-glass: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Custom Scrollbar for Dark Theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--primary-dark);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary-dark);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-dark);
+        }
     </style>
     <link rel="stylesheet" href="<?= base_url('assets/css/documentation.css') ?>">
 </head>
-<body class="font-sans antialiased bg-gray-50">
+<body class="font-sans antialiased bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 text-white selection:bg-blue-500/20 selection:text-blue-300 transition duration-200">
