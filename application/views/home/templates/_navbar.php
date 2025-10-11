@@ -120,14 +120,92 @@
                 </a>
             </div>
 
-            <!-- Auth Buttons -->
+            <!-- Auth Buttons / User Menu -->
             <div class="hidden lg:flex items-center space-x-3">
-                <a href="<?= site_url('auth/login') ?>" class="px-4 py-2 text-blue-300 font-medium hover:text-blue-200 transition-colors">
-                    Masuk
-                </a>
-                <a href="<?= site_url('auth/register') ?>" class="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-200">
-                    Daftar
-                </a>
+                <?php if ($this->session->userdata('logged_in')): ?>
+                    <!-- User Dropdown -->
+                    <div class="relative group">
+                        <button class="flex items-center space-x-3 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200 border border-white/20">
+                            <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user text-white text-sm"></i>
+                            </div>
+                            <div class="text-left">
+                                <div class="text-white font-medium text-sm">
+                                    <?= html_escape($this->session->userdata('nama_lengkap') ?: $this->session->userdata('username')) ?>
+                                </div>
+                                <div class="text-gray-300 text-xs">
+                                    <?= ucfirst($this->session->userdata('role')) ?>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-down text-white text-sm transition-transform group-hover:rotate-180"></i>
+                        </button>
+                        
+                        <!-- Dropdown Menu -->
+                        <div class="absolute top-full right-0 mt-2 w-64 bg-gray-800/95 backdrop-blur-md rounded-xl shadow-xl border border-gray-600 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                            <div class="p-2">
+                                <!-- User Info Header -->
+                                <div class="px-4 py-3 border-b border-gray-600">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-user text-white"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-white font-semibold">
+                                                <?= html_escape($this->session->userdata('nama_lengkap') ?: $this->session->userdata('username')) ?>
+                                            </div>
+                                            <div class="text-gray-400 text-sm">
+                                                <?= html_escape($this->session->userdata('email')) ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Menu Items -->
+                                <?php if ($this->session->userdata('role') == 'super_admin' || $this->session->userdata('role') == 'admin'): ?>
+                                    <a href="<?= site_url('dashboard') ?>" class="flex items-center px-4 py-3 text-white hover:bg-white/10 hover:text-blue-300 rounded-lg transition-colors">
+                                        <i class="fas fa-tachometer-alt mr-3 text-blue-400"></i>
+                                        <span>Dashboard Admin</span>
+                                    </a>
+                                <?php elseif ($this->session->userdata('role') == 'guru'): ?>
+                                    <a href="<?= site_url('teacher/dashboard') ?>" class="flex items-center px-4 py-3 text-white hover:bg-white/10 hover:text-blue-300 rounded-lg transition-colors">
+                                        <i class="fas fa-chalkboard-teacher mr-3 text-blue-400"></i>
+                                        <span>Dashboard Guru</span>
+                                    </a>
+                                <?php else: ?>
+                                    <a href="<?= site_url('student/dashboard') ?>" class="flex items-center px-4 py-3 text-white hover:bg-white/10 hover:text-blue-300 rounded-lg transition-colors">
+                                        <i class="fas fa-graduation-cap mr-3 text-blue-400"></i>
+                                        <span>Dashboard Siswa</span>
+                                    </a>
+                                <?php endif; ?>
+
+                                <a href="<?= site_url('profile') ?>" class="flex items-center px-4 py-3 text-white hover:bg-white/10 hover:text-purple-300 rounded-lg transition-colors">
+                                    <i class="fas fa-user-circle mr-3 text-purple-400"></i>
+                                    <span>Profile Saya</span>
+                                </a>
+
+                                <a href="<?= site_url('profile/settings') ?>" class="flex items-center px-4 py-3 text-white hover:bg-white/10 hover:text-green-300 rounded-lg transition-colors">
+                                    <i class="fas fa-cog mr-3 text-green-400"></i>
+                                    <span>Pengaturan</span>
+                                </a>
+
+                                <div class="border-t border-gray-600 mt-2 pt-2">
+                                    <a href="<?= site_url('auth/logout') ?>" class="flex items-center px-4 py-3 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors">
+                                        <i class="fas fa-sign-out-alt mr-3"></i>
+                                        <span>Keluar</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <!-- Login/Register Buttons -->
+                    <a href="<?= site_url('auth/login') ?>" class="px-4 py-2 text-blue-300 font-medium hover:text-blue-200 transition-colors">
+                        Masuk
+                    </a>
+                    <a href="<?= site_url('auth/register') ?>" class="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+                        Daftar
+                    </a>
+                <?php endif; ?>
             </div>
 
             <!-- Mobile Menu Button -->
@@ -187,14 +265,74 @@
                     <i class="fas fa-mobile-alt mr-3"></i>Download App
                 </a>
 
-                <!-- Mobile Auth Buttons -->
-                <div class="px-4 pt-4 border-t border-gray-600 mt-4 space-y-2">
-                    <a href="<?= site_url('auth/login') ?>" class="block w-full px-4 py-3 text-center text-blue-300 font-medium border border-blue-500 rounded-lg hover:bg-white/10 transition-colors">
-                        Masuk
-                    </a>
-                    <a href="<?= site_url('auth/register') ?>" class="block w-full px-4 py-3 text-center bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-lg hover:shadow-lg transition-all duration-200">
-                        Daftar
-                    </a>
+                <!-- Mobile Auth / User Section -->
+                <div class="px-4 pt-4 border-t border-gray-600 mt-4">
+                    <?php if ($this->session->userdata('logged_in')): ?>
+                        <!-- User Info -->
+                        <div class="bg-white/10 rounded-lg p-4 mb-3 border border-white/20">
+                            <div class="flex items-center space-x-3 mb-3">
+                                <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-user text-white"></i>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="text-white font-semibold truncate">
+                                        <?= html_escape($this->session->userdata('nama_lengkap') ?: $this->session->userdata('username')) ?>
+                                    </div>
+                                    <div class="text-gray-300 text-sm truncate">
+                                        <?= html_escape($this->session->userdata('email')) ?>
+                                    </div>
+                                    <div class="text-gray-400 text-xs mt-1">
+                                        <i class="fas fa-shield-alt mr-1"></i><?= ucfirst($this->session->userdata('role')) ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- User Menu Links -->
+                        <div class="space-y-2">
+                            <?php if ($this->session->userdata('role') == 'admin'): ?>
+                                <a href="<?= site_url('dashboard') ?>" class="flex items-center px-4 py-3 text-white hover:bg-white/10 hover:text-blue-300 rounded-lg transition-colors">
+                                    <i class="fas fa-tachometer-alt mr-3 text-blue-400"></i>
+                                    <span>Dashboard Admin</span>
+                                </a>
+                            <?php elseif ($this->session->userdata('role') == 'guru'): ?>
+                                <a href="<?= site_url('teacher/dashboard') ?>" class="flex items-center px-4 py-3 text-white hover:bg-white/10 hover:text-blue-300 rounded-lg transition-colors">
+                                    <i class="fas fa-chalkboard-teacher mr-3 text-blue-400"></i>
+                                    <span>Dashboard Guru</span>
+                                </a>
+                            <?php else: ?>
+                                <a href="<?= site_url('student/dashboard') ?>" class="flex items-center px-4 py-3 text-white hover:bg-white/10 hover:text-blue-300 rounded-lg transition-colors">
+                                    <i class="fas fa-graduation-cap mr-3 text-blue-400"></i>
+                                    <span>Dashboard Siswa</span>
+                                </a>
+                            <?php endif; ?>
+
+                            <a href="<?= site_url('profile') ?>" class="flex items-center px-4 py-3 text-white hover:bg-white/10 hover:text-purple-300 rounded-lg transition-colors">
+                                <i class="fas fa-user-circle mr-3 text-purple-400"></i>
+                                <span>Profile Saya</span>
+                            </a>
+
+                            <a href="<?= site_url('profile/settings') ?>" class="flex items-center px-4 py-3 text-white hover:bg-white/10 hover:text-green-300 rounded-lg transition-colors">
+                                <i class="fas fa-cog mr-3 text-green-400"></i>
+                                <span>Pengaturan</span>
+                            </a>
+
+                            <a href="<?= site_url('auth/logout') ?>" class="flex items-center px-4 py-3 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors">
+                                <i class="fas fa-sign-out-alt mr-3"></i>
+                                <span>Keluar</span>
+                            </a>
+                        </div>
+                    <?php else: ?>
+                        <!-- Login/Register Buttons -->
+                        <div class="space-y-2">
+                            <a href="<?= site_url('auth/login') ?>" class="block w-full px-4 py-3 text-center text-blue-300 font-medium border border-blue-500 rounded-lg hover:bg-white/10 transition-colors">
+                                <i class="fas fa-sign-in-alt mr-2"></i>Masuk
+                            </a>
+                            <a href="<?= site_url('auth/register') ?>" class="block w-full px-4 py-3 text-center bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-lg hover:shadow-lg transition-all duration-200">
+                                <i class="fas fa-user-plus mr-2"></i>Daftar
+                            </a>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
