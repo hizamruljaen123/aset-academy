@@ -53,7 +53,7 @@
  *
  * NOTE: If you change these, also change the error_reporting() code below
  */
-	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'production');
+	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
 
 /*
  *---------------------------------------------------------------
@@ -114,6 +114,7 @@ switch (ENVIRONMENT)
  *
  * NO TRAILING SLASH!
  */
+
 	$application_folder = 'application';
 
 /*
@@ -298,7 +299,6 @@ switch (ENVIRONMENT)
 	}
 	else
 	{
-		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
 		echo 'Your view folder path does not appear to be set correctly. Please open the following file and correct this: '.SELF;
 		exit(3); // EXIT_CONFIG
 	}
@@ -309,7 +309,7 @@ switch (ENVIRONMENT)
  * --------------------------------------------------------------------
  * LOAD THE BOOTSTRAP FILE
  * --------------------------------------------------------------------
- *
  * And away we go...
  */
+require_once APPPATH.'helpers/env_helper.php';
 require_once BASEPATH.'core/CodeIgniter.php';

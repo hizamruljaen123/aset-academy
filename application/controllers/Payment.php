@@ -171,7 +171,7 @@ class Payment extends CI_Controller {
      * Process payment creation (without proof initially)
      * @param int $class_id The ID of the class to process payment for
      */
-    public function process_payment_proof($class_id) {
+    public function process_payment($class_id) {
         log_message('info', 'Process payment called for class_id: ' . $class_id . ', user_id: ' . $this->session->userdata('user_id'));
         log_message('info', 'Request method: ' . $this->input->server('REQUEST_METHOD'));
         

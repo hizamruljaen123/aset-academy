@@ -37,3 +37,6 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 !index.php
 !.htaccess
 .htaccess
+
+# Environment variables
+.env

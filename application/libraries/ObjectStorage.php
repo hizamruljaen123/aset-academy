@@ -23,39 +23,41 @@ class ObjectStorage
             require_once $autoload;
         }
 
-        // Load configuration by directly including the config file (no CI config->load checks)
-        // If the file is missing or doesn't define $config['cloud_storage'], fall back to the inline defaults below.
-        $config = [];
-        @include(APPPATH . 'config/cloud_storage.php');
-        $cfg = $config['cloud_storage'] ?? [
-            'ACCESS_KEY' => '112HPA3FIMQSDSD2Z23Q',
-            'SECRET_KEY' => '8Nh1QbARDpa0HbBCDXQ7tP0M6uh8r5ikgQZyAWqf',
-            'SERVER'     => 'is3.cloudhost.id',
-            'NAME'       => 'pantaoumedia',
-            'PATH'       => '/asset_academy/',
-            'REGION'     => 'us-east-1'
+        // Load configuration from environment variables
+        $cfg = [
+            'access_key' => env('CLOUD_STORAGE_ACCESS_KEY'),
+            'secret_key' => env('CLOUD_STORAGE_SECRET_KEY'),
+            'server'    => env('CLOUD_STORAGE_SERVER'),
+            'name'      => env('CLOUD_STORAGE_NAME'),
+            'path'      => env('CLOUD_STORAGE_PATH'),
+            'region'    => env('CLOUD_STORAGE_REGION') ?: 'us-east-1'
         ];
-
-        if (empty($cfg['ACCESS_KEY']) || empty($cfg['SECRET_KEY']) || empty($cfg['SERVER']) || empty($cfg['NAME'])) {
-            log_message('error', 'ObjectStorage: missing storage configuration');
-            return;
+        
+        // Validate required configuration
+        $required = ['access_key', 'secret_key', 'server', 'name'];
+        foreach ($required as $key) {
+            if (empty($cfg[$key])) {
+                throw new RuntimeException("Missing required configuration: CLOUD_STORAGE_" . strtoupper($key));
+            }
         }
 
-        $this->bucket = $cfg['NAME'];
-        $this->endpoint = rtrim($cfg['SERVER'], '/');
-        $this->baseUrl = (strpos($cfg['SERVER'], 'http') === 0)
-            ? rtrim($cfg['SERVER'], '/')
-            : 'https://' . rtrim($cfg['SERVER'], '/');
-        $this->prefix = isset($cfg['PATH']) ? ltrim($cfg['PATH'], '/') : '';
+        // Configuration validation is already done above
+
+        $this->bucket = $cfg['name'];
+        $this->endpoint = rtrim($cfg['server'], '/');
+        $this->baseUrl = (strpos($cfg['server'], 'http') === 0)
+            ? rtrim($cfg['server'], '/')
+            : 'https://' . rtrim($cfg['server'], '/');
+        $this->prefix = !empty($cfg['path']) ? ltrim($cfg['path'], '/') : '';
 
         $clientConfig = [
             'version' => 'latest',
-            'region' => $cfg['REGION'] ?? 'us-east-1',
+            'region' => $cfg['region'],
             'endpoint' => $this->baseUrl,
             'use_path_style_endpoint' => true,
             'credentials' => [
-                'key' => $cfg['ACCESS_KEY'],
-                'secret' => $cfg['SECRET_KEY']
+                'key' => $cfg['access_key'],
+                'secret' => $cfg['secret_key']
             ]
         ];
 

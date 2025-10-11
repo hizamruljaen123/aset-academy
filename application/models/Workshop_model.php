@@ -57,7 +57,7 @@ class Workshop_model extends CI_Model {
     // Get upcoming workshops
     public function get_upcoming_workshops($limit = 3)
     {
-        $this->db->where('start_datetime >', date('Y-m-d H:i:s'));
+        // $this->db->where('start_datetime >', date('Y-m-d H:i:s'));
         $this->db->where_in('status', ['published', 'coming soon']);
         $this->db->order_by('start_datetime', 'ASC');
         $this->db->limit($limit);

@@ -3,6 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Auth extends CI_Controller {
 
+    // Firebase configuration will be loaded from config/firebase.php
+
     public function __construct()
     {
         parent::__construct();
@@ -10,8 +12,9 @@ class Auth extends CI_Controller {
         $this->load->model('Auth_model');
         $this->load->model('Settings_model', 'settings_model');
         
-        // Jika method logout dipanggil, skip pengecekan login
-        if ($this->router->method === 'logout') {
+        // Skip authentication check for these methods
+        $skip_auth = ['logout', 'firebase_auth'];
+        if (in_array($this->router->method, $skip_auth)) {
             return;
         }
         
@@ -25,6 +28,114 @@ class Auth extends CI_Controller {
     }
 
     // Menampilkan halaman login
+    /**
+     * Handle Firebase Authentication
+     */
+    public function firebase_auth() {
+        header('Content-Type: application/json');
+        
+        // Get the ID token from the request
+        $idToken = $this->input->post('idToken');
+        
+        if (!$idToken) {
+            echo json_encode(['success' => false, 'message' => 'No ID token provided']);
+            return;
+        }
+
+        try {
+            // Load Firebase configuration
+            $this->config->load('firebase');
+            $firebaseConfig = $this->config->item('firebase');
+            
+            // Initialize Firebase Admin SDK
+            $serviceAccount = [
+                'projectId' => $firebaseConfig['admin']['project_id'],
+                'clientEmail' => $firebaseConfig['admin']['client_email'],
+                'privateKey' => $firebaseConfig['admin']['private_key']
+            ];
+            
+            $factory = new \Kreait\Firebase\Factory();
+            $auth = $factory->withServiceAccount($serviceAccount)->createAuth();
+            
+            // Verify the ID token
+            $verifiedIdToken = $auth->verifyIdToken($idToken);
+            $uid = $verifiedIdToken->claims()->get('sub');
+            $user = $auth->getUser($uid);
+            
+            // Check if user exists in database
+            $existingUser = $this->Users_model->get_user_by_email($user->email);
+            
+            if ($existingUser) {
+                // User exists, log them in
+                $userData = [
+                    'user_id' => $existingUser->id,
+                    'username' => $existingUser->username,
+                    'email' => $existingUser->email,
+                    'role' => $existingUser->role,
+                    'level' => $existingUser->level,
+                    'logged_in' => TRUE
+                ];
+                
+                $this->session->set_userdata($userData);
+                
+                // Get redirect URL based on role and level
+                $redirectUrl = $this->Auth_model->get_redirect_url($userData['role'], $userData['level']);
+                
+                echo json_encode([
+                    'success' => true,
+                    'redirectUrl' => $redirectUrl
+                ]);
+                return;
+            } else {
+                // Create new user
+                $userData = [
+                    'username' => $user->displayName ?: explode('@', $user->email)[0],
+                    'email' => $user->email,
+                    'password' => password_hash(uniqid(), PASSWORD_DEFAULT), // Random password
+                    'role' => 'siswa', // Default role
+                    'level' => 'Basic', // Default level
+                    'status' => 'active',
+                    'created_at' => date('Y-m-d H:i:s')
+                ];
+                
+                $userId = $this->Users_model->create_user($userData);
+                
+                if ($userId) {
+                    // Set session
+                    $userData = [
+                        'user_id' => $userId,
+                        'username' => $userData['username'],
+                        'email' => $userData['email'],
+                        'role' => $userData['role'],
+                        'level' => $userData['level'],
+                        'logged_in' => TRUE
+                    ];
+                    
+                    $this->session->set_userdata($userData);
+                    
+                    // Get redirect URL based on role and level
+                    $redirectUrl = $this->Auth_model->get_redirect_url($userData['role'], $userData['level']);
+                    
+                    echo json_encode([
+                        'success' => true,
+                        'redirectUrl' => $redirectUrl
+                    ]);
+                    return;
+                } else {
+                    throw new Exception('Gagal membuat akun baru');
+                }
+            }
+            
+        } catch (Exception $e) {
+            log_message('error', 'Firebase Auth Error: ' . $e->getMessage());
+            echo json_encode([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat autentikasi: ' . $e->getMessage()
+            ]);
+            return;
+        }
+    }
+
     public function index()
     {
         // Force destroy any existing sessions when accessing login page directly
@@ -32,6 +143,9 @@ class Auth extends CI_Controller {
             $this->session->sess_destroy();
         }
 
+        // Load Firebase configuration
+        $this->config->load('firebase');
+        $data['firebase'] = $this->config->item('firebase');
         $data['title'] = 'Login - Academy Lite';
 
         $this->form_validation->set_rules('username', 'Username', 'required|trim');
