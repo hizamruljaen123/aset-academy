@@ -38,6 +38,10 @@ class Free_classes extends CI_Controller {
         // Get recent classes
         $data['recent_classes'] = $this->Free_class_model->get_recent_free_classes(5);
         
+        // Get total count of classes for conditional display
+        $all_classes = $this->Free_class_model->get_all_free_classes();
+        $data['total_classes_count'] = count($all_classes);
+        
         // Get progress statistics
         $data['progress_stats'] = $this->Enrollment_model->get_student_progress_stats($student_id);
         
@@ -79,7 +83,7 @@ class Free_classes extends CI_Controller {
         }
 
         if ($free_class->status != 'Published') {
-            show_error('Kelas ini belum dipublikasikan', 403);
+            show_error('Kelas ini belum tersedia', 403);
         }
 
         // Check if student is enrolled in this class
@@ -140,7 +144,7 @@ class Free_classes extends CI_Controller {
         }
         
         if ($free_class->status != 'Published') {
-            show_error('Kelas ini belum dipublikasikan', 403);
+            show_error('Kelas ini belum tersedia untuk pendaftaran', 403);
         }
         
         // Check if class has reached max students
