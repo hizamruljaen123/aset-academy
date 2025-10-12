@@ -459,7 +459,7 @@
                                     Nama Lengkap <span class="text-red-500">*</span>
                                 </label>
                                 <input type="text" id="nama_lengkap" name="nama_lengkap"
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 bg-white"
                                        placeholder="Masukkan nama lengkap Anda" required>
                             </div>
 
@@ -469,7 +469,7 @@
                                     Asal Kampus/Sekolah <span class="text-red-500">*</span>
                                 </label>
                                 <input type="text" id="asal_kampus_sekolah" name="asal_kampus_sekolah"
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 bg-white"
                                        placeholder="Contoh: Universitas Indonesia" required>
                             </div>
 
@@ -479,7 +479,7 @@
                                     Provinsi
                                 </label>
                                 <select id="province_id" name="province_id"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 bg-white">
                                     <option value="">Pilih Provinsi</option>
                                     <!-- Will be populated by JavaScript -->
                                 </select>
@@ -491,7 +491,7 @@
                                     Kabupaten/Kota
                                 </label>
                                 <select id="regency_id" name="regency_id"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" disabled>
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 bg-white" disabled>
                                     <option value="">Pilih Kabupaten/Kota</option>
                                     <!-- Will be populated by JavaScript -->
                                 </select>
@@ -503,7 +503,7 @@
                                     Kecamatan
                                 </label>
                                 <select id="district_id" name="district_id"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" disabled>
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 bg-white" disabled>
                                     <option value="">Pilih Kecamatan</option>
                                     <!-- Will be populated by JavaScript -->
                                 </select>
@@ -515,7 +515,7 @@
                                     Kelurahan/Desa
                                 </label>
                                 <select id="village_id" name="village_id"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" disabled>
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 bg-white" disabled>
                                     <option value="">Pilih Kelurahan/Desa</option>
                                     <!-- Will be populated by JavaScript -->
                                 </select>
@@ -527,7 +527,7 @@
                                     Usia <span class="text-red-500">*</span>
                                 </label>
                                 <input type="number" id="usia" name="usia" min="10" max="99"
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 bg-white"
                                        placeholder="20" required>
                             </div>
 
@@ -537,7 +537,7 @@
                                     Pekerjaan <span class="text-red-500">*</span>
                                 </label>
                                 <select id="pekerjaan" name="pekerjaan"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 bg-white" required>
                                     <option value="">Pilih Pekerjaan</option>
                                     <option value="Pelajar">Pelajar</option>
                                     <option value="Mahasiswa">Mahasiswa</option>
@@ -555,7 +555,7 @@
                                     No. WhatsApp/Telegram <span class="text-red-500">*</span>
                                 </label>
                                 <input type="text" id="no_wa_telegram" name="no_wa_telegram"
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 bg-white"
                                        placeholder="081234567890" required>
                                 <p class="text-sm text-gray-500 mt-1">
                                     Masukkan nomor WhatsApp atau Telegram untuk komunikasi dan informasi workshop

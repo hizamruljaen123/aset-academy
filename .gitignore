@@ -40,3 +40,10 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 
 /__pycache__/
 /test_stress/
+
+# Environment Files
+#-------------------------
+.env
+.env.*
+*.env
+!.env.example
