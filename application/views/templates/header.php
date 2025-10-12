@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $title; ?> - Academy Lite</title>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="<?= base_url('assets/img/favicon.ico') ?>">
+    <link rel="shortcut icon" type="image/x-icon" href="<?= base_url('assets/img/favicon.ico') ?>">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?= base_url('assets/img/logo.png') ?>">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= base_url('assets/img/logo.png') ?>">
+    
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
@@ -387,14 +393,38 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
     <div class="flex min-h-screen">
         <!-- Sidebar -->
-        <div class="w-64 bg-white shadow-md fixed h-full transition-all duration-300 ease-in-out z-50 overflow-y-auto" id="sidebar">
-            <div class="p-4 border-b border-gray-200">
-                <a href="<?php echo site_url(); ?>" class="flex items-center text-blue-600 font-bold">
-                <img src="<?= base_url('assets/img/logo.png') ?>" alt="ASET Academy" class="h-8 w-auto">
+        <div class="w-64 bg-gradient-to-b from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-xl fixed h-full transition-all duration-300 ease-in-out z-50 overflow-y-auto border-r border-gray-200 dark:border-gray-700" id="sidebar">
+            <!-- Logo & Brand -->
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
+                <a href="<?php echo site_url(); ?>" class="flex items-center space-x-3 group">
+                    <!-- Logo Light Mode -->
+                    <img src="<?= base_url('assets/img/logo.png') ?>" alt="ASET Academy" class="h-8 w-auto dark:hidden">
+                    <!-- Logo Dark Mode -->
+                    <img src="<?= base_url('assets/img/logo-white.png') ?>" alt="ASET Academy" class="h-8 w-auto hidden dark:block">
                 </a>
+            </div>
+            
+            <!-- Dark Mode Toggle -->
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                <button onclick="toggleDarkMode()" class="w-full flex items-center justify-between px-4 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-all duration-300 group">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 dark:from-blue-500 dark:to-indigo-600 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-all">
+                            <i class="fas fa-sun text-white dark:hidden"></i>
+                            <i class="fas fa-moon text-white hidden dark:inline-block"></i>
+                        </div>
+                        <div class="text-left">
+                            <div class="text-sm font-semibold text-gray-800 dark:text-white">
+                                <span class="dark:hidden">Light Mode</span>
+                                <span class="hidden dark:inline">Dark Mode</span>
+                            </div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Klik untuk ubah</div>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400 group-hover:translate-x-1 transition-transform"></i>
+                </button>
             </div>
             
             <nav class="p-2">
@@ -405,33 +435,47 @@
                 
                 <?php if ($role == 'guru'): ?>
                     <!-- Teacher Navigation -->
-                    <a href="<?php echo site_url('teacher'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'teacher') ? 'bg-blue-50 text-blue-600' : ''; ?>">
-                        <i class="fas fa-tachometer-alt w-5 text-center mr-3"></i>
-                        Dashboard
+                    <a href="<?php echo site_url('teacher'); ?>" class="flex items-center px-4 py-3 text-gray-600 dark:text-gray-300 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 mb-2 transition-all duration-200 group <?php echo ($this->uri->segment(1) == 'teacher') ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg' : ''; ?>">
+                        <div class="w-10 h-10 flex items-center justify-center rounded-lg <?php echo ($this->uri->segment(1) == 'teacher') ? 'bg-white/20' : 'bg-gray-100 dark:bg-gray-700'; ?> mr-3 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-tachometer-alt text-sm"></i>
+                        </div>
+                        <span class="font-medium">Dashboard</span>
                     </a>
-                    <a href="<?php echo site_url('teacher/kelas'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == 'kelas') ? 'bg-blue-50 text-blue-600' : ''; ?>">
-                        <i class="fas fa-chalkboard-teacher w-5 text-center mr-3"></i>
-                        Kelas Saya
+                    <a href="<?php echo site_url('teacher/kelas'); ?>" class="flex items-center px-4 py-3 text-gray-600 dark:text-gray-200 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 mb-2 transition-all duration-200 group <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == 'kelas') ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg' : ''; ?>">
+                        <div class="w-10 h-10 flex items-center justify-center rounded-lg <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == 'kelas') ? 'bg-white/20' : 'bg-gray-100 dark:bg-gray-700'; ?> mr-3 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-chalkboard-teacher text-sm"></i>
+                        </div>
+                        <span class="font-medium">Kelas Saya</span>
                     </a>
-                    <a href="<?php echo site_url('teacher/siswa'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == 'siswa') ? 'bg-blue-50 text-blue-600' : ''; ?>">
-                        <i class="fas fa-users w-5 text-center mr-3"></i>
-                        Siswa Saya
+                    <a href="<?php echo site_url('teacher/siswa'); ?>" class="flex items-center px-4 py-3 text-gray-600 dark:text-gray-200 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 mb-2 transition-all duration-200 group <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == 'siswa') ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg' : ''; ?>">
+                        <div class="w-10 h-10 flex items-center justify-center rounded-lg <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == 'siswa') ? 'bg-white/20' : 'bg-gray-100 dark:bg-gray-700'; ?> mr-3 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-users text-sm"></i>
+                        </div>
+                        <span class="font-medium">Siswa Saya</span>
                     </a>
-                    <a href="<?php echo site_url('teacher/materi'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == 'materi') ? 'bg-blue-50 text-blue-600' : ''; ?>">
-                        <i class="fas fa-book w-5 text-center mr-3"></i>
-                        Materi
+                    <a href="<?php echo site_url('teacher/materi'); ?>" class="flex items-center px-4 py-3 text-gray-600 dark:text-gray-200 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 mb-2 transition-all duration-200 group <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == 'materi') ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg' : ''; ?>">
+                        <div class="w-10 h-10 flex items-center justify-center rounded-lg <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == 'materi') ? 'bg-white/20' : 'bg-gray-100 dark:bg-gray-700'; ?> mr-3 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-book text-sm"></i>
+                        </div>
+                        <span class="font-medium">Materi</span>
                     </a>
-                    <a href="<?php echo site_url('teacher/assignments'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == 'assignments') ? 'bg-blue-50 text-blue-600' : ''; ?>">
-                        <i class="fas fa-edit w-5 text-center mr-3"></i>
-                        Penilaian
+                    <a href="<?php echo site_url('teacher/assignments'); ?>" class="flex items-center px-4 py-3 text-gray-600 dark:text-gray-200 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 mb-2 transition-all duration-200 group <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == 'assignments') ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg' : ''; ?>">
+                        <div class="w-10 h-10 flex items-center justify-center rounded-lg <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == 'assignments') ? 'bg-white/20' : 'bg-gray-100 dark:bg-gray-700'; ?> mr-3 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-edit text-sm"></i>
+                        </div>
+                        <span class="font-medium">Penilaian</span>
                     </a>
-                    <a href="<?php echo site_url('forum'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'forum') ? 'bg-blue-50 text-blue-600' : ''; ?>">
-                        <i class="fas fa-comments w-5 text-center mr-3"></i>
-                        Forum
+                    <a href="<?php echo site_url('forum'); ?>" class="flex items-center px-4 py-3 text-gray-600 dark:text-gray-200 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 mb-2 transition-all duration-200 group <?php echo ($this->uri->segment(1) == 'forum') ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg' : ''; ?>">
+                        <div class="w-10 h-10 flex items-center justify-center rounded-lg <?php echo ($this->uri->segment(1) == 'forum') ? 'bg-white/20' : 'bg-gray-100 dark:bg-gray-700'; ?> mr-3 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-comments text-sm"></i>
+                        </div>
+                        <span class="font-medium">Forum</span>
                     </a>
-                    <a href="<?php echo site_url('admin_workshop_guests'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'admin_workshop_guests') ? 'bg-blue-50 text-blue-600' : ''; ?>">
-                        <i class="fas fa-users-cog w-5 text-center mr-3"></i>
-                        Workshop Guests
+                    <a href="<?php echo site_url('admin_workshop_guests'); ?>" class="flex items-center px-4 py-3 text-gray-600 dark:text-gray-200 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 mb-2 transition-all duration-200 group <?php echo ($this->uri->segment(1) == 'admin_workshop_guests') ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg' : ''; ?>">
+                        <div class="w-10 h-10 flex items-center justify-center rounded-lg <?php echo ($this->uri->segment(1) == 'admin_workshop_guests') ? 'bg-white/20' : 'bg-gray-100 dark:bg-gray-700'; ?> mr-3 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-users-cog text-sm"></i>
+                        </div>
+                        <span class="font-medium">Workshop Guests</span>
                     </a>
                     
                 <?php elseif ($role == 'siswa'): ?>
@@ -450,8 +494,8 @@
                     </a>
                     
 
-                    <div class="border-t border-gray-200 my-2"></div>
-                    <div class="px-2 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">Pembelajaran</div>
+                    <div class="border-t border-gray-200 dark:border-gray-700 my-2"></div>
+                    <div class="px-2 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Pembelajaran</div>
                     <a href="<?php echo site_url('student/all_classes'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'all_classes') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-layer-group w-5 text-center mr-3"></i>
                         Semua Kelas Saya
@@ -473,8 +517,8 @@
                         Materi Pembelajaran
                     </a>
 
-                    <div class="border-t border-gray-200 my-2"></div>
-                    <div class="px-2 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">Operasional</div>
+                    <div class="border-t border-gray-200 dark:border-gray-700 my-2"></div>
+                    <div class="px-2 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Operasional</div>
                    
 
                     <a href="<?php echo site_url('absensi'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'absensi') ? 'bg-blue-50 text-blue-600' : ''; ?>">
@@ -485,8 +529,8 @@
                         <i class="fas fa-tasks w-5 text-center mr-3"></i>
                         Penilaian
                     </a>
-                    <div class="border-t border-gray-200 my-2"></div>
-                    <div class="px-2 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">Diskusi</div>
+                    <div class="border-t border-gray-200 dark:border-gray-700 my-2"></div>
+                    <div class="px-2 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Diskusi</div>
                     <a href="<?php echo site_url('forum'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'forum') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-comments w-5 text-center mr-3"></i>
                         Forum
@@ -558,8 +602,8 @@
                     </a>
                     
                     <?php if ($level == '1' || $level == '2'): // Super Admin or Admin ?>
-                    <div class="border-t border-gray-200 my-2"></div>
-                    <div class="px-2 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">Admin</div>
+                    <div class="border-t border-gray-200 dark:border-gray-700 my-2"></div>
+                    <div class="px-2 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Admin</div>
                     <a href="<?php echo site_url('payment/admin_verify'); ?>" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 mb-1 <?php echo ($this->uri->segment(1) == 'payment' && $this->uri->segment(2) == 'admin_verify') ? 'bg-blue-50 text-blue-600' : ''; ?>">
                         <i class="fas fa-money-check-alt w-5 text-center mr-3"></i>
                         Verifikasi Pembayaran
@@ -601,25 +645,28 @@
         <!-- Main Content -->
         <div class="flex-1 ml-0 md:ml-64 transition-all duration-300 ease-in-out" id="mainContent">
             <!-- Topbar -->
-            <div class="bg-white shadow-sm p-4 flex justify-between items-center sticky top-0 z-40">
-                <div class="flex items-center">
-                    <button onclick="toggleSidebar()" class="md:hidden bg-gray-100 hover:bg-gray-200 text-gray-600 p-2 rounded-md mr-3 transition-colors">
+            <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md shadow-lg border-b border-gray-200 dark:border-gray-700 p-4 flex justify-between items-center sticky top-0 z-40 transition-colors duration-300">
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleSidebar()" class="md:hidden bg-gradient-to-br from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white p-2.5 rounded-lg mr-3 transition-all duration-300 shadow-md hover:shadow-lg">
                         <i class="fas fa-bars"></i>
                     </button>
-                    <h1 class="text-xl font-semibold text-gray-800"><?php echo $title; ?></h1>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-800 dark:text-white"><?php echo $title; ?></h1>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Welcome back! 👋</p>
+                    </div>
                 </div>
                 
                 <div class="flex items-center space-x-3">
                     <div class="relative" id="profileDropdown">
-                        <button type="button" id="userMenuButton" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-                            <div class="w-9 h-9 bg-blue-600 rounded-full flex items-center justify-center">
+                        <button type="button" id="userMenuButton" class="flex items-center space-x-3 px-3 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 border border-gray-200 dark:border-gray-600 bg-white/50 dark:bg-gray-800/50">
+                            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-md">
                                 <i class="fas fa-user text-white text-sm"></i>
                             </div>
                             <div class="text-left hidden md:block">
-                                <p class="text-sm font-medium text-gray-700 truncate max-w-[150px]">
+                                <p class="text-sm font-semibold text-gray-800 dark:text-white truncate max-w-[150px]">
                                     <?php echo $this->session->userdata('nama_lengkap') ?: 'Admin'; ?>
                                 </p>
-                                <p class="text-xs text-gray-500 truncate max-w-[150px]">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 truncate max-w-[150px]">
                                     <?php 
                                     $role = $this->session->userdata('role');
                                     $role_labels = [
@@ -632,25 +679,37 @@
                                     ?>
                                 </p>
                             </div>
-                            <i class="fas fa-chevron-down text-gray-400 text-xs ml-1"></i>
+                            <i class="fas fa-chevron-down text-gray-400 dark:text-gray-500 text-xs ml-1 transition-transform group-hover:rotate-180"></i>
                         </button>
                         
-                        <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 focus:outline-none z-50 transition-all duration-100 ease-in-out transform opacity-0 scale-95" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                            <div class="px-4 py-3 border-b border-gray-100">
-                                <p class="text-sm font-medium text-gray-900 truncate">
-                                    <?php echo $this->session->userdata('nama_lengkap') ?: 'Admin'; ?>
-                                </p>
-                                <p class="text-xs text-gray-500 truncate">
-                                    <?php echo $this->session->userdata('email') ?: 'admin@academy.com'; ?>
-                                </p>
+                        <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl py-2 ring-1 ring-black ring-opacity-5 dark:ring-gray-700 focus:outline-none z-50 transition-all duration-200 ease-in-out transform opacity-0 scale-95 border border-gray-200 dark:border-gray-700" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                            <div class="px-4 py-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-700 dark:to-gray-600 mx-2 rounded-xl mb-2">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-md">
+                                        <i class="fas fa-user text-white"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                                            <?php echo $this->session->userdata('nama_lengkap') ?: 'Admin'; ?>
+                                        </p>
+                                        <p class="text-xs text-gray-600 dark:text-gray-400 truncate">
+                                            <?php echo $this->session->userdata('email') ?: 'admin@academy.com'; ?>
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
-                            <a href="<?php echo site_url('profile'); ?>" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150" role="menuitem" tabindex="-1">
-                                <i class="fas fa-user-cog mr-3 text-gray-400 w-5 text-center"></i>
-                                <span>Profile Settings</span>
+                            <a href="<?php echo site_url('profile'); ?>" class="flex items-center px-4 py-3 mx-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 rounded-xl transition-all duration-200 group" role="menuitem" tabindex="-1">
+                                <div class="w-9 h-9 bg-gray-100 dark:bg-gray-600 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-user-cog text-gray-600 dark:text-gray-300"></i>
+                                </div>
+                                <span class="font-medium">Profile Settings</span>
                             </a>
-                            <a href="<?php echo site_url('auth/logout'); ?>" class="flex items-center px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors duration-150" role="menuitem" tabindex="-1">
-                                <i class="fas fa-sign-out-alt mr-3 text-red-400 w-5 text-center"></i>
-                                <span>Logout</span>
+                            <div class="border-t border-gray-200 dark:border-gray-700 my-2"></div>
+                            <a href="<?php echo site_url('auth/logout'); ?>" class="flex items-center px-4 py-3 mx-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all duration-200 group" role="menuitem" tabindex="-1">
+                                <div class="w-9 h-9 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-sign-out-alt text-red-600 dark:text-red-400"></i>
+                                </div>
+                                <span class="font-medium">Logout</span>
                             </a>
                         </div>
                     </div>
@@ -661,30 +720,58 @@
             <div class="p-4">
                 <!-- Flash Messages -->
                 <?php if ($this->session->flashdata('success')): ?>
-                    <div class="mb-4 p-4 border-l-4 border-green-500 bg-green-50 rounded-md">
+                    <div class="mb-4 p-4 border-l-4 border-green-500 bg-green-50 dark:bg-green-900/20 rounded-xl shadow-md dark:border-green-400 transition-all duration-300">
                         <div class="flex items-center">
-                            <i class="fas fa-check-circle text-green-600 mr-3"></i>
-                            <div>
-                                <p class="font-semibold text-green-800">Success</p>
-                                <p class="text-green-700"><?php echo $this->session->flashdata('success'); ?></p>
+                            <div class="w-10 h-10 bg-green-500 dark:bg-green-600 rounded-lg flex items-center justify-center mr-3 shadow-md">
+                                <i class="fas fa-check-circle text-white"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-bold text-green-800 dark:text-green-300">Success!</p>
+                                <p class="text-green-700 dark:text-green-400"><?php echo $this->session->flashdata('success'); ?></p>
                             </div>
                         </div>
                     </div>
                 <?php endif; ?>
                 
                 <?php if ($this->session->flashdata('error')): ?>
-                    <div class="mb-4 p-4 border-l-4 border-red-500 bg-red-50 rounded-md">
+                    <div class="mb-4 p-4 border-l-4 border-red-500 bg-red-50 dark:bg-red-900/20 rounded-xl shadow-md dark:border-red-400 transition-all duration-300">
                         <div class="flex items-center">
-                            <i class="fas fa-exclamation-circle text-red-600 mr-3"></i>
-                            <div>
-                                <p class="font-semibold text-red-800">Error</p>
-                                <p class="text-red-700"><?php echo $this->session->flashdata('error'); ?></p>
+                            <div class="w-10 h-10 bg-red-500 dark:bg-red-600 rounded-lg flex items-center justify-center mr-3 shadow-md">
+                                <i class="fas fa-exclamation-circle text-white"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-bold text-red-800 dark:text-red-300">Error!</p>
+                                <p class="text-red-700 dark:text-red-400"><?php echo $this->session->flashdata('error'); ?></p>
                             </div>
                         </div>
                     </div>
                 <?php endif; ?>
 
     <script>
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const isDark = html.classList.contains('dark');
+            
+            if (isDark) {
+                html.classList.remove('dark');
+                localStorage.setItem('darkMode', 'false');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('darkMode', 'true');
+            }
+        }
+
+        // Check dark mode preference on load
+        window.addEventListener('DOMContentLoaded', function() {
+            const darkMode = localStorage.getItem('darkMode');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (darkMode === 'true' || (darkMode === null && prefersDark)) {
+                document.documentElement.classList.add('dark');
+            }
+        });
+
         // Toggle sidebar on mobile
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
