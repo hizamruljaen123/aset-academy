@@ -25,3 +25,17 @@ $hook['post_controller_constructor'] = array(
     'filename' => 'Session_tracker.php',
     'filepath' => 'hooks'
 );
+
+/*
+|| -------------------------------------------------------------------------
+|| Cache Headers Hook
+|| -------------------------------------------------------------------------
+|| Automatically adds cache control and expires headers for better performance
+|| This hook runs after the controller is instantiated but before any method is called
+*/
+$hook['post_controller_constructor'][] = array(
+    'class'    => 'Cache_headers',
+    'function' => 'set_cache_headers',
+    'filename' => 'Cache_headers.php',
+    'filepath' => 'hooks'
+);
