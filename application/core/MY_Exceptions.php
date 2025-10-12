@@ -60,13 +60,18 @@ class MY_Exceptions extends CI_Exceptions
         return $this->render_custom_500('Terjadi Kesalahan', 'Maaf, kami mengalami kendala teknis. Tim kami sudah menerima laporan ini.');
     }
 
-    public function show_error($heading, $message, $status_code = 500, $template = 'error_general')
+    public function show_error($heading, $message, $template = 'error_general', $status_code = 500)
     {
+        // Ensure status_code is numeric to prevent infinite loop
+        if (!is_numeric($status_code)) {
+            $status_code = 500;
+        }
+        
         if (ENVIRONMENT === 'development' || is_cli() || $status_code < 500) {
-            return parent::show_error($heading, $message, $status_code, $template);
+            return parent::show_error($heading, $message, $template, $status_code);
         }
 
-        log_message('error', 'Application Error ('.$status_code.'): '.strip_tags(is_array($message) ? implode(' ', $message) : $message));
+        log_message('error', 'Application Error ('.$template.'): '.strip_tags(is_array($message) ? implode(' ', $message) : $message));
         return $this->render_custom_500($heading, $message, $status_code);
     }
 

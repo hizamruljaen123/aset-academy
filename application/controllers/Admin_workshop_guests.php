@@ -56,6 +56,9 @@ class Admin_workshop_guests extends CI_Controller {
         $data['statistics'] = $this->workshop_model->get_guest_statistics($workshop_id);
 
         $data['title'] = 'Workshop Guests - ' . $data['workshop']->title;
+        $data['is_teacher'] = false; // Admin has full access
+        $data['user_role'] = $this->session->userdata('role'); // Pass role ke view
+        
         $this->load->view('admin/workshop_guests/workshop_guests', $data);
     }
 

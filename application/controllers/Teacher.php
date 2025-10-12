@@ -154,40 +154,50 @@ class Teacher extends CI_Controller {
     public function siswa_detail($siswa_id)
     {
         $guru_id = $this->session->userdata('user_id');
-        $siswa = $this->Siswa_model->get_siswa_by_id($siswa_id);
-
-        if (!$siswa) {
-            show_404();
-        }
-
-        // Check if teacher has access to this student
-        // First check if it's a premium class student
-        $kelas = $this->db->get_where('kelas_programming', ['nama_kelas' => $siswa->kelas])->row();
-        $has_premium_access = $kelas && $this->Guru_model->has_class_access($guru_id, $kelas->id);
-
-        // Then check if it's a free class student
-        $has_free_access = false;
-        if (!$has_premium_access) {
-            // Check if student is enrolled in any free class taught by this teacher
-            $this->db->select('fce.class_id');
-            $this->db->from('free_class_enrollments fce');
-            $this->db->join('free_classes fc', 'fce.class_id = fc.id');
-            $this->db->where('fce.student_id', $siswa_id);
-            $this->db->where('fc.mentor_id', $guru_id);
-            $this->db->where('fc.status', 'Published');
-            $this->db->where_in('fce.status', ['Enrolled', 'Completed']);
-            $free_enrollment = $this->db->get()->row();
-            $has_free_access = $free_enrollment !== null;
-        }
-
-        if (!$has_premium_access && !$has_free_access) {
+        
+        // Check if teacher has access to this student using the view
+        $this->db->select('student_id, student_name, student_email, class_name, class_type, enrollment_status, progress_percentage');
+        $this->db->from('v_guru_kelas_detail');
+        $this->db->where('guru_id', $guru_id);
+        $this->db->where('student_id', $siswa_id);
+        $this->db->group_by('student_id, class_id');
+        $access_check = $this->db->get()->result();
+        
+        if (empty($access_check)) {
             show_error('Anda tidak memiliki akses ke siswa ini.', 403);
         }
-
+        
+        // Try to get student from siswa table first (for old data)
+        $siswa = $this->Siswa_model->get_siswa_by_id($siswa_id);
+        
+        // If not found in siswa table, get from users table
+        if (!$siswa) {
+            $this->db->select('id, username, nama_lengkap, email, foto_profil, role, status, created_at');
+            $this->db->from('users');
+            $this->db->where('id', $siswa_id);
+            $siswa = $this->db->get()->row();
+            
+            if (!$siswa) {
+                show_404();
+            }
+            
+            // Add empty fields for compatibility with view
+            $siswa->nis = '-';
+            $siswa->kelas = '-';
+            $siswa->jurusan = '-';
+            $siswa->alamat = '-';
+            $siswa->no_telepon = '-';
+            $siswa->tanggal_lahir = null;
+            $siswa->jenis_kelamin = null;
+        }
+        
+        // Get enrolled classes for this student
         $data['siswa'] = $siswa;
         $data['programming_classes'] = $this->Siswa_model->get_enrolled_programming_classes($siswa_id);
         $data['free_classes'] = $this->Siswa_model->get_enrolled_free_classes($siswa_id);
+        $data['enrollment_data'] = $access_check; // Data enrollment dari guru
         $data['title'] = 'Detail Siswa - ' . $siswa->nama_lengkap;
+        
         $this->load->view('templates/header', $data);
         $this->load->view('teacher/siswa_detail', $data);
         $this->load->view('templates/footer');
@@ -339,7 +349,7 @@ class Teacher extends CI_Controller {
         $guru_id = $this->session->userdata('user_id');
         
         // Check if teacher has access to this material
-        $this->db->select('m.*, kp.nama_kelas');
+        $this->db->select('m.*, kp.nama_kelas, kp.id as kelas_id');
         $this->db->from('materi m');
         $this->db->join('kelas_programming kp', 'm.kelas_id = kp.id');
         $this->db->join('guru_kelas gk', 'kp.id = gk.kelas_id');
@@ -362,6 +372,358 @@ class Teacher extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('teacher/materi_detail', $data);
         $this->load->view('templates/footer');
+    }
+
+    public function edit_materi($id)
+    {
+        $guru_id = $this->session->userdata('user_id');
+        
+        // Check if teacher has access to this material
+        $this->db->select('m.*, kp.nama_kelas, kp.id as kelas_id');
+        $this->db->from('materi m');
+        $this->db->join('kelas_programming kp', 'm.kelas_id = kp.id');
+        $this->db->join('guru_kelas gk', 'kp.id = gk.kelas_id');
+        $this->db->where('m.id', $id);
+        $this->db->where('gk.guru_id', $guru_id);
+        $this->db->where('gk.status', 'Aktif');
+        $materi = $this->db->get()->row();
+        
+        if (!$materi) {
+            show_error('Materi tidak ditemukan atau Anda tidak memiliki akses.', 404);
+        }
+        
+        // Get materi parts
+        $this->load->model('Materi_part_model');
+        $data['parts'] = $this->Materi_part_model->get_parts_by_materi_id($id);
+        
+        $data['materi'] = $materi;
+        $data['title'] = 'Edit Materi - ' . $materi->judul;
+        $this->load->view('templates/header', $data);
+        $this->load->view('teacher/edit_materi', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function update_materi($id)
+    {
+        $guru_id = $this->session->userdata('user_id');
+        
+        // Check if teacher has access to this material
+        $this->db->select('m.*, kp.nama_kelas');
+        $this->db->from('materi m');
+        $this->db->join('kelas_programming kp', 'm.kelas_id = kp.id');
+        $this->db->join('guru_kelas gk', 'kp.id = gk.kelas_id');
+        $this->db->where('m.id', $id);
+        $this->db->where('gk.guru_id', $guru_id);
+        $this->db->where('gk.status', 'Aktif');
+        $materi = $this->db->get()->row();
+        
+        if (!$materi) {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => false,
+                'message' => 'Materi tidak ditemukan atau Anda tidak memiliki akses.'
+            ]));
+            return;
+        }
+        
+        $this->form_validation->set_rules('judul', 'Judul', 'required|trim');
+        $this->form_validation->set_rules('deskripsi', 'Deskripsi', 'required|trim');
+        
+        if ($this->form_validation->run() == FALSE) {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => false,
+                'message' => 'Validasi gagal: ' . validation_errors()
+            ]));
+            return;
+        }
+        
+        $update_data = [
+            'judul' => $this->input->post('judul'),
+            'deskripsi' => $this->input->post('deskripsi')
+        ];
+        
+        $this->Materi_model->update_materi($id, $update_data);
+        
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode([
+            'success' => true,
+            'message' => 'Materi berhasil diperbarui!'
+        ]));
+    }
+
+    public function delete_materi($id)
+    {
+        $guru_id = $this->session->userdata('user_id');
+        
+        // Check if teacher has access to this material
+        $this->db->select('m.*, kp.nama_kelas');
+        $this->db->from('materi m');
+        $this->db->join('kelas_programming kp', 'm.kelas_id = kp.id');
+        $this->db->join('guru_kelas gk', 'kp.id = gk.kelas_id');
+        $this->db->where('m.id', $id);
+        $this->db->where('gk.guru_id', $guru_id);
+        $this->db->where('gk.status', 'Aktif');
+        $materi = $this->db->get()->row();
+        
+        if (!$materi) {
+            $this->session->set_flashdata('error', 'Materi tidak ditemukan atau Anda tidak memiliki akses.');
+            redirect('teacher/materi');
+            return;
+        }
+        
+        $this->Materi_model->delete_materi($id);
+        $this->session->set_flashdata('success', 'Materi berhasil dihapus!');
+        redirect('teacher/materi');
+    }
+
+    public function add_materi_part($materi_id)
+    {
+        $guru_id = $this->session->userdata('user_id');
+        
+        // Check access
+        $this->db->select('m.*');
+        $this->db->from('materi m');
+        $this->db->join('kelas_programming kp', 'm.kelas_id = kp.id');
+        $this->db->join('guru_kelas gk', 'kp.id = gk.kelas_id');
+        $this->db->where('m.id', $materi_id);
+        $this->db->where('gk.guru_id', $guru_id);
+        $this->db->where('gk.status', 'Aktif');
+        $materi = $this->db->get()->row();
+        
+        if (!$materi) {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => false,
+                'message' => 'Akses ditolak.'
+            ]));
+            return;
+        }
+        
+        $this->form_validation->set_rules('part_title', 'Judul Bagian', 'required|trim');
+        $this->form_validation->set_rules('part_content', 'Konten', 'required|trim');
+        $this->form_validation->set_rules('part_type', 'Tipe', 'required');
+        
+        if ($this->form_validation->run() == FALSE) {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => false,
+                'message' => 'Validasi gagal: ' . validation_errors()
+            ]));
+            return;
+        }
+        
+        // Get last order
+        $this->load->model('Materi_part_model');
+        $last_order = $this->Materi_part_model->get_last_part_order($materi_id);
+        
+        $part_data = [
+            'materi_id' => $materi_id,
+            'part_title' => $this->input->post('part_title'),
+            'part_content' => $this->input->post('part_content'),
+            'part_type' => $this->input->post('part_type'),
+            'part_order' => $last_order + 1
+        ];
+        
+        $this->Materi_part_model->insert_part($part_data);
+        
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode([
+            'success' => true,
+            'message' => 'Bagian materi berhasil ditambahkan!'
+        ]));
+    }
+
+    public function update_materi_part($part_id)
+    {
+        $guru_id = $this->session->userdata('user_id');
+        
+        // Check access through materi
+        $this->load->model('Materi_part_model');
+        $part = $this->Materi_part_model->get_part_by_id($part_id);
+        
+        if (!$part) {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => false,
+                'message' => 'Bagian tidak ditemukan.'
+            ]));
+            return;
+        }
+        
+        $this->db->select('m.*');
+        $this->db->from('materi m');
+        $this->db->join('kelas_programming kp', 'm.kelas_id = kp.id');
+        $this->db->join('guru_kelas gk', 'kp.id = gk.kelas_id');
+        $this->db->where('m.id', $part->materi_id);
+        $this->db->where('gk.guru_id', $guru_id);
+        $this->db->where('gk.status', 'Aktif');
+        $materi = $this->db->get()->row();
+        
+        if (!$materi) {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => false,
+                'message' => 'Akses ditolak.'
+            ]));
+            return;
+        }
+        
+        $this->form_validation->set_rules('part_title', 'Judul Bagian', 'required|trim');
+        $this->form_validation->set_rules('part_content', 'Konten', 'required|trim');
+        $this->form_validation->set_rules('part_type', 'Tipe', 'required');
+        
+        if ($this->form_validation->run() == FALSE) {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => false,
+                'message' => 'Validasi gagal: ' . validation_errors()
+            ]));
+            return;
+        }
+        
+        $update_data = [
+            'part_title' => $this->input->post('part_title'),
+            'part_content' => $this->input->post('part_content'),
+            'part_type' => $this->input->post('part_type')
+        ];
+        
+        $this->Materi_part_model->update_part($part_id, $update_data);
+        
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode([
+            'success' => true,
+            'message' => 'Bagian materi berhasil diperbarui!'
+        ]));
+    }
+
+    public function delete_materi_part($part_id)
+    {
+        $guru_id = $this->session->userdata('user_id');
+        
+        // Check access through materi
+        $this->load->model('Materi_part_model');
+        $part = $this->Materi_part_model->get_part_by_id($part_id);
+        
+        if (!$part) {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => false,
+                'message' => 'Bagian tidak ditemukan.'
+            ]));
+            return;
+        }
+        
+        $this->db->select('m.*');
+        $this->db->from('materi m');
+        $this->db->join('kelas_programming kp', 'm.kelas_id = kp.id');
+        $this->db->join('guru_kelas gk', 'kp.id = gk.kelas_id');
+        $this->db->where('m.id', $part->materi_id);
+        $this->db->where('gk.guru_id', $guru_id);
+        $this->db->where('gk.status', 'Aktif');
+        $materi = $this->db->get()->row();
+        
+        if (!$materi) {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => false,
+                'message' => 'Akses ditolak.'
+            ]));
+            return;
+        }
+        
+        $this->Materi_part_model->delete_part($part_id);
+        
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode([
+            'success' => true,
+            'message' => 'Bagian materi berhasil dihapus!'
+        ]));
+    }
+
+    public function reorder_materi_parts()
+    {
+        $guru_id = $this->session->userdata('user_id');
+        $materi_id = $this->input->post('materi_id');
+        $orders_json = $this->input->post('orders');
+        $orders = json_decode($orders_json, true);
+        
+        // Check access
+        $this->db->select('m.*');
+        $this->db->from('materi m');
+        $this->db->join('kelas_programming kp', 'm.kelas_id = kp.id');
+        $this->db->join('guru_kelas gk', 'kp.id = gk.kelas_id');
+        $this->db->where('m.id', $materi_id);
+        $this->db->where('gk.guru_id', $guru_id);
+        $this->db->where('gk.status', 'Aktif');
+        $materi = $this->db->get()->row();
+        
+        if (!$materi) {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => false,
+                'message' => 'Akses ditolak.'
+            ]));
+            return;
+        }
+        
+        if (empty($orders) || !is_array($orders)) {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'success' => false,
+                'message' => 'Data urutan tidak valid.'
+            ]));
+            return;
+        }
+        
+        $this->load->model('Materi_part_model');
+        
+        foreach ($orders as $part_id => $order) {
+            $this->Materi_part_model->update_part($part_id, ['part_order' => $order]);
+        }
+        
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode([
+            'success' => true,
+            'message' => 'Urutan berhasil diperbarui!'
+        ]));
+    }
+
+    public function get_part($part_id)
+    {
+        $guru_id = $this->session->userdata('user_id');
+        
+        // Check access through materi
+        $this->load->model('Materi_part_model');
+        $part = $this->Materi_part_model->get_part_by_id($part_id);
+        
+        if (!$part) {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'error' => 'Bagian tidak ditemukan.'
+            ]));
+            return;
+        }
+        
+        $this->db->select('m.*');
+        $this->db->from('materi m');
+        $this->db->join('kelas_programming kp', 'm.kelas_id = kp.id');
+        $this->db->join('guru_kelas gk', 'kp.id = gk.kelas_id');
+        $this->db->where('m.id', $part->materi_id);
+        $this->db->where('gk.guru_id', $guru_id);
+        $this->db->where('gk.status', 'Aktif');
+        $materi = $this->db->get()->row();
+        
+        if (!$materi) {
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode([
+                'error' => 'Akses ditolak.'
+            ]));
+            return;
+        }
+        
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($part));
     }
     
     public function assignments()

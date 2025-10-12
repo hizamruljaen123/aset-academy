@@ -32,31 +32,52 @@ class Guru_model extends CI_Model {
         return array_merge($premium_classes, $free_classes);
     }
 
-    // Get students in teacher's classes (both premium and free) - FIXED STRUCTURE
+    // Get students in teacher's classes (both premium and free) - USING VIEW
     public function get_guru_siswa($guru_id)
     {
-        // Get students in premium classes (from siswa table)
-        $this->db->select('s.id, s.nama_lengkap, s.nis, s.email, s.foto_profil, s.kelas, s.jurusan, s.status, kp.nama_kelas, "premium" as class_type');
-        $this->db->from('siswa s');
-        $this->db->join('kelas_programming kp', 's.kelas = kp.nama_kelas');
-        $this->db->join('guru_kelas gk', 'kp.id = gk.kelas_id');
-        $this->db->where('gk.guru_id', $guru_id);
-        $this->db->where('gk.status', 'Aktif');
-        $this->db->where('kp.status', 'Aktif');
-        $premium_students = $this->db->get()->result();
-
-        // Get students in free classes (from users table via enrollments)
-        $this->db->select('u.id, u.nama_lengkap, "" as nis, u.email, "" as foto_profil, fc.title as kelas, "" as jurusan, u.status, fc.title as nama_kelas, "gratis" as class_type');
-        $this->db->from('free_class_enrollments fce');
-        $this->db->join('free_classes fc', 'fce.class_id = fc.id');
-        $this->db->join('users u', 'fce.student_id = u.id');
-        $this->db->where('fc.mentor_id', $guru_id);
-        $this->db->where('fc.status', 'Published');
-        $this->db->where_in('fce.status', ['Enrolled', 'Completed']);
-        $free_students = $this->db->get()->result();
-
-        // Combine results
-        return array_merge($premium_students, $free_students);
+        $this->db->select('
+            student_id as id,
+            student_name as nama_lengkap,
+            student_email as email,
+            class_name as kelas,
+            class_name as nama_kelas,
+            language as jurusan,
+            enrollment_status as status,
+            class_type,
+            enrollment_created_at as enrollment_date,
+            progress_percentage as progress,
+            class_id,
+            class_level,
+            completion_date,
+            guru_assignment_status
+        ');
+        $this->db->from('v_guru_kelas_detail');
+        $this->db->where('guru_id', $guru_id);
+        $this->db->where('student_id IS NOT NULL'); // Only get rows with students
+        
+        // Group by student and class to avoid duplicates from multiple meetings
+        $this->db->group_by(['student_id', 'class_id']);
+        
+        $this->db->order_by('enrollment_created_at', 'DESC');
+        
+        return $this->db->get()->result();
+    }
+    
+    // Get detailed student info with meeting data
+    public function get_guru_siswa_with_meetings($guru_id, $class_id = null)
+    {
+        $this->db->select('*');
+        $this->db->from('v_guru_kelas_detail');
+        $this->db->where('guru_id', $guru_id);
+        $this->db->where('student_id IS NOT NULL');
+        
+        if ($class_id) {
+            $this->db->where('class_id', $class_id);
+        }
+        
+        $this->db->order_by('class_name, student_name, meeting_date');
+        
+        return $this->db->get()->result();
     }
 
     // Get materials for teacher's classes (both premium and free)

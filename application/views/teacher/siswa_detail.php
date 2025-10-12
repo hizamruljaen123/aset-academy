@@ -24,6 +24,56 @@
         </div>
     </div>
 
+    <!-- Enrollment in Your Classes -->
+    <?php if (!empty($enrollment_data)): ?>
+    <div class="bg-white rounded-2xl shadow-md p-6 mb-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">
+            <i class="fas fa-chalkboard-teacher text-indigo-600 mr-2"></i>
+            Kelas yang Anda Ajar
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <?php foreach ($enrollment_data as $enrollment): ?>
+                <div class="p-4 border-l-4 <?php echo $enrollment->class_type == 'Premium' ? 'border-yellow-500 bg-yellow-50' : 'border-green-500 bg-green-50'; ?> rounded-lg">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-lg text-gray-900"><?php echo $enrollment->class_name; ?></h3>
+                            <div class="mt-2 space-y-1">
+                                <p class="text-sm text-gray-600">
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium <?php echo $enrollment->class_type == 'Premium' ? 'bg-yellow-200 text-yellow-800' : 'bg-green-200 text-green-800'; ?>">
+                                        <i class="<?php echo $enrollment->class_type == 'Premium' ? 'fas fa-crown' : 'fas fa-gift'; ?> mr-1"></i>
+                                        <?php echo $enrollment->class_type == 'Free' ? 'Gratis' : $enrollment->class_type; ?>
+                                    </span>
+                                </p>
+                                <p class="text-sm text-gray-600">
+                                    Status: 
+                                    <span class="font-medium <?php 
+                                        if (in_array($enrollment->enrollment_status, ['Active', 'Enrolled'])) echo 'text-green-600';
+                                        elseif ($enrollment->enrollment_status == 'Completed') echo 'text-blue-600';
+                                        elseif ($enrollment->enrollment_status == 'Pending') echo 'text-yellow-600';
+                                        else echo 'text-gray-600';
+                                    ?>">
+                                        <?php echo $enrollment->enrollment_status; ?>
+                                    </span>
+                                </p>
+                                <p class="text-sm text-gray-600">
+                                    Progress: 
+                                    <span class="font-medium text-indigo-600"><?php echo $enrollment->progress_percentage; ?>%</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Progress bar -->
+                    <div class="mt-3">
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full transition-all" style="width: <?php echo $enrollment->progress_percentage; ?>%"></div>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <?php endif; ?>
+
     <!-- Enrolled Classes -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Programming Classes -->
