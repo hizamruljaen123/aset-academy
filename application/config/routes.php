@@ -183,7 +183,13 @@ $route['workshops/get_provinces'] = 'workshops/get_provinces';
 $route['workshops/get_regencies/(:any)'] = 'workshops/get_regencies/$1';
 $route['workshops/get_districts/(:any)'] = 'workshops/get_districts/$1';
 
-// Admin Workshop Guests Routes (under /admin/ prefix)
+// Teacher Workshop Guests Routes (read-only access)
+$route['teacher/workshop-guests'] = 'teacher_workshop_guests';
+$route['teacher/workshop-guests/workshop/(:any)'] = 'teacher_workshop_guests/workshop_guests/$1';
+$route['teacher/workshop-guests/export/(:any)'] = 'teacher_workshop_guests/export_guests/$1';
+$route['teacher/workshop-guests/delete-guest/(:any)'] = 'teacher_workshop_guests/delete_guest/$1';
+
+// Admin Workshop Guests Routes (full access)
 $route['admin/workshop-guests'] = 'admin_workshop_guests';
 $route['admin/workshop-guests/workshop/(:any)'] = 'admin_workshop_guests/workshop_guests/$1';
 $route['admin/workshop-guests/export/(:any)'] = 'admin_workshop_guests/export_guests/$1';
