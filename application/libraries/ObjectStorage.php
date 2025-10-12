@@ -87,32 +87,219 @@ class ObjectStorage
         return $result;
     }
 
-    public function putFile($localPath, $remoteKey, $acl = 'public-read')
+    /**
+     * Compress image before upload
+     * Supports: JPEG, PNG, GIF, WebP
+     * 
+     * @param string $sourcePath Path to original image
+     * @return string|false Path to compressed image or false on failure
+     */
+    protected function compressImage($sourcePath)
+    {
+        // Check if GD library is available
+        if (!extension_loaded('gd')) {
+            log_message('debug', 'GD library not available, skipping image compression');
+            return $sourcePath;
+        }
+
+        // Get image info
+        $imageInfo = @getimagesize($sourcePath);
+        if (!$imageInfo) {
+            return $sourcePath;
+        }
+
+        list($width, $height, $type) = $imageInfo;
+        
+        // Skip compression for very small images (< 50KB)
+        $fileSize = filesize($sourcePath);
+        if ($fileSize < 51200) {
+            return $sourcePath;
+        }
+
+        // Create image resource based on type
+        $sourceImage = null;
+        switch ($type) {
+            case IMAGETYPE_JPEG:
+                $sourceImage = @imagecreatefromjpeg($sourcePath);
+                break;
+            case IMAGETYPE_PNG:
+                $sourceImage = @imagecreatefrompng($sourcePath);
+                break;
+            case IMAGETYPE_GIF:
+                $sourceImage = @imagecreatefromgif($sourcePath);
+                break;
+            case IMAGETYPE_WEBP:
+                if (function_exists('imagecreatefromwebp')) {
+                    $sourceImage = @imagecreatefromwebp($sourcePath);
+                }
+                break;
+            default:
+                return $sourcePath;
+        }
+
+        if (!$sourceImage) {
+            return $sourcePath;
+        }
+
+        // Calculate new dimensions if image is too large
+        $maxWidth = 1920;
+        $maxHeight = 1920;
+        $newWidth = $width;
+        $newHeight = $height;
+
+        if ($width > $maxWidth || $height > $maxHeight) {
+            $ratio = min($maxWidth / $width, $maxHeight / $height);
+            $newWidth = round($width * $ratio);
+            $newHeight = round($height * $ratio);
+        }
+
+        // Create new image with calculated dimensions
+        $newImage = imagecreatetruecolor($newWidth, $newHeight);
+
+        // Preserve transparency for PNG and GIF
+        if ($type == IMAGETYPE_PNG || $type == IMAGETYPE_GIF) {
+            imagealphablending($newImage, false);
+            imagesavealpha($newImage, true);
+            $transparent = imagecolorallocatealpha($newImage, 255, 255, 255, 127);
+            imagefilledrectangle($newImage, 0, 0, $newWidth, $newHeight, $transparent);
+        }
+
+        // Resample image with high quality
+        imagecopyresampled($newImage, $sourceImage, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+
+        // Create temp file for compressed image
+        $tempPath = sys_get_temp_dir() . '/' . uniqid('compressed_') . '_' . basename($sourcePath);
+
+        // Save compressed image based on type
+        $success = false;
+        switch ($type) {
+            case IMAGETYPE_JPEG:
+                // JPEG with 85% quality (optimal balance)
+                $success = imagejpeg($newImage, $tempPath, 85);
+                break;
+            case IMAGETYPE_PNG:
+                // PNG with compression level 6 (0-9, 9 = max compression)
+                $success = imagepng($newImage, $tempPath, 6);
+                break;
+            case IMAGETYPE_GIF:
+                $success = imagegif($newImage, $tempPath);
+                break;
+            case IMAGETYPE_WEBP:
+                if (function_exists('imagewebp')) {
+                    // WebP with 85% quality
+                    $success = imagewebp($newImage, $tempPath, 85);
+                }
+                break;
+        }
+
+        // Free memory
+        imagedestroy($sourceImage);
+        imagedestroy($newImage);
+
+        if (!$success || !file_exists($tempPath)) {
+            return $sourcePath;
+        }
+
+        // Check if compression actually reduced file size
+        $originalSize = filesize($sourcePath);
+        $compressedSize = filesize($tempPath);
+
+        if ($compressedSize < $originalSize) {
+            log_message('info', sprintf(
+                'Image compressed: %s -> %s (%.1f%% reduction)',
+                $this->formatBytes($originalSize),
+                $this->formatBytes($compressedSize),
+                (($originalSize - $compressedSize) / $originalSize) * 100
+            ));
+            return $tempPath;
+        } else {
+            // If compression didn't help, delete temp file and use original
+            @unlink($tempPath);
+            return $sourcePath;
+        }
+    }
+
+    /**
+     * Format bytes to human readable format
+     */
+    protected function formatBytes($bytes, $precision = 2)
+    {
+        $units = ['B', 'KB', 'MB', 'GB'];
+        $bytes = max($bytes, 0);
+        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+        $pow = min($pow, count($units) - 1);
+        $bytes /= pow(1024, $pow);
+        return round($bytes, $precision) . ' ' . $units[$pow];
+    }
+
+    /**
+     * Check if file is an image
+     */
+    protected function isImage($filePath)
+    {
+        if (!file_exists($filePath)) {
+            return false;
+        }
+
+        $mime = @mime_content_type($filePath);
+        if (!$mime) {
+            // Fallback to extension check
+            $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+            return in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+        }
+
+        return strpos($mime, 'image/') === 0;
+    }
+
+    public function putFile($localPath, $remoteKey, $acl = 'public-read', $compress = true)
     {
         if (!$this->s3) return false;
         if (!file_exists($localPath)) return false;
 
+        // Compress image if it's an image file and compression is enabled
+        $uploadPath = $localPath;
+        $isCompressed = false;
+        
+        if ($compress && $this->isImage($localPath)) {
+            $compressedPath = $this->compressImage($localPath);
+            if ($compressedPath !== $localPath) {
+                $uploadPath = $compressedPath;
+                $isCompressed = true;
+            }
+        }
+
         $key = $this->prefix ? rtrim($this->prefix, '/') . '/' . ltrim($remoteKey, '/') : ltrim($remoteKey, '/');
 
         try {
-            $body = fopen($localPath, 'r');
+            $body = fopen($uploadPath, 'r');
             $params = [
                 'Bucket' => $this->bucket,
                 'Key' => $key,
                 'Body' => $body,
                 'ACL' => $acl
             ];
+            
             // Try to set ContentType if possible
             if (function_exists('mime_content_type')) {
-                $mime = @mime_content_type($localPath);
+                $mime = @mime_content_type($uploadPath);
                 if ($mime) $params['ContentType'] = $mime;
             }
 
             $this->s3->putObject($params);
+            
+            // Clean up compressed temp file if exists
+            if ($isCompressed && file_exists($uploadPath)) {
+                @unlink($uploadPath);
+            }
+            
             // Construct public URL
             $url = $this->baseUrl . '/' . $this->bucket . '/' . $key;
             return $url;
         } catch (AwsException $e) {
+            // Clean up compressed temp file on error
+            if ($isCompressed && file_exists($uploadPath)) {
+                @unlink($uploadPath);
+            }
             log_message('error', 'ObjectStorage putFile error: ' . $e->getMessage());
             return false;
         }
