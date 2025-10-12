@@ -111,11 +111,21 @@
                                         </div>
                                         <div>
                                             <h4 class="text-sm font-medium text-gray-900"><?php echo $siswa->nama_lengkap; ?></h4>
-                                            <p class="text-xs text-gray-500"><?php echo $siswa->nis; ?> • <?php echo $siswa->nama_kelas; ?></p>
+                                            <p class="text-xs text-gray-500">
+                                                <?php 
+                                                    if (isset($siswa->nis) && !empty($siswa->nis)) {
+                                                        echo $siswa->nis . ' • ';
+                                                    }
+                                                    echo isset($siswa->nama_kelas) ? $siswa->nama_kelas : (isset($siswa->kelas) ? $siswa->kelas : '-');
+                                                ?>
+                                            </p>
                                         </div>
                                     </div>
-                                    <span class="px-2 py-1 text-xs font-medium rounded <?php echo ($siswa->status == 'Aktif') ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'; ?>">
-                                        <?php echo $siswa->status; ?>
+                                    <span class="px-2 py-1 text-xs font-medium rounded <?php 
+                                        $status = isset($siswa->status) ? $siswa->status : 'Active';
+                                        echo (in_array($status, ['Aktif', 'Active', 'Enrolled'])) ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'; 
+                                    ?>">
+                                        <?php echo $status; ?>
                                     </span>
                                 </div>
                             <?php endforeach; ?>

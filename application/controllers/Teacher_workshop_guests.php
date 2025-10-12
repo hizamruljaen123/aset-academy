@@ -35,9 +35,7 @@ class Teacher_workshop_guests extends CI_Controller {
         $data['title'] = 'Workshop Guest Management - Teacher';
         $data['is_teacher'] = true; // Flag untuk view
         
-        $this->load->view('templates/header', $data);
         $this->load->view('admin/workshop_guests/index', $data);
-        $this->load->view('templates/footer');
     }
 
     public function workshop_guests($workshop_id)
