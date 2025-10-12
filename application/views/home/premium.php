@@ -30,64 +30,11 @@
                 dan dukungan mentor berpengalaman dari industri teknologi.
             </p>
 
-            <!-- Stats -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto" data-aos="fade-up" data-aos-delay="200">
-                <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                    <div class="text-3xl md:text-4xl font-bold mb-2" style="color: #198aad;">24.700+</div>
-                    <div class="text-white/80 text-sm">Alumni</div>
-                </div>
-                <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                    <div class="text-3xl md:text-4xl font-bold mb-2" style="color: #198aad;">4.9/5</div>
-                    <div class="text-white/80 text-sm">Rating</div>
-                </div>
-                <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                    <div class="text-3xl md:text-4xl font-bold mb-2" style="color: #198aad;">100%</div>
-                    <div class="text-white/80 text-sm">Sertifikat</div>
-                </div>
-                <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                    <div class="text-3xl md:text-4xl font-bold mb-2" style="color: #198aad;">24/7</div>
-                    <div class="text-white/80 text-sm">Akses</div>
-                </div>
-            </div>
+            
         </div>
     </section>
 
-    <!-- Filter Section -->
-    <section class="py-20" style="background: linear-gradient(135deg, #0e1127 0%, #1a1f3a 50%, #2e3c73 100%);">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12" data-aos="fade-up">
-                <div class="flex items-center justify-center mb-6">
-                    <span class="text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg"
-                          style="background: linear-gradient(90deg, #198aad 0%, #2e3c73 100%);">
-                        🔍 Kategori Program
-                    </span>
-                </div>
-                <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Program Profesional yang Tersedia</h2>
-                <p class="text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
-                    Pilih program pembelajaran yang sesuai dengan minat dan tujuan karir teknologi Anda
-                </p>
-            </div>
-                
-            <div class="flex flex-wrap justify-center gap-4 mb-8" data-aos="fade-up" data-aos-delay="100">
-                <button class="filter-btn active group px-8 py-3 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-                        style="background: linear-gradient(90deg, #198aad 0%, #2e3c73 100%);" data-filter="all">
-                    <i class="fas fa-th mr-2"></i>Semua Program
-                </button>
-                <button class="filter-btn group px-8 py-3 bg-white/10 backdrop-blur-sm text-white border-2 border-white/20 rounded-full font-semibold hover:bg-white/20 hover:shadow-lg transform hover:scale-105 transition-all duration-300" data-filter="web">
-                    <i class="fas fa-code mr-2"></i>Web Development
-                </button>
-                <button class="filter-btn group px-8 py-3 bg-white/10 backdrop-blur-sm text-white border-2 border-white/20 rounded-full font-semibold hover:bg-white/20 hover:shadow-lg transform hover:scale-105 transition-all duration-300" data-filter="mobile">
-                    <i class="fas fa-mobile-alt mr-2"></i>Mobile Development
-                </button>
-                <button class="filter-btn group px-8 py-3 bg-white/10 backdrop-blur-sm text-white border-2 border-white/20 rounded-full font-semibold hover:bg-white/20 hover:shadow-lg transform hover:scale-105 transition-all duration-300" data-filter="data">
-                    <i class="fas fa-chart-bar mr-2"></i>Data Science
-                </button>
-                <button class="filter-btn group px-8 py-3 bg-white/10 backdrop-blur-sm text-white border-2 border-white/20 rounded-full font-semibold hover:bg-white/20 hover:shadow-lg transform hover:scale-105 transition-all duration-300" data-filter="cloud">
-                    <i class="fas fa-cloud mr-2"></i>Cloud & DevOps
-                </button>
-            </div>
-        </div>
-    </section>
+   
 
     <!-- Courses Grid -->
     <section class="py-20 bg-gradient-to-br from-slate-50 via-white to-gray-50">
@@ -189,69 +136,7 @@
         </div>
     </section>
 
-    <!-- Benefits Section -->
-    <section class="py-20" style="background: linear-gradient(135deg, #0e1127 0%, #1a1f3a 50%, #2e3c73 100%);">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16" data-aos="fade-up">
-                <div class="flex items-center justify-center mb-6">
-                    <span class="text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg"
-                          style="background: linear-gradient(90deg, #198aad 0%, #2e3c73 100%);">
-                        ✨ Keunggulan Program
-                    </span>
-                </div>
-                <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">Keunggulan Program Profesional</h2>
-                <p class="text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
-                    Program pembelajaran yang dirancang untuk mengembangkan kompetensi teknologi profesional Anda
-                </p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="group text-center bg-white/10 backdrop-blur-sm p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border border-white/20" data-aos="fade-up" data-aos-delay="100">
-                    <div class="relative mb-6">
-                        <div class="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg"
-                             style="background: linear-gradient(90deg, #198aad 0%, #2e3c73 100%);">
-                            <i class="fas fa-certificate text-white text-2xl"></i>
-                        </div>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-4 group-hover:text-blue-300 transition-colors">Sertifikat Resmi BNSP</h3>
-                    <p class="text-white/80 leading-relaxed">Sertifikat resmi yang diakui industri nasional setelah menyelesaikan program</p>
-                </div>
-                
-                <div class="group text-center bg-white/10 backdrop-blur-sm p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border border-white/20" data-aos="fade-up" data-aos-delay="200">
-                    <div class="relative mb-6">
-                        <div class="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg"
-                             style="background: linear-gradient(90deg, #198aad 0%, #2e3c73 100%);">
-                            <i class="fas fa-users text-white text-2xl"></i>
-                        </div>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-4 group-hover:text-blue-300 transition-colors">Dukungan Mentor Expert</h3>
-                    <p class="text-white/80 leading-relaxed">Akses langsung ke mentor profesional dari industri untuk konsultasi dan bimbingan</p>
-                </div>
-                
-                <div class="group text-center bg-white/10 backdrop-blur-sm p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border border-white/20" data-aos="fade-up" data-aos-delay="300">
-                    <div class="relative mb-6">
-                        <div class="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg"
-                             style="background: linear-gradient(90deg, #198aad 0%, #2e3c73 100%);">
-                            <i class="fas fa-briefcase text-white text-2xl"></i>
-                        </div>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-4 group-hover:text-blue-300 transition-colors">Proyek Portfolio Nyata</h3>
-                    <p class="text-white/80 leading-relaxed">Belajar melalui proyek nyata yang relevan dengan kebutuhan industri</p>
-                </div>
-                
-                <div class="group text-center bg-white/10 backdrop-blur-sm p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border border-white/20" data-aos="fade-up" data-aos-delay="400">
-                    <div class="relative mb-6">
-                        <div class="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg"
-                             style="background: linear-gradient(90deg, #198aad 0%, #2e3c73 100%);">
-                            <i class="fas fa-clock text-white text-2xl"></i>
-                        </div>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-4 group-hover:text-blue-300 transition-colors">Akses Seumur Hidup</h3>
-                    <p class="text-white/80 leading-relaxed">Akses materi selamanya termasuk update konten terbaru tanpa biaya tambahan</p>
-                </div>
-            </div>
-        </div>
-    </section>
+   
 
     <!-- CTA Section -->
     <section class="py-20 relative overflow-hidden" style="background: linear-gradient(135deg, #0e1127 0%, #2e3c73 50%, #198aad 100%);">

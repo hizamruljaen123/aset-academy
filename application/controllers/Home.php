@@ -102,6 +102,9 @@ class Home extends MY_Controller {
     
     public function view_free_class($encrypted_class_id)
     {
+        // Ensure text helper is loaded for view
+        $this->load->helper('text');
+
         $class_id = $this->decrypt_id($encrypted_class_id, 'Class ID');
         $free_class = $this->free_class_model->get_free_class_by_id($class_id);
         

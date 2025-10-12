@@ -2,364 +2,372 @@
 <?php $this->load->view('home/templates/_header'); ?>
 <?php $this->load->view('home/templates/_navbar'); ?>
 
-    <!-- Hero Section -->
-    <section class="pt-32 pb-20 bg-gradient-to-br from-green-500 to-emerald-600">
+    <!-- Hero Section - Udemy Style -->
+    <section class="pt-24 pb-12 bg-white border-b">
         <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div>
-                    <div class="flex items-center mb-6">
-                        <div class="flex items-center justify-center h-16 w-16 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-2xl mr-4">
-                            <i data-feather="check-circle" class="w-8 h-8"></i>
-                        </div>
-                        <div>
-                            <span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-500 text-white backdrop-blur-sm">
-                                GRATIS
+            <div class="max-w-6xl mx-auto">
+                <!-- Breadcrumb -->
+                <nav class="flex mb-8 text-sm text-gray-500">
+                    <a href="<?= site_url('home') ?>" class="hover:text-gray-700">Home</a>
+                    <span class="mx-2">/</span>
+                    <a href="<?= site_url('home/free') ?>" class="hover:text-gray-700">Kelas Gratis</a>
+                    <span class="mx-2">/</span>
+                    <span class="text-gray-900 font-medium"><?= html_escape($free_class->title) ?></span>
+                </nav>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                    <!-- Main Content -->
+                    <div class="lg:col-span-2">
+                        <!-- Title and Badge -->
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                                <i data-feather="gift" class="w-4 h-4 mr-1"></i>
+                                100% Gratis
                             </span>
-                            <h1 class="text-4xl md:text-5xl font-bold text-white mt-2"><?= html_escape($free_class->title) ?></h1>
-                            <p class="text-white/80 mt-2"><?= html_escape($free_class->description) ?></p>
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                <i data-feather="users" class="w-4 h-4 mr-1"></i>
+                                <?= number_format($enrolled_count) ?> siswa
+                            </span>
                         </div>
+
+                        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                            <?= html_escape($free_class->title) ?>
+                        </h1>
+
+                        <!-- Short Description -->
+                        <div class="text-lg text-gray-700 mb-6 leading-relaxed">
+                            <?php
+                            $short_desc = word_limiter($free_class->description, 30);
+                            echo decode_html_entities($short_desc);
+                            ?>
+                        </div>
+
+                        <!-- Meta Information -->
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-gray-900 mb-1">
+                                    <?php
+                                    $level_badges = [
+                                        'Pemula' => 'bg-green-100 text-green-800',
+                                        'Menengah' => 'bg-yellow-100 text-yellow-800',
+                                        'Lanjutan' => 'bg-red-100 text-red-800'
+                                    ];
+                                    $level_class = $level_badges[$free_class->level] ?? 'bg-gray-100 text-gray-800';
+                                    ?>
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium <?= $level_class ?>">
+                                        <?= html_escape($free_class->level) ?>
+                                    </span>
+                                </div>
+                                <div class="text-sm text-gray-500">Tingkat Kesulitan</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-gray-900 mb-1">
+                                    <i data-feather="clock" class="w-5 h-5 inline mr-1"></i>
+                                    <?= html_escape($free_class->duration) ?>
+                                </div>
+                                <div class="text-sm text-gray-500">Total Durasi</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-gray-900 mb-1">
+                                    <i data-feather="monitor" class="w-5 h-5 inline mr-1"></i>
+                                    <?= count($materials ?? []) ?>
+                                </div>
+                                <div class="text-sm text-gray-500">Sesi Live</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-green-600 mb-1">
+                                    <i data-feather="dollar-sign" class="w-5 h-5 inline mr-1"></i>
+                                    Gratis
+                                </div>
+                                <div class="text-sm text-gray-500">Harga</div>
+                            </div>
+                        </div>
+
+
+                        
                     </div>
-                    
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                        <div class="bg-white/10 backdrop-blur-md rounded-lg p-4 text-center">
-                            <div class="text-2xl font-bold text-white"><?= html_escape($free_class->level) ?></div>
-                            <div class="text-white/70 text-sm">Level</div>
+
+                    <!-- Sidebar - Course Preview -->
+                    <div class="lg:col-span-1">
+                        <div class="sticky top-8">
+                            <!-- Course Preview Card -->
+                            <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+                                <!-- Preview Image -->
+                                <div class="relative aspect-video">
+                                    <img src="<?= $free_class->thumbnail ?>" alt="<?= html_escape($free_class->title) ?>"
+                                         class="w-full h-full object-cover">
+                                    <!-- Live Class Badge -->
+                                    <div class="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                                        <span class="w-2 h-2 bg-white rounded-full mr-2 animate-pulse"></span>
+                                        Kelas Live
+                                    </div>
+                                </div>
+
+                                <!-- Course Info -->
+                                <div class="p-6">
+                                    <!-- Price -->
+                                    <div class="text-center mb-4">
+                                        <div class="text-3xl font-bold text-green-600 mb-1">Gratis</div>
+                                        <div class="text-sm text-gray-500 line-through">Rp 500.000</div>
+                                    </div>
+
+                                    <!-- Key Features -->
+                                    <div class="space-y-3 mb-6">
+                                        
+                                        <div class="flex items-center text-sm text-gray-600">
+                                            <i data-feather="check-circle" class="w-4 h-4 text-green-500 mr-2"></i>
+                                            <span>Sertifikat penyelesaian</span>
+                                        </div>
+                                        <div class="flex items-center text-sm text-gray-600">
+                                            <i data-feather="check-circle" class="w-4 h-4 text-green-500 mr-2"></i>
+                                            <span>Dukungan komunitas</span>
+                                        </div>
+                                        <div class="flex items-center text-sm text-gray-600">
+                                            <i data-feather="check-circle" class="w-4 h-4 text-green-500 mr-2"></i>
+                                            <span>Akses mobile & desktop</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- CTA Button -->
+                                    <a href="<?= site_url('auth/login?redirect=home/view_free_class/' . $free_class->id) ?>"
+                                       class="w-full inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors">
+                                        <i data-feather="play-circle" class="w-5 h-5 mr-2"></i>
+                                        Daftar Sekarang
+                                    </a>
+                                    <br>
+                                    <div class="text-sm text-gray-600 text-center">
+                                <i data-feather="users" class="w-4 h-4 inline mr-1"></i>
+                                <?= number_format($enrolled_count) ?> siswa terdaftar
+                            </div>
+
+                                    
+                                </div>
+                            </div>
+
+                            
                         </div>
-                        <div class="bg-white/10 backdrop-blur-md rounded-lg p-4 text-center">
-                            <div class="text-2xl font-bold text-white"><?= html_escape($free_class->duration) ?> Jam</div>
-                            <div class="text-white/70 text-sm">Durasi</div>
-                        </div>
-                        <div class="bg-white/10 backdrop-blur-md rounded-lg p-4 text-center">
-                            <div class="text-2xl font-bold text-white"><?= html_escape($enrolled_count) ?></div>
-                            <div class="text-white/70 text-sm">Siswa Terdaftar</div>
-                        </div>
-                        <div class="bg-white/10 backdrop-blur-md rounded-lg p-4 text-center">
-                            <div class="text-2xl font-bold text-white">Rp 0</div>
-                            <div class="text-white/70 text-sm">Harga</div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="<?= site_url('auth/login?redirect=home/view_free_class/' . $free_class->id) ?>" class="bg-white text-green-600 px-8 py-4 rounded-lg font-bold hover:bg-gray-100 transition-colors text-center">
-                            Mulai Belajar Sekarang
-                        </a>
-                        <a href="<?= site_url('home/free') ?>" class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-bold hover:bg-white/10 transition-colors text-center">
-                            Kembali ke Daftar Kelas
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="relative">
-                    <img src="<?= $free_class->thumbnail ?>" alt="<?= html_escape($free_class->title) ?>" class="w-full rounded-2xl shadow-2xl">
-                    <div class="absolute -top-4 -right-4 bg-green-400 text-green-900 px-4 py-2 rounded-full font-bold text-sm">
-                        ⭐ 4.8/5 Rating
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- What You'll Learn Section -->
-    <section class="py-16 bg-white">
+    <!-- Course Description & Curriculum -->
+    <section class="py-16 bg-gray-50">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-12" data-aos="fade-up">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Apa yang Akan Anda Pelajari?</h2>
-                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                    Dalam kelas gratis ini, Anda akan mempelajari konsep-konsep penting dan praktik langsung yang relevan dengan industri
-                </p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <?php if (!empty($materials)): ?>
-                    <?php foreach ($materials as $index => $material): ?>
-                        <div class="bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-shadow duration-300" data-aos="fade-up" data-aos-delay="<?php echo ($index + 1) * 100; ?>">
-                            <div class="flex items-center mb-4">
-                                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
-                                    <i data-feather="play-circle" class="w-6 h-6 text-green-600"></i>
-                                </div>
-                                <div>
-                                    <h3 class="text-lg font-bold text-gray-800"><?= html_escape($material->title) ?></h3>
-                                    <p class="text-sm text-gray-600">Modul <?php echo $index + 1; ?></p>
+            <div class="max-w-6xl mx-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                    <!-- Main Content -->
+                    <div class="lg:col-span-2 space-y-8">
+                        <!-- Course Description -->
+                        <div class="bg-white rounded-xl shadow-sm p-8">
+                            <!-- Live Class Info Banner -->
+                            <div class="mb-6 bg-blue-50 border-l-4 border-blue-500 rounded-lg p-4">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0">
+                                        <i data-feather="monitor" class="w-6 h-6 text-blue-500"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <h3 class="text-sm font-semibold text-blue-900 mb-1">Kelas Live Online dengan Mentor</h3>
+                                        <p class="text-sm text-blue-700">
+                                            Kelas ini diajarkan secara langsung oleh mentor profesional melalui platform online. 
+                                            Anda dapat berinteraksi langsung, bertanya, dan berdiskusi selama sesi pembelajaran.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                            <?php if ($material->description): ?>
-                                <p class="text-gray-600 mb-4"><?= html_escape($material->description) ?></p>
+
+                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Tentang Kelas Ini</h2>
+                            <div class="prose prose-lg max-w-none text-gray-700">
+                                <?php
+                                // Decode HTML entities and render clean HTML
+                                $full_description = $free_class->description;
+                                echo decode_html_entities($full_description, true);
+                                ?>
+                            </div>
+
+                           
+                        </div>
+
+                        <!-- Curriculum Section -->
+                        <div class="bg-white rounded-xl shadow-sm p-8">
+                            <div class="flex items-center justify-between mb-6">
+                                <h2 class="text-2xl font-bold text-gray-900">Jadwal Sesi Live</h2>
+                                <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                                    <?php echo count($materials ?? []); ?> sesi • <?php echo html_escape($free_class->duration); ?> jam
+                                </span>
+                            </div>
+
+                            <?php if (!empty($materials)): ?>
+                                <div class="space-y-4">
+                                    <?php foreach ($materials as $index => $material): ?>
+                                        <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex items-center space-x-4">
+                                                    <div class="flex-shrink-0 w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                                        <span class="text-sm font-semibold text-green-800"><?php echo $index + 1; ?></span>
+                                                    </div>
+                                                    <div>
+                                                        <h3 class="text-lg font-semibold text-gray-900">
+                                                            <?php echo html_escape(character_limiter($material->title, 60)); ?>
+                                                        </h3>
+                                                        <?php if ($material->description): ?>
+                                                            <p class="text-gray-600 mt-1">
+                                                                <?php echo html_escape(character_limiter($material->description, 100)); ?>
+                                                            </p>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </div>
+                                                <div class="flex items-center space-x-2 text-sm text-gray-500">
+                                                    <i data-feather="monitor" class="w-4 h-4"></i>
+                                                    <span>Sesi Live</span>
+                                                    <span class="text-gray-300">•</span>
+                                                    <i data-feather="clock" class="w-4 h-4"></i>
+                                                    <span>60 menit</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php else: ?>
+                                <div class="text-center py-12">
+                                    <i data-feather="calendar" class="w-16 h-16 text-gray-300 mx-auto mb-4"></i>
+                                    <h3 class="text-lg font-medium text-gray-900 mb-2">Jadwal Akan Segera Diumumkan</h3>
+                                    <p class="text-gray-500">Jadwal sesi live untuk kelas ini akan segera diumumkan. Daftarkan diri Anda sekarang untuk mendapatkan notifikasi.</p>
+                                </div>
                             <?php endif; ?>
-                            <div class="flex items-center text-sm text-gray-500">
-                                <i data-feather="file-text" class="w-4 h-4 mr-2"></i>
-                                <span><?= html_escape(ucfirst($material->content_type)) ?></span>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div class="lg:col-span-1 space-y-6">
+                        <!-- Course Includes -->
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">Kelas Ini Termasuk</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i data-feather="monitor" class="w-5 h-5 text-green-500 mr-3"></i>
+                                    <span>Kelas live online dengan mentor</span>
+                                </div>
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i data-feather="message-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                    <span>Tanya jawab langsung dengan mentor</span>
+                                </div>
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i data-feather="download" class="w-5 h-5 text-green-500 mr-3"></i>
+                                    <span>Materi pembelajaran untuk download</span>
+                                </div>
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i data-feather="award" class="w-5 h-5 text-green-500 mr-3"></i>
+                                    <span>Sertifikat penyelesaian</span>
+                                </div>
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i data-feather="users" class="w-5 h-5 text-green-500 mr-3"></i>
+                                    <span>Akses ke komunitas siswa</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prerequisites -->
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">Persyaratan</h3>
+                            <div class="space-y-3 text-sm text-gray-600">
+                                <div class="flex items-start">
+                                    <i data-feather="check-circle" class="w-4 h-4 text-green-500 mr-3 mt-0.5 flex-shrink-0"></i>
+                                    <span>Tidak ada persyaratan khusus - cocok untuk pemula</span>
+                                </div>
+                                <div class="flex items-start">
+                                    <i data-feather="check-circle" class="w-4 h-4 text-green-500 mr-3 mt-0.5 flex-shrink-0"></i>
+                                    <span>Koneksi internet stabil</span>
+                                </div>
+                                <div class="flex items-start">
+                                    <i data-feather="check-circle" class="w-4 h-4 text-green-500 mr-3 mt-0.5 flex-shrink-0"></i>
+                                    <span>Komputer atau laptop</span>
+                                </div>
+                            </div>
+                        </div>
+
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   
+
+    <!-- FAQ Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Pertanyaan Umum</h2>
+                    <p class="text-lg text-gray-600">Jawaban atas pertanyaan yang sering ditanyakan siswa</p>
+                </div>
+
+                <div class="space-y-4">
+                    <?php
+                    $faqs = [
+                        [
+                            'question' => 'Apakah kelas ini benar-benar gratis?',
+                            'answer' => word_wrap('Ya, kelas ini 100% gratis. Anda mendapatkan akses penuh ke semua sesi live dengan mentor dan sertifikat penyelesaian tanpa biaya apapun.', 70)
+                        ],
+                        [
+                            'question' => 'Bagaimana format kelas ini?',
+                            'answer' => word_wrap('Kelas ini diajarkan secara live online oleh mentor profesional. Anda akan mengikuti sesi pembelajaran interaktif dimana Anda bisa bertanya dan berdiskusi langsung.', 70)
+                        ],
+                        [
+                            'question' => 'Apakah ada sertifikat setelah menyelesaikan kelas?',
+                            'answer' => word_wrap('Ya, setiap siswa yang menyelesaikan semua sesi pembelajaran akan mendapatkan sertifikat penyelesaian resmi dari Aset Academy.', 70)
+                        ],
+                        [
+                            'question' => 'Apakah saya bisa bertanya ke mentor?',
+                            'answer' => word_wrap('Tentu! Karena ini kelas live online, Anda bisa langsung bertanya kepada mentor selama sesi pembelajaran berlangsung.', 70)
+                        ],
+                        [
+                            'question' => 'Apakah cocok untuk pemula?',
+                            'answer' => word_wrap('Kelas ini dirancang untuk pemula, namun juga cocok untuk yang ingin menyegarkan pengetahuan. Kami akan mulai dari dasar.', 70)
+                        ]
+                    ];
+
+                    foreach($faqs as $index => $faq): ?>
+                        <div class="bg-white rounded-lg shadow-sm">
+                            <button class="w-full px-6 py-4 text-left focus:outline-none focus:ring-2 focus:ring-green-500 rounded-lg"
+                                    onclick="toggleFaq(<?php echo $index; ?>)">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-lg font-semibold text-gray-900">
+                                        <?php echo html_escape(character_limiter($faq['question'], 80)); ?>
+                                    </h3>
+                                    <i data-feather="chevron-down" class="w-5 h-5 text-gray-500 transform transition-transform faq-icon-<?php echo $index; ?>"></i>
+                                </div>
+                            </button>
+                            <div class="px-6 pb-4 faq-content-<?php echo $index; ?> hidden">
+                                <p class="text-gray-700 leading-relaxed">
+                                    <?php echo nl2br(html_escape($faq['answer'])); ?>
+                                </p>
                             </div>
                         </div>
                     <?php endforeach; ?>
-                <?php else: ?>
-                    <div class="col-span-full text-center py-8">
-                        <p class="text-gray-500">Materi kelas sedang dalam proses persiapan</p>
-                    </div>
-                <?php endif; ?>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Mentor Section -->
-    <section class="py-16 bg-gray-50">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12" data-aos="fade-up">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Tentang Mentor</h2>
-                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                    Kenali mentor yang akan membimbing Anda dalam perjalanan belajar
-                </p>
-            </div>
-            
-            <div class="max-w-4xl mx-auto" data-aos="fade-up">
-                <div class="bg-white rounded-xl shadow-lg p-8">
-                    <div class="flex items-center space-x-6">
-                        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
-                            <i data-feather="user" class="w-10 h-10 text-green-600"></i>
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="text-2xl font-bold text-gray-800 mb-2"><?= html_escape($free_class->mentor_name) ?></h3>
-                            <p class="text-gray-600 mb-4">Mentor profesional dengan pengalaman dalam bidang <?= html_escape($free_class->category) ?></p>
-                            <div class="flex items-center space-x-4 text-sm text-gray-500">
-                                <div class="flex items-center">
-                                    <i data-feather="briefcase" class="w-4 h-4 mr-2"></i>
-                                    <span>Expert di <?= html_escape($free_class->category) ?></span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i data-feather="users" class="w-4 h-4 mr-2"></i>
-                                    <span>+500 siswa diajar</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Class Schedule Section -->
-    <section class="py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12" data-aos="fade-up">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Jadwal Kelas</h2>
-                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                    Jadwal pembelajaran dan topik yang akan dibahas dalam kelas ini
-                </p>
-            </div>
-            
-            <?php if ($free_class->start_date && $free_class->end_date): ?>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-                    <div class="bg-gray-50 rounded-xl p-6 text-center" data-aos="fade-up">
-                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i data-feather="calendar" class="w-8 h-8 text-green-600"></i>
-                        </div>
-                        <h3 class="text-lg font-bold text-gray-800 mb-2">Tanggal Mulai</h3>
-                        <p class="text-2xl font-bold text-green-600"><?= date('d M Y', strtotime($free_class->start_date)) ?></p>
-                    </div>
-                    <div class="bg-gray-50 rounded-xl p-6 text-center" data-aos="fade-up" data-aos-delay="100">
-                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i data-feather="calendar" class="w-8 h-8 text-blue-600"></i>
-                        </div>
-                        <h3 class="text-lg font-bold text-gray-800 mb-2">Tanggal Selesai</h3>
-                        <p class="text-2xl font-bold text-blue-600"><?= date('d M Y', strtotime($free_class->end_date)) ?></p>
-                    </div>
-                </div>
-            <?php else: ?>
-                <div class="text-center py-8">
-                    <p class="text-gray-500">Kelas tersedia segera, mulai belajar kapan saja</p>
-                </div>
-            <?php endif; ?>
-        </div>
-    </section>
 
-    <!-- Benefits Section -->
-    <section class="py-16 bg-gray-50">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12" data-aos="fade-up">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Keuntungan Kelas Gratis</h2>
-                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                    Mengapa memilih kelas gratis di Aset Academy?
-                </p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="text-center" data-aos="fade-up" data-aos-delay="100">
-                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i data-feather="dollar-sign" class="w-8 h-8 text-green-600"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-4">Gratis 100%</h3>
-                    <p class="text-gray-600">Akses lengkap materi tanpa biaya apapun</p>
-                </div>
-                
-                <div class="text-center" data-aos="fade-up" data-aos-delay="200">
-                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i data-feather="clock" class="w-8 h-8 text-blue-600"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-4">Flexible Learning</h3>
-                    <p class="text-gray-600">Belajar sesuai jadwal Anda sendiri</p>
-                </div>
-                
-                <div class="text-center" data-aos="fade-up" data-aos-delay="300">
-                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i data-feather="refresh-cw" class="w-8 h-8 text-purple-600"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-4">Update Konten</h3>
-                    <p class="text-gray-600">Materi selalu diperbarui dengan teknologi terkini</p>
-                </div>
-                
-                <div class="text-center" data-aos="fade-up" data-aos-delay="400">
-                    <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i data-feather="users" class="w-8 h-8 text-orange-600"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-4">Community Support</h3>
-                    <p class="text-gray-600">Bergabung dengan komunitas pembelajar</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- FAQ Toggle Script -->
+    <script>
+        function toggleFaq(index) {
+            const content = document.querySelector(`.faq-content-${index}`);
+            const icon = document.querySelector(`.faq-icon-${index}`);
 
-    <!-- Requirements Section -->
-    <section class="py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12" data-aos="fade-up">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Persyaratan</h2>
-                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                    Persiapan yang dibutuhkan sebelum memulai kelas
-                </p>
-            </div>
-            
-            <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="bg-gray-50 rounded-xl p-8" data-aos="fade-up">
-                    <h3 class="text-xl font-bold text-gray-800 mb-6">Persyaratan Utama</h3>
-                    <ul class="space-y-4">
-                        <li class="flex items-start">
-                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mr-4 mt-0.5">
-                                <i data-feather="check" class="w-4 h-4 text-green-600"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-800">Koneksi Internet Stabil</h4>
-                                <p class="text-gray-600 text-sm">Pastikan koneksi internet Anda cukup untuk streaming video</p>
-                            </div>
-                        </li>
-                        <li class="flex items-start">
-                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mr-4 mt-0.5">
-                                <i data-feather="check" class="w-4 h-4 text-green-600"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-800">Perangkat Komputer/Laptop</h4>
-                                <p class="text-gray-600 text-sm">PC atau laptop dengan spesifikasi minimal</p>
-                            </div>
-                        </li>
-                        <li class="flex items-start">
-                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mr-4 mt-0.5">
-                                <i data-feather="check" class="w-4 h-4 text-green-600"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-800">Minimalkan Pemahaman Dasar</h4>
-                                <p class="text-gray-600 text-sm">Pemahaman dasar programming akan membantu</p>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="bg-gray-50 rounded-xl p-8" data-aos="fade-up" data-aos-delay="100">
-                    <h3 class="text-xl font-bold text-gray-800 mb-6">Rekomendasi</h3>
-                    <ul class="space-y-4">
-                        <li class="flex items-start">
-                            <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mr-4 mt-0.5">
-                                <i data-feather="star" class="w-4 h-4 text-blue-600"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-800">Headphone/Earphone</h4>
-                                <p class="text-gray-600 text-sm">Untuk pengalaman belajar yang lebih fokus</p>
-                            </div>
-                        </li>
-                        <li class="flex items-start">
-                            <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mr-4 mt-0.5">
-                                <i data-feather="star" class="w-4 h-4 text-blue-600"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-800">Catatan Digital</h4>
-                                <p class="text-gray-600 text-sm">Siapkan aplikasi catatan untuk menyimpan poin penting</p>
-                            </div>
-                        </li>
-                        <li class="flex items-start">
-                            <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mr-4 mt-0.5">
-                                <i data-feather="star" class="w-4 h-4 text-blue-600"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-800">Dedikasi Waktu</h4>
-                                <p class="text-gray-600 text-sm">Alokasikan waktu minimal 2 jam per minggu</p>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Related Classes -->
-    <section class="py-16 bg-gray-50">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12" data-aos="fade-up">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Kelas Lainnya</h2>
-                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                    Jelajahi kelas gratis lainnya yang mungkin Anda minati
-                </p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <?php 
-                foreach ($related_classes as $related_class): 
-                    if ($related_class->id != $free_class->id): 
-                ?>
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300" data-aos="fade-up" data-aos-delay="100">
-                    <div class="relative overflow-hidden">
-                        <img src="<?php echo $related_class->thumbnail ?>" alt="<?= html_escape($related_class->title) ?>" class="w-full h-48 object-cover">
-                        <div class="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                            Gratis
-                        </div>
-                        <div class="absolute top-4 right-4 bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
-                            <?= html_escape($related_class->level) ?>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-gray-800 mb-3"><?= html_escape($related_class->title) ?></h3>
-                        <p class="text-gray-600 mb-4"><?= html_escape($related_class->description) ?></p>
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="text-sm text-gray-500"><?= html_escape($related_class->duration) ?> Jam</span>
-                            <div class="flex items-center">
-                                <span class="text-yellow-400 mr-1">★</span>
-                                <span class="text-sm text-gray-600">4.8</span>
-                            </div>
-                        </div>
-                        <a href="<?= site_url('home/view_free_class/' . $related_class->id) ?>" class="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-center">
-                            Lihat Detail
-                        </a>
-                    </div>
-                </div>
-                <?php 
-                    endif;
-                endforeach; 
-                ?>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="py-16 bg-gradient-to-r from-green-500 to-emerald-600">
-        <div class="container mx-auto px-4 text-center">
-            <h2 class="text-3xl md:text-4xl font-bold text-white mb-6" data-aos="fade-up">
-                Siap Memulai Perjalanan Belajar?
-            </h2>
-            <p class="text-xl text-white/90 mb-8 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
-                Bergabunglah dengan ribuan siswa lainnya dan mulai belajar programming dengan metode terbaik tanpa biaya
-            </p>
-            <div data-aos="fade-up" data-aos-delay="200">
-                <a href="<?= site_url('auth/login?redirect=home/view_free_class/' . $free_class->id) ?>" class="px-8 py-4 bg-white text-green-600 font-bold rounded-lg hover:bg-gray-100 transition-colors">
-                    Mulai Belajar Sekarang
-                </a>
-            </div>
-        </div>
-    </section>
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                content.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+    </script>
 
 <?php $this->load->view('home/templates/_footer'); ?>

@@ -30,68 +30,11 @@
                 dari instruktur profesional dan komunitas pembelajaran yang aktif.
             </p>
 
-            <!-- Stats -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto" data-aos="fade-up" data-aos-delay="200">
-                <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                    <div class="text-3xl md:text-4xl font-bold mb-2" style="color: #198aad;">15K+</div>
-                    <div class="text-white/80 text-sm">Siswa Aktif</div>
-                </div>
-                <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                    <div class="text-3xl md:text-4xl font-bold mb-2" style="color: #198aad;">50+</div>
-                    <div class="text-white/80 text-sm">Materi</div>
-                </div>
-                <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                    <div class="text-3xl md:text-4xl font-bold mb-2" style="color: #198aad;">100%</div>
-                    <div class="text-white/80 text-sm">Gratis</div>
-                </div>
-                <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                    <div class="text-3xl md:text-4xl font-bold mb-2" style="color: #198aad;">24/7</div>
-                    <div class="text-white/80 text-sm">Akses</div>
-                </div>
-            </div>
+            
         </div>
     </section>
 
-    <!-- Filter Section -->
-    <section class="py-20" style="background: linear-gradient(135deg, #0e1127 0%, #1a1f3a 50%, #2e3c73 100%);">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12" data-aos="fade-up">
-                <div class="flex items-center justify-center mb-6">
-                    <span class="text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg"
-                          style="background: linear-gradient(90deg, #198aad 0%, #2e3c73 100%);">
-                        🔍 Kategori Program
-                    </span>
-                </div>
-                <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Program Gratis yang Tersedia</h2>
-                <p class="text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
-                    Pilih program pembelajaran gratis yang sesuai dengan level dan minat teknologi Anda
-                </p>
-            </div>
-                
-            <div class="flex flex-wrap justify-center gap-4 mb-8" data-aos="fade-up" data-aos-delay="100">
-                <button class="filter-btn active group px-8 py-3 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-                        style="background: linear-gradient(90deg, #198aad 0%, #2e3c73 100%);" data-filter="all">
-                    <i class="fas fa-th mr-2"></i>Semua Program
-                </button>
-                <button class="filter-btn group px-8 py-3 bg-white/10 backdrop-blur-sm text-white border-2 border-white/20 rounded-full font-semibold hover:bg-white/20 hover:shadow-lg transform hover:scale-105 transition-all duration-300" data-filter="pemula">
-                    <i class="fas fa-seedling mr-2"></i>Pemula
-                </button>
-                <button class="filter-btn group px-8 py-3 bg-white/10 backdrop-blur-sm text-white border-2 border-white/20 rounded-full font-semibold hover:bg-white/20 hover:shadow-lg transform hover:scale-105 transition-all duration-300" data-filter="menengah">
-                    <i class="fas fa-chart-line mr-2"></i>Menengah
-                </button>
-                <button class="filter-btn group px-8 py-3 bg-white/10 backdrop-blur-sm text-white border-2 border-white/20 rounded-full font-semibold hover:bg-white/20 hover:shadow-lg transform hover:scale-105 transition-all duration-300" data-filter="web">
-                    <i class="fas fa-code mr-2"></i>Web Development
-                </button>
-                <button class="filter-btn group px-8 py-3 bg-white/10 backdrop-blur-sm text-white border-2 border-white/20 rounded-full font-semibold hover:bg-white/20 hover:shadow-lg transform hover:scale-105 transition-all duration-300" data-filter="mobile">
-                    <i class="fas fa-mobile-alt mr-2"></i>Mobile Development
-                </button>
-                <button class="filter-btn group px-8 py-3 bg-white/10 backdrop-blur-sm text-white border-2 border-white/20 rounded-full font-semibold hover:bg-white/20 hover:shadow-lg transform hover:scale-105 transition-all duration-300" data-filter="data">
-                    <i class="fas fa-chart-bar mr-2"></i>Data Science
-                </button>
-            </div>
-        </div>
-    </section>
-
+    
     <!-- Courses Grid -->
     <section class="py-20 bg-gradient-to-br from-slate-50 via-white to-gray-50">
         <div class="container mx-auto px-4">

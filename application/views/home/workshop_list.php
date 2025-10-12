@@ -30,25 +30,7 @@
                 dari para ahli berpengalaman di industri teknologi.
             </p>
 
-            <!-- Stats -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto" data-aos="fade-up" data-aos-delay="200">
-                <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                    <div class="text-3xl md:text-4xl font-bold mb-2" style="color: #198aad;">50+</div>
-                    <div class="text-white/80 text-sm">Workshop</div>
-                </div>
-                <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                    <div class="text-3xl md:text-4xl font-bold mb-2" style="color: #198aad;">5K+</div>
-                    <div class="text-white/80 text-sm">Peserta</div>
-                </div>
-                <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                    <div class="text-3xl md:text-4xl font-bold mb-2" style="color: #198aad;">Expert</div>
-                    <div class="text-white/80 text-sm">Pembicara</div>
-                </div>
-                <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                    <div class="text-3xl md:text-4xl font-bold mb-2" style="color: #198aad;">Free</div>
-                    <div class="text-white/80 text-sm">& Berbayar</div>
-                </div>
-            </div>
+           
         </div>
     </section>
 
