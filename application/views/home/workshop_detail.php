@@ -473,7 +473,7 @@
                                        placeholder="Contoh: Universitas Indonesia" required>
                             </div>
 
-                            <div>
+                            <!-- <div>
                                 <label for="province_id" class="block text-sm font-medium text-gray-700 mb-2">
                                     Provinsi
                                 </label>
@@ -481,7 +481,7 @@
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 bg-white">
                                     <option value="">Pilih Provinsi</option>
                                 </select>
-                            </div>
+                            </div> -->
 
                             <!-- <div>
                                 <label for="regency_id" class="block text-sm font-medium text-gray-700 mb-2">
