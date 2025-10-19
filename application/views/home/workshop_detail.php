@@ -473,7 +473,6 @@
                                        placeholder="Contoh: Universitas Indonesia" required>
                             </div>
 
-                            <!-- Provinsi -->
                             <div>
                                 <label for="province_id" class="block text-sm font-medium text-gray-700 mb-2">
                                     Provinsi
@@ -481,23 +480,19 @@
                                 <select id="province_id" name="province_id"
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 bg-white">
                                     <option value="">Pilih Provinsi</option>
-                                    <!-- Will be populated by JavaScript -->
                                 </select>
                             </div>
 
-                            <!-- Kabupaten/Kota -->
-                            <div>
+                            <!-- <div>
                                 <label for="regency_id" class="block text-sm font-medium text-gray-700 mb-2">
                                     Kabupaten/Kota
                                 </label>
                                 <select id="regency_id" name="regency_id"
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 bg-white" disabled>
                                     <option value="">Pilih Kabupaten/Kota</option>
-                                    <!-- Will be populated by JavaScript -->
                                 </select>
                             </div>
 
-                            <!-- Kecamatan -->
                             <div>
                                 <label for="district_id" class="block text-sm font-medium text-gray-700 mb-2">
                                     Kecamatan
@@ -505,11 +500,9 @@
                                 <select id="district_id" name="district_id"
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 bg-white" disabled>
                                     <option value="">Pilih Kecamatan</option>
-                                    <!-- Will be populated by JavaScript -->
                                 </select>
                             </div>
 
-                            <!-- Kelurahan/Desa -->
                             <div>
                                 <label for="village_id" class="block text-sm font-medium text-gray-700 mb-2">
                                     Kelurahan/Desa
@@ -517,9 +510,8 @@
                                 <select id="village_id" name="village_id"
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 bg-white" disabled>
                                     <option value="">Pilih Kelurahan/Desa</option>
-                                    <!-- Will be populated by JavaScript -->
                                 </select>
-                            </div>
+                            </div> -->
 
                             <!-- Usia -->
                             <div>
