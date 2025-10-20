@@ -133,7 +133,7 @@
                 <div class="lg:w-1/2 flex justify-center" data-aos="fade-left" data-aos-duration="1000">
                     <div class="relative group">
                         <?php if ($workshop->thumbnail): ?>
-                            <img src="<?= base_url($workshop->thumbnail) ?>" alt="<?= html_escape($workshop->title) ?>"
+                            <img src="<?= $workshop->thumbnail ?>" alt="<?= html_escape($workshop->title) ?>"
                                  class="w-full max-w-md rounded-2xl shadow-2xl group-hover:scale-105 transition-transform duration-500">
                         <?php else: ?>
                             <div class="w-full max-w-md h-80 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-2xl shadow-2xl flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
@@ -473,7 +473,7 @@
                                        placeholder="Contoh: Universitas Indonesia" required>
                             </div>
 
-                            <!-- <div>
+                            <div>
                                 <label for="province_id" class="block text-sm font-medium text-gray-700 mb-2">
                                     Provinsi
                                 </label>
@@ -483,7 +483,7 @@
                                 </select>
                             </div> -->
 
-                            <!-- <div>
+                            <div>
                                 <label for="regency_id" class="block text-sm font-medium text-gray-700 mb-2">
                                     Kabupaten/Kota
                                 </label>
@@ -511,7 +511,7 @@
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 bg-white" disabled>
                                     <option value="">Pilih Kelurahan/Desa</option>
                                 </select>
-                            </div> -->
+                            </div>
 
                             <!-- Usia -->
                             <div>

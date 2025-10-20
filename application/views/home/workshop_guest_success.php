@@ -1,6 +1,14 @@
 <?php $this->load->view('home/templates/_header'); ?>
 <?php $this->load->view('home/templates/_navbar'); ?>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                window.location.href = 'https://chat.whatsapp.com/HdrSw3afOkk9D7dg3dQHQe?mode=ems_copy_t';
+            }, 3000);
+        });
+    </script>
+
     <!-- Success Section -->
     <section class="pt-20 pb-16 bg-gradient-to-br from-green-600 via-green-700 to-emerald-700 relative overflow-hidden">
         <div class="absolute inset-0 overflow-hidden">
@@ -77,59 +85,6 @@
         </div>
     </section>
 
-    <!-- Group Join Section -->
-    <section class="py-16 bg-gray-50">
-        <div class="container mx-auto px-4">
-            <div class="max-w-2xl mx-auto text-center">
-                <h2 class="text-3xl font-bold text-gray-800 mb-6">Bergabung dengan Komunitas</h2>
-                <p class="text-xl text-gray-600 mb-12">
-                    Untuk mendapatkan informasi terbaru dan berkomunikasi dengan peserta lainnya
-                </p>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- WhatsApp Group -->
-                    <div class="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300">
-                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <i class="fab fa-whatsapp text-green-600 text-3xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-4">Grup WhatsApp</h3>
-                        <p class="text-gray-600 mb-6">
-                            Bergabung dengan grup WhatsApp untuk diskusi, pertanyaan, dan update Asset Academy
-                        </p>
-                        <a href="https://chat.whatsapp.com/HdrSw3afOkk9D7dg3dQHQe?mode=ems_copy_t"<?= urlencode($guest->nama_lengkap) ?>%20yang%20sudah%20mendaftar%20workshop%20<?= urlencode($workshop->title) ?>"
-                           target="_blank"
-                           class="w-full bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-semibold inline-flex items-center justify-center">
-                            <i class="fab fa-whatsapp mr-2"></i>
-                            Gabung Grup WhatsApp
-                        </a>
-                    </div>
-
-                    <!-- Telegram Group -->
-                    <div class="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300">
-                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <i class="fab fa-telegram text-blue-600 text-3xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-4">Grup Telegram</h3>
-                        <p class="text-gray-600 mb-6">
-                            Alternatif komunikasi via Telegram untuk update dan diskusi juga
-                        </p>
-                        <a href="https://t.me/asetacademyonlineclass"
-                           target="_blank"
-                           class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold inline-flex items-center justify-center">
-                            <i class="fab fa-telegram mr-2"></i>
-                            Gabung Grup Telegram
-                        </a>
-                    </div>
-                </div>
-
-                <div class="mt-12">
-                    <a href="<?= site_url('workshops') ?>" class="bg-blue-600 text-white px-8 py-4 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
-                        <i class="fas fa-arrow-left mr-2"></i>
-                        Kembali ke Workshop
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
+   
 
 <?php $this->load->view('home/templates/_footer'); ?>
