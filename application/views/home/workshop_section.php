@@ -13,7 +13,7 @@
             <div class="bg-white rounded-xl shadow-lg overflow-hidden group hover:shadow-2xl transition-all duration-300 border border-transparent hover:border-indigo-500" data-aos="fade-up" data-aos-delay="100">
                 <div class="relative h-48 overflow-hidden">
                     <?php if ($workshop->thumbnail): ?>
-                        <img src="<?= base_url($workshop->thumbnail) ?>" alt="<?= html_escape($workshop->title) ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        <img src="<?= $workshop->thumbnail ?>" alt="<?= html_escape($workshop->title) ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                     <?php else: ?>
                         <div class="w-full h-full bg-indigo-100 flex items-center justify-center">
                             <i class="fas fa-chalkboard-teacher text-indigo-400 text-5xl"></i>
