@@ -80,7 +80,7 @@
                             <div class="relative">
                                 <div id="poster-upload-area" class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-blue-400 transition-colors duration-300 cursor-pointer bg-gray-50 hover:bg-blue-50">
                                     <div id="poster-preview" class="hidden mb-4">
-                                        <img id="poster-image" src="<?= $workshop->thumbnail ? base_url($workshop->thumbnail) : '' ?>" alt="Poster Preview" class="max-w-full max-h-64 mx-auto rounded-lg shadow-lg">
+                                        <img id="poster-image" src="<?= $workshop->thumbnail ? $workshop->thumbnail : '' ?>" alt="Poster Preview" class="max-w-full max-h-64 mx-auto rounded-lg shadow-lg">
                                         <button type="button" id="remove-poster" class="mt-2 px-3 py-1 bg-red-500 text-white text-sm rounded-md hover:bg-red-600 transition-colors">
                                             <i class="fas fa-trash mr-1"></i> Hapus
                                         </button>

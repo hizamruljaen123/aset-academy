@@ -21,6 +21,13 @@ class ObjectStorage
         $autoload = APPPATH . '../vendor/autoload.php';
         if (file_exists($autoload)) {
             require_once $autoload;
+        } else {
+            log_message('error', 'ObjectStorage: Composer autoload not found at ' . $autoload);
+        }
+
+        if (!class_exists(S3Client::class)) {
+            log_message('error', 'ObjectStorage: AWS SDK for PHP (aws/aws-sdk-php) is not installed.');
+            return;
         }
 
         // Load configuration by directly including the config file (no CI config->load checks)
