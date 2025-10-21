@@ -36,8 +36,11 @@ class Session_management extends CI_Controller {
             $data['logged_in_users'] = $this->Session_model->get_logged_in_users_count();
             $data['guest_sessions'] = $this->Session_model->get_guest_sessions_count();
             
-            // Get or generate location cache
+            // Get location cache
             $data['location_cache'] = $this->get_location_cache();
+            
+            // Get unique IP statistics for regions
+            $data['unique_ip_stats'] = $this->Session_model->get_unique_ip_statistics();
         } catch (Exception $e) {
             // Log error
             log_message('error', 'Session Management Error: ' . $e->getMessage());
@@ -71,7 +74,6 @@ class Session_management extends CI_Controller {
      */
     private function get_location_cache() {
         $cache_file = FCPATH . 'assets/tmp/session_locations.json';
-        $cache_duration = 3600; // 1 hour
         
         // Create tmp directory if not exists
         $tmp_dir = FCPATH . 'assets/tmp';
@@ -79,18 +81,25 @@ class Session_management extends CI_Controller {
             mkdir($tmp_dir, 0755, true);
         }
         
-        // Check if cache exists and is valid
+        // Create cache file if not exists
+        if (!file_exists($cache_file)) {
+            $initial_cache = [];
+            file_put_contents($cache_file, json_encode($initial_cache));
+        }
+        
+        // Check if cache exists
         if (file_exists($cache_file)) {
-            $cache_age = time() - filemtime($cache_file);
-            if ($cache_age < $cache_duration) {
-                // Cache is still valid
-                $cache_content = file_get_contents($cache_file);
-                return json_decode($cache_content, true);
+            $cache_content = file_get_contents($cache_file);
+            $cache = json_decode($cache_content, true);
+            
+            // If cache is valid array, return it
+            if (is_array($cache)) {
+                return $cache;
             }
         }
         
         // Generate new cache
-        return ['status' => 'empty', 'data' => [], 'timestamp' => time()];
+        return [];
     }
     
     /**
@@ -108,20 +117,55 @@ class Session_management extends CI_Controller {
             return;
         }
         
-        // Fetch from IP API
-        $api_url = "http://ip-api.com/json/{$ip_address}";
+        // Check if already cached
+        $cache_file = FCPATH . 'assets/tmp/session_locations.json';
+        if (file_exists($cache_file)) {
+            $cache_content = file_get_contents($cache_file);
+            $cache = json_decode($cache_content, true);
+            if (isset($cache[$ip_address])) {
+                $cache_age = time() - $cache[$ip_address]['timestamp'];
+                // Cache valid for 1 hour
+                if ($cache_age < 3600) {
+                    echo json_encode([
+                        'success' => true,
+                        'cached' => true,
+                        'data' => $cache[$ip_address]['data']
+                    ]);
+                    return;
+                }
+            }
+        }
+        
+        // Fetch from findip.net API
+        $api_token = 'efaf01800b6544fba976faf4e037b740';
+        $api_url = "https://api.findip.net/{$ip_address}/?token={$api_token}";
         $response = @file_get_contents($api_url);
         
         if ($response) {
             $data = json_decode($response, true);
             
-            if ($data && $data['status'] === 'success') {
+            if ($data && isset($data['country'])) {
+                // Transform data to match expected format
+                $formatted_data = [
+                    'status' => 'success',
+                    'country' => $data['country']['names']['en'] ?? 'Unknown',
+                    'countryCode' => $data['country']['iso_code'] ?? '',
+                    'regionName' => $data['subdivisions'][0]['names']['en'] ?? 'Unknown',
+                    'city' => $data['city']['names']['en'] ?? 'Unknown',
+                    'lat' => $data['location']['latitude'] ?? 0,
+                    'lon' => $data['location']['longitude'] ?? 0,
+                    'isp' => $data['traits']['isp'] ?? 'Unknown',
+                    'org' => $data['traits']['organization'] ?? 'Unknown',
+                    'timezone' => $data['location']['time_zone'] ?? 'Unknown'
+                ];
+                
                 // Save to cache
-                $this->update_location_cache($ip_address, $data);
+                $this->update_location_cache($ip_address, $formatted_data);
                 
                 echo json_encode([
                     'success' => true,
-                    'data' => $data
+                    'cached' => false,
+                    'data' => $formatted_data
                 ]);
                 return;
             }
@@ -146,7 +190,7 @@ class Session_management extends CI_Controller {
             }
         }
         
-        // Update cache
+        // Update cache with timestamp
         $cache[$ip_address] = [
             'data' => $location_data,
             'timestamp' => time()
@@ -189,6 +233,41 @@ class Session_management extends CI_Controller {
                     ]);
                     return;
                 }
+            }
+        }
+        
+        // If not in cache, try to fetch fresh data from findip.net
+        $api_token = 'efaf01800b6544fba976faf4e037b740';
+        $api_url = "https://api.findip.net/{$ip_address}/?token={$api_token}";
+        $response = @file_get_contents($api_url);
+        
+        if ($response) {
+            $data = json_decode($response, true);
+            
+            if ($data && isset($data['country'])) {
+                // Transform data to match expected format
+                $formatted_data = [
+                    'status' => 'success',
+                    'country' => $data['country']['names']['en'] ?? 'Unknown',
+                    'countryCode' => $data['country']['iso_code'] ?? '',
+                    'regionName' => $data['subdivisions'][0]['names']['en'] ?? 'Unknown',
+                    'city' => $data['city']['names']['en'] ?? 'Unknown',
+                    'lat' => $data['location']['latitude'] ?? 0,
+                    'lon' => $data['location']['longitude'] ?? 0,
+                    'isp' => $data['traits']['isp'] ?? 'Unknown',
+                    'org' => $data['traits']['organization'] ?? 'Unknown',
+                    'timezone' => $data['location']['time_zone'] ?? 'Unknown'
+                ];
+                
+                // Save to cache
+                $this->update_location_cache($ip_address, $formatted_data);
+                
+                echo json_encode([
+                    'success' => true,
+                    'cached' => false,
+                    'data' => $formatted_data
+                ]);
+                return;
             }
         }
         
@@ -335,7 +414,7 @@ class Session_management extends CI_Controller {
     }
 
     /**
-     * AJAX endpoint to get IP information from ip-api.com
+     * AJAX endpoint to get IP information from findip.net
      */
     public function get_ip_info() {
         if (!$this->input->is_ajax_request()) {
@@ -348,21 +427,40 @@ class Session_management extends CI_Controller {
             return;
         }
 
-        // Use curl to fetch IP information
+        // Use curl to fetch IP information from findip.net
+        $api_token = 'efaf01800b6544fba976faf4e037b740';
+        $api_url = "https://api.findip.net/{$ip_address}/?token={$api_token}";
+        
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "http://ip-api.com/json/{$ip_address}");
+        curl_setopt($ch, CURLOPT_URL, $api_url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // Only for development, should be true in production
         $response = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
         if ($http_code == 200) {
             $ip_data = json_decode($response, true);
-            if ($ip_data && $ip_data['status'] == 'success') {
+            if ($ip_data && isset($ip_data['country'])) {
+                // Transform data to match expected format
+                $formatted_data = [
+                    'query' => $ip_address,
+                    'country' => $ip_data['country']['names']['en'] ?? 'Unknown',
+                    'countryCode' => $ip_data['country']['iso_code'] ?? '',
+                    'regionName' => $ip_data['subdivisions'][0]['names']['en'] ?? 'Unknown',
+                    'city' => $ip_data['city']['names']['en'] ?? 'Unknown',
+                    'zip' => '',
+                    'lat' => $ip_data['location']['latitude'] ?? 0,
+                    'lon' => $ip_data['location']['longitude'] ?? 0,
+                    'timezone' => $ip_data['location']['time_zone'] ?? 'Unknown',
+                    'isp' => $ip_data['traits']['isp'] ?? 'Unknown',
+                    'org' => $ip_data['traits']['organization'] ?? 'Unknown'
+                ];
+                
                 echo json_encode([
                     'success' => true,
-                    'data' => $ip_data
+                    'data' => $formatted_data
                 ]);
             } else {
                 echo json_encode([

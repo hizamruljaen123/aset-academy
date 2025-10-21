@@ -14,6 +14,15 @@ const locationCache = <?= json_encode($location_cache ?? []) ?>;
 // Sessions data from server
 const sessionsData = <?= json_encode($active_sessions ?? []) ?>;
 
+// Queue for IP location requests to avoid overwhelming the API
+let ipQueue = [];
+let isProcessingQueue = false;
+const maxConcurrentRequests = 3;
+const requestDelay = 1500; // 1.5 seconds between requests
+
+// Track processed IPs to avoid duplicate requests
+let processedIPs = new Set();
+
 // Initialize map
 function initMap() {
     // Create map centered on Indonesia
@@ -63,7 +72,9 @@ function loadSessionLocations() {
     showMapLoading();
     markerClusterGroup.clearLayers();
     
-    const processedIPs = new Set();
+    // Reset processed IPs set
+    processedIPs.clear();
+    
     let loadedLocations = 0;
     
     // Filter unique IPs
@@ -93,10 +104,18 @@ function loadSessionLocations() {
             loadedLocations++;
             document.getElementById('loadingProgress').textContent = index + 1;
             document.getElementById('markerCount').textContent = loadedLocations;
+        } else if (session.ip_address) {
+            // If location data is not in cache, fetch it
+            fetchLocationForIP(session.ip_address, session);
         }
     });
     
-    finishMapLoading(loadedLocations);
+    // Hide loading after a delay to allow processing
+    setTimeout(() => {
+        if (loadedLocations === totalSessions) {
+            finishMapLoading(loadedLocations);
+        }
+    }, 2000);
 }
 
 // Add marker to map
@@ -180,8 +199,30 @@ function hideMapLoading() {
 }
 
 function refreshMap() {
+    // Show loading
+    showMapLoading();
+    
+    // Clear existing markers
+    markerClusterGroup.clearLayers();
+    
+    // Reset marker count
+    document.getElementById('markerCount').textContent = '0';
+    
+    // Clear processed IPs set to allow re-fetching
+    processedIPs.clear();
+    
+    // Clear queue
+    ipQueue = [];
+    
+    // Reload session locations
     loadSessionLocations();
-    showNotification('Map refreshed successfully', 'success');
+    
+    // Also refresh regions data
+    if (window.regionsDataLoaded) {
+        loadRegionsData();
+    }
+    
+    showNotification('Map and data refreshed successfully', 'success');
 }
 
 // Load ISP Statistics with Plotly
@@ -502,64 +543,196 @@ function getIPInfo(ipAddress) {
     document.getElementById('ipInfoModal').classList.remove('hidden');
     document.getElementById('ipInfoContent').innerHTML = '<div class="flex items-center justify-center py-12"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>';
     
-    fetch(`http://ip-api.com/json/${ipAddress}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                document.getElementById('ipInfoContent').innerHTML = `
-                    <div class="space-y-4">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="text-sm font-medium text-gray-500">IP Address</label>
-                                <p class="text-lg font-mono">${data.query}</p>
-                            </div>
-                            <div>
-                                <label class="text-sm font-medium text-gray-500">Negara</label>
-                                <p class="text-lg">${data.country} (${data.countryCode})</p>
-                            </div>
-                            <div>
-                                <label class="text-sm font-medium text-gray-500">Region</label>
-                                <p class="text-lg">${data.regionName}</p>
-                            </div>
-                            <div>
-                                <label class="text-sm font-medium text-gray-500">Kota</label>
-                                <p class="text-lg">${data.city}</p>
-                            </div>
-                            <div>
-                                <label class="text-sm font-medium text-gray-500">ZIP Code</label>
-                                <p class="text-lg">${data.zip || 'N/A'}</p>
-                            </div>
-                            <div>
-                                <label class="text-sm font-medium text-gray-500">Timezone</label>
-                                <p class="text-lg">${data.timezone}</p>
-                            </div>
-                            <div>
-                                <label class="text-sm font-medium text-gray-500">ISP</label>
-                                <p class="text-lg">${data.isp}</p>
-                            </div>
-                            <div>
-                                <label class="text-sm font-medium text-gray-500">Organisasi</label>
-                                <p class="text-lg">${data.org}</p>
-                            </div>
-                            <div class="col-span-2">
-                                <label class="text-sm font-medium text-gray-500">Koordinat</label>
-                                <p class="text-lg font-mono">${data.lat}, ${data.lon}</p>
-                            </div>
+    // Fetch IP info from server (which uses findip.net API)
+    fetch(`${baseUrl}/admin/session_management/get_ip_info`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: `ip_address=${encodeURIComponent(ipAddress)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.data) {
+            const ipData = data.data;
+            document.getElementById('ipInfoContent').innerHTML = `
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-sm font-medium text-gray-500">IP Address</label>
+                            <p class="text-lg font-mono">${ipData.query}</p>
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-500">Negara</label>
+                            <p class="text-lg">${ipData.country} (${ipData.countryCode})</p>
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-500">Region</label>
+                            <p class="text-lg">${ipData.regionName || 'N/A'}</p>
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-500">Kota</label>
+                            <p class="text-lg">${ipData.city || 'Unknown'}</p>
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-500">ZIP Code</label>
+                            <p class="text-lg">${ipData.zip || 'N/A'}</p>
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-500">Timezone</label>
+                            <p class="text-lg">${ipData.timezone || 'Unknown'}</p>
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-500">ISP</label>
+                            <p class="text-lg">${ipData.isp || 'Unknown'}</p>
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-500">Organisasi</label>
+                            <p class="text-lg">${ipData.org || 'Unknown'}</p>
+                        </div>
+                        <div class="col-span-2">
+                            <label class="text-sm font-medium text-gray-500">Koordinat</label>
+                            <p class="text-lg font-mono">${ipData.lat || 'Unknown'}, ${ipData.lon || 'Unknown'}</p>
                         </div>
                     </div>
-                `;
-            } else {
-                document.getElementById('ipInfoContent').innerHTML = '<div class="text-center text-red-600 py-8"><i class="fas fa-exclamation-circle text-4xl mb-3"></i><p>Gagal mengambil informasi IP</p></div>';
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            document.getElementById('ipInfoContent').innerHTML = '<div class="text-center text-red-600 py-8"><i class="fas fa-times-circle text-4xl mb-3"></i><p>Error mengambil informasi IP</p></div>';
-        });
+                </div>
+            `;
+        } else {
+            document.getElementById('ipInfoContent').innerHTML = '<div class="text-center text-red-600 py-8"><i class="fas fa-exclamation-circle text-4xl mb-3"></i><p>Gagal mengambil informasi IP</p></div>';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('ipInfoContent').innerHTML = '<div class="text-center text-red-600 py-8"><i class="fas fa-times-circle text-4xl mb-3"></i><p>Error mengambil informasi IP</p></div>';
+    });
 }
 
 function closeIPInfoModal() {
     document.getElementById('ipInfoModal').classList.add('hidden');
+}
+
+// Fetch location data for an IP address
+function fetchLocationForIP(ipAddress, sessionData) {
+    // Check if already processed
+    if (processedIPs.has(ipAddress)) {
+        return;
+    }
+    
+    // Mark as processed
+    processedIPs.add(ipAddress);
+    
+    // Check if already in cache
+    if (locationCache[ipAddress] && locationCache[ipAddress].data) {
+        updateMapWithLocation(sessionData, locationCache[ipAddress].data);
+        return;
+    }
+    
+    // Update UI to show loading
+    const locationElement = document.getElementById(`location-${btoa(ipAddress).replace(/=/g, '')}`);
+    if (locationElement) {
+        locationElement.innerHTML = '<i class="fas fa-sync fa-spin mr-1 text-blue-500"></i> Getting location...';
+    }
+    
+    // Add to queue
+    ipQueue.push({ip: ipAddress, session: sessionData});
+    processIPQueue();
+}
+
+// Process IP queue
+function processIPQueue() {
+    if (isProcessingQueue || ipQueue.length === 0) {
+        return;
+    }
+    
+    isProcessingQueue = true;
+    processNextIP();
+}
+
+// Process next IP in queue
+function processNextIP() {
+    if (ipQueue.length === 0) {
+        isProcessingQueue = false;
+        return;
+    }
+    
+    const ipItem = ipQueue.shift();
+    const ipAddress = ipItem.ip;
+    const sessionData = ipItem.session;
+    
+    // Fetch location data from server (which uses findip.net API)
+    fetch(`${baseUrl}/admin/session_management/get_cached_location`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: `ip_address=${encodeURIComponent(ipAddress)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Use data (either cached or fresh)
+            locationCache[ipAddress] = {data: data.data, timestamp: Date.now()};
+            updateMapWithLocation(sessionData, data.data);
+            
+            // Update UI with location info
+            const locationElement = document.getElementById(`location-${btoa(ipAddress).replace(/=/g, '')}`);
+            if (locationElement) {
+                locationElement.innerHTML = `${data.data.city || 'Unknown'}, ${data.data.countryCode || 'Unknown'}`;
+            }
+        } else {
+            // Update UI to show error
+            const locationElement = document.getElementById(`location-${btoa(ipAddress).replace(/=/g, '')}`);
+            if (locationElement) {
+                locationElement.innerHTML = '<i class="fas fa-exclamation-triangle text-yellow-500 mr-1"></i> Location unavailable';
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching location for IP:', ipAddress, error);
+        // Update UI to show error
+        const locationElement = document.getElementById(`location-${btoa(ipAddress).replace(/=/g, '')}`);
+        if (locationElement) {
+            locationElement.innerHTML = '<i class="fas fa-exclamation-triangle text-yellow-500 mr-1"></i> Location unavailable';
+        }
+    })
+    .finally(() => {
+        // Process next IP after delay
+        setTimeout(processNextIP, requestDelay);
+    });
+}
+
+// Update map with location data
+function updateMapWithLocation(session, locationData) {
+    if (locationData && locationData.lat && locationData.lon) {
+        addMarkerToMap(session, locationData);
+        
+        // Update regions data
+        const key = `${locationData.country}|${locationData.city}|${locationData.isp || 'Unknown'}`;
+        if (!regionsData[key]) {
+            regionsData[key] = {
+                country: locationData.country,
+                countryCode: locationData.countryCode,
+                city: locationData.city,
+                region: locationData.regionName,
+                isp: locationData.isp || 'Unknown',
+                lat: locationData.lat,
+                lon: locationData.lon,
+                totalSessions: 0
+            };
+        }
+        regionsData[key].totalSessions++;
+        
+        // Update marker count
+        const currentCount = parseInt(document.getElementById('markerCount').textContent) || 0;
+        document.getElementById('markerCount').textContent = currentCount + 1;
+        
+        // Refresh regions table if loaded
+        if (window.regionsDataLoaded) {
+            showRegionsTable();
+        }
+    }
 }
 
 // View user sessions
@@ -654,8 +827,21 @@ function loadRegionsData() {
         }
     }
     
-    document.getElementById('regionsProgress').textContent = Object.keys(locationCache).length;
-    document.getElementById('regionsTotal').textContent = Object.keys(locationCache).length;
+    // If no data in cache, try to fetch from sessions data
+    if (Object.keys(regionsData).length === 0 && sessionsData.length > 0) {
+        // Process unique IPs from sessions data
+        const processedIPs = new Set();
+        sessionsData.forEach(session => {
+            if (session.ip_address && !processedIPs.has(session.ip_address)) {
+                processedIPs.add(session.ip_address);
+                // Try to fetch location data for this IP
+                fetchLocationForIP(session.ip_address, session);
+            }
+        });
+    }
+    
+    document.getElementById('regionsProgress').textContent = Object.keys(locationCache).length || sessionsData.length;
+    document.getElementById('regionsTotal').textContent = Object.keys(locationCache).length || sessionsData.length;
     
     showRegionsTable();
 }
@@ -678,6 +864,7 @@ function showRegionsTable() {
                 <td colspan="7" class="px-6 py-12 text-center text-gray-500">
                     <i class="fas fa-globe text-4xl mb-3"></i>
                     <p class="text-lg font-medium">Tidak ada data geografis tersedia</p>
+                    <p class="text-sm mt-2">Data akan dimuat secara otomatis saat pengguna mengakses sistem</p>
                 </td>
             </tr>
         `;
@@ -699,7 +886,7 @@ function showRegionsTable() {
             </td>
             <td class="px-6 py-4">
                 <div class="text-sm font-medium text-gray-900">${region.city}</div>
-                <div class="text-sm text-gray-500">${region.region}</div>
+                <div class="text-sm text-gray-500">${region.region || 'N/A'}</div>
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
                 <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
@@ -717,7 +904,7 @@ function showRegionsTable() {
                 </span>
             </td>
             <td class="px-6 py-4">
-                <div class="text-sm text-gray-700">${region.isp}</div>
+                <div class="text-sm text-gray-700">${region.isp || 'Unknown'}</div>
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 <button onclick="viewRegionOnMap(${region.lat}, ${region.lon})" class="text-blue-600 hover:text-blue-900" title="Lihat di Peta">

@@ -261,7 +261,7 @@
                                 </tr>
                             <?php else: ?>
                                 <?php foreach ($active_sessions as $session): ?>
-                                    <tr class="hover:bg-gray-50 transition-colors">
+                                    <tr class="hover:bg-gray-50 transition-colors" data-session-id="<?= html_escape($session->session_id) ?>">
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <?php if ($session->user_id): ?>
                                                 <div class="flex items-center">
@@ -286,11 +286,13 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-900"><?= html_escape($session->ip_address) ?></div>
-                                            <div class="text-sm text-gray-500">
+                                            <div class="text-sm text-gray-500 flex items-center">
                                                 <?php if (isset($location_cache[$session->ip_address]['data'])): ?>
                                                     <?= html_escape($location_cache[$session->ip_address]['data']['city']) ?>, <?= html_escape($location_cache[$session->ip_address]['data']['countryCode']) ?>
                                                 <?php else: ?>
-                                                    Unknown Location
+                                                    <span class="flex items-center" id="location-<?= md5($session->ip_address) ?>">
+                                                        <i class="fas fa-sync fa-spin mr-1 text-blue-500"></i> Getting location...
+                                                    </span>
                                                 <?php endif; ?>
                                             </div>
                                         </td>

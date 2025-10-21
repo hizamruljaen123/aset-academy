@@ -375,6 +375,22 @@ class Session_model extends CI_Model {
     }
 
     /**
+     * Get unique IP statistics for regions
+     * 
+     * @return array
+     */
+    public function get_unique_ip_statistics() {
+        $this->db->select('s.ip_address, u.username, u.nama_lengkap, u.role, u.email, COUNT(*) as session_count, MAX(s.timestamp) as last_activity, s.user_agent');
+        $this->db->from('ci_sessions s');
+        $this->db->join('users u', 's.user_id = u.id', 'left');
+        $this->db->where('s.is_active', 1);
+        $this->db->group_by('s.ip_address');
+        $this->db->order_by('last_activity', 'DESC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    /**
      * Get session statistics
      * 
      * @return object
