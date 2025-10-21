@@ -12,6 +12,7 @@ class Free_classes extends CI_Controller {
         $this->load->model('User_model');
         $this->load->library('Permission');
         $this->load->library('form_validation');
+        $this->load->library('encryption_url');
         $this->load->helper('file');
         
         // Check if user is logged in and has admin role
@@ -36,6 +37,13 @@ class Free_classes extends CI_Controller {
     
     public function detail($id)
     {
+        // Decrypt class ID
+        $id = $this->encryption_url->decode($id);
+        
+        if ($id === false) {
+            show_error('Invalid class ID', 404);
+        }
+        
         // Get class details
         $data['free_class'] = $this->Free_class_model->get_free_class_by_id($id);
         
@@ -142,7 +150,7 @@ class Free_classes extends CI_Controller {
 
             if ($class_id) {
                 $this->session->set_flashdata('success', 'Kelas gratis berhasil ditambahkan');
-                redirect('admin/free_classes/edit/' . $class_id);
+                redirect('admin/free_classes/edit/' . $this->encryption_url->encode($class_id));
             } else {
                 $this->session->set_flashdata('error', 'Gagal menambahkan kelas gratis');
                 redirect('admin/free_classes/create');
@@ -152,6 +160,13 @@ class Free_classes extends CI_Controller {
     
     public function edit($id)
     {
+        // Decrypt class ID
+        $id = $this->encryption_url->decode($id);
+        
+        if ($id === false) {
+            show_error('Invalid class ID', 404);
+        }
+        
         $data['free_class'] = $this->Free_class_model->get_free_class_by_id($id);
         
         if (!$data['free_class']) {
@@ -216,12 +231,12 @@ class Free_classes extends CI_Controller {
                     } else {
                         @unlink($localPath);
                         $this->session->set_flashdata('error', 'Gagal mengunggah thumbnail ke object storage');
-                        redirect('admin/free_classes/edit/' . $id);
+                        redirect('admin/free_classes/edit/' . $this->encryption_url->encode($id));
                         return;
                     }
                 } else {
                     $this->session->set_flashdata('error', $this->upload->display_errors());
-                    redirect('admin/free_classes/edit/' . $id);
+                    redirect('admin/free_classes/edit/' . $this->encryption_url->encode($id));
                     return;
                 }
             }
@@ -243,16 +258,23 @@ class Free_classes extends CI_Controller {
             
             if ($this->Free_class_model->update_free_class($id, $class_data)) {
                 $this->session->set_flashdata('success', 'Kelas gratis berhasil diperbarui');
-                redirect('admin/free_classes/edit/' . $id);
+                redirect('admin/free_classes/edit/' . $this->encryption_url->encode($id));
             } else {
                 $this->session->set_flashdata('error', 'Gagal memperbarui kelas gratis');
-                redirect('admin/free_classes/edit/' . $id);
+                redirect('admin/free_classes/edit/' . $this->encryption_url->encode($id));
             }
         }
     }
     
     public function delete($id)
     {
+        // Decrypt class ID
+        $id = $this->encryption_url->decode($id);
+        
+        if ($id === false) {
+            show_error('Invalid class ID', 404);
+        }
+        
         $free_class = $this->Free_class_model->get_free_class_by_id($id);
         
         if (!$free_class) {
