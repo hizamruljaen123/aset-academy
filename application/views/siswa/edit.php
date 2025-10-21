@@ -9,7 +9,7 @@
         
         <!-- Card Body -->
         <div class="p-8">
-            <?php echo form_open('siswa/edit/'.$siswa->id, 'class="space-y-6"'); ?>
+            <?php echo form_open('siswa/edit/' . encrypt_url($siswa->id), 'class="space-y-6"'); ?>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- NIS -->
                     <div class="space-y-2">

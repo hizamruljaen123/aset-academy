@@ -16,7 +16,7 @@
 
     <!-- Edit Form -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-        <form action="<?php echo site_url('admin/class_categories/edit/' . $category->id); ?>" method="POST" class="p-6">
+        <form action="<?php echo site_url('admin/class_categories/edit/' . encrypt_url($category->id)); ?>" method="POST" class="p-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Nama Kategori -->
                 <div class="md:col-span-2">

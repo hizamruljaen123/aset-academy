@@ -102,13 +102,13 @@
                                                     <i class="fas fa-video text-xs"></i>
                                                 </a>
                                             <?php endif; ?>
-                                            <a href="<?php echo site_url('siswa/detail/'.$s->id); ?>" class="text-blue-600 hover:text-blue-900 p-1 rounded-full hover:bg-blue-50" title="Detail">
+                                            <a href="<?php echo site_url('siswa/detail/' . encrypt_url($s->id)); ?>" class="text-blue-600 hover:text-blue-900 p-1 rounded-full hover:bg-blue-50" title="Detail">
                                                 <i class="fas fa-eye text-xs"></i>
                                             </a>
-                                            <a href="<?php echo site_url('siswa/edit/'.$s->id); ?>" class="text-indigo-600 hover:text-indigo-900 p-1 rounded-full hover:bg-indigo-50" title="Edit">
+                                            <a href="<?php echo site_url('siswa/edit/' . encrypt_url($s->id)); ?>" class="text-indigo-600 hover:text-indigo-900 p-1 rounded-full hover:bg-indigo-50" title="Edit">
                                                 <i class="fas fa-edit text-xs"></i>
                                             </a>
-                                            <a href="<?php echo site_url('siswa/delete/'.$s->id); ?>" class="text-red-600 hover:text-red-900 p-1 rounded-full hover:bg-red-50" title="Hapus" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+                                            <a href="<?php echo site_url('siswa/delete/' . encrypt_url($s->id)); ?>" class="text-red-600 hover:text-red-900 p-1 rounded-full hover:bg-red-50" title="Hapus" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                                 <i class="fas fa-trash text-xs"></i>
                                             </a>
                                         </div>

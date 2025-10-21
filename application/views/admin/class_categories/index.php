@@ -142,12 +142,12 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex justify-end space-x-2">
-                                        <a href="<?php echo site_url('admin/class_categories/edit/' . $category->id); ?>"
+                                        <a href="<?php echo site_url('admin/class_categories/edit/' . encrypt_url($category->id)); ?>"
                                            class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200">
                                             <i class="fas fa-edit mr-1"></i>
                                             Edit
                                         </a>
-                                        <button onclick="confirmDelete(<?php echo $category->id; ?>, '<?php echo htmlspecialchars($category->name); ?>')"
+                                        <button onclick="confirmDelete('<?php echo encrypt_url($category->id); ?>', '<?php echo htmlspecialchars($category->name); ?>')"
                                                 class="inline-flex items-center px-3 py-1.5 border border-red-300 text-xs font-medium rounded text-red-700 bg-white hover:bg-red-50 transition-colors duration-200">
                                             <i class="fas fa-trash mr-1"></i>
                                             Hapus
@@ -195,9 +195,9 @@
 </div>
 
 <script>
-function confirmDelete(id, name) {
+function confirmDelete(encryptedId, name) {
     document.getElementById('deleteCategoryName').textContent = name;
-    document.getElementById('confirmDeleteBtn').href = '<?php echo site_url('admin/class_categories/delete/'); ?>' + id;
+    document.getElementById('confirmDeleteBtn').href = '<?php echo site_url('admin/class_categories/delete/'); ?>' + encryptedId;
     document.getElementById('deleteModal').classList.remove('hidden');
 }
 

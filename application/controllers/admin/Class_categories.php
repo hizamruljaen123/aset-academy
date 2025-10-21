@@ -7,7 +7,7 @@ class Class_categories extends CI_Controller {
     {
         parent::__construct();
         $this->load->model('Class_category_model', 'category_model');
-        $this->load->library(['form_validation', 'session', 'permission']);
+        $this->load->library(['form_validation', 'session', 'permission', 'encryption_url']);
         $this->load->helper(['url', 'form']);
 
         if (!$this->session->userdata('logged_in')) {
@@ -80,6 +80,13 @@ class Class_categories extends CI_Controller {
 
     public function edit($id)
     {
+        // Decrypt category ID
+        $id = $this->encryption_url->decode($id);
+        
+        if ($id === false) {
+            show_error('Invalid category ID', 404);
+        }
+        
         $category = $this->category_model->get_by_id($id);
         if (!$category) {
             show_error('Kategori tidak ditemukan.', 404);
@@ -109,7 +116,7 @@ class Class_categories extends CI_Controller {
 
         if ($this->category_model->is_name_exists($name, $id)) {
             $this->session->set_flashdata('error', 'Nama kategori sudah digunakan.');
-            redirect('admin/class_categories/edit/' . $id);
+            redirect('admin/class_categories/edit/' . $this->encryption_url->encode($id));
         }
 
         if ($this->category_model->is_slug_exists($slug, $id)) {
@@ -132,6 +139,13 @@ class Class_categories extends CI_Controller {
 
     public function delete($id)
     {
+        // Decrypt category ID
+        $id = $this->encryption_url->decode($id);
+        
+        if ($id === false) {
+            show_error('Invalid category ID', 404);
+        }
+        
         $category = $this->category_model->get_by_id($id);
         if (!$category) {
             show_error('Kategori tidak ditemukan.', 404);

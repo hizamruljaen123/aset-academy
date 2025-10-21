@@ -9,6 +9,7 @@ class Siswa extends CI_Controller {
         $this->load->model('Siswa_model');
         $this->load->model('Kelas_model');
         $this->load->library('form_validation');
+        $this->load->library('encryption_url');
         $this->load->helper('url');
         $this->load->helper('form');
         $this->load->library('session');
@@ -113,6 +114,13 @@ class Siswa extends CI_Controller {
     // Menampilkan form edit siswa
     public function edit($id)
     {
+        // Decrypt student ID
+        $id = $this->encryption_url->decode($id);
+        
+        if ($id === false) {
+            show_error('Invalid student ID', 404);
+        }
+        
         $data['title'] = 'Edit Siswa';
         $data['siswa'] = $this->Siswa_model->get_siswa_by_id($id);
         $data['kelas_list'] = $this->Kelas_model->get_all_kelas();
@@ -164,6 +172,13 @@ class Siswa extends CI_Controller {
     // Menghapus data siswa
     public function delete($id)
     {
+        // Decrypt student ID
+        $id = $this->encryption_url->decode($id);
+        
+        if ($id === false) {
+            show_error('Invalid student ID', 404);
+        }
+        
         $siswa = $this->Siswa_model->get_siswa_by_id($id);
 
         if (empty($siswa)) {
@@ -250,6 +265,13 @@ class Siswa extends CI_Controller {
     // Menampilkan detail siswa
     public function detail($id)
     {
+        // Decrypt student ID
+        $id = $this->encryption_url->decode($id);
+        
+        if ($id === false) {
+            show_error('Invalid student ID', 404);
+        }
+        
         $data['title'] = 'Detail Siswa';
         $data['siswa'] = $this->Siswa_model->get_siswa_by_id($id);
         
