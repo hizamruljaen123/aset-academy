@@ -7,7 +7,14 @@ $this->load->view('forum/partials/comment');
 
 <!-- Load modular CSS and JS -->
 <link rel="stylesheet" href="<?php echo base_url('assets/css/forum-thread.css'); ?>">
+<link rel="stylesheet" href="<?php echo base_url('assets/css/markdown-styles.css'); ?>">
+<!-- Marked.js for Markdown parsing -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<!-- Highlight.js for code syntax highlighting -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <script src="<?php echo base_url('assets/js/forum-thread.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/markdown-renderer.js'); ?>"></script>
 
 <div class="forum-thread-container">
     <div class="forum-thread-wrapper">
@@ -118,7 +125,7 @@ $this->load->view('forum/partials/comment');
             <div class="thread-content">
                 <h1 class="thread-title"><?= html_escape($thread->title); ?></h1>
                 <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
-                    <div class="thread-body">
+                    <div class="thread-body markdown-content" data-content="<?= htmlspecialchars($thread->content, ENT_QUOTES, 'UTF-8'); ?>">
                         <?= $thread->content; ?>
                     </div>
                 </div>

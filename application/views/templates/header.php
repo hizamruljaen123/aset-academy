@@ -458,8 +458,7 @@
                     <!-- Teacher Navigation -->
                     <!-- Dashboard Section -->
                     <div class="mb-2">
-                        <button @click="teacherSections.dashboard = !teacherSections.dashboard"
-                                class="flex items-center justify-between w-full px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 rounded-xl transition-all duration-200 group">
+                        <button                                 class="flex items-center justify-between w-full px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 rounded-xl transition-all duration-200 group">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 bg-gradient-to-br from-cyan-500 to-teal-500 rounded-lg flex items-center justify-center mr-3 shadow-md">
                                     <i class="fas fa-tachometer-alt text-xs text-white"></i>
@@ -467,11 +466,11 @@
                                 <span class="font-medium text-sm">Dashboard</span>
                             </div>
                             <i class="fas fa-chevron-down text-gray-400 transition-transform duration-200"
-                               :class="{'rotate-180': teacherSections.dashboard}"></i>
+                               ></i>
                         </button>
-                        <div x-show="teacherSections.dashboard" x-transition class="ml-4 mt-1 space-y-1">
-                            <a href="<?php echo site_url('teacher'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == '') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == '') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                        <div style="display: block;" x-transition class="ml-4 mt-1 space-y-1">
+                            <a href="<?php echo site_url('teacher'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-home text-xs"></i>
                                 </div>
                                 <span class="font-medium">Beranda</span>
@@ -493,31 +492,30 @@
                                :class="{'rotate-180': teacherSections.teaching}"></i>
                         </button>
                         <div x-show="teacherSections.teaching" x-transition class="ml-4 mt-1 space-y-1">
-                            <a href="<?php echo site_url('teacher/kelas'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == 'kelas') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == 'kelas') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                            <a href="<?php echo site_url('teacher/kelas'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-graduation-cap text-xs"></i>
-                        </div>
-                        <span class="font-medium">Kelas Saya</span>
-                    </a>
-                            <a href="<?php echo site_url('teacher/siswa'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == 'siswa') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == 'siswa') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                                </div>
+                                <span class="font-medium">Kelas Saya</span>
+                            </a>
+                            <a href="<?php echo site_url('teacher/siswa'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-users text-xs"></i>
-                        </div>
-                        <span class="font-medium">Siswa Saya</span>
-                    </a>
-                            <a href="<?php echo site_url('teacher/materi'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'teacher' && ($this->uri->segment(2) == 'materi' || $this->uri->segment(2) == 'edit_materi' || $this->uri->segment(2) == 'materi_detail')) ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'teacher' && ($this->uri->segment(2) == 'materi' || $this->uri->segment(2) == 'edit_materi' || $this->uri->segment(2) == 'materi_detail')) ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                                </div>
+                                <span class="font-medium">Siswa Saya</span>
+                            </a>
+                            <a href="<?php echo site_url('teacher/materi'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-book text-xs"></i>
-                        </div>
-                        <span class="font-medium">Materi</span>
-                    </a>
+                                </div>
+                                <span class="font-medium">Materi</span>
+                            </a>
                         </div>
                     </div>
 
                     <!-- Penilaian Section -->
                     <div class="mb-2">
-                        <button @click="teacherSections.assessment = !teacherSections.assessment"
-                                class="flex items-center justify-between w-full px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 rounded-xl transition-all duration-200 group">
+                        <button                                 class="flex items-center justify-between w-full px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 rounded-xl transition-all duration-200 group">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg flex items-center justify-center mr-3 shadow-md">
                                     <i class="fas fa-edit text-xs text-white"></i>
@@ -525,44 +523,43 @@
                                 <span class="font-medium text-sm">Penilaian</span>
                             </div>
                             <i class="fas fa-chevron-down text-gray-400 transition-transform duration-200"
-                               :class="{'rotate-180': teacherSections.assessment}"></i>
+                               ></i>
                         </button>
-                        <div x-show="teacherSections.assessment" x-transition class="ml-4 mt-1 space-y-1">
-                            <a href="<?php echo site_url('teacher/assignments'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == 'assignments') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == 'assignments') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                        <div style="display: block;" x-transition class="ml-4 mt-1 space-y-1">
+                            <a href="<?php echo site_url('teacher/assignments'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-clipboard-check text-xs"></i>
-                        </div>
-                        <span class="font-medium">Penilaian</span>
-                    </a>
+                                </div>
+                                <span class="font-medium">Penilaian</span>
+                            </a>
                         </div>
                     </div>
 
                     <!-- Komunitas Section -->
                     <div class="mb-2">
-                        <button @click="teacherSections.community = !teacherSections.community"
-                                class="flex items-center justify-between w-full px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 rounded-xl transition-all duration-200 group">
+                        <button                                 class="flex items-center justify-between w-full px-4 py-2 text-gray-600 dark:text-gray-300 rounded-xl transition-all duration-200 group">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mr-3 shadow-md">
                                     <i class="fas fa-users text-xs text-white"></i>
                                 </div>
-                                <span class="font-medium text-sm">Komunitas</span>
+                                <span class="font-medium text-sm">Diskusi</span>
                             </div>
                             <i class="fas fa-chevron-down text-gray-400 transition-transform duration-200"
-                               :class="{'rotate-180': teacherSections.community}"></i>
+                               ></i>
                         </button>
-                        <div x-show="teacherSections.community" x-transition class="ml-4 mt-1 space-y-1">
-                            <a href="<?php echo site_url('forum'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'forum') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'forum') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                        <div style="display: block;" x-transition class="ml-4 mt-1 space-y-1">
+                            <a href="<?php echo site_url('forum'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-comments text-xs"></i>
-                        </div>
-                        <span class="font-medium">Forum</span>
-                    </a>
-                            <a href="<?php echo site_url('teacher/workshop-guests'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == 'workshop-guests') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'teacher' && $this->uri->segment(2) == 'workshop-guests') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                                </div>
+                                <span class="font-medium">Forum</span>
+                            </a>
+                            <a href="<?php echo site_url('teacher/workshop-guests'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-users-cog text-xs"></i>
-                        </div>
-                        <span class="font-medium">Workshop Guests</span>
-                    </a>
+                                </div>
+                                <span class="font-medium">Workshop Guests</span>
+                            </a>
                         </div>
                     </div>
                     
@@ -570,8 +567,7 @@
                     <!-- Student Navigation -->
                     <!-- Dashboard Section -->
                     <div class="mb-2">
-                        <button @click="studentSections.dashboard = !studentSections.dashboard"
-                                class="flex items-center justify-between w-full px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 rounded-xl transition-all duration-200 group">
+                        <button                                 class="flex items-center justify-between w-full px-4 py-2 text-gray-600 dark:text-gray-300 rounded-xl transition-all duration-200 group">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 bg-gradient-to-br from-cyan-500 to-teal-500 rounded-lg flex items-center justify-center mr-3 shadow-md">
                                     <i class="fas fa-tachometer-alt text-xs text-white"></i>
@@ -579,23 +575,23 @@
                                 <span class="font-medium text-sm">Dashboard</span>
                             </div>
                             <i class="fas fa-chevron-down text-gray-400 transition-transform duration-200"
-                               :class="{'rotate-180': studentSections.dashboard}"></i>
+                               ></i>
                         </button>
-                        <div x-show="studentSections.dashboard" x-transition class="ml-4 mt-1 space-y-1">
-                            <a href="<?php echo site_url('student'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == '') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == '') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                        <div style="display: block;" x-transition class="ml-4 mt-1 space-y-1">
+                            <a href="<?php echo site_url('student'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-home text-xs"></i>
                                 </div>
                                 <span class="font-medium">Beranda</span>
                             </a>
-                            <a href="<?php echo site_url('student/profile'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'profile') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'profile') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                            <a href="<?php echo site_url('student/profile'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-user text-xs"></i>
                                 </div>
                                 <span class="font-medium">Profil Saya</span>
                             </a>
-                            <a href="<?php echo site_url('student/orders'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'orders') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'orders') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                            <a href="<?php echo site_url('student/orders'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-shopping-cart text-xs"></i>
                                 </div>
                                 <span class="font-medium">Pesanan Saya</span>
@@ -605,8 +601,7 @@
 
                     <!-- Pembelajaran Section -->
                     <div class="mb-2">
-                        <button @click="studentSections.learning = !studentSections.learning"
-                                class="flex items-center justify-between w-full px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 rounded-xl transition-all duration-200 group">
+                        <button                                 class="flex items-center justify-between w-full px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 rounded-xl transition-all duration-200 group">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-3 shadow-md">
                                     <i class="fas fa-graduation-cap text-xs text-white"></i>
@@ -614,35 +609,35 @@
                                 <span class="font-medium text-sm">Pembelajaran</span>
                             </div>
                             <i class="fas fa-chevron-down text-gray-400 transition-transform duration-200"
-                               :class="{'rotate-180': studentSections.learning}"></i>
+                               ></i>
                         </button>
-                        <div x-show="studentSections.learning" x-transition class="ml-4 mt-1 space-y-1">
-                            <a href="<?php echo site_url('student/all_classes'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'all_classes') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'all_classes') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                        <div style="display: block;" x-transition class="ml-4 mt-1 space-y-1">
+                            <a href="<?php echo site_url('student/all_classes'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-layer-group text-xs"></i>
                                 </div>
                                 <span class="font-medium">Semua Kelas Saya</span>
                             </a>
-                            <a href="<?php echo site_url('student/premium'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'premium') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'premium') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                            <a href="<?php echo site_url('student/premium'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-crown text-xs text-yellow-500"></i>
                                 </div>
                                 <span class="font-medium">Kelas Premium</span>
                             </a>
-                            <a href="<?php echo site_url('student/workshops'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'workshops') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'workshops') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                            <a href="<?php echo site_url('student/workshops'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-users text-xs"></i>
                                 </div>
                                 <span class="font-medium">Workshop & Seminar</span>
                             </a>
-                            <a href="<?php echo site_url('student/free_classes'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'free_classes' && $this->uri->segment(3) != 'my_classes') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'free_classes' && $this->uri->segment(3) != 'my_classes') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                            <a href="<?php echo site_url('student/free_classes'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-graduation-cap text-xs"></i>
                                 </div>
                                 <span class="font-medium">Kelas Gratis</span>
                             </a>
-                            <a href="<?php echo site_url('student/materi'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'materi') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'materi') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                            <a href="<?php echo site_url('student/materi'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-book-open text-xs"></i>
                                 </div>
                                 <span class="font-medium">Materi Pembelajaran</span>
@@ -652,8 +647,7 @@
 
                     <!-- Operasional Section -->
                     <div class="mb-2">
-                        <button @click="studentSections.operational = !studentSections.operational"
-                                class="flex items-center justify-between w-full px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 rounded-xl transition-all duration-200 group">
+                        <button                                 class="flex items-center justify-between w-full px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 rounded-xl transition-all duration-200 group">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg flex items-center justify-center mr-3 shadow-md">
                                     <i class="fas fa-cogs text-xs text-white"></i>
@@ -661,40 +655,23 @@
                                 <span class="font-medium text-sm">Operasional</span>
                             </div>
                             <i class="fas fa-chevron-down text-gray-400 transition-transform duration-200"
-                               :class="{'rotate-180': studentSections.operational}"></i>
+                               ></i>
                         </button>
-                        <div x-show="studentSections.operational" x-transition class="ml-4 mt-1 space-y-1">
-                            <a href="<?php echo site_url('absensi'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'absensi') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'absensi') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                        <div style="display: block;" x-transition class="ml-4 mt-1 space-y-1">
+                            <a href="<?php echo site_url('absensi'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-user-check text-xs"></i>
                                 </div>
                                 <span class="font-medium">Absensi Saya</span>
                             </a>
-                            <a href="<?php echo site_url('student/assignments'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'assignments') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'student' && $this->uri->segment(2) == 'assignments') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                            <a href="<?php echo site_url('student/assignments'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-tasks text-xs"></i>
                                 </div>
                                 <span class="font-medium">Penilaian</span>
                             </a>
-                        </div>
-                    </div>
-
-                    <!-- Diskusi Section -->
-                    <div class="mb-2">
-                        <button @click="studentSections.discussion = !studentSections.discussion"
-                                class="flex items-center justify-between w-full px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 rounded-xl transition-all duration-200 group">
-                            <div class="flex items-center">
-                                <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mr-3 shadow-md">
-                                    <i class="fas fa-comments text-xs text-white"></i>
-                                </div>
-                                <span class="font-medium text-sm">Diskusi</span>
-                            </div>
-                            <i class="fas fa-chevron-down text-gray-400 transition-transform duration-200"
-                               :class="{'rotate-180': studentSections.discussion}"></i>
-                        </button>
-                        <div x-show="studentSections.discussion" x-transition class="ml-4 mt-1 space-y-1">
-                            <a href="<?php echo site_url('forum'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'forum') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'forum') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                            <a href="<?php echo site_url('forum'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-comments text-xs"></i>
                                 </div>
                                 <span class="font-medium">Forum</span>
@@ -706,8 +683,7 @@
                     <!-- Admin Navigation -->
                     <!-- Dashboard Section -->
                     <div class="mb-2">
-                        <button @click="adminSections.dashboard = !adminSections.dashboard"
-                                class="flex items-center justify-between w-full px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 rounded-xl transition-all duration-200 group">
+                        <button                                 class="flex items-center justify-between w-full px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 rounded-xl transition-all duration-200 group">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 bg-gradient-to-br from-cyan-500 to-teal-500 rounded-lg flex items-center justify-center mr-3 shadow-md">
                                     <i class="fas fa-tachometer-alt text-xs text-white"></i>
@@ -715,17 +691,17 @@
                                 <span class="font-medium text-sm">Dashboard</span>
                             </div>
                             <i class="fas fa-chevron-down text-gray-400 transition-transform duration-200"
-                               :class="{'rotate-180': adminSections.dashboard}"></i>
+                               ></i>
                         </button>
-                        <div x-show="adminSections.dashboard" x-transition class="ml-4 mt-1 space-y-1">
-                            <a href="<?php echo site_url('dashboard'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'dashboard' || $this->uri->segment(1) == '') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'dashboard' || $this->uri->segment(1) == '') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                        <div style="display: block;" x-transition class="ml-4 mt-1 space-y-1">
+                            <a href="<?php echo site_url('dashboard'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-home text-xs"></i>
                                 </div>
                                 <span class="font-medium">Beranda</span>
                             </a>
-                            <a href="<?php echo site_url('admin/statistics'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'statistics') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'statistics') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                            <a href="<?php echo site_url('admin/statistics'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-chart-line text-xs"></i>
                                 </div>
                                 <span class="font-medium">Statistics</span>
@@ -735,8 +711,7 @@
 
                     <!-- Data Master Section -->
                     <div class="mb-2">
-                        <button @click="adminSections.masterdata = !adminSections.masterdata"
-                                class="flex items-center justify-between w-full px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 rounded-xl transition-all duration-200 group">
+                        <button                                 class="flex items-center justify-between w-full px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 rounded-xl transition-all duration-200 group">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center mr-3 shadow-md">
                                     <i class="fas fa-database text-xs text-white"></i>
@@ -744,17 +719,17 @@
                                 <span class="font-medium text-sm">Data Master</span>
                             </div>
                             <i class="fas fa-chevron-down text-gray-400 transition-transform duration-200"
-                               :class="{'rotate-180': adminSections.masterdata}"></i>
+                               ></i>
                         </button>
-                        <div x-show="adminSections.masterdata" x-transition class="ml-4 mt-1 space-y-1">
-                            <a href="<?php echo site_url('siswa'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'siswa') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'siswa') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                        <div style="display: block;" x-transition class="ml-4 mt-1 space-y-1">
+                            <a href="<?php echo site_url('siswa'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-users text-xs"></i>
                                 </div>
                                 <span class="font-medium">Data Siswa</span>
                             </a>
-                            <a href="<?php echo site_url('admin_guru'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'admin_guru') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'admin_guru') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                            <a href="<?php echo site_url('admin_guru'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-chalkboard-teacher text-xs"></i>
                                 </div>
                                 <span class="font-medium">Kelola Guru</span>
@@ -764,8 +739,7 @@
 
                     <!-- Kelas & Materi Section -->
                     <div class="mb-2">
-                        <button @click="adminSections.classes = !adminSections.classes"
-                                class="flex items-center justify-between w-full px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 rounded-xl transition-all duration-200 group">
+                        <button                                 class="flex items-center justify-between w-full px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 rounded-xl transition-all duration-200 group">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-3 shadow-md">
                                     <i class="fas fa-graduation-cap text-xs text-white"></i>
@@ -773,29 +747,29 @@
                                 <span class="font-medium text-sm">Kelas & Materi</span>
                             </div>
                             <i class="fas fa-chevron-down text-gray-400 transition-transform duration-200"
-                               :class="{'rotate-180': adminSections.classes}"></i>
+                               ></i>
                         </button>
-                        <div x-show="adminSections.classes" x-transition class="ml-4 mt-1 space-y-1">
-                            <a href="<?php echo site_url('kelas'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'kelas') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'kelas') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                        <div style="display: block;" x-transition class="ml-4 mt-1 space-y-1">
+                            <a href="<?php echo site_url('kelas'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-code text-xs"></i>
                                 </div>
                                 <span class="font-medium">Kelas Programming</span>
                             </a>
-                            <a href="<?php echo site_url('materi'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'materi') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'materi') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                            <a href="<?php echo site_url('materi'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-book text-xs"></i>
                                 </div>
                                 <span class="font-medium">Materi</span>
                             </a>
-                            <a href="<?php echo site_url('admin/free_classes'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'free_classes') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'free_classes') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                            <a href="<?php echo site_url('admin/free_classes'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-graduation-cap text-xs"></i>
                                 </div>
                                 <span class="font-medium">Kelas Gratis</span>
                             </a>
-                            <a href="<?php echo site_url('admin/class_categories'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'class_categories') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'class_categories') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                            <a href="<?php echo site_url('admin/class_categories'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-tags text-xs"></i>
                                 </div>
                                 <span class="font-medium">Kategori Kelas</span>
@@ -805,8 +779,7 @@
 
                     <!-- Operasional Section -->
                     <div class="mb-2">
-                        <button @click="adminSections.operational = !adminSections.operational"
-                                class="flex items-center justify-between w-full px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 rounded-xl transition-all duration-200 group">
+                        <button                                 class="flex items-center justify-between w-full px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 rounded-xl transition-all duration-200 group">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg flex items-center justify-center mr-3 shadow-md">
                                     <i class="fas fa-cogs text-xs text-white"></i>
@@ -814,35 +787,35 @@
                                 <span class="font-medium text-sm">Operasional</span>
                             </div>
                             <i class="fas fa-chevron-down text-gray-400 transition-transform duration-200"
-                               :class="{'rotate-180': adminSections.operational}"></i>
+                               ></i>
                         </button>
-                        <div x-show="adminSections.operational" x-transition class="ml-4 mt-1 space-y-1">
-                            <a href="<?php echo site_url('absensi'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'absensi') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'absensi') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                        <div style="display: block;" x-transition class="ml-4 mt-1 space-y-1">
+                            <a href="<?php echo site_url('absensi'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-user-check text-xs"></i>
                                 </div>
                                 <span class="font-medium">Kelola Absensi</span>
                             </a>
-                            <a href="<?php echo site_url('admin/jadwal'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(2) == 'jadwal') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(2) == 'jadwal') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                            <a href="<?php echo site_url('admin/jadwal'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-calendar-alt text-xs"></i>
                                 </div>
                                 <span class="font-medium">Kelola Jadwal</span>
                             </a>
-                            <a href="<?php echo site_url('admin/assignments'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'assignments') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'assignments') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                            <a href="<?php echo site_url('admin/assignments'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-clipboard-check text-xs"></i>
                                 </div>
                                 <span class="font-medium">Penilaian</span>
                             </a>
-                            <a href="<?= site_url('admin/workshops'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'workshops') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'workshops') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                            <a href="<?= site_url('admin/workshops'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-chalkboard-teacher text-xs"></i>
                                 </div>
                                 <span class="font-medium">Workshop & Seminar</span>
                             </a>
-                            <a href="<?php echo site_url('admin/workshop-guests'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'workshop-guests') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'workshop-guests') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                            <a href="<?php echo site_url('admin/workshop-guests'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-users-cog text-xs"></i>
                                 </div>
                                 <span class="font-medium">Workshop Guests</span>
@@ -852,8 +825,7 @@
 
                     <!-- Komunitas Section -->
                     <div class="mb-2">
-                        <button @click="adminSections.community = !adminSections.community"
-                                class="flex items-center justify-between w-full px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 rounded-xl transition-all duration-200 group">
+                        <button                                 class="flex items-center justify-between w-full px-4 py-2 text-gray-600 dark:text-gray-300 rounded-xl transition-all duration-200 group">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mr-3 shadow-md">
                                     <i class="fas fa-users text-xs text-white"></i>
@@ -861,15 +833,15 @@
                                 <span class="font-medium text-sm">Komunitas</span>
                             </div>
                             <i class="fas fa-chevron-down text-gray-400 transition-transform duration-200"
-                               :class="{'rotate-180': adminSections.community}"></i>
+                               ></i>
                         </button>
-                        <div x-show="adminSections.community" x-transition class="ml-4 mt-1 space-y-1">
-                            <a href="<?php echo site_url('forum'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'forum') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'forum') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                        <div style="display: block;" x-transition class="ml-4 mt-1 space-y-1">
+                            <a href="<?php echo site_url('forum'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-comments text-xs"></i>
                                 </div>
                                 <span class="font-medium">Forum</span>
-                    </a>
+                            </a>
                     <?php if ($level === '1'): ?>
                             <a href="<?php echo site_url('admin/recruitment'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm" target="_blank" rel="noopener">
                                 <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
@@ -884,8 +856,7 @@
                     <?php if ($level == '1' || $level == '2'): // Super Admin or Admin ?>
                     <!-- Admin Section -->
                     <div class="mb-2">
-                        <button @click="adminSections.admin = !adminSections.admin"
-                                class="flex items-center justify-between w-full px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 rounded-xl transition-all duration-200 group">
+                        <button  class="flex items-center justify-between w-full px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 rounded-xl transition-all duration-200 group">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 bg-gradient-to-br from-red-500 to-pink-500 rounded-lg flex items-center justify-center mr-3 shadow-md">
                                     <i class="fas fa-user-shield text-xs text-white"></i>
@@ -893,53 +864,53 @@
                                 <span class="font-medium text-sm">Admin</span>
                             </div>
                             <i class="fas fa-chevron-down text-gray-400 transition-transform duration-200"
-                               :class="{'rotate-180': adminSections.admin}"></i>
+                               ></i>
                         </button>
-                        <div x-show="adminSections.admin" x-transition class="ml-4 mt-1 space-y-1">
-                            <a href="<?php echo site_url('payment/admin_verify'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'payment' && $this->uri->segment(2) == 'admin_verify') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'payment' && $this->uri->segment(2) == 'admin_verify') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                        <div style="display: block;" x-transition class="ml-4 mt-1 space-y-1">
+                            <a href="<?php echo site_url('payment/admin_verify'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-money-check-alt text-xs"></i>
                                 </div>
                                 <span class="font-medium">Verifikasi Pembayaran</span>
                             </a>
-                            <a href="<?php echo site_url('admin/enrollment'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'enrollment') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'enrollment') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                            <a href="<?php echo site_url('admin/enrollment'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-user-graduate text-xs"></i>
                                 </div>
                                 <span class="font-medium">Kelola Akses Kelas</span>
                             </a>
-                            <a href="<?php echo site_url('admin/contact'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'contact') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'contact') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                            <a href="<?php echo site_url('admin/contact'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-phone text-xs"></i>
                                 </div>
                                 <span class="font-medium">Kotak Masuk</span>
                             </a>
-                            <a href="<?php echo site_url('admin/users'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'users') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'users') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                            <a href="<?php echo site_url('admin/users'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-user-shield text-xs"></i>
                                 </div>
                                 <span class="font-medium">Kelola User</span>
                             </a>
-                            <a href="<?php echo site_url('admin/permissions'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'permissions') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'permissions') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                            <a href="<?php echo site_url('admin/permissions'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-key text-xs"></i>
                                 </div>
                                 <span class="font-medium">Kelola Permission</span>
                             </a>
-                            <a href="<?php echo site_url('admin/settings'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'settings') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'settings') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                            <a href="<?php echo site_url('admin/settings'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-cog text-xs"></i>
                                 </div>
                                 <span class="font-medium">Pengaturan Sistem</span>
                             </a>
-                            <a href="<?php echo site_url('admin/session_management'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'session_management') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'session_management') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                            <a href="<?php echo site_url('admin/session_management'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-shield-alt text-xs"></i>
                                 </div>
                                 <span class="font-medium">Session Management</span>
                             </a>
-                            <a href="<?php echo site_url('admin/midtrans'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'midtrans') ? 'bg-gradient-to-r from-cyan-50 to-teal-50 text-gray-900 font-semibold shadow-md border-l-4 border-cyan-500' : ''; ?>">
-                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 <?php echo ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'midtrans') ? 'bg-gradient-to-br from-cyan-500 to-teal-500 text-white' : 'bg-gray-100 dark:bg-gray-700'; ?> group-hover:scale-110 transition-transform">
+                            <a href="<?php echo site_url('admin/midtrans'); ?>" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 group text-sm">
+                                <div class="w-6 h-6 flex items-center justify-center rounded-md mr-3 bg-gray-100 dark:bg-gray-700 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-credit-card text-xs"></i>
                                 </div>
                                 <span class="font-medium">Midtrans Payment</span>

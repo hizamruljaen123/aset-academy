@@ -97,7 +97,7 @@ function render_comment($post, $thread, $depth = 0, $max_depth = 5) {
                     <?php endif; ?>
                 </div>
 
-                <div class="mb-4 text-gray-800 leading-relaxed prose prose-indigo max-w-none">
+                <div class="mb-4 text-gray-800 leading-relaxed prose prose-indigo max-w-none markdown-content" data-content="<?= htmlspecialchars($post->content ?? '', ENT_QUOTES, 'UTF-8'); ?>">
                     <?= $post->content ?? ''; ?>
                 </div>
 
