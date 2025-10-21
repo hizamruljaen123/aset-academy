@@ -57,7 +57,7 @@
                     </div>
                     <div class="ml-4">
                         <p class="text-sm font-medium text-gray-600">Diterbitkan</p>
-                        <p class="text-2xl font-bold text-gray-900"><?= count(array_filter($assignments, fn($a) => $a->grades_published)) ?></p>
+                        <p class="text-2xl font-bold text-gray-900"><?= count(array_filter($assignments, function($a) { return $a->grades_published; })) ?></p>
                     </div>
                 </div>
             </div>
@@ -70,7 +70,7 @@
                     </div>
                     <div class="ml-4">
                         <p class="text-sm font-medium text-gray-600">Belum Diterbitkan</p>
-                        <p class="text-2xl font-bold text-gray-900"><?= count(array_filter($assignments, fn($a) => !$a->grades_published)) ?></p>
+                        <p class="text-2xl font-bold text-gray-900"><?= count(array_filter($assignments, function($a) { return !$a->grades_published; })) ?></p>
                     </div>
                 </div>
             </div>
