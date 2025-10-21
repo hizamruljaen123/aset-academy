@@ -107,8 +107,8 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" data-field="time"><?= date('H:i', strtotime($j->waktu_mulai)); ?> - <?= date('H:i', strtotime($j->waktu_selesai)); ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $j->nama_guru; ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <a href="<?= site_url('admin/jadwal/edit/' . $j->id); ?>" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                                        <a href="<?= site_url('admin/jadwal/delete/' . $j->id); ?>" class="text-red-600 hover:text-red-900 ml-4" onclick="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?');">Hapus</a>
+                                        <a href="<?= site_url('admin/jadwal/edit/' . encrypt_url($j->id)); ?>" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                        <a href="<?= site_url('admin/jadwal/delete/' . encrypt_url($j->id)); ?>" class="text-red-600 hover:text-red-900 ml-4" onclick="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?');">Hapus</a>
                                     </td>
                                 </tr>
                             <?php endif; ?>

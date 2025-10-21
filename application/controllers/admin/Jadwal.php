@@ -9,6 +9,7 @@ class Jadwal extends CI_Controller {
         $this->load->model('Jadwal_model');
         $this->load->model('Kelas_model');
         $this->load->library('session');
+        $this->load->library('encryption_url');
 
         // Cek apakah user sudah login dan memiliki role admin
         if (!$this->session->userdata('logged_in') || !in_array($this->session->userdata('role'), ['admin', 'super_admin'])) {
@@ -255,6 +256,13 @@ class Jadwal extends CI_Controller {
 
     public function edit($id)
     {
+        // Decrypt jadwal ID
+        $id = $this->encryption_url->decode($id);
+        
+        if ($id === false) {
+            show_error('Invalid jadwal ID', 404);
+        }
+        
         $data['title'] = 'Edit Jadwal Kelas';
         $data['jadwal'] = $this->Jadwal_model->get_jadwal_by_id($id);
 
@@ -275,6 +283,13 @@ class Jadwal extends CI_Controller {
 
     public function update($id)
     {
+        // Decrypt jadwal ID
+        $id = $this->encryption_url->decode($id);
+        
+        if ($id === false) {
+            show_error('Invalid jadwal ID', 404);
+        }
+        
         $kelas_input = $this->input->post('kelas_id');
 
         // Parse class type and ID from the combined value
@@ -293,7 +308,7 @@ class Jadwal extends CI_Controller {
         $guru_id = $this->input->post('guru_id');
         if (empty($class_type) || empty($guru_id)) {
             $this->session->set_flashdata('error', 'Class type dan guru harus diisi.');
-            redirect('admin/jadwal/edit/' . $id);
+            redirect('admin/jadwal/edit/' . $this->encryption_url->encode($id));
         }
 
         $data = [
@@ -318,6 +333,13 @@ class Jadwal extends CI_Controller {
 
     public function delete($id)
     {
+        // Decrypt jadwal ID
+        $id = $this->encryption_url->decode($id);
+        
+        if ($id === false) {
+            show_error('Invalid jadwal ID', 404);
+        }
+        
         $this->Jadwal_model->delete_jadwal($id);
         $this->session->set_flashdata('success', 'Jadwal berhasil dihapus.');
         redirect('admin/jadwal');
