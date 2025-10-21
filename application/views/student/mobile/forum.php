@@ -94,7 +94,7 @@
             </div>
         <?php else: ?>
             <?php foreach ($threads as $thread): ?>
-                <a href="<?= site_url('student_mobile/forum_thread_clean/' . $thread->id . '/' . $thread->slug) ?>" class="block bg-white rounded-lg shadow-md border border-gray-100 p-4 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 thread-card">
+                <a href="<?= site_url('student_mobile/forum_thread_clean/' . encrypt_url($thread->id) . '/' . $thread->slug) ?>" class="block bg-white rounded-lg shadow-md border border-gray-100 p-4 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 thread-card">
                     <div class="flex justify-between items-start">
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center space-x-1.5 mb-2">

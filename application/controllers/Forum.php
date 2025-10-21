@@ -12,6 +12,7 @@ class Forum extends CI_Controller {
         $this->load->helper('form');
         $this->load->helper('date');
         $this->load->library('form_validation');
+        $this->load->library('encryption_url');
 
         if (!$this->session->userdata('user_id')) {
             redirect('auth/login');
@@ -104,8 +105,15 @@ class Forum extends CI_Controller {
     public function thread($thread_id = null)
     {
         // If no id is provided, show 404
-        if (!$thread_id || !is_numeric($thread_id)) {
+        if (!$thread_id) {
             show_404();
+        }
+        
+        // Decrypt thread_id
+        $thread_id = $this->encryption_url->decode($thread_id);
+        
+        if ($thread_id === false) {
+            show_error('Invalid thread ID', 404);
         }
         
         // Get thread data by id
@@ -187,7 +195,7 @@ class Forum extends CI_Controller {
 
             if ($thread_id) {
                 $this->session->set_flashdata('success', 'Topik berhasil dibuat!');
-                redirect('forum/thread/' . $thread_id);
+                redirect('forum/thread/' . $this->encryption_url->encode($thread_id));
             } else {
                 $this->session->set_flashdata('error', 'Gagal membuat topik. Silakan coba lagi.');
                 redirect('forum/create_thread/' . $category_id);
@@ -197,6 +205,13 @@ class Forum extends CI_Controller {
 
     public function create_post($thread_id)
     {
+        // Decrypt thread_id
+        $thread_id = $this->encryption_url->decode($thread_id);
+        
+        if ($thread_id === false) {
+            show_error('Invalid thread ID', 404);
+        }
+        
         // Validate thread exists
         $thread = $this->forum->get_thread($thread_id);
         if (!$thread) {
@@ -230,7 +245,7 @@ class Forum extends CI_Controller {
         }
 
         // Redirect back to the thread
-        redirect('forum/thread/' . $thread_id);
+        redirect('forum/thread/' . $this->encryption_url->encode($thread_id));
     }
 
     public function get_comments_ajax($thread_id)
@@ -310,6 +325,13 @@ class Forum extends CI_Controller {
 
     public function reply($post_id)
     {
+        // Decrypt post_id
+        $post_id = $this->encryption_url->decode($post_id);
+        
+        if ($post_id === false) {
+            show_error('Invalid post ID', 404);
+        }
+        
         // Validate post exists and get user info
         $this->db->select('fp.*, u.nama_lengkap, u.username, u.role as user_role');
         $this->db->from('forum_posts fp');

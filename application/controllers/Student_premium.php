@@ -127,6 +127,13 @@ class Student_premium extends CI_Controller {
     
     public function learn($enrollment_id)
     {
+        // Decrypt enrollment_id
+        $enrollment_id = $this->encryption_url->decode($enrollment_id);
+        
+        if ($enrollment_id === false) {
+            show_error('Invalid enrollment ID', 404);
+        }
+        
         $student_id = $this->session->userdata('user_id');
 
         $this->load->model('Premium_enrollment_model');
@@ -324,7 +331,7 @@ class Student_premium extends CI_Controller {
 
         if (empty($message)) {
             $this->session->set_flashdata('error', 'Pesan tidak boleh kosong');
-            redirect('student/premium/learn/' . $enrollment_id);
+            redirect('student/premium/learn/' . $this->encryption_url->encode($enrollment_id));
         }
 
         // Get enrollment to get class_id
@@ -347,11 +354,19 @@ class Student_premium extends CI_Controller {
             $this->session->set_flashdata('error', 'Gagal menambahkan diskusi');
         }
 
-        redirect('student/premium/learn/' . $enrollment_id);
+        redirect('student/premium/learn/' . $this->encryption_url->encode($enrollment_id));
     }
     
     public function material($enrollment_id, $material_id)
     {
+        // Decrypt enrollment_id and material_id
+        $enrollment_id = $this->encryption_url->decode($enrollment_id);
+        $material_id = $this->encryption_url->decode($material_id);
+        
+        if ($enrollment_id === false || $material_id === false) {
+            show_error('Invalid parameters', 404);
+        }
+        
         $student_id = $this->session->userdata('user_id');
         $enrollment = $this->Premium_enrollment_model->get_enrollment_details_by_id($enrollment_id);
 
@@ -420,6 +435,14 @@ class Student_premium extends CI_Controller {
 
     public function complete_material($enrollment_id, $material_id)
     {
+        // Decrypt enrollment_id and material_id
+        $enrollment_id = $this->encryption_url->decode($enrollment_id);
+        $material_id = $this->encryption_url->decode($material_id);
+        
+        if ($enrollment_id === false || $material_id === false) {
+            show_error('Invalid parameters', 404);
+        }
+        
         $student_id = $this->session->userdata('user_id');
         $enrollment = $this->Premium_enrollment_model->get_enrollment_details_by_id($enrollment_id);
 
@@ -451,9 +474,9 @@ class Student_premium extends CI_Controller {
         $this->session->set_flashdata('success', 'Materi berhasil diselesaikan');
 
         if ($next_material) {
-            redirect('student/premium/material/' . $enrollment_id . '/' . $next_material->id);
+            redirect('student/premium/material/' . $this->encryption_url->encode($enrollment_id) . '/' . $this->encryption_url->encode($next_material->id));
         } else {
-            redirect('student/premium/learn/' . $enrollment_id);
+            redirect('student/premium/learn/' . $this->encryption_url->encode($enrollment_id));
         }
     }
     

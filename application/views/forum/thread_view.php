@@ -191,7 +191,7 @@ $this->load->view('forum/partials/comment');
 
         <!-- Main Reply Form (Simplified) -->
         <div id="reply-form-main" class="reply-form-container">
-            <?= form_open('forum/create_post/' . $thread->id, ['class' => 'reply-form']); ?>
+            <?= form_open('forum/create_post/' . encrypt_url($thread->id), ['class' => 'reply-form']); ?>
                 <div class="user-avatar">
                     <div class="avatar-small">
                         <?= strtoupper(substr(($this->session->userdata('nama_lengkap') ?? 'U'), 0, 1)); ?>

@@ -306,7 +306,7 @@
                     
                     <div class="mt-6 pt-6 border-t border-gray-200">
                         <?php if ($is_enrolled): ?>
-                            <a href="<?php echo site_url('student/free_classes/learn/' . $enrollment->id); ?>" class="block w-full text-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 hover:scale-105">
+                            <a href="<?php echo site_url('student/free_classes/learn/' . encrypt_url($enrollment->id)); ?>" class="block w-full text-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 hover:scale-105">
                                 <i class="fas fa-book-open mr-2"></i>
                                 Mulai Belajar
                             </a>

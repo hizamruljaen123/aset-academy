@@ -65,6 +65,16 @@ $route['student/orders'] = 'payment/orders';
 $route['student/premium/orders'] = 'payment/orders';
 $route['student/premium/payment/(:any)'] = 'payment/purchase/$1';
 
+// Routes untuk Student Free Classes
+$route['student/free_classes'] = 'student/free_classes';
+$route['student/free_classes/browse'] = 'student/free_classes/browse';
+$route['student/free_classes/view/(:any)'] = 'student/free_classes/view/$1';
+$route['student/free_classes/enroll/(:any)'] = 'student/free_classes/enroll/$1';
+$route['student/free_classes/learn/(:any)'] = 'student/free_classes/learn/$1';
+$route['student/free_classes/material/(:any)/(:any)'] = 'student/free_classes/material/$1/$2';
+$route['student/free_classes/complete_material/(:any)/(:any)'] = 'student/free_classes/complete_material/$1/$2';
+$route['student/free_classes/my_classes'] = 'student/free_classes/my_classes';
+
 // Routes untuk Student Mobile Dashboard
 $route['student_mobile'] = 'student_mobile';
 $route['student_mobile/index'] = 'student_mobile';
@@ -290,17 +300,17 @@ $route['sitemap.xml'] = 'sitemap';
 // Forum Routes
 $route['forum'] = 'forum';
 $route['forum/category/(:any)'] = 'forum/category/$1';
-$route['forum/thread/(:num)'] = 'forum/thread/$1';
-$route['forum/thread/(:num)/(:any)'] = 'forum/thread/$1/$2';
+$route['forum/thread/(:any)'] = 'forum/thread/$1';
+$route['forum/thread/(:any)/(:any)'] = 'forum/thread/$1/$2';
 $route['forum/create'] = 'forum/create';
-$route['forum/create_post/(:num)'] = 'forum/create_post/$1';
-$route['forum/reply/(:num)'] = 'forum/reply/$1';
-$route['forum/edit_thread/(:num)'] = 'forum/edit_thread/$1';
-$route['forum/delete_thread/(:num)'] = 'forum/delete_thread/$1';
-$route['forum/delete_post/(:num)/(:num)'] = 'forum/delete_post/$1/$2';
-$route['forum/toggle_pin/(:num)'] = 'forum/toggle_pin/$1';
-$route['forum/get_comments_ajax/(:num)'] = 'forum/get_comments_ajax/$1';
-$route['forum/get_viewers/(:num)'] = 'forum/get_viewers/$1';
+$route['forum/create_post/(:any)'] = 'forum/create_post/$1';
+$route['forum/reply/(:any)'] = 'forum/reply/$1';
+$route['forum/edit_thread/(:any)'] = 'forum/edit_thread/$1';
+$route['forum/delete_thread/(:any)'] = 'forum/delete_thread/$1';
+$route['forum/delete_post/(:any)/(:any)'] = 'forum/delete_post/$1/$2';
+$route['forum/toggle_pin/(:any)'] = 'forum/toggle_pin/$1';
+$route['forum/get_comments_ajax/(:any)'] = 'forum/get_comments_ajax/$1';
+$route['forum/get_viewers/(:any)'] = 'forum/get_viewers/$1';
 
 // Maintenance Mode Routes
 $route['maintenance'] = 'home/maintenance';

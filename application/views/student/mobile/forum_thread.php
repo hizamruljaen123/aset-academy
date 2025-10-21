@@ -170,7 +170,7 @@
                 </div>
 
                 <div class="flex-1">
-                    <form action="<?= site_url('student_mobile/forum/reply/' . $thread->id) ?>" method="post">
+                    <form action="<?= site_url('student_mobile/forum/reply/' . encrypt_url($thread->id)) ?>" method="post">
                         <div class="mb-3">
                             <textarea
                                 name="content"

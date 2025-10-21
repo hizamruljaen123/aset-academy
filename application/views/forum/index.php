@@ -212,7 +212,7 @@
                     <?php if (isset($popular_threads) && !empty($popular_threads)): ?>
                         <?php foreach ($popular_threads as $thread): ?>
                             <li class="px-6 py-4 hover:bg-gray-50 transition-colors duration-150">
-                                <a href="<?php echo site_url('forum/thread/' . $thread->id); ?>" class="block">
+                                <a href="<?php echo site_url('forum/thread/' . encrypt_url($thread->id)); ?>" class="block">
                                     <div class="flex items-center justify-between">
                                         <div class="flex-1 min-w-0">
                                             <p class="text-sm font-medium text-blue-600 truncate">

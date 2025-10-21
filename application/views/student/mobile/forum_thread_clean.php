@@ -246,7 +246,7 @@
                 </div>
 
                 <div class="flex-1">
-                    <form action="<?= site_url('student_mobile/forum/reply/' . $thread->id) ?>" method="post" class="space-y-3">
+                    <form action="<?= site_url('student_mobile/forum/reply/' . encrypt_url($thread->id)) ?>" method="post" class="space-y-3">
                         <div>
                             <textarea
                                 name="content"

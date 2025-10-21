@@ -46,7 +46,7 @@ function render_comment($post, $thread, $depth = 0, $max_depth = 5) {
     }
     $postedAgo = timespan($createdTimestamp, time()) . ' yang lalu';
 
-    $replyUrl = site_url('forum/reply/' . $postId);
+    $replyUrl = site_url('forum/reply/' . encrypt_url($postId));
     $deleteUrl = site_url('forum/delete_post/' . $postId . '/' . $threadId);
 
     ob_start();

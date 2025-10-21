@@ -30,6 +30,7 @@ class Student_mobile extends CI_Controller
         // Load necessary helpers
         $this->load->helper('url');
         $this->load->library('pagination');
+        $this->load->library('encryption_url');
         $this->load->helper('form');
         $this->load->helper('text');
         $this->load->helper('date');
@@ -615,6 +616,13 @@ class Student_mobile extends CI_Controller
      */
     public function forum_thread_clean($thread_id = null, $slug = null)
     {
+        // Decrypt thread_id
+        $thread_id = $this->encryption_url->decode($thread_id);
+        
+        if ($thread_id === false) {
+            show_error('Invalid thread ID', 404);
+        }
+        
         // Get user data
         $user_id = $this->session->userdata('user_id');
         $data['user'] = $this->User_model->get_user_by_id($user_id);
@@ -628,7 +636,7 @@ class Student_mobile extends CI_Controller
         // Verify slug
         $correct_slug = url_title($data['thread']->title, '-', true);
         if ($slug !== $correct_slug) {
-            redirect('student_mobile/forum_thread_clean/' . $thread_id . '/' . $correct_slug);
+            redirect('student_mobile/forum_thread_clean/' . $this->encryption_url->encode($thread_id) . '/' . $correct_slug);
         }
         
         // Get thread with all data efficiently
@@ -702,6 +710,13 @@ class Student_mobile extends CI_Controller
      */
     private function _forum_reply($thread_id)
     {
+        // Decrypt thread_id
+        $thread_id = $this->encryption_url->decode($thread_id);
+        
+        if ($thread_id === false) {
+            show_error('Invalid thread ID', 404);
+        }
+        
         // Validate thread exists
         $thread = $this->Forum_model->get_thread($thread_id);
         if (!$thread) {
@@ -801,7 +816,7 @@ class Student_mobile extends CI_Controller
         if ($this->form_validation->run() === FALSE) {
             // Validation failed, redirect back to thread
             $this->session->set_flashdata('error', validation_errors());
-            redirect('student_mobile/forum/thread/' . $thread_id . '/' . url_title($thread->title, '-', true));
+            redirect('student_mobile/forum_thread_clean/' . $this->encryption_url->encode($thread_id) . '/' . url_title($thread->title, '-', true));
         } else {
             // Prepare reply data
             $reply_data = array(
@@ -814,6 +829,14 @@ class Student_mobile extends CI_Controller
             
             // Save reply
             $reply_id = $this->Forum_model->create_reply($reply_data);
+            
+            if ($reply_id) {
+                $this->session->set_flashdata('success', 'Balasan berhasil ditambahkan!');
+            } else {
+                $this->session->set_flashdata('error', 'Gagal menambahkan balasan.');
+            }
+            
+            redirect('student_mobile/forum_thread_clean/' . $this->encryption_url->encode($thread_id) . '/' . url_title($thread->title, '-', true));
         }
     }
 

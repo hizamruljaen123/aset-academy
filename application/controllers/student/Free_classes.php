@@ -9,6 +9,7 @@ class Free_classes extends CI_Controller {
         $this->load->model('Free_class_model');
         $this->load->model('Enrollment_model');
         $this->load->library('Permission');
+        $this->load->library('encryption_url');
         
         // Check if user is logged in and has student role
         if (!$this->session->userdata('logged_in')) {
@@ -159,7 +160,7 @@ class Free_classes extends CI_Controller {
         
         if ($enrollment_id) {
             $this->session->set_flashdata('success', 'Anda berhasil mendaftar ke kelas ini');
-            redirect('student/free_classes/learn/' . $enrollment_id);
+            redirect('student/free_classes/learn/' . $this->encryption_url->encode($enrollment_id));
         } else {
             $this->session->set_flashdata('error', 'Anda sudah terdaftar di kelas ini');
             redirect('student/free_classes/view/' . $class_id);
@@ -168,6 +169,13 @@ class Free_classes extends CI_Controller {
     
     public function learn($enrollment_id)
     {
+        // Decrypt enrollment_id
+        $enrollment_id = $this->encryption_url->decode($enrollment_id);
+        
+        if ($enrollment_id === false) {
+            show_error('Invalid enrollment ID', 404);
+        }
+        
         $student_id = $this->session->userdata('user_id');
         $enrollment = $this->Enrollment_model->get_enrollment_details($enrollment_id);
 
@@ -324,6 +332,14 @@ class Free_classes extends CI_Controller {
 
     public function material($enrollment_id, $material_id)
     {
+        // Decrypt enrollment_id and material_id
+        $enrollment_id = $this->encryption_url->decode($enrollment_id);
+        $material_id = $this->encryption_url->decode($material_id);
+        
+        if ($enrollment_id === false || $material_id === false) {
+            show_error('Invalid parameters', 404);
+        }
+        
         $student_id = $this->session->userdata('user_id');
         $enrollment = $this->Enrollment_model->get_enrollment_details($enrollment_id);
 
@@ -379,6 +395,14 @@ class Free_classes extends CI_Controller {
     
     public function complete_material($enrollment_id, $material_id)
     {
+        // Decrypt enrollment_id and material_id
+        $enrollment_id = $this->encryption_url->decode($enrollment_id);
+        $material_id = $this->encryption_url->decode($material_id);
+        
+        if ($enrollment_id === false || $material_id === false) {
+            show_error('Invalid parameters', 404);
+        }
+        
         $student_id = $this->session->userdata('user_id');
         $enrollment = $this->Enrollment_model->get_enrollment_details($enrollment_id);
 
@@ -409,9 +433,9 @@ class Free_classes extends CI_Controller {
         $this->session->set_flashdata('success', 'Materi berhasil diselesaikan');
 
         if ($next_material) {
-            redirect('student/free_classes/material/' . $enrollment_id . '/' . $next_material->id);
+            redirect('student/free_classes/material/' . $this->encryption_url->encode($enrollment_id) . '/' . $this->encryption_url->encode($next_material->id));
         } else {
-            redirect('student/free_classes/learn/' . $enrollment_id);
+            redirect('student/free_classes/learn/' . $this->encryption_url->encode($enrollment_id));
         }
     }
     
@@ -424,7 +448,7 @@ class Free_classes extends CI_Controller {
 
         if (empty($message)) {
             $this->session->set_flashdata('error', 'Pesan tidak boleh kosong');
-            redirect('student/free_classes/learn/' . $enrollment_id);
+            redirect('student/free_classes/learn/' . $this->encryption_url->encode($enrollment_id));
         }
 
         // Get enrollment to get class_id
@@ -446,7 +470,7 @@ class Free_classes extends CI_Controller {
             $this->session->set_flashdata('error', 'Gagal menambahkan diskusi');
         }
 
-        redirect('student/free_classes/learn/' . $enrollment_id);
+        redirect('student/free_classes/learn/' . $this->encryption_url->encode($enrollment_id));
     }
     
     public function my_classes()

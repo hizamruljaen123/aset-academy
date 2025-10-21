@@ -22,7 +22,7 @@
                 <li aria-current="page">
                     <div class="flex items-center">
                         <i class="fas fa-chevron-right text-gray-400 text-sm mx-2"></i>
-                        <a href="<?php echo site_url('forum/thread/' . $thread->id); ?>" class="text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors duration-300">
+                        <a href="<?php echo site_url('forum/thread/' . encrypt_url($thread->id)); ?>" class="text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors duration-300">
                             <?php echo html_escape($thread->title); ?>
                         </a>
                     </div>
@@ -101,7 +101,7 @@
                 </h2>
             </div>
             <div class="px-8 py-6">
-                <?php echo form_open('forum/create_post/' . $thread->id, ['class' => 'space-y-4']); ?>
+                <?php echo form_open('forum/create_post/' . encrypt_url($thread->id), ['class' => 'space-y-4']); ?>
                     <input type="hidden" name="parent_id" value="<?php echo $post->id; ?>">
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0">
@@ -118,7 +118,7 @@
                                 <input type="hidden" name="content" id="content-reply-hidden" required>
                             </div>
                             <div class="flex justify-end space-x-3">
-                                <a href="<?php echo site_url('forum/thread/' . $thread->id); ?>" class="px-6 py-3 border border-gray-300 rounded-xl shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all duration-200">
+                                <a href="<?php echo site_url('forum/thread/' . encrypt_url($thread->id)); ?>" class="px-6 py-3 border border-gray-300 rounded-xl shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all duration-200">
                                     Batal
                                 </a>
                                 <button type="submit" class="px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300 transform hover:scale-105">

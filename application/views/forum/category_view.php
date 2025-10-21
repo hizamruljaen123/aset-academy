@@ -38,7 +38,7 @@
                                 <div class="ml-4 flex-1">
                                     <div class="flex items-center justify-between">
                                         <h3 class="text-lg font-medium text-gray-900 hover:text-blue-600 transition-colors duration-150 pr-8">
-                                            <a href="<?php echo site_url('forum/thread/' . $thread->id); ?>">
+                                            <a href="<?php echo site_url('forum/thread/' . encrypt_url($thread->id)); ?>">
                                                 <?php if ($thread->is_pinned): ?>
                                                     <span class="text-yellow-500 mr-2"><i class="fas fa-thumbtack"></i></span>
                                                 <?php endif; ?>
@@ -110,7 +110,7 @@
                                                 <?php echo isset($thread->views) ? $thread->views : '0'; ?> Dilihat
                                             </span>
                                         </div>
-                                        <a href="<?php echo site_url('forum/thread/' . $thread->id); ?>" class="text-blue-600 hover:text-blue-800 font-medium">
+                                        <a href="<?php echo site_url('forum/thread/' . encrypt_url($thread->id)); ?>" class="text-blue-600 hover:text-blue-800 font-medium">
                                             Lihat Diskusi <i class="fas fa-arrow-right ml-1 text-xs"></i>
                                         </a>
                                     </div>

@@ -44,7 +44,7 @@
                             <a href="<?= site_url('kelas/detail/' . $class->class_id); ?>" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-blue-600">
                                 Lihat Detail
                             </a>
-                            <a href="<?= site_url('student/premium/learn/' . $class->id); ?>" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">
+                            <a href="<?= site_url('student/premium/learn/' . encrypt_url($class->id)); ?>" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">
                                 Lanjutkan Belajar
                             </a>
                         </div>
@@ -102,7 +102,7 @@
                             <a href="<?= site_url('student/free_classes/view/' . $free->class_id); ?>" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-blue-600">
                                 Lihat Detail
                             </a>
-                            <a href="<?= site_url('student/free_classes/learn/' . $free->id); ?>" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition">
+                            <a href="<?= site_url('student/free_classes/learn/' . encrypt_url($free->id)); ?>" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition">
                                 Lanjutkan Belajar
                             </a>
                         </div>

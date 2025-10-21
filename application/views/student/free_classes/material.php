@@ -8,7 +8,7 @@
                 <p><?php echo $enrollment->title; ?></p>
             </div>
         </div>
-        <a href="<?php echo site_url('student/free_classes/learn/' . $enrollment->id); ?>" class="inline-flex items-center px-4 py-2 border border-white/30 rounded-lg text-sm font-medium text-white bg-white/10 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+        <a href="<?php echo site_url('student/free_classes/learn/' . encrypt_url($enrollment->id)); ?>" class="inline-flex items-center px-4 py-2 border border-white/30 rounded-lg text-sm font-medium text-white bg-white/10 hover:bg-white/20 transition-all duration-300 hover:scale-105">
             <i class="fas fa-arrow-left mr-2"></i>
             Kembali ke Kelas
         </a>
@@ -25,7 +25,7 @@
                 <div class="p-6">
                     <div class="space-y-2">
                         <?php foreach ($all_materials as $index => $item): ?>
-                            <a href="<?php echo site_url('student/free_classes/material/' . $enrollment->id . '/' . $item->id); ?>" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition-colors <?php echo ($item->id == $material->id) ? 'bg-blue-50 border-l-4 border-blue-500' : ''; ?>">
+                            <a href="<?php echo site_url('student/free_classes/material/' . encrypt_url($enrollment->id) . '/' . encrypt_url($item->id)); ?>" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition-colors <?php echo ($item->id == $material->id) ? 'bg-blue-50 border-l-4 border-blue-500' : ''; ?>">
                                 <div class="h-6 w-6 rounded-full <?php echo ($progress && $progress->status == 'Completed') ? 'bg-green-600' : (($progress && $progress->status == 'In Progress') ? 'bg-blue-600' : 'bg-gray-300'); ?> flex items-center justify-center text-white text-xs font-medium mr-3">
                                     <?php echo ($progress && $progress->status == 'Completed') ? '<i class="fas fa-check"></i>' : ($index + 1); ?>
                                 </div>
@@ -200,7 +200,7 @@
             <!-- Navigation -->
             <div class="flex justify-between items-center mb-8 fade-in">
                 <?php if ($prev_material): ?>
-                    <a href="<?php echo site_url('student/free_classes/material/' . $enrollment->id . '/' . $prev_material->id); ?>" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 hover:scale-105">
+                    <a href="<?php echo site_url('student/free_classes/material/' . encrypt_url($enrollment->id) . '/' . encrypt_url($prev_material->id)); ?>" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 hover:scale-105">
                         <i class="fas fa-chevron-left mr-2"></i>
                         Materi Sebelumnya
                     </a>
@@ -209,17 +209,17 @@
                 <?php endif; ?>
                 
                 <?php if ($next_material): ?>
-                    <a href="<?php echo site_url('student/free_classes/material/' . $enrollment->id . '/' . $next_material->id); ?>" class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 hover:scale-105">
+                    <a href="<?php echo site_url('student/free_classes/material/' . encrypt_url($enrollment->id) . '/' . encrypt_url($next_material->id)); ?>" class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 hover:scale-105">
                         Materi Selanjutnya
                         <i class="fas fa-chevron-right ml-2"></i>
                     </a>
                 <?php elseif ($progress && $progress->status != 'Completed'): ?>
-                    <a href="<?php echo site_url('student/free_classes/complete_material/' . $enrollment->id . '/' . $material->id); ?>" class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 hover:scale-105">
+                    <a href="<?php echo site_url('student/free_classes/complete_material/' . encrypt_url($enrollment->id) . '/' . encrypt_url($material->id)); ?>" class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 hover:scale-105">
                         <i class="fas fa-check-circle mr-2"></i>
                         Selesaikan Materi
                     </a>
                 <?php else: ?>
-                    <a href="<?php echo site_url('student/free_classes/learn/' . $enrollment->id); ?>" class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 hover:scale-105">
+                    <a href="<?php echo site_url('student/free_classes/learn/' . encrypt_url($enrollment->id)); ?>" class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 hover:scale-105">
                         <i class="fas fa-graduation-cap mr-2"></i>
                         Kembali ke Kelas
                     </a>
