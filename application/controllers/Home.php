@@ -238,71 +238,22 @@ class Home extends MY_Controller {
 
     public function career()
     {
-        // Sample career data since recruitment tables don't exist in current database
+        $this->load->model('Recruitment_model', 'recruitment');
+        $filters = [
+            'status' => 'Published',
+            'department' => $this->input->get('department', true),
+            'search' => $this->input->get('q', true)
+        ];
+        $filters = array_filter($filters, static function ($value) {
+            return $value !== null && $value !== '';
+        });
+
         $data['title'] = 'Karier di ASET Academy';
         $data['description'] = 'Bergabung dengan tim ASET Academy dan bantu kami membangun masa depan pendidikan teknologi.';
-        
-        // Sample positions data
-        $data['positions'] = [
-            (object) [
-                'id' => 1,
-                'title' => 'Frontend Developer',
-                'department' => 'Engineering',
-                'employment_type' => 'Full-time',
-                'location' => 'Jakarta / Remote',
-                'experience_level' => 'Mid Level',
-                'salary_range' => 'Rp 8-15 juta',
-                'description' => 'Kami mencari Frontend Developer yang berpengalaman dalam React, Vue.js, dan modern web technologies untuk bergabung dengan tim development kami.',
-                'requirements' => '<ul><li>Minimal 2 tahun pengalaman sebagai Frontend Developer</li><li>Menguasai React.js, Vue.js, atau Angular</li><li>Familiar dengan HTML5, CSS3, JavaScript ES6+</li><li>Pengalaman dengan Git dan agile development</li></ul>',
-                'benefits' => '<ul><li>Gaji kompetitif</li><li>Remote work flexibility</li><li>Health insurance</li><li>Learning & development budget</li></ul>',
-                'is_featured' => 1,
-                'application_deadline' => '2024-12-31',
-                'total_applications' => 25,
-                'active_applications' => 8
-            ],
-            (object) [
-                'id' => 2,
-                'title' => 'Backend Developer',
-                'department' => 'Engineering',
-                'employment_type' => 'Full-time',
-                'location' => 'Jakarta',
-                'experience_level' => 'Senior Level',
-                'salary_range' => 'Rp 12-20 juta',
-                'description' => 'Bergabunglah sebagai Backend Developer untuk mengembangkan sistem backend yang scalable dan reliable untuk platform pembelajaran online kami.',
-                'requirements' => '<ul><li>Minimal 3 tahun pengalaman sebagai Backend Developer</li><li>Menguasai PHP (CodeIgniter/Laravel) atau Node.js</li><li>Familiar dengan MySQL/PostgreSQL</li><li>Pengalaman dengan RESTful API dan microservices</li></ul>',
-                'benefits' => '<ul><li>Gaji kompetitif</li><li>Flexible working hours</li><li>Team building activities</li><li>Professional development opportunities</li></ul>',
-                'is_featured' => 0,
-                'application_deadline' => null,
-                'total_applications' => 18,
-                'active_applications' => 5
-            ],
-            (object) [
-                'id' => 3,
-                'title' => 'UI/UX Designer',
-                'department' => 'Design',
-                'employment_type' => 'Contract',
-                'location' => 'Remote',
-                'experience_level' => 'Mid Level',
-                'salary_range' => 'Rp 6-12 juta',
-                'description' => 'Kami mencari UI/UX Designer yang kreatif dan berpengalaman untuk merancang interface yang user-friendly untuk platform pembelajaran kami.',
-                'requirements' => '<ul><li>Minimal 2 tahun pengalaman sebagai UI/UX Designer</li><li>Menguasai Figma, Adobe XD, atau Sketch</li><li>Memahami prinsip-prinsip UX design</li><li>Portfolio yang menunjukkan kemampuan design</li></ul>',
-                'benefits' => '<ul><li>Project-based contract</li><li>Remote work</li><li>Creative freedom</li><li>Portfolio building opportunities</li></ul>',
-                'is_featured' => 0,
-                'application_deadline' => '2024-11-30',
-                'total_applications' => 12,
-                'active_applications' => 3
-            ]
-        ];
-        
-        $data['departments'] = ['Engineering', 'Design', 'Marketing', 'Operations'];
-        $data['stats'] = [
-            'total_positions' => 3,
-            'published_positions' => 3,
-            'closed_positions' => 0,
-            'total_applications' => 55,
-            'active_applications' => 16
-        ];
-        $data['filters'] = [];
+        $data['positions'] = $this->recruitment->get_job_positions_with_stats($filters);
+        $data['departments'] = $this->recruitment->get_departments();
+        $data['stats'] = $this->recruitment->get_recruitment_stats();
+        $data['filters'] = $filters;
 
         $this->load->view('career/index', $data);
     }
@@ -310,70 +261,17 @@ class Home extends MY_Controller {
     public function career_detail($encryptedId)
     {
         try {
-            // Decode encrypted ID
+            $this->load->model('Recruitment_model', 'recruitment');
             $positionId = $this->encryption_url->decode($encryptedId);
-            
+
             if (!$positionId) {
                 show_404();
                 return;
             }
 
-            // Sample positions data (same as in career method)
-            $positions = [
-                1 => (object) [
-                    'id' => 1,
-                    'title' => 'Frontend Developer',
-                    'department' => 'Engineering',
-                    'employment_type' => 'Full-time',
-                    'location' => 'Jakarta / Remote',
-                    'experience_level' => 'Mid Level',
-                    'salary_range' => 'Rp 8-15 juta',
-                    'description' => 'Kami mencari Frontend Developer yang berpengalaman dalam React, Vue.js, dan modern web technologies untuk bergabung dengan tim development kami.',
-                    'requirements' => '<ul><li>Minimal 2 tahun pengalaman sebagai Frontend Developer</li><li>Menguasai React.js, Vue.js, atau Angular</li><li>Familiar dengan HTML5, CSS3, JavaScript ES6+</li><li>Pengalaman dengan Git dan agile development</li></ul>',
-                    'benefits' => '<ul><li>Gaji kompetitif</li><li>Remote work flexibility</li><li>Health insurance</li><li>Learning & development budget</li></ul>',
-                    'is_featured' => 1,
-                    'application_deadline' => '2024-12-31',
-                    'total_applications' => 25,
-                    'active_applications' => 8
-                ],
-                2 => (object) [
-                    'id' => 2,
-                    'title' => 'Backend Developer',
-                    'department' => 'Engineering',
-                    'employment_type' => 'Full-time',
-                    'location' => 'Jakarta',
-                    'experience_level' => 'Senior Level',
-                    'salary_range' => 'Rp 12-20 juta',
-                    'description' => 'Bergabunglah sebagai Backend Developer untuk mengembangkan sistem backend yang scalable dan reliable untuk platform pembelajaran online kami.',
-                    'requirements' => '<ul><li>Minimal 3 tahun pengalaman sebagai Backend Developer</li><li>Menguasai PHP (CodeIgniter/Laravel) atau Node.js</li><li>Familiar dengan MySQL/PostgreSQL</li><li>Pengalaman dengan RESTful API dan microservices</li></ul>',
-                    'benefits' => '<ul><li>Gaji kompetitif</li><li>Flexible working hours</li><li>Team building activities</li><li>Professional development opportunities</li></ul>',
-                    'is_featured' => 0,
-                    'application_deadline' => null,
-                    'total_applications' => 18,
-                    'active_applications' => 5
-                ],
-                3 => (object) [
-                    'id' => 3,
-                    'title' => 'UI/UX Designer',
-                    'department' => 'Design',
-                    'employment_type' => 'Contract',
-                    'location' => 'Remote',
-                    'experience_level' => 'Mid Level',
-                    'salary_range' => 'Rp 6-12 juta',
-                    'description' => 'Kami mencari UI/UX Designer yang kreatif dan berpengalaman untuk merancang interface yang user-friendly untuk platform pembelajaran kami.',
-                    'requirements' => '<ul><li>Minimal 2 tahun pengalaman sebagai UI/UX Designer</li><li>Menguasai Figma, Adobe XD, atau Sketch</li><li>Memahami prinsip-prinsip UX design</li><li>Portfolio yang menunjukkan kemampuan design</li></ul>',
-                    'benefits' => '<ul><li>Project-based contract</li><li>Remote work</li><li>Creative freedom</li><li>Portfolio building opportunities</li></ul>',
-                    'is_featured' => 0,
-                    'application_deadline' => '2024-11-30',
-                    'total_applications' => 12,
-                    'active_applications' => 3
-                ]
-            ];
+            $position = $this->recruitment->get_job_position($positionId);
 
-            // Get position details
-            $position = isset($positions[$positionId]) ? $positions[$positionId] : null;
-            
-            if (!$position) {
+            if (!$position || $position->status !== 'Published') {
                 show_404();
                 return;
             }
@@ -384,7 +282,6 @@ class Home extends MY_Controller {
             $data['encryptedId'] = $encryptedId;
 
             $this->load->view('career/detail', $data);
-            
         } catch (Throwable $th) {
             log_message('error', 'Career detail page error: ' . $th->getMessage());
             show_404();
