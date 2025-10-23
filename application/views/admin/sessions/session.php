@@ -7,6 +7,7 @@ let map;
 let markerClusterGroup;
 let isDarkMode = false;
 let currentTileLayer;
+let allMarkers = []; // Array untuk menyimpan semua marker
 
 // Location cache from JSON file (from server)
 const locationCache = <?= json_encode($location_cache ?? []) ?>;
@@ -14,14 +15,9 @@ const locationCache = <?= json_encode($location_cache ?? []) ?>;
 // Sessions data from server
 const sessionsData = <?= json_encode($active_sessions ?? []) ?>;
 
-// Queue for IP location requests to avoid overwhelming the API
-let ipQueue = [];
-let isProcessingQueue = false;
-const maxConcurrentRequests = 3;
-const requestDelay = 1500; // 1.5 seconds between requests
+// Concurrent request management
+const maxConcurrentRequests = 5; // Batasi jumlah permintaan konkuren untuk menghindari pembatasan tarif API
 
-// Track processed IPs to avoid duplicate requests
-let processedIPs = new Set();
 
 // Initialize map
 function initMap() {
@@ -71,51 +67,68 @@ function toggleMapStyle() {
 function loadSessionLocations() {
     showMapLoading();
     markerClusterGroup.clearLayers();
+    allMarkers = []; // Kosongkan array marker lama
     
-    // Reset processed IPs set
-    processedIPs.clear();
     
     let loadedLocations = 0;
     
-    // Filter unique IPs
-    const uniqueSessions = sessionsData.filter(session => {
-        if (session.ip_address && !processedIPs.has(session.ip_address)) {
-            processedIPs.add(session.ip_address);
-            return true;
-        }
-        return false;
-    });
+    const uniqueIPs = [...new Set(sessionsData.map(s => s.ip_address).filter(ip => ip))];
     
-    const totalSessions = uniqueSessions.length;
-    document.getElementById('totalSessions').textContent = totalSessions;
+    const totalIPs = uniqueIPs.length;
+    document.getElementById('totalSessions').textContent = totalIPs;
     document.getElementById('loadingProgress').textContent = 0;
     
-    if (totalSessions === 0) {
+    if (totalIPs === 0) {
         hideMapLoading();
         document.getElementById('markerCount').textContent = 0;
         return;
     }
     
-    // Process each session from locationCache
-    uniqueSessions.forEach((session, index) => {
-        if (locationCache[session.ip_address] && locationCache[session.ip_address].data) {
-            const data = locationCache[session.ip_address].data;
-            addMarkerToMap(session, data);
+    const promises = [];
+    let processedCount = 0;
+
+    uniqueIPs.forEach(ip => {
+        const sessionForIP = sessionsData.find(s => s.ip_address === ip);
+        if (locationCache[ip] && locationCache[ip].data) {
+            // Gunakan dari cache jika tersedia
+            addMarkerToMap(sessionForIP, locationCache[ip].data);
+            updateLocationUI(ip, locationCache[ip].data);
             loadedLocations++;
-            document.getElementById('loadingProgress').textContent = index + 1;
-            document.getElementById('markerCount').textContent = loadedLocations;
-        } else if (session.ip_address) {
-            // If location data is not in cache, fetch it
-            fetchLocationForIP(session.ip_address, session);
+            processedCount++;
+            document.getElementById('loadingProgress').textContent = processedCount;
+        } else {
+            // Jika tidak, fetch dari API
+            const promise = fetchLocationForIP(ip, sessionForIP)
+                .then(data => {
+                                        if (data) {
+                        addMarkerToMap(sessionForIP, data);
+                        updateLocationUI(ip, data);
+                        locationCache[ip] = { data: data, timestamp: Date.now() };
+                        loadedLocations++;
+
+                        // Perbarui statistik secara real-time
+                        if (window.ispStatsLoaded) loadISPStats();
+                        if (window.countryStatsLoaded) loadCountryStats();
+                    }
+                })
+                .finally(() => {
+                    processedCount++;
+                    document.getElementById('loadingProgress').textContent = processedCount;
+                });
+            promises.push(promise);
         }
     });
+
+            // Tunggu semua permintaan selesai
+    Promise.all(promises).then(() => {
+        // Peta sudah difilter saat dimuat, jadi kita hanya perlu menyelesaikan loading
+        finishMapLoading(document.getElementById('markerCount').textContent);
+        
+        // Setelah semua data awal dimuat, perbarui statistik
+        loadISPStats();
+        loadCountryStats();
+    });
     
-    // Hide loading after a delay to allow processing
-    setTimeout(() => {
-        if (loadedLocations === totalSessions) {
-            finishMapLoading(loadedLocations);
-        }
-    }, 2000);
 }
 
 // Add marker to map
@@ -132,7 +145,8 @@ function addMarkerToMap(session, data) {
         iconAnchor: [6, 6]
     });
     
-    const marker = L.marker([data.lat, data.lon], { icon: icon });
+        const marker = L.marker([data.lat, data.lon], { icon: icon });
+    marker.sessionStatus = session.session_status; // Simpan status sesi di marker
     
     const popupContent = `
         <div class="text-sm">
@@ -176,7 +190,21 @@ function addMarkerToMap(session, data) {
         className: 'custom-popup'
     });
     
-    markerClusterGroup.addLayer(marker);
+        allMarkers.push(marker); // Selalu tambahkan ke array global untuk pemfilteran nanti
+
+    // Periksa filter sebelum menambahkan ke peta untuk tampilan awal
+    const showActive = document.getElementById('filterActive').checked;
+    const showIdle = document.getElementById('filterIdle').checked;
+    const showInactive = document.getElementById('filterInactive').checked;
+
+    if ((marker.sessionStatus === 'Active' && showActive) ||
+        (marker.sessionStatus === 'Idle' && showIdle) ||
+        (marker.sessionStatus === 'Inactive' && showInactive)) {
+        markerClusterGroup.addLayer(marker);
+        // Perbarui jumlah marker yang terlihat
+        const currentCount = parseInt(document.getElementById('markerCount').textContent) || 0;
+        document.getElementById('markerCount').textContent = currentCount + 1;
+    }
 }
 
 function finishMapLoading(loadedLocations) {
@@ -199,30 +227,38 @@ function hideMapLoading() {
 }
 
 function refreshMap() {
-    // Show loading
     showMapLoading();
-    
-    // Clear existing markers
     markerClusterGroup.clearLayers();
-    
-    // Reset marker count
     document.getElementById('markerCount').textContent = '0';
     
-    // Clear processed IPs set to allow re-fetching
-    processedIPs.clear();
-    
-    // Clear queue
-    ipQueue = [];
-    
-    // Reload session locations
+    // Muat ulang lokasi sesi
     loadSessionLocations();
     
-    // Also refresh regions data
+    // Muat ulang data wilayah jika sudah pernah dimuat
     if (window.regionsDataLoaded) {
         loadRegionsData();
     }
     
     showNotification('Map and data refreshed successfully', 'success');
+}
+
+// Filter sesi di peta secara real-time
+function filterSessions() {
+    const showActive = document.getElementById('filterActive').checked;
+    const showIdle = document.getElementById('filterIdle').checked;
+    const showInactive = document.getElementById('filterInactive').checked;
+
+    markerClusterGroup.clearLayers(); // Hapus semua marker dari cluster
+
+    const filteredMarkers = allMarkers.filter(marker => {
+        if (marker.sessionStatus === 'Active' && showActive) return true;
+        if (marker.sessionStatus === 'Idle' && showIdle) return true;
+        if (marker.sessionStatus === 'Inactive' && showInactive) return true;
+        return false;
+    });
+
+    markerClusterGroup.addLayers(filteredMarkers); // Tambahkan marker yang sudah difilter
+    document.getElementById('markerCount').textContent = filteredMarkers.length;
 }
 
 // Load ISP Statistics with Plotly
@@ -612,126 +648,54 @@ function closeIPInfoModal() {
     document.getElementById('ipInfoModal').classList.add('hidden');
 }
 
-// Fetch location data for an IP address
-function fetchLocationForIP(ipAddress, sessionData) {
-    // Check if already processed
-    if (processedIPs.has(ipAddress)) {
-        return;
-    }
-    
-    // Mark as processed
-    processedIPs.add(ipAddress);
-    
-    // Check if already in cache
-    if (locationCache[ipAddress] && locationCache[ipAddress].data) {
-        updateMapWithLocation(sessionData, locationCache[ipAddress].data);
-        return;
-    }
-    
-    // Update UI to show loading
-    const locationElement = document.getElementById(`location-${btoa(ipAddress).replace(/=/g, '')}`);
+// Mengambil data lokasi untuk sebuah IP secara asinkron
+async function fetchLocationForIP(ipAddress, sessionData) {
+    const locationElementId = `location-${ipAddress.replace(/\./g, '-')}`;
+    const locationElement = document.getElementById(locationElementId);
     if (locationElement) {
-        locationElement.innerHTML = '<i class="fas fa-sync fa-spin mr-1 text-blue-500"></i> Getting location...';
+        locationElement.innerHTML = `<i class="fas fa-sync fa-spin mr-1 text-blue-500"></i>`;
     }
-    
-    // Add to queue
-    ipQueue.push({ip: ipAddress, session: sessionData});
-    processIPQueue();
-}
 
-// Process IP queue
-function processIPQueue() {
-    if (isProcessingQueue || ipQueue.length === 0) {
-        return;
-    }
-    
-    isProcessingQueue = true;
-    processNextIP();
-}
+    try {
+        const response = await fetch(`${baseUrl}/admin/session_management/fetch_locations`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: `ip_address=${encodeURIComponent(ipAddress)}`
+        });
 
-// Process next IP in queue
-function processNextIP() {
-    if (ipQueue.length === 0) {
-        isProcessingQueue = false;
-        return;
-    }
-    
-    const ipItem = ipQueue.shift();
-    const ipAddress = ipItem.ip;
-    const sessionData = ipItem.session;
-    
-    // Fetch location data from server (which uses findip.net API)
-    fetch(`${baseUrl}/admin/session_management/get_cached_location`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: `ip_address=${encodeURIComponent(ipAddress)}`
-    })
-    .then(response => response.json())
-    .then(data => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
         if (data.success) {
-            // Use data (either cached or fresh)
-            locationCache[ipAddress] = {data: data.data, timestamp: Date.now()};
-            updateMapWithLocation(sessionData, data.data);
-            
-            // Update UI with location info
-            const locationElement = document.getElementById(`location-${btoa(ipAddress).replace(/=/g, '')}`);
-            if (locationElement) {
-                locationElement.innerHTML = `${data.data.city || 'Unknown'}, ${data.data.countryCode || 'Unknown'}`;
-            }
+            return data.data;
         } else {
-            // Update UI to show error
-            const locationElement = document.getElementById(`location-${btoa(ipAddress).replace(/=/g, '')}`);
             if (locationElement) {
-                locationElement.innerHTML = '<i class="fas fa-exclamation-triangle text-yellow-500 mr-1"></i> Location unavailable';
+                locationElement.innerHTML = `<i class="fas fa-exclamation-triangle text-yellow-500" title="${data.message || 'Location unavailable'}"></i>`;
             }
+            return null;
         }
-    })
-    .catch(error => {
+    } catch (error) {
         console.error('Error fetching location for IP:', ipAddress, error);
-        // Update UI to show error
-        const locationElement = document.getElementById(`location-${btoa(ipAddress).replace(/=/g, '')}`);
         if (locationElement) {
-            locationElement.innerHTML = '<i class="fas fa-exclamation-triangle text-yellow-500 mr-1"></i> Location unavailable';
+            locationElement.innerHTML = `<i class="fas fa-exclamation-triangle text-red-500" title="${error.message}"></i>`;
         }
-    })
-    .finally(() => {
-        // Process next IP after delay
-        setTimeout(processNextIP, requestDelay);
-    });
+        return null;
+    }
 }
 
-// Update map with location data
-function updateMapWithLocation(session, locationData) {
-    if (locationData && locationData.lat && locationData.lon) {
-        addMarkerToMap(session, locationData);
-        
-        // Update regions data
-        const key = `${locationData.country}|${locationData.city}|${locationData.isp || 'Unknown'}`;
-        if (!regionsData[key]) {
-            regionsData[key] = {
-                country: locationData.country,
-                countryCode: locationData.countryCode,
-                city: locationData.city,
-                region: locationData.regionName,
-                isp: locationData.isp || 'Unknown',
-                lat: locationData.lat,
-                lon: locationData.lon,
-                totalSessions: 0
-            };
-        }
-        regionsData[key].totalSessions++;
-        
-        // Update marker count
-        const currentCount = parseInt(document.getElementById('markerCount').textContent) || 0;
-        document.getElementById('markerCount').textContent = currentCount + 1;
-        
-        // Refresh regions table if loaded
-        if (window.regionsDataLoaded) {
-            showRegionsTable();
-        }
+
+// Memperbarui UI di tabel dengan info lokasi
+function updateLocationUI(ip, data) {
+    const locationElementId = `location-${ip.replace(/\./g, '-')}`;
+    const locationElement = document.getElementById(locationElementId);
+    if (locationElement) {
+        locationElement.innerHTML = `${data.city || '?'}, ${data.countryCode || '?'}`;
     }
 }
 
@@ -828,14 +792,17 @@ function loadRegionsData() {
     }
     
     // If no data in cache, try to fetch from sessions data
-    if (Object.keys(regionsData).length === 0 && sessionsData.length > 0) {
-        // Process unique IPs from sessions data
-        const processedIPs = new Set();
-        sessionsData.forEach(session => {
-            if (session.ip_address && !processedIPs.has(session.ip_address)) {
-                processedIPs.add(session.ip_address);
-                // Try to fetch location data for this IP
-                fetchLocationForIP(session.ip_address, session);
+        if (Object.keys(regionsData).length === 0 && sessionsData.length > 0) {
+        const uniqueIPs = [...new Set(sessionsData.map(s => s.ip_address).filter(ip => ip))];
+        uniqueIPs.forEach(ip => {
+            if (!locationCache[ip]) {
+                const sessionForIP = sessionsData.find(s => s.ip_address === ip);
+                fetchLocationForIP(ip, sessionForIP).then(data => {
+                    if (data) {
+                        locationCache[ip] = { data: data, timestamp: Date.now() };
+                        // Anda bisa memuat ulang data wilayah di sini jika perlu
+                    }
+                });
             }
         });
     }

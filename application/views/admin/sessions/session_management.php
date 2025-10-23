@@ -290,7 +290,7 @@
                                                 <?php if (isset($location_cache[$session->ip_address]['data'])): ?>
                                                     <?= html_escape($location_cache[$session->ip_address]['data']['city']) ?>, <?= html_escape($location_cache[$session->ip_address]['data']['countryCode']) ?>
                                                 <?php else: ?>
-                                                    <span class="flex items-center" id="location-<?= md5($session->ip_address) ?>">
+                                                    <span class="flex items-center" id="location-<?= str_replace('.', '-', $session->ip_address) ?>">
                                                         <i class="fas fa-sync fa-spin mr-1 text-blue-500"></i> Getting location...
                                                     </span>
                                                 <?php endif; ?>

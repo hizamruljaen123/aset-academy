@@ -201,7 +201,7 @@ class Session_management extends CI_Controller {
     }
     
     /**
-     * Get cached location for an IP
+     * AJAX endpoint to fetch and cache IP locations
      */
     public function get_cached_location() {
         if (!$this->input->is_ajax_request()) {
